@@ -29,6 +29,17 @@ Every capability must be introduced through a falsifiable hypothesis, an explici
 
 See [the project contract](docs/project-contract.md) and [the experimental protocol](docs/experimental-protocol.md).
 
+## P0 baseline and telemetry
+
+P0 provides executor-agnostic execution records, explicit event metrics, nullable resource measurements, and fail-closed status resolution. It does not implement performance optimization, routing, planning, or any executor. See [the P0 metrics contract](docs/baseline-metrics.md).
+
+Run the deterministic fixture and tests locally from the repository root:
+
+```text
+PYTHONPATH=src python -m arkx.baseline
+PYTHONPATH=src python -m unittest discover -s tests -t . -v
+```
+
 ## Checks
 
 The bootstrap check is dependency-free:
@@ -36,4 +47,3 @@ The bootstrap check is dependency-free:
 ```text
 python tools/check_foundation.py
 ```
-

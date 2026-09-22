@@ -11,13 +11,14 @@ Arkx
 └── tools/         dependency-free repository checks
 ```
 
+P0 adds a deliberately small executable core under `src/arkx/`: versioned contracts, evidence status resolution, telemetry collection, and a deterministic baseline fixture. It has no executor interface or orchestration policy.
+
 ## Boundary rules
 
 - `src/` is reserved for product code and is empty in this bootstrap.
 - `experiments/` contains evidence-oriented records, not an implicit runtime.
 - `tools/` may validate repository contracts but must not become orchestration.
-- `tests/` is reserved for executable verification as capabilities are added.
+- `tests/` contains P0 executable verification and remains the boundary for future tests.
 - Integrations and executors require an explicit decision record and experiment evidence.
 
 An empty boundary is intentional. Creating a directory does not imply that the corresponding capability exists.
-
