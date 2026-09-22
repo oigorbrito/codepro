@@ -1,0 +1,20 @@
+# Local tooling and caches
+.venv/
+venv/
+__pycache__/
+.pytest_cache/
+.ruff_cache/
+.mypy_cache/
+.coverage
+htmlcov/
+
+# IDE and operating-system files
+.idea/
+.vscode/
+.DS_Store
+Thumbs.db
+
+# Local experiment outputs (keep the protocol and metadata, not generated data)
+experiments/**/runs/
+experiments/**/artifacts/
+
