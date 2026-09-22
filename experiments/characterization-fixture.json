@@ -1,0 +1,56 @@
+{
+  "fixture_type": "CHARACTERIZATION_FIXTURE",
+  "description": "Synthetic stability fixtures; not a real-world quality benchmark.",
+  "tasks": [
+    {
+      "id": "simple",
+      "signals": {
+        "candidate_files": ["src/arkx/contracts.py"],
+        "dependency_edges": [],
+        "affected_components": ["contracts"],
+        "known_tests": ["tests/test_contracts.py"],
+        "ambiguity_markers": [],
+        "risk_markers": [],
+        "acceptance_checks": ["unit tests pass"]
+      }
+    },
+    {
+      "id": "localized",
+      "signals": {
+        "candidate_files": ["src/arkx/telemetry.py", "tests/test_telemetry.py"],
+        "dependency_edges": [["telemetry", "contracts"]],
+        "affected_components": ["telemetry"],
+        "known_tests": ["tests/test_telemetry.py", "tests/test_contracts.py"],
+        "ambiguity_markers": [],
+        "risk_markers": [],
+        "acceptance_checks": ["unit tests pass", "round-trip is preserved"]
+      }
+    },
+    {
+      "id": "repository-wide",
+      "signals": {
+        "candidate_files": ["src/arkx/a.py", "src/arkx/b.py", "src/arkx/c.py", "tests/test_a.py", "tests/test_b.py", "docs/architecture.md"],
+        "dependency_edges": [["a", "b"], ["b", "c"], ["c", "shared-state"], ["tests", "a"]],
+        "affected_components": ["runtime", "storage", "api"],
+        "known_tests": ["tests/test_a.py", "tests/test_b.py", "tests/test_c.py"],
+        "ambiguity_markers": [],
+        "risk_markers": [],
+        "acceptance_checks": ["unit tests pass", "integration tests pass"],
+        "state_shared": true,
+        "architectural_change": true
+      }
+    },
+    {
+      "id": "ambiguous",
+      "signals": {
+        "candidate_files": null,
+        "dependency_edges": null,
+        "affected_components": ["unknown"],
+        "known_tests": null,
+        "ambiguity_markers": ["acceptance unclear"],
+        "risk_markers": [],
+        "acceptance_checks": null
+      }
+    }
+  ]
+}

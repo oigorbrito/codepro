@@ -11,7 +11,7 @@ Arkx
 └── tools/         dependency-free repository checks
 ```
 
-P0 adds a deliberately small executable core under `src/arkx/`: versioned contracts, evidence status resolution, telemetry collection, and a deterministic baseline fixture. It has no executor interface or orchestration policy.
+P0 adds a deliberately small executable core under `src/arkx/`: versioned contracts, evidence status resolution, telemetry collection, and a deterministic baseline fixture. P1 adds explicit-signal task characterization in the same boundary. Neither has an executor interface or orchestration policy.
 
 ## Boundary rules
 

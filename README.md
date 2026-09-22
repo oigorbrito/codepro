@@ -40,6 +40,8 @@ PYTHONPATH=src python -m arkx.baseline
 PYTHONPATH=src python -m unittest discover -s tests -t . -v
 ```
 
+P1 adds deterministic task characterization from explicit signals only. See [the P1 contract](docs/task-characterization.md). It does not select executors or route work.
+
 ## Checks
 
 The bootstrap check is dependency-free:
