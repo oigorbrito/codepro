@@ -42,6 +42,8 @@ PYTHONPATH=src python -m unittest discover -s tests -t . -v
 
 P1 adds deterministic task characterization from explicit signals only. See [the P1 contract](docs/task-characterization.md). It does not select executors or route work.
 
+P2 adds deterministic progress/stagnation assessment from explicit snapshots only. See [the P2 contract](docs/progress-stagnation.md). It does not control execution or authorize retry/replan.
+
 ## Checks
 
 The bootstrap check is dependency-free:

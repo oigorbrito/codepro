@@ -11,6 +11,15 @@ from .characterization import (
     characterize,
     characterize_timed,
 )
+from .progress import (
+    ProgressAssessment,
+    ProgressConfig,
+    ProgressEvidence,
+    ProgressSnapshot,
+    ProgressStatus,
+    assess_progress,
+    assess_progress_timed,
+)
 
 __all__ = [
     "Event",
@@ -25,4 +34,11 @@ __all__ = [
     "TaskSignals",
     "characterize",
     "characterize_timed",
+    "ProgressAssessment",
+    "ProgressConfig",
+    "ProgressEvidence",
+    "ProgressSnapshot",
+    "ProgressStatus",
+    "assess_progress",
+    "assess_progress_timed",
 ]
