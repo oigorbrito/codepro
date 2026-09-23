@@ -6,6 +6,7 @@ from dataclasses import dataclass
 from enum import Enum
 import hashlib
 import json
+from math import isfinite
 from typing import Any, Mapping
 
 
@@ -84,7 +85,7 @@ class PromotionGate:
         }
 
     def to_json(self) -> str:
-        return json.dumps(self.to_dict(), ensure_ascii=False, sort_keys=True, separators=(",", ":"))
+        return json.dumps(self.to_dict(), ensure_ascii=False, sort_keys=True, separators=(",", ":"), allow_nan=False)
 
     @classmethod
     def from_dict(cls, value: Mapping[str, Any]) -> "PromotionGate":
@@ -111,7 +112,7 @@ class FrozenPromotionGate:
             "content_hash": self.content_hash,
             "gate": self.gate.to_dict(),
         }
-        return json.dumps(payload, ensure_ascii=False, sort_keys=True, separators=(",", ":"))
+        return json.dumps(payload, ensure_ascii=False, sort_keys=True, separators=(",", ":"), allow_nan=False)
 
 
 @dataclass(frozen=True)
@@ -133,6 +134,7 @@ class CriterionAssessment:
 @dataclass(frozen=True)
 class GateAssessment:
     gate_id: str
+    gate_hash: str
     status: GateStatus
     criteria: tuple[CriterionAssessment, ...]
     missing_evidence_keys: tuple[str, ...]
@@ -140,6 +142,7 @@ class GateAssessment:
     def to_dict(self) -> dict[str, Any]:
         return {
             "gate_id": self.gate_id,
+            "gate_hash": self.gate_hash,
             "status": self.status.value,
             "criteria": [item.to_dict() for item in self.criteria],
             "missing_evidence_keys": list(self.missing_evidence_keys),
@@ -156,6 +159,7 @@ class GateAssessment:
 
 @dataclass(frozen=True)
 class PromotionRecord:
+    gate_hash: str
     gate_assessment_hash: str
     decision: PromotionDecisionStatus
     reviewer: str
@@ -164,6 +168,7 @@ class PromotionRecord:
 
     def to_json(self) -> str:
         payload = {
+            "gate_hash": self.gate_hash,
             "gate_assessment_hash": self.gate_assessment_hash,
             "decision": self.decision.value,
             "reviewer": self.reviewer,
@@ -198,6 +203,10 @@ def validate_promotion_gate(gate: PromotionGate) -> tuple[str, ...]:
                 issues.append(
                     f"criterion {criterion.criterion_id!r} numeric operator requires numeric target"
                 )
+            elif not isfinite(float(criterion.target)):
+                issues.append(
+                    f"criterion {criterion.criterion_id!r} numeric target must be finite"
+                )
 
     if not gate.required_evidence_keys:
         issues.append("promotion gate requires explicit evidence requirements")
@@ -227,15 +236,15 @@ def _assess(criterion: PromotionCriterion, observed: Scalar | None) -> Criterion
     if criterion.operator is CriterionOperator.EQ:
         satisfied = observed == criterion.target
     else:
-        if isinstance(observed, bool) or not isinstance(observed, (int, float)):
+        if isinstance(observed, bool) or not isinstance(observed, (int, float)) or not isfinite(float(observed)):
             return CriterionAssessment(
                 criterion_id=criterion.criterion_id,
                 satisfied=None,
                 observed=observed,
-                reason="numeric criterion received non-numeric observation",
+                reason="numeric criterion received non-finite or non-numeric observation",
             )
         target = criterion.target
-        if isinstance(target, bool) or not isinstance(target, (int, float)):
+        if isinstance(target, bool) or not isinstance(target, (int, float)) or not isfinite(float(target)):
             return CriterionAssessment(
                 criterion_id=criterion.criterion_id,
                 satisfied=None,
@@ -253,10 +262,14 @@ def _assess(criterion: PromotionCriterion, observed: Scalar | None) -> Criterion
 
 
 def assess_promotion_gate(
-    gate: PromotionGate,
+    frozen_gate: FrozenPromotionGate,
     observations: Mapping[str, Scalar | None],
     evidence: Mapping[str, str | None],
 ) -> GateAssessment:
+    gate = frozen_gate.gate
+    canonical = freeze_promotion_gate(gate)
+    if canonical.content_hash != frozen_gate.content_hash:
+        raise ValueError("frozen promotion gate hash does not match gate content")
     issues = validate_promotion_gate(gate)
     if issues:
         raise ValueError("Invalid promotion gate: " + "; ".join(issues))
@@ -282,6 +295,7 @@ def assess_promotion_gate(
 
     return GateAssessment(
         gate_id=gate.gate_id,
+        gate_hash=frozen_gate.content_hash,
         status=status,
         criteria=assessments,
         missing_evidence_keys=missing_evidence,
@@ -291,18 +305,25 @@ def assess_promotion_gate(
 def record_promotion_decision(
     assessment: GateAssessment,
     *,
+    frozen_gate: FrozenPromotionGate,
     promote: bool,
     reviewer: str,
     rationale: str,
     evidence_refs: tuple[str, ...],
 ) -> PromotionRecord:
+    canonical = freeze_promotion_gate(frozen_gate.gate)
+    if canonical.content_hash != frozen_gate.content_hash:
+        raise ValueError("frozen promotion gate hash does not match gate content")
+    if assessment.gate_id != frozen_gate.gate.gate_id or assessment.gate_hash != frozen_gate.content_hash:
+        raise ValueError("promotion assessment is not bound to the supplied frozen gate")
     if not reviewer.strip() or not rationale.strip():
         raise ValueError("promotion decision requires reviewer and rationale")
-    if not evidence_refs:
-        raise ValueError("promotion decision requires evidence references")
+    if not evidence_refs or any(not ref.strip() for ref in evidence_refs):
+        raise ValueError("promotion decision requires non-blank evidence references")
     if promote and assessment.status is not GateStatus.ELIGIBLE_FOR_REVIEW:
         raise ValueError("cannot promote when promotion gate is not ELIGIBLE_FOR_REVIEW")
     return PromotionRecord(
+        gate_hash=frozen_gate.content_hash,
         gate_assessment_hash=assessment.content_hash,
         decision=PromotionDecisionStatus.PROMOTED if promote else PromotionDecisionStatus.NOT_PROMOTED,
         reviewer=reviewer,
