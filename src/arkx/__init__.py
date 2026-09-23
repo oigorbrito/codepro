@@ -1,4 +1,6 @@
-"""Minimal, executor-agnostic Arkx execution contracts and telemetry."""
+"""Minimal, executor-agnostic Dekon chassis exposed through the arkx namespace."""
+
+__version__ = "0.1.0"
 
 from .contracts import Event, EventType, ExecutionRecord, ExecutionStatus
 from .characterization import (
@@ -59,6 +61,7 @@ from .handoff import (
 )
 
 __all__ = [
+    "__version__",
     "Event",
     "EventType",
     "ExecutionRecord",
