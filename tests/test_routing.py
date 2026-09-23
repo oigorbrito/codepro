@@ -157,6 +157,14 @@ class EscalationTests(unittest.TestCase):
         )
         self.assertEqual(decision.action, EscalationAction.REQUIRE_QUALIFICATION)
 
+    def test_negative_or_boolean_budget_values_are_rejected(self):
+        with self.assertRaises(ValueError):
+            RoutingBudget(max_attempts=-1)
+        with self.assertRaises(ValueError):
+            BudgetState(attempts_used=-1)
+        with self.assertRaises(ValueError):
+            BudgetState(path_escalations_used=True)
+
     def test_exhausted_budget_blocks(self):
         state = BudgetState(RoutingBudget(max_path_escalations=2, max_attempts=3), attempts_used=3, path_escalations_used=2)
         decision = assess_escalation(
