@@ -13,6 +13,41 @@ SCHEMA_VERSION = 1
 FREEZE_SCHEMA_VERSION = 1
 
 
+def _strict_schema(value: Mapping[str, Any]) -> int:
+    raw = value.get("schema_version", 0)
+    if isinstance(raw, bool) or not isinstance(raw, int) or raw != SCHEMA_VERSION:
+        raise ValueError(f"Unsupported study spec schema: {raw}")
+    return raw
+
+
+def _required_string(name: str, value: Any) -> str:
+    if not isinstance(value, str) or not value.strip():
+        raise ValueError(f"{name} must be a non-empty string")
+    return value
+
+
+def _optional_string(name: str, value: Any) -> str | None:
+    if value is None:
+        return None
+    if not isinstance(value, str):
+        raise ValueError(f"{name} must be a string when present")
+    return value
+
+
+def _string_tuple(name: str, value: Any) -> tuple[str, ...]:
+    if not isinstance(value, (list, tuple)):
+        raise ValueError(f"{name} must be a list or tuple")
+    if any(not isinstance(item, str) for item in value):
+        raise ValueError(f"{name} must contain only strings")
+    return tuple(value)
+
+
+def _strict_int(name: str, value: Any) -> int:
+    if isinstance(value, bool) or not isinstance(value, int):
+        raise ValueError(f"{name} must be an integer")
+    return value
+
+
 class _ValueEnum(str, Enum):
     def __str__(self) -> str:
         return self.value
@@ -96,29 +131,29 @@ class StudySpec:
 
     @classmethod
     def from_dict(cls, value: Mapping[str, Any]) -> "StudySpec":
-        schema_version = int(value.get("schema_version", 0))
-        if schema_version != SCHEMA_VERSION:
-            raise ValueError(f"Unsupported study spec schema: {schema_version}")
+        if not isinstance(value, Mapping):
+            raise ValueError("study spec payload must be a mapping")
+        schema_version = _strict_schema(value)
         return cls(
-            study_id=str(value["study_id"]),
+            study_id=_required_string("study_id", value.get("study_id")),
             methodology=Methodology(value["methodology"]),
-            research_question=str(value["research_question"]),
-            hypothesis=str(value["hypothesis"]),
-            experimental_unit=str(value["experimental_unit"]),
-            quality_attribute=str(value["quality_attribute"]),
-            workload_refs=tuple(value.get("workload_refs", ())),
-            metrics=tuple(value.get("metrics", ())),
-            primary_metric=str(value["primary_metric"]),
+            research_question=_required_string("research_question", value.get("research_question")),
+            hypothesis=_required_string("hypothesis", value.get("hypothesis")),
+            experimental_unit=_required_string("experimental_unit", value.get("experimental_unit")),
+            quality_attribute=_required_string("quality_attribute", value.get("quality_attribute")),
+            workload_refs=_string_tuple("workload_refs", value.get("workload_refs", ())),
+            metrics=_string_tuple("metrics", value.get("metrics", ())),
+            primary_metric=_required_string("primary_metric", value.get("primary_metric")),
             comparison_mode=ComparisonMode(value["comparison_mode"]),
-            control_ref=value.get("control_ref"),
-            treatment_refs=tuple(value.get("treatment_refs", ())),
-            comparator_justification=value.get("comparator_justification"),
-            repetitions=int(value.get("repetitions", 1)),
-            repetition_justification=value.get("repetition_justification"),
-            stopping_rule=str(value["stopping_rule"]),
-            analysis_plan_ref=str(value["analysis_plan_ref"]),
-            promotion_rule=str(value["promotion_rule"]),
-            environment_contract_ref=str(value["environment_contract_ref"]),
+            control_ref=_optional_string("control_ref", value.get("control_ref")),
+            treatment_refs=_string_tuple("treatment_refs", value.get("treatment_refs", ())),
+            comparator_justification=_optional_string("comparator_justification", value.get("comparator_justification")),
+            repetitions=_strict_int("repetitions", value.get("repetitions", 1)),
+            repetition_justification=_optional_string("repetition_justification", value.get("repetition_justification")),
+            stopping_rule=_required_string("stopping_rule", value.get("stopping_rule")),
+            analysis_plan_ref=_required_string("analysis_plan_ref", value.get("analysis_plan_ref")),
+            promotion_rule=_required_string("promotion_rule", value.get("promotion_rule")),
+            environment_contract_ref=_required_string("environment_contract_ref", value.get("environment_contract_ref")),
             raw_results_policy=RawResultsPolicy(value.get("raw_results_policy", RawResultsPolicy.PERSIST_ALL_RAW_RUNS.value)),
             schema_version=schema_version,
         )
