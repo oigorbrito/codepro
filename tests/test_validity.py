@@ -3,7 +3,7 @@ import unittest
 from dataclasses import replace
 from pathlib import Path
 
-from arkx.study import ComparisonMode, Methodology, StudySpec
+from arkx.study import ComparisonMode, Methodology, StudySpec, freeze_study_spec
 from arkx.validity import (
     ConstructMapping,
     Threat,
@@ -35,6 +35,10 @@ def study():
         promotion_rule="frozen gate",
         environment_contract_ref="env://v1",
     )
+
+
+def frozen_study():
+    return freeze_study_spec(study())
 
 
 def threat(identifier, dimension):
@@ -112,16 +116,27 @@ class CompatibilityTests(unittest.TestCase):
 class FreezeTests(unittest.TestCase):
     def test_same_plan_has_same_hash(self):
         self.assertEqual(
-            freeze_validity_plan(valid(), study()).to_json(),
-            freeze_validity_plan(valid(), study()).to_json(),
+            freeze_validity_plan(valid(), frozen_study()).to_json(),
+            freeze_validity_plan(valid(), frozen_study()).to_json(),
         )
 
     def test_claim_change_changes_hash(self):
-        first = freeze_validity_plan(valid(), study())
+        first = freeze_validity_plan(valid(), frozen_study())
         second = freeze_validity_plan(
             replace(valid(), target_population="a different population"),
-            study(),
+            frozen_study(),
         )
+        self.assertNotEqual(first.content_hash, second.content_hash)
+
+
+    def test_frozen_plan_records_governing_study_hash(self):
+        frozen = freeze_validity_plan(valid(), frozen_study())
+        self.assertEqual(frozen.study_spec_hash, frozen_study().content_hash)
+
+    def test_compatible_study_change_changes_frozen_identity(self):
+        first = freeze_validity_plan(valid(), frozen_study())
+        changed_study = freeze_study_spec(replace(study(), hypothesis="a changed frozen hypothesis"))
+        second = freeze_validity_plan(valid(), changed_study)
         self.assertNotEqual(first.content_hash, second.content_hash)
 
 
