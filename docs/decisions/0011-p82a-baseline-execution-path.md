@@ -24,6 +24,11 @@ The official authority adapter serializes only `instance_id`,
 `model_name_or_path`, and `model_patch` for inference. It invokes
 `swebench.harness.run_evaluation` with a unique run id and maps infrastructure
 errors to `INDETERMINATE`/`BLOCKED`, never to task rejection. Gold-patch
-qualification is a separate gate. In the current environment it is blocked:
-the `swebench` package is not installed and Docker Desktop's Linux engine is
-unavailable.
+qualification is a separate gate. The official package is now available in
+the isolated `.venv-swebench` environment (`swebench 5.0.2`, upstream commit
+`02e7a74ffd0b707aab73d203fe87bdc7c76afc8e`) and its CLI help passes. The
+Modal qualification reached the official harness but is blocked by missing
+`~/.modal.toml` credentials. The local Docker Linux engine is also
+unavailable. The deterministic headless probe now passes with an explicit
+`DeterministicModelConfig.outputs` fixture recorded in
+`experiments/p82-deterministic-headless-probe.json`.

@@ -1,0 +1,43 @@
+{
+  "schema": "p8.2a-deterministic-headless-probe-v1",
+  "status": "PASS",
+  "runtime": {
+    "package": "mini-swe-agent",
+    "version": "2.4.6",
+    "api": [
+      "get_model",
+      "get_environment",
+      "get_agent",
+      "agent.run"
+    ]
+  },
+  "explicit_model_configuration": {
+    "model": "deterministic",
+    "model_class": "deterministic",
+    "cost_per_call": 0.0,
+    "outputs": [
+      {
+        "role": "assistant",
+        "content": "",
+        "extra": {
+          "actions": [
+            {
+              "command": "echo COMPLETE_TASK_AND_SUBMIT_FINAL_OUTPUT"
+            }
+          ],
+          "cost": 0.0
+        }
+      }
+    ]
+  },
+  "result": {
+    "process_status": "EXIT_CODE_0",
+    "initialization_status": "PASS",
+    "run_status": "Submitted",
+    "api_calls": 1,
+    "instance_cost": 0.0,
+    "trajectory": "%TEMP%/arkx-p82-deterministic-probe.json",
+    "failure_category": null
+  },
+  "interpretation": "Headless runner qualification only; not a model capability result and not treatment-A evidence."
+}
