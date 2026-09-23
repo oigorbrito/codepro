@@ -31,6 +31,10 @@ For the current benchmark-oriented Arkx methodology, at least one claim-linked t
 
 Internal-validity threats are added when the study makes a causal claim or the design introduces a relevant confounding mechanism.
 
+## Frozen-study binding
+
+A frozen Validity Plan records the governing `study_spec_hash`. Its content identity includes that hash, so the same validity text attached to a materially different Study Spec cannot retain the same frozen identity.
+
 ## Boundary
 
 ```text
