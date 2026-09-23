@@ -45,6 +45,10 @@ def valid_gate(**overrides):
     return PromotionGate(**values)
 
 
+def frozen_gate():
+    return freeze_promotion_gate(valid_gate())
+
+
 def observations():
     return {
         "verified_resolution_delta": 0.0,
@@ -78,23 +82,23 @@ class ValidationTests(unittest.TestCase):
 
 class AssessmentTests(unittest.TestCase):
     def test_satisfied_gate_is_only_eligible_for_review(self):
-        result = assess_promotion_gate(valid_gate(), observations(), evidence())
+        result = assess_promotion_gate(frozen_gate(), observations(), evidence())
         self.assertEqual(result.status, GateStatus.ELIGIBLE_FOR_REVIEW)
         self.assertNotIn('"PROMOTED"', result.to_json())
 
     def test_missing_observation_blocks(self):
         observed = observations()
         del observed["median_cost_ratio"]
-        result = assess_promotion_gate(valid_gate(), observed, evidence())
+        result = assess_promotion_gate(frozen_gate(), observed, evidence())
         self.assertEqual(result.status, GateStatus.BLOCKED)
 
     def test_missing_evidence_blocks(self):
-        result = assess_promotion_gate(valid_gate(), observations(), {"analysis": "analysis://x"})
+        result = assess_promotion_gate(frozen_gate(), observations(), {"analysis": "analysis://x"})
         self.assertEqual(result.status, GateStatus.BLOCKED)
 
     def test_failed_criterion_is_not_eligible(self):
         result = assess_promotion_gate(
-            valid_gate(),
+            frozen_gate(),
             {"verified_resolution_delta": -0.2, "median_cost_ratio": 0.8},
             evidence(),
         )
@@ -102,11 +106,48 @@ class AssessmentTests(unittest.TestCase):
 
 
 class DecisionTests(unittest.TestCase):
+    def test_non_finite_observation_blocks(self):
+        for value in (float("inf"), float("-inf"), float("nan")):
+            result = assess_promotion_gate(
+                frozen_gate(),
+                {"verified_resolution_delta": value, "median_cost_ratio": 0.8},
+                evidence(),
+            )
+            self.assertEqual(result.status, GateStatus.BLOCKED)
+
+    def test_decision_rejects_assessment_bound_to_other_gate(self):
+        frozen = frozen_gate()
+        eligible = assess_promotion_gate(frozen, observations(), evidence())
+        forged = replace(eligible, gate_hash="sha256:" + "0" * 64)
+        with self.assertRaises(ValueError):
+            record_promotion_decision(
+                forged,
+                frozen_gate=frozen,
+                promote=True,
+                reviewer="reviewer",
+                rationale="must not accept a mismatched gate binding",
+                evidence_refs=("analysis://x",),
+            )
+
+    def test_decision_rejects_blank_evidence_reference(self):
+        frozen = frozen_gate()
+        eligible = assess_promotion_gate(frozen, observations(), evidence())
+        with self.assertRaises(ValueError):
+            record_promotion_decision(
+                eligible,
+                frozen_gate=frozen,
+                promote=True,
+                reviewer="reviewer",
+                rationale="evidence must be substantive",
+                evidence_refs=("   ",),
+            )
+
     def test_promotion_requires_eligible_gate(self):
-        blocked = assess_promotion_gate(valid_gate(), {}, {})
+        blocked = assess_promotion_gate(frozen_gate(), {}, {})
         with self.assertRaises(ValueError):
             record_promotion_decision(
                 blocked,
+                frozen_gate=frozen_gate(),
                 promote=True,
                 reviewer="reviewer",
                 rationale="cannot override missing evidence",
@@ -114,9 +155,10 @@ class DecisionTests(unittest.TestCase):
             )
 
     def test_eligible_still_requires_explicit_decision(self):
-        eligible = assess_promotion_gate(valid_gate(), observations(), evidence())
+        eligible = assess_promotion_gate(frozen_gate(), observations(), evidence())
         record = record_promotion_decision(
             eligible,
+            frozen_gate=frozen_gate(),
             promote=True,
             reviewer="reviewer",
             rationale="all frozen gates satisfied and evidence reviewed",
@@ -125,9 +167,10 @@ class DecisionTests(unittest.TestCase):
         self.assertEqual(record.decision, PromotionDecisionStatus.PROMOTED)
 
     def test_not_promoted_is_valid_even_when_eligible(self):
-        eligible = assess_promotion_gate(valid_gate(), observations(), evidence())
+        eligible = assess_promotion_gate(frozen_gate(), observations(), evidence())
         record = record_promotion_decision(
             eligible,
+            frozen_gate=frozen_gate(),
             promote=False,
             reviewer="reviewer",
             rationale="residual validity risk remains too high",
