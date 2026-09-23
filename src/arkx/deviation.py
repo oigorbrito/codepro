@@ -9,6 +9,18 @@ import json
 from typing import Any, Mapping
 
 
+def _required_string(name: str, value: Any) -> str:
+    if not isinstance(value, str) or not value.strip():
+        raise ValueError(f"{name} must be a non-empty string")
+    return value
+
+
+def _strict_bool(name: str, value: Any) -> bool:
+    if not isinstance(value, bool):
+        raise ValueError(f"{name} must be boolean")
+    return value
+
+
 SCHEMA_VERSION = 1
 FREEZE_SCHEMA_VERSION = 1
 
@@ -98,22 +110,27 @@ class ProtocolDeviation:
 
     @classmethod
     def from_dict(cls, value: Mapping[str, Any]) -> "ProtocolDeviation":
-        schema_version = int(value.get("schema_version", 0))
-        if schema_version != SCHEMA_VERSION:
+        if not isinstance(value, Mapping):
+            raise ValueError("deviation payload must be a mapping")
+        schema_version = value.get("schema_version", 0)
+        if isinstance(schema_version, bool) or not isinstance(schema_version, int) or schema_version != SCHEMA_VERSION:
             raise ValueError(f"Unsupported deviation schema: {schema_version}")
+        refs = value.get("evidence_refs", ())
+        if not isinstance(refs, (list, tuple)):
+            raise ValueError("evidence_refs must be a list or tuple")
         return cls(
-            deviation_id=str(value["deviation_id"]),
-            study_spec_ref=str(value["study_spec_ref"]),
-            scope_ref=str(value["scope_ref"]),
+            deviation_id=_required_string("deviation_id", value.get("deviation_id")),
+            study_spec_ref=_required_string("study_spec_ref", value.get("study_spec_ref")),
+            scope_ref=_required_string("scope_ref", value.get("scope_ref")),
             deviation_type=DeviationType(value["deviation_type"]),
             phase=DeviationPhase(value["phase"]),
-            frozen_value=str(value["frozen_value"]),
-            observed_value=str(value["observed_value"]),
-            reason=str(value["reason"]),
-            evidence_refs=tuple(value.get("evidence_refs", ())),
-            preauthorized_by_frozen_protocol=bool(value["preauthorized_by_frozen_protocol"]),
+            frozen_value=_required_string("frozen_value", value.get("frozen_value")),
+            observed_value=_required_string("observed_value", value.get("observed_value")),
+            reason=_required_string("reason", value.get("reason")),
+            evidence_refs=tuple(refs),
+            preauthorized_by_frozen_protocol=_strict_bool("preauthorized_by_frozen_protocol", value.get("preauthorized_by_frozen_protocol")),
             analysis_impact=AnalysisImpact(value["analysis_impact"]),
-            impact_rationale=str(value["impact_rationale"]),
+            impact_rationale=_required_string("impact_rationale", value.get("impact_rationale")),
             replacement_study_spec_ref=value.get("replacement_study_spec_ref"),
             schema_version=schema_version,
         )
@@ -152,6 +169,8 @@ def validate_protocol_deviation(value: ProtocolDeviation) -> tuple[str, ...]:
         issues.append("deviation must record an actual before/after difference")
     if not value.evidence_refs:
         issues.append("protocol deviation requires at least one evidence reference")
+    elif any(not isinstance(ref, str) or not ref.strip() for ref in value.evidence_refs):
+        issues.append("protocol deviation evidence references must be non-blank strings")
 
     if value.deviation_type in _HIGH_RISK_TYPES:
         if value.analysis_impact is AnalysisImpact.NO_PRIMARY_EFFECT and not value.preauthorized_by_frozen_protocol:
