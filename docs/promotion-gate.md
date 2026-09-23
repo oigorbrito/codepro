@@ -15,7 +15,7 @@ For every criterion:
 
 `ELIGIBLE_FOR_REVIEW` still requires an explicit promotion or non-promotion decision with reviewer, rationale, and evidence references.
 
-Gate assessment accepts a `FrozenPromotionGate`, records its content hash, and the later promotion decision verifies the same binding. A manually constructed assessment with an unrelated or fabricated gate hash cannot authorize promotion. Numeric gate values must be finite; `NaN` and infinities block evaluation rather than satisfying a threshold.
+Gate assessment accepts a `FrozenPromotionGate` and records its content hash. The later promotion decision verifies the same binding **and recomputes the canonical assessment from the supplied observations and evidence**; a manually altered `ELIGIBLE_FOR_REVIEW` status cannot authorize promotion. Numeric gate values must be finite; `NaN` and infinities block evaluation rather than satisfying a threshold.
 
 ## Why this is separate
 
