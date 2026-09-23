@@ -31,3 +31,17 @@ Run comparison is tri-state: `COMPARABLE` means controls are known and equal,
 required control is unknown. Summaries retain `NOT_EXECUTED` and `BLOCKED`
 counts, aggregate only observed metrics, and never produce a winner or a
 promotion decision.
+
+## P8.2a baseline execution path
+
+P8.2a is infrastructure qualification, not mechanism evidence. The baseline
+runner accepts treatment A only, invokes mini-SWE-agent through its public
+Python API in a headless worker, and records execution artifacts. It does not
+run verification or decide acceptance. Verification and independent
+acceptance are explicit, nullable records; missing provider/model identity is
+`BLOCKED`, with no fallback.
+
+Artifacts are append-only under `task_id/attempt-N`. Reusing an existing
+attempt is rejected rather than silently overwritten. No prospective task
+sample is committed until public task artifacts, selection rationale, and an
+independent acceptance authority are available.

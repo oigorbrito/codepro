@@ -91,6 +91,12 @@ from .p82 import (
     P82TreatmentSummary, P82TrialPlan, TaskSampleManifest, TaskSampleTask, TaskStratum,
     build_p82_plan, compare_run_manifests, p82_manifest, plan_is_comparable, summarize_p82,
 )
+from .p82_baseline import (
+    AcceptanceDecision, AcceptanceResult, BaselineExecutionState, BaselineRunConfig,
+    BaselineSampleManifest, ExplicitVerificationAcceptance, ExecutionArtifact,
+    MiniSweAgentHeadlessRunner, ProspectiveTask, VerificationResult, VerificationState,
+    baseline_observation,
+)
 
 __all__ = [
     "Event",
@@ -184,4 +190,16 @@ __all__ = [
     "p82_manifest",
     "plan_is_comparable",
     "summarize_p82",
+    "AcceptanceDecision",
+    "AcceptanceResult",
+    "BaselineExecutionState",
+    "BaselineRunConfig",
+    "BaselineSampleManifest",
+    "ExplicitVerificationAcceptance",
+    "ExecutionArtifact",
+    "MiniSweAgentHeadlessRunner",
+    "ProspectiveTask",
+    "VerificationResult",
+    "VerificationState",
+    "baseline_observation",
 ]
