@@ -9,6 +9,25 @@ import re
 from typing import Any, Mapping
 
 
+def _schema_version(value: Mapping[str, Any]) -> int:
+    raw = value.get("schema_version", 0)
+    if isinstance(raw, bool) or not isinstance(raw, int) or raw != SCHEMA_VERSION:
+        raise ValueError(f"Unsupported environment manifest schema: {raw}")
+    return raw
+
+
+def _strict_bool(name: str, value: Any) -> bool:
+    if not isinstance(value, bool):
+        raise ValueError(f"{name} must be boolean")
+    return value
+
+
+def _required_string(name: str, value: Any) -> str:
+    if not isinstance(value, str) or not value.strip():
+        raise ValueError(f"{name} must be a non-empty string")
+    return value
+
+
 SCHEMA_VERSION = 1
 FREEZE_SCHEMA_VERSION = 1
 _SHA_RE = re.compile(r"^[0-9a-f]{40}$")
@@ -25,7 +44,12 @@ class ActionPin:
 
     @classmethod
     def from_dict(cls, value: Mapping[str, Any]) -> "ActionPin":
-        return cls(repository=str(value["repository"]), commit_sha=str(value["commit_sha"]))
+        if not isinstance(value, Mapping):
+            raise ValueError("action pin must be a mapping")
+        return cls(
+            repository=_required_string("repository", value.get("repository")),
+            commit_sha=_required_string("commit_sha", value.get("commit_sha")),
+        )
 
 
 @dataclass(frozen=True)
@@ -82,29 +106,35 @@ class EnvironmentManifest:
 
     @classmethod
     def from_dict(cls, value: Mapping[str, Any]) -> "EnvironmentManifest":
-        schema_version = int(value.get("schema_version", 0))
-        if schema_version != SCHEMA_VERSION:
-            raise ValueError(f"Unsupported environment manifest schema: {schema_version}")
+        if not isinstance(value, Mapping):
+            raise ValueError("environment manifest must be a mapping")
+        schema_version = _schema_version(value)
+        pins = value.get("action_pins", ())
+        reasons = value.get("nonhermetic_reasons", ())
+        if not isinstance(pins, (list, tuple)):
+            raise ValueError("action_pins must be a list or tuple")
+        if not isinstance(reasons, (list, tuple)):
+            raise ValueError("nonhermetic_reasons must be a list or tuple")
         return cls(
-            environment_id=str(value["environment_id"]),
-            operating_system=str(value["operating_system"]),
-            operating_system_version=str(value["operating_system_version"]),
-            runner_image=str(value["runner_image"]),
-            runner_image_version=str(value["runner_image_version"]),
-            architecture=str(value["architecture"]),
-            python_implementation=str(value["python_implementation"]),
-            python_version=str(value["python_version"]),
-            locale=str(value["locale"]),
-            timezone=str(value["timezone"]),
+            environment_id=_required_string("environment_id", value.get("environment_id")),
+            operating_system=_required_string("operating_system", value.get("operating_system")),
+            operating_system_version=_required_string("operating_system_version", value.get("operating_system_version")),
+            runner_image=_required_string("runner_image", value.get("runner_image")),
+            runner_image_version=_required_string("runner_image_version", value.get("runner_image_version")),
+            architecture=_required_string("architecture", value.get("architecture")),
+            python_implementation=_required_string("python_implementation", value.get("python_implementation")),
+            python_version=_required_string("python_version", value.get("python_version")),
+            locale=_required_string("locale", value.get("locale")),
+            timezone=_required_string("timezone", value.get("timezone")),
             dependency_lock_ref=value.get("dependency_lock_ref"),
             dependency_lock_hash=value.get("dependency_lock_hash"),
             dependency_lock_justification=value.get("dependency_lock_justification"),
             container_image_digest=value.get("container_image_digest"),
             non_container_justification=value.get("non_container_justification"),
-            action_pins=tuple(ActionPin.from_dict(item) for item in value.get("action_pins", ())),
-            hermetic=bool(value["hermetic"]),
-            nonhermetic_reasons=tuple(value.get("nonhermetic_reasons", ())),
-            network_policy=str(value["network_policy"]),
+            action_pins=tuple(ActionPin.from_dict(item) for item in pins),
+            hermetic=_strict_bool("hermetic", value.get("hermetic")),
+            nonhermetic_reasons=tuple(reasons),
+            network_policy=_required_string("network_policy", value.get("network_policy")),
             schema_version=schema_version,
         )
 
@@ -145,6 +175,9 @@ def validate_environment_manifest(environment: EnvironmentManifest) -> tuple[str
         "network_policy",
     ):
         _required(name, str(getattr(environment, name)), issues)
+
+    if any(not isinstance(item, str) or not item.strip() for item in environment.nonhermetic_reasons):
+        issues.append("nonhermetic_reasons cannot contain blanks")
 
     if not environment.action_pins:
         issues.append("action_pins must contain every external CI action used by the environment")
