@@ -15,6 +15,19 @@ SCHEMA_VERSION = 1
 FREEZE_SCHEMA_VERSION = 1
 
 
+def _strict_schema(value: Mapping[str, Any]) -> int:
+    raw = value.get("schema_version", 0)
+    if isinstance(raw, bool) or not isinstance(raw, int) or raw != SCHEMA_VERSION:
+        raise ValueError(f"Unsupported measurement contract schema: {raw}")
+    return raw
+
+
+def _required_string(name: str, value: Any) -> str:
+    if not isinstance(value, str) or not value.strip():
+        raise ValueError(f"{name} must be a non-empty string")
+    return value
+
+
 class _ValueEnum(str, Enum):
     def __str__(self) -> str:
         return self.value
@@ -60,16 +73,18 @@ class MetricDefinition:
 
     @classmethod
     def from_dict(cls, value: Mapping[str, Any]) -> "MetricDefinition":
+        if not isinstance(value, Mapping):
+            raise ValueError("metric definition must be a mapping")
         return cls(
-            metric_id=str(value["metric_id"]),
+            metric_id=_required_string("metric_id", value.get("metric_id")),
             data_type=MetricDataType(value["data_type"]),
-            unit=str(value["unit"]),
+            unit=_required_string("unit", value.get("unit")),
             direction=Direction(value["direction"]),
-            source=str(value["source"]),
-            measurement_rule=str(value["measurement_rule"]),
-            missing_semantics=str(value["missing_semantics"]),
-            invalid_semantics=str(value["invalid_semantics"]),
-            precision_rule=str(value["precision_rule"]),
+            source=_required_string("source", value.get("source")),
+            measurement_rule=_required_string("measurement_rule", value.get("measurement_rule")),
+            missing_semantics=_required_string("missing_semantics", value.get("missing_semantics")),
+            invalid_semantics=_required_string("invalid_semantics", value.get("invalid_semantics")),
+            precision_rule=_required_string("precision_rule", value.get("precision_rule")),
         )
 
 
@@ -93,12 +108,15 @@ class MeasurementContract:
 
     @classmethod
     def from_dict(cls, value: Mapping[str, Any]) -> "MeasurementContract":
-        schema_version = int(value.get("schema_version", 0))
-        if schema_version != SCHEMA_VERSION:
-            raise ValueError(f"Unsupported measurement contract schema: {schema_version}")
+        if not isinstance(value, Mapping):
+            raise ValueError("measurement contract payload must be a mapping")
+        schema_version = _strict_schema(value)
+        metrics = value.get("metrics", ())
+        if not isinstance(metrics, (list, tuple)):
+            raise ValueError("metrics must be a list or tuple")
         return cls(
-            measurement_id=str(value["measurement_id"]),
-            metrics=tuple(MetricDefinition.from_dict(item) for item in value.get("metrics", ())),
+            measurement_id=_required_string("measurement_id", value.get("measurement_id")),
+            metrics=tuple(MetricDefinition.from_dict(item) for item in metrics),
             schema_version=schema_version,
         )
 
