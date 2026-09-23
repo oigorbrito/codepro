@@ -37,6 +37,7 @@ class ReasonCode(_ValueEnum):
     ISSUE_STILL_REPRODUCES_AFTER_PATCH = "ISSUE_STILL_REPRODUCES_AFTER_PATCH"
     PATCH_NOT_APPLIED = "PATCH_NOT_APPLIED"
     REQUIRED_REGRESSION_FAILED = "REQUIRED_REGRESSION_FAILED"
+    REQUIRED_REGRESSION_MISSING = "REQUIRED_REGRESSION_MISSING"
     REQUIRED_TEST_NOT_EXECUTED = "REQUIRED_TEST_NOT_EXECUTED"
     SCOPE_CHANGED = "SCOPE_CHANGED"
     EVIDENCE_MISSING = "EVIDENCE_MISSING"
@@ -49,6 +50,14 @@ class TestResult:
     status: TestResultStatus
     required: bool
     evidence_ref: str | None = None
+
+    def __post_init__(self) -> None:
+        if not self.test_id.strip():
+            raise ValueError("test_id must be non-empty")
+        if not isinstance(self.required, bool):
+            raise ValueError("required must be boolean")
+        if self.evidence_ref is not None and not self.evidence_ref.strip():
+            raise ValueError("evidence_ref cannot be blank")
 
     def to_dict(self) -> dict[str, Any]:
         return {
@@ -162,6 +171,22 @@ def verify_patch(value: PatchVerificationInput) -> PatchVerificationResult:
 
     assert value.regression_results is not None
     required = [test for test in value.regression_results if test.required]
+    if not required:
+        return _result(
+            value,
+            PatchVerificationStatus.BLOCKED,
+            regressions=None,
+            scope_changed=None,
+            reasons=[ReasonCode.REQUIRED_REGRESSION_MISSING],
+        )
+    if any(test.status is TestResultStatus.PASSED and not (test.evidence_ref or "").strip() for test in required):
+        return _result(
+            value,
+            PatchVerificationStatus.BLOCKED,
+            regressions=None,
+            scope_changed=None,
+            reasons=[ReasonCode.EVIDENCE_MISSING],
+        )
     if any(test.status is TestResultStatus.FAILED for test in required):
         return _result(
             value,
@@ -200,7 +225,7 @@ def verify_patch(value: PatchVerificationInput) -> PatchVerificationResult:
             reasons=[ReasonCode.SCOPE_CHANGED],
         )
 
-    if not value.evidence_refs:
+    if not value.evidence_refs or any(not item.strip() for item in value.evidence_refs):
         return _result(
             value,
             PatchVerificationStatus.BLOCKED,
@@ -233,7 +258,7 @@ def _result(
         regression_tests_passed=regressions,
         issue_reproduces_after_patch=value.issue_reproduces_after_patch,
         scope_changed=scope_changed,
-        evidence_sufficient=(bool(value.evidence_refs) if value.evidence_refs is not None else None),
+        evidence_sufficient=(bool(value.evidence_refs) and all(item.strip() for item in value.evidence_refs) if value.evidence_refs is not None else None),
         status=status,
         reason_codes=tuple(reasons),
         telemetry={
