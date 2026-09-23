@@ -18,11 +18,14 @@ def valid(**overrides):
         "study_spec_ref": "git:47da1e44e2fb3830c344d98c13dcb03a2f24eba8:experiments/study.json",
         "arkx_commit": "998438c2c29fa21014823966c1273fc827e3089d",
         "task_ref": "benchmark://swebench/verified/task-001",
+        "workload_hash": "sha256:" + "c" * 64,
         "configuration_ref": "config://bounded-routing-v1",
+        "configuration_hash": "sha256:" + "d" * 64,
         "repetition_index": 1,
         "executor_id": "executor",
         "executor_version": "1.0.0",
         "environment_ref": "env://arkx-ci-python-3.14.7-ubuntu-24.04",
+        "environment_hash": "sha256:" + "e" * 64,
         "execution_record_ref": "raw://runs/run-001.json",
         "execution_record_hash": "sha256:" + "b" * 64,
         "protocol_deviations": (),
@@ -41,8 +44,29 @@ class ValidationTests(unittest.TestCase):
     def test_short_commit_is_rejected(self):
         self.assertIn("arkx_commit must be a full 40-character git SHA", validate_run_manifest(valid(arkx_commit="abc")))
 
+    def test_execution_inputs_require_content_hashes(self):
+        for field in ("workload_hash", "configuration_hash", "environment_hash"):
+            issues = validate_run_manifest(valid(**{field: "mutable"}))
+            self.assertTrue(any(field in issue for issue in issues))
+
+    def test_study_ref_must_be_commit_anchored(self):
+        self.assertIn(
+            "study_spec_ref must be anchored to a full git commit",
+            validate_run_manifest(valid(study_spec_ref="git:main:experiments/study.json")),
+        )
+
     def test_raw_record_hash_is_required_in_canonical_form(self):
         self.assertIn("execution_record_hash must be a canonical sha256 reference", validate_run_manifest(valid(execution_record_hash="unknown")))
+
+    def test_parser_rejects_string_schema_and_repetition(self):
+        payload = valid().to_dict()
+        payload["schema_version"] = "2"
+        with self.assertRaises(ValueError):
+            RunManifest.from_dict(payload)
+        payload = valid().to_dict()
+        payload["repetition_index"] = "1"
+        with self.assertRaises(ValueError):
+            RunManifest.from_dict(payload)
 
     def test_repetition_index_is_one_based(self):
         self.assertIn("repetition_index must be at least 1", validate_run_manifest(valid(repetition_index=0)))
@@ -54,7 +78,7 @@ class IntegrityTests(unittest.TestCase):
 
     def test_provenance_change_changes_hash(self):
         first = freeze_run_manifest(valid())
-        second = freeze_run_manifest(replace(valid(), configuration_ref="config://direct-v1"))
+        second = freeze_run_manifest(replace(valid(), configuration_hash="sha256:" + "f" * 64))
         self.assertNotEqual(first.content_hash, second.content_hash)
 
     def test_invalid_manifest_cannot_be_frozen(self):
