@@ -45,6 +45,12 @@ class HandoffRecord:
     def __post_init__(self) -> None:
         if not self.handoff_id.strip():
             raise ValueError("handoff_id must be non-empty")
+        for name in ("source_executor", "target_executor", "reason", "context_summary"):
+            value = getattr(self, name)
+            if value is not None and not value.strip():
+                raise ValueError(f"{name} cannot be blank")
+        if self.evidence_refs is not None and any(not item.strip() for item in self.evidence_refs):
+            raise ValueError("evidence_refs cannot contain blank references")
         for name in (
             "context_bytes_in",
             "context_bytes_out",
@@ -53,8 +59,10 @@ class HandoffRecord:
             "discarded_context",
         ):
             value = getattr(self, name)
-            if value is not None and value < 0:
-                raise ValueError(f"{name} cannot be negative")
+            if value is not None and (
+                isinstance(value, bool) or not isinstance(value, int) or value < 0
+            ):
+                raise ValueError(f"{name} must be a non-negative integer when present")
         if self.lost_information is not None and any(
             not item.strip() for item in self.lost_information
         ):
@@ -84,8 +92,10 @@ class HandoffPolicy:
     max_executor_transitions: int = 2
 
     def __post_init__(self) -> None:
-        if self.max_handoffs < 0 or self.max_executor_transitions < 0:
-            raise ValueError("handoff budgets cannot be negative")
+        for name in ("max_handoffs", "max_executor_transitions"):
+            value = getattr(self, name)
+            if isinstance(value, bool) or not isinstance(value, int) or value < 0:
+                raise ValueError(f"{name} must be a non-negative integer")
 
 
 @dataclass(frozen=True)
