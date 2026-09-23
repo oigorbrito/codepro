@@ -12,10 +12,14 @@ The frozen design and the run record are different artifacts:
 STUDY_SPEC_FROZEN -> RUNS_EXECUTED -> ANALYSIS -> ACCEPTANCE -> PROMOTION
 ```
 
-Every real run must record both:
+Every real run must record:
 
-- `study_spec_hash`: the canonical content hash;
-- `study_spec_ref`: an immutable commit/blob/object reference containing that exact spec and existing before the run.
+- `study_spec_hash`: the canonical Study Spec content hash;
+- `study_spec_ref`: a full-commit Git reference containing that exact spec and existing before the run;
+- `workload_hash`: canonical identity of the frozen workload;
+- `configuration_hash`: canonical identity of the frozen treatment/configuration;
+- `environment_hash`: canonical identity of the frozen execution environment;
+- `execution_record_hash`: canonical identity of the raw execution record.
 
 A content hash proves integrity, not temporal precedence. Any post-freeze design change requires a new design version/identity or an explicit protocol-deviation record; it may not silently overwrite the governing design.
 
@@ -26,7 +30,8 @@ All individual raw run records must be retained. Aggregates and summaries are de
 Each experiment run records:
 
 - `id`: stable identifier;
-- `study_spec_hash` and `study_spec_ref`;
+- `study_spec_hash` and commit-anchored `study_spec_ref`;
+- `workload_hash`, `configuration_hash`, and `environment_hash`;
 - `scope`: exact systems, inputs, and exclusions;
 - `implementation`: what changed, if anything;
 - `executor`: the exact executor and version/configuration;
@@ -62,7 +67,11 @@ An experiment may stop at any state. `BLOCKED` and `NOT_EXECUTED` are not passes
 ```yaml
 id: RUN-YYYY-MM-DD-name
 study_spec_hash: "sha256:..."
-study_spec_ref: "git:<immutable-commit-or-blob>"
+study_spec_ref: "git:<40-character-commit>:experiments/study.json"
+workload_hash: "sha256:..."
+configuration_hash: "sha256:..."
+environment_hash: "sha256:..."
+execution_record_hash: "sha256:..."
 scope: "..."
 implementation: "..."
 executor: "..."
