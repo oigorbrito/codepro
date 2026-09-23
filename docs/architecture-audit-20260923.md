@@ -3,7 +3,7 @@
 ## Scope and evidence boundary
 
 This is a read-oriented architectural audit of the current working tree on
-branch `codex/auditoriaarquitetural`, at HEAD `aef1df4`. The tree contains
+branch `codex/auditoriaarquitetural`, at HEAD `d54262aa`. The tree contains
 substantial uncommitted architecture, documentation, tests, logs, and local
 preflight artifacts. They were inspected and preserved; unrelated changes were
 not reset or deleted.
@@ -11,7 +11,7 @@ not reset or deleted.
 Evidence inspected included the P0–P8 history, decision records 0012–0083,
 contracts, tests, runners, adapters, telemetry, experimental manifests,
 evaluation logs, and the current package API. The complete deterministic local
-suite passed: 364 tests. This is local evidence only. It is not provider,
+suite passed: 367 tests. This is local evidence only. It is not provider,
 model, Docker, SWE-bench, benchmark, or scientific qualification evidence.
 
 The current external authority boundary remains explicit: the official
