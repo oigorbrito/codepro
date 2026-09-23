@@ -84,7 +84,7 @@ class ValidationTests(unittest.TestCase):
     def test_study_metric_requires_definition(self):
         issues = validate_measurement_compatibility(
             valid(metrics=(metric("verified_resolution"),)),
-            frozen_study(),
+            study(),
         )
         self.assertTrue(any("study metrics lack operational definitions" in issue for issue in issues))
 
@@ -102,7 +102,7 @@ class FreezeTests(unittest.TestCase):
         changed_metric = replace(original.metrics[0], measurement_rule="a changed operational definition")
         second = freeze_measurement_contract(
             replace(original, metrics=(changed_metric,) + original.metrics[1:]),
-            study(),
+            frozen_study(),
         )
         self.assertNotEqual(first.content_hash, second.content_hash)
 
