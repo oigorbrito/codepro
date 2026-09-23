@@ -15,6 +15,8 @@ For every metric it records:
 
 Every metric named by the frozen Study Spec must have an operational definition before confirmatory analysis.
 
+A frozen Measurement Contract records the governing `study_spec_hash`, and its identity includes that hash. Compatibility is therefore not only checked transiently during freezing; the frozen artifact preserves which Study Spec governed the check.
+
 ## Missingness
 
 Unknown, unavailable, blocked, and not-observed values are never silently converted to zero. A measured zero is an observation; missingness is absence of that observation and is handled by the frozen Analysis Plan.
