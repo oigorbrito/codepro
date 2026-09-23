@@ -1,0 +1,15 @@
+{
+  "fixture_type": "P82_MINIMAL_MECHANISM_TRIAL",
+  "description": "Declarative A/B/C/D plan; no executor invocation or result acceptance.",
+  "executor": "fixed externally supplied mini-SWE-agent identity",
+  "treatments": ["A", "B", "C", "D"],
+  "mechanisms": {
+    "A": [],
+    "B": ["P8_SAFE_EDITOR"],
+    "C": ["P8_ENHANCED_REPOSITORY_CONTEXT"],
+    "D": ["P8_SAFE_EDITOR", "P8_ENHANCED_REPOSITORY_CONTEXT"]
+  },
+  "controlled_dimensions": ["executor", "model", "environment", "budget", "task", "replicate", "verification", "acceptance_authority"],
+  "primary_metrics": ["verified_acceptance", "cost_to_acceptance"],
+  "guardrail": "false_pass_must_not_increase"
+}

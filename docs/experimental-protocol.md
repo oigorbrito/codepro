@@ -18,6 +18,14 @@ Each experiment records:
 P7 composition trials use their own comparability namespace: `COMPARABLE`, `INCOMPARABLE`, and `UNKNOWN`. P7 records externally supplied measurements and does not convert them into acceptance results.
 
 P8.1 adds executor qualification records with explicit `EXECUTOR` and `TREATMENT` comparison axes. P8.1 records externally supplied execution outcomes and acceptance observations; it does not execute an executor, infer acceptance, rank executors, or promote components.
+
+P8.2 defines the minimal mechanism trial as a declarative A/B/C/D plan over a
+fixed executor: baseline, safe editor, enhanced repository context, and their
+combination. Its harness freezes task, replicate, executor, model,
+environment, budget, verification, and independent acceptance authority. It
+does not invoke an executor or mechanism and does not manufacture acceptance;
+results remain P8.1 observations. Missing controls and measurements remain
+`UNKNOWN`, and the only intended treatment difference is the declared arm.
 - `evidence`: links or paths to raw evidence and environment facts;
 - `acceptance`: explicit reviewer decision and rationale;
 - `promotion`: explicit decision to make the change durable, or `NOT_PROMOTED`.

@@ -85,6 +85,7 @@ from .executor_qualification import (
     compare_trials as compare_qualification_trials,
     summarize_experiment,
 )
+from .p82 import P82ExperimentConfig, P82ExperimentPlan, P82Treatment, P82TrialPlan, build_p82_plan, p82_manifest, plan_is_comparable
 
 __all__ = [
     "Event",
@@ -159,4 +160,11 @@ __all__ = [
     "assess_trial",
     "compare_qualification_trials",
     "summarize_experiment",
+    "P82ExperimentConfig",
+    "P82ExperimentPlan",
+    "P82Treatment",
+    "P82TrialPlan",
+    "build_p82_plan",
+    "p82_manifest",
+    "plan_is_comparable",
 ]

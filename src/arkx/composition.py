@@ -27,6 +27,8 @@ class Mechanism(_ValueEnum):
     P4_PLANNING_STATE = "P4_PLANNING_STATE"
     P5_PATCH_VERIFICATION = "P5_PATCH_VERIFICATION"
     P6_HANDOFF_ACCOUNTING = "P6_HANDOFF_ACCOUNTING"
+    P8_SAFE_EDITOR = "P8_SAFE_EDITOR"
+    P8_ENHANCED_REPOSITORY_CONTEXT = "P8_ENHANCED_REPOSITORY_CONTEXT"
 
 
 _MECHANISM_ORDER = {mechanism: index for index, mechanism in enumerate(Mechanism)}
@@ -160,7 +162,7 @@ class ExperimentSummary:
 
 
 def initial_manifest() -> ExperimentManifest:
-    """Return only the currently defined A-F treatment arms; G is not P7."""
+    """Return only the P7 A-F treatment arms; P8.2 is a separate manifest."""
 
     return ExperimentManifest(
         treatments=(
@@ -212,4 +214,3 @@ def summarize_trials(trials: tuple[TrialObservation, ...]) -> ExperimentSummary:
         measurement_keys=tuple(sorted(counts)),
         measurement_counts=tuple(sorted(counts.items())),
     )
-
