@@ -9,6 +9,18 @@ import json
 from typing import Any, Mapping
 
 
+def _required_string(name: str, value: Any) -> str:
+    if not isinstance(value, str) or not value.strip():
+        raise ValueError(f"{name} must be a non-empty string")
+    return value
+
+
+def _strict_bool(name: str, value: Any) -> bool:
+    if not isinstance(value, bool):
+        raise ValueError(f"{name} must be boolean")
+    return value
+
+
 SCHEMA_VERSION = 1
 FREEZE_SCHEMA_VERSION = 1
 
@@ -78,19 +90,24 @@ class RunIssueAttribution:
 
     @classmethod
     def from_dict(cls, value: Mapping[str, Any]) -> "RunIssueAttribution":
-        schema_version = int(value.get("schema_version", 0))
-        if schema_version != SCHEMA_VERSION:
+        if not isinstance(value, Mapping):
+            raise ValueError("attribution payload must be a mapping")
+        schema_version = value.get("schema_version", 0)
+        if isinstance(schema_version, bool) or not isinstance(schema_version, int) or schema_version != SCHEMA_VERSION:
             raise ValueError(f"Unsupported attribution schema: {schema_version}")
+        refs = value.get("evidence_refs", ())
+        if not isinstance(refs, (list, tuple)):
+            raise ValueError("evidence_refs must be a list or tuple")
         return cls(
-            attribution_id=str(value["attribution_id"]),
-            run_id=str(value["run_id"]),
+            attribution_id=_required_string("attribution_id", value.get("attribution_id")),
+            run_id=_required_string("run_id", value.get("run_id")),
             disposition=IssueDisposition(value["disposition"]),
             domain=AttributionDomain(value["domain"]),
-            observed_signature=str(value["observed_signature"]),
-            attribution_basis=str(value["attribution_basis"]),
-            evidence_refs=tuple(value.get("evidence_refs", ())),
-            retryability=str(value["retryability"]),
-            affects_primary_analysis=bool(value["affects_primary_analysis"]),
+            observed_signature=_required_string("observed_signature", value.get("observed_signature")),
+            attribution_basis=_required_string("attribution_basis", value.get("attribution_basis")),
+            evidence_refs=tuple(refs),
+            retryability=_required_string("retryability", value.get("retryability")),
+            affects_primary_analysis=_strict_bool("affects_primary_analysis", value.get("affects_primary_analysis")),
             schema_version=schema_version,
         )
 
@@ -124,6 +141,8 @@ def validate_run_issue_attribution(value: RunIssueAttribution) -> tuple[str, ...
 
     if not value.evidence_refs:
         issues.append("attribution requires at least one evidence reference")
+    elif any(not isinstance(ref, str) or not ref.strip() for ref in value.evidence_refs):
+        issues.append("attribution evidence references must be non-blank strings")
 
     if value.domain is AttributionDomain.UNKNOWN and value.disposition is not IssueDisposition.UNKNOWN:
         issues.append("UNKNOWN domain must remain UNKNOWN disposition until evidence supports attribution")
