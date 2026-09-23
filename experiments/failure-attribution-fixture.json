@@ -1,0 +1,17 @@
+{
+  "fixture_type": "FAILURE_ATTRIBUTION_FIXTURE",
+  "attribution": {
+    "schema_version": 1,
+    "attribution_id": "attr-001",
+    "run_id": "run-001",
+    "disposition": "EXTERNAL_BLOCKER",
+    "domain": "PROVIDER",
+    "observed_signature": "HTTP 503 provider_overloaded",
+    "attribution_basis": "provider response explicitly reported temporary capacity exhaustion before patch execution",
+    "evidence_refs": [
+      "raw://provider-response.json"
+    ],
+    "retryability": "bounded retry permitted by frozen run policy",
+    "affects_primary_analysis": true
+  }
+}
