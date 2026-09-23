@@ -16,6 +16,7 @@ from arkx.workload import WorkloadManifest, freeze_workload_manifest
 
 ROOT = Path(__file__).parents[1]
 EXPERIMENTS = ROOT / "experiments"
+EXPECTED_FINGERPRINT = "sha256:ab557c36fa62df7dc0242c4241a1b2cb12ef33f4f7e2955d24334ea17a584fa0"
 
 
 def _fixture(name: str, key: str) -> dict:
@@ -70,8 +71,19 @@ def fingerprint() -> str:
 
 
 def main() -> int:
-    result = {"components": components(), "fingerprint": fingerprint()}
+    observed = fingerprint()
+    result = {
+        "components": components(),
+        "expected_fingerprint": EXPECTED_FINGERPRINT,
+        "fingerprint": observed,
+    }
     print(json.dumps(result, sort_keys=True, separators=(",", ":")))
+    if observed != EXPECTED_FINGERPRINT:
+        print(
+            f"CHASSIS_FINGERPRINT_MISMATCH expected={EXPECTED_FINGERPRINT} observed={observed}"
+        )
+        return 1
+    print(f"CHASSIS_FINGERPRINT_PASS {observed}")
     return 0
 
 
