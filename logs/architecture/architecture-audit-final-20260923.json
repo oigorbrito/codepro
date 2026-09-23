@@ -2,7 +2,7 @@
   "audit": "architecture-audit-final",
   "date": "2026-09-23",
   "branch": "codex/auditoriaarquitetural",
-  "head": "d54262aa",
+  "audit_source_head": "0eff3dca",
   "local_tests": {"command": "PYTHONPATH=src python -m unittest discover -s tests -p test_*.py", "passed": 338},
   "diff_check": "PASS",
   "final_suite": {"command": "PYTHONPATH=src python -m unittest discover -s tests -p 'test_*.py'", "passed": 348},

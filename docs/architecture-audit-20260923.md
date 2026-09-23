@@ -3,7 +3,8 @@
 ## Scope and evidence boundary
 
 This is a read-oriented architectural audit of the current working tree on
-branch `codex/auditoriaarquitetural`, at HEAD `d54262aa`. The checkout contains
+branch `codex/auditoriaarquitetural`, with source revision `0eff3dca` at audit
+collection. The checkout contains
 the committed architecture, documentation, tests and evidence plus two nested
 experimental workspaces with local modifications. Those workspaces were
 inspected and preserved; unrelated changes were not reset or deleted.
