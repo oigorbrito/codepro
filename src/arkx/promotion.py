@@ -14,6 +14,27 @@ SCHEMA_VERSION = 1
 FREEZE_SCHEMA_VERSION = 1
 
 
+def _strict_schema(value: Mapping[str, Any]) -> int:
+    raw = value.get("schema_version", 0)
+    if isinstance(raw, bool) or not isinstance(raw, int) or raw != SCHEMA_VERSION:
+        raise ValueError(f"Unsupported promotion gate schema: {raw}")
+    return raw
+
+
+def _required_string(name: str, value: Any) -> str:
+    if not isinstance(value, str) or not value.strip():
+        raise ValueError(f"{name} must be a non-empty string")
+    return value
+
+
+def _string_tuple(name: str, value: Any) -> tuple[str, ...]:
+    if not isinstance(value, (list, tuple)):
+        raise ValueError(f"{name} must be a list or tuple")
+    if any(not isinstance(item, str) for item in value):
+        raise ValueError(f"{name} must contain only strings")
+    return tuple(value)
+
+
 class _ValueEnum(str, Enum):
     def __str__(self) -> str:
         return self.value
@@ -58,12 +79,19 @@ class PromotionCriterion:
 
     @classmethod
     def from_dict(cls, value: Mapping[str, Any]) -> "PromotionCriterion":
+        if not isinstance(value, Mapping):
+            raise ValueError("promotion criterion must be a mapping")
+        target = value.get("target")
+        if not isinstance(target, (bool, int, float, str)):
+            raise ValueError("criterion target must be a scalar")
+        if isinstance(target, float) and not isfinite(target):
+            raise ValueError("criterion target must be finite")
         return cls(
-            criterion_id=str(value["criterion_id"]),
-            observation_key=str(value["observation_key"]),
+            criterion_id=_required_string("criterion_id", value.get("criterion_id")),
+            observation_key=_required_string("observation_key", value.get("observation_key")),
             operator=CriterionOperator(value["operator"]),
-            target=value["target"],
-            rationale=str(value["rationale"]),
+            target=target,
+            rationale=_required_string("rationale", value.get("rationale")),
         )
 
 
@@ -89,13 +117,16 @@ class PromotionGate:
 
     @classmethod
     def from_dict(cls, value: Mapping[str, Any]) -> "PromotionGate":
-        schema_version = int(value.get("schema_version", 0))
-        if schema_version != SCHEMA_VERSION:
-            raise ValueError(f"Unsupported promotion gate schema: {schema_version}")
+        if not isinstance(value, Mapping):
+            raise ValueError("promotion gate payload must be a mapping")
+        schema_version = _strict_schema(value)
+        criteria = value.get("criteria", ())
+        if not isinstance(criteria, (list, tuple)):
+            raise ValueError("criteria must be a list or tuple")
         return cls(
-            gate_id=str(value["gate_id"]),
-            criteria=tuple(PromotionCriterion.from_dict(item) for item in value.get("criteria", ())),
-            required_evidence_keys=tuple(value.get("required_evidence_keys", ())),
+            gate_id=_required_string("gate_id", value.get("gate_id")),
+            criteria=tuple(PromotionCriterion.from_dict(item) for item in criteria),
+            required_evidence_keys=_string_tuple("required_evidence_keys", value.get("required_evidence_keys", ())),
             schema_version=schema_version,
         )
 
