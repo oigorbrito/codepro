@@ -1,6 +1,6 @@
 # Experimental protocol
 
-Arkx develops through small, empirical increments. The protocol below is the minimum record required before a capability can be considered for promotion.
+CodePro develops through small, empirical increments. The protocol below is the minimum record required before a capability can be considered for promotion.
 
 ## Pre-execution study design
 
