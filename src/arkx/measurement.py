@@ -8,7 +8,7 @@ import hashlib
 import json
 from typing import Any, Mapping
 
-from arkx.study import StudySpec
+from arkx.study import FrozenStudySpec, StudySpec, freeze_study_spec
 
 
 SCHEMA_VERSION = 1
@@ -107,12 +107,14 @@ class MeasurementContract:
 class FrozenMeasurementContract:
     contract: MeasurementContract
     content_hash: str
+    study_spec_hash: str
     freeze_schema_version: int = FREEZE_SCHEMA_VERSION
 
     def to_json(self) -> str:
         payload = {
             "freeze_schema_version": self.freeze_schema_version,
             "content_hash": self.content_hash,
+            "study_spec_hash": self.study_spec_hash,
             "contract": self.contract.to_dict(),
         }
         return json.dumps(payload, ensure_ascii=False, sort_keys=True, separators=(",", ":"))
@@ -161,10 +163,24 @@ def validate_measurement_compatibility(
 
 
 def freeze_measurement_contract(
-    contract: MeasurementContract, study: StudySpec
+    contract: MeasurementContract, study: FrozenStudySpec
 ) -> FrozenMeasurementContract:
-    issues = validate_measurement_compatibility(contract, study)
+    canonical = freeze_study_spec(study.study_spec)
+    if canonical.content_hash != study.content_hash:
+        raise ValueError("frozen Study Spec hash does not match Study Spec content")
+    issues = validate_measurement_compatibility(contract, study.study_spec)
     if issues:
         raise ValueError("Invalid measurement contract: " + "; ".join(issues))
-    digest = hashlib.sha256(contract.to_json().encode("utf-8")).hexdigest()
-    return FrozenMeasurementContract(contract=contract, content_hash=f"sha256:{digest}")
+    identity = json.dumps(
+        {"contract": contract.to_dict(), "study_spec_hash": study.content_hash},
+        ensure_ascii=False,
+        sort_keys=True,
+        separators=(",", ":"),
+        allow_nan=False,
+    )
+    digest = hashlib.sha256(identity.encode("utf-8")).hexdigest()
+    return FrozenMeasurementContract(
+        contract=contract,
+        content_hash=f"sha256:{digest}",
+        study_spec_hash=study.content_hash,
+    )
