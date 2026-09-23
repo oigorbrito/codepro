@@ -45,6 +45,18 @@ class BaselineExecutionState(str, Enum):
     BLOCKED = "BLOCKED"
 
 
+class RunnerFailureCategory(str, Enum):
+    PROCESS_START_FAILURE = "PROCESS_START_FAILURE"
+    ENVIRONMENT_FAILURE = "ENVIRONMENT_FAILURE"
+    MODEL_INITIALIZATION_FAILURE = "MODEL_INITIALIZATION_FAILURE"
+    AGENT_INITIALIZATION_FAILURE = "AGENT_INITIALIZATION_FAILURE"
+    AGENT_RUN_FAILURE = "AGENT_RUN_FAILURE"
+    TIMEOUT = "TIMEOUT"
+    DEADLOCK_HANG = "DEADLOCK/HANG"
+    OUTPUT_CAPTURE_FAILURE = "OUTPUT_CAPTURE_FAILURE"
+    UNKNOWN = "UNKNOWN"
+
+
 @dataclass(frozen=True)
 class ProspectiveTask:
     task_id: str
@@ -138,15 +150,20 @@ class ExecutionArtifact:
     finished_at: str
     exit_code: int | None
     failure: str | None
+    failure_category: RunnerFailureCategory | None
     diff_path: str | None
     log_path: str | None
     trajectory_path: str | None
     model_usage: dict[str, Any] | None
 
     def to_dict(self) -> dict[str, Any]:
-        return {name: getattr(self, name) for name in (
+        value = {name: getattr(self, name) for name in (
             "run_id", "state", "task_id", "treatment", "attempt", "started_at", "finished_at",
-            "exit_code", "failure", "diff_path", "log_path", "trajectory_path", "model_usage")}
+            "exit_code", "failure", "failure_category", "diff_path", "log_path", "trajectory_path", "model_usage")}
+        for name in ("state", "failure_category"):
+            if isinstance(value[name], Enum):
+                value[name] = value[name].value
+        return value
 
 
 class HeadlessInvoker(Protocol):
@@ -176,7 +193,7 @@ class MiniSweAgentHeadlessRunner:
         trajectory = root / "trajectory.json"
         if missing:
             return self._finish(root, run_id, task, attempt, started, BaselineExecutionState.BLOCKED, None,
-                                f"missing explicit identity: {','.join(missing)}", None, None, None, None)
+                                f"missing explicit identity: {','.join(missing)}", RunnerFailureCategory.UNKNOWN, None, None, None, None)
         try:
             exit_code, log, usage = self.invoker(task, config, trajectory)
             log_path = root / "executor.log"
@@ -185,9 +202,31 @@ class MiniSweAgentHeadlessRunner:
             diff = subprocess.run(["git", "diff", "--binary"], cwd=task.workspace, capture_output=True, text=True, check=False)
             diff_path.write_text(diff.stdout, encoding="utf-8")
             state = BaselineExecutionState.COMPLETED if exit_code == 0 else BaselineExecutionState.EXECUTOR_FAILED
-            return self._finish(root, run_id, task, attempt, started, state, exit_code, None if exit_code == 0 else "executor returned non-zero", str(diff_path), str(log_path), str(trajectory), usage)
+            return self._finish(root, run_id, task, attempt, started, state, exit_code, None if exit_code == 0 else "executor returned non-zero", None if exit_code == 0 else RunnerFailureCategory.AGENT_RUN_FAILURE, str(diff_path), str(log_path), str(trajectory), usage)
+        except subprocess.TimeoutExpired as error:
+            return self._finish(root, run_id, task, attempt, started, BaselineExecutionState.EXECUTOR_FAILED, None, str(error), RunnerFailureCategory.TIMEOUT, None, None, None, None)
         except Exception as error:
-            return self._finish(root, run_id, task, attempt, started, BaselineExecutionState.EXECUTOR_FAILED, None, f"{type(error).__name__}: {error}", None, None, None)
+            message = f"{type(error).__name__}: {error}"
+            return self._finish(root, run_id, task, attempt, started, BaselineExecutionState.EXECUTOR_FAILED, None, message, self._classify_failure(message), None, None, None, None)
+
+    @staticmethod
+    def _classify_failure(message: str) -> RunnerFailureCategory:
+        lowered = message.lower()
+        if "filenotfound" in lowered or "process" in lowered and "start" in lowered:
+            return RunnerFailureCategory.PROCESS_START_FAILURE
+        if "timeout" in lowered or "timed out" in lowered:
+            return RunnerFailureCategory.TIMEOUT
+        if "environment" in lowered or "docker" in lowered or "workspace" in lowered:
+            return RunnerFailureCategory.ENVIRONMENT_FAILURE
+        if "model" in lowered and ("validation" in lowered or "initial" in lowered or "config" in lowered):
+            return RunnerFailureCategory.MODEL_INITIALIZATION_FAILURE
+        if "agent" in lowered and ("initial" in lowered or "config" in lowered):
+            return RunnerFailureCategory.AGENT_INITIALIZATION_FAILURE
+        if "trajectory" in lowered or "capture" in lowered:
+            return RunnerFailureCategory.OUTPUT_CAPTURE_FAILURE
+        if "deadlock" in lowered or "hang" in lowered:
+            return RunnerFailureCategory.DEADLOCK_HANG
+        return RunnerFailureCategory.AGENT_RUN_FAILURE
 
     def _subprocess_invoker(self, task: ProspectiveTask, config: BaselineRunConfig, trajectory_path: Path) -> tuple[int, str, dict[str, Any] | None]:
         worker = Path(__file__).parents[2] / "tools" / "run_mini_headless.py"
@@ -200,10 +239,10 @@ class MiniSweAgentHeadlessRunner:
 
     def _blocked(self, run_id: str, task: ProspectiveTask, attempt: int, failure: str) -> ExecutionArtifact:
         now = _now()
-        return ExecutionArtifact(run_id, BaselineExecutionState.BLOCKED, task.task_id, "A", attempt, now, now, None, failure, None, None, None, None)
+        return ExecutionArtifact(run_id, BaselineExecutionState.BLOCKED, task.task_id, "A", attempt, now, now, None, failure, RunnerFailureCategory.UNKNOWN, None, None, None, None)
 
-    def _finish(self, root: Path, run_id: str, task: ProspectiveTask, attempt: int, started: str, state: BaselineExecutionState, exit_code: int | None, failure: str | None, diff_path: str | None, log_path: str | None, trajectory_path: str | None, usage: dict[str, Any] | None) -> ExecutionArtifact:
-        return ExecutionArtifact(run_id, state, task.task_id, "A", attempt, started, _now(), exit_code, failure, diff_path, log_path, trajectory_path, usage)
+    def _finish(self, root: Path, run_id: str, task: ProspectiveTask, attempt: int, started: str, state: BaselineExecutionState, exit_code: int | None, failure: str | None, failure_category: RunnerFailureCategory | None, diff_path: str | None, log_path: str | None, trajectory_path: str | None, usage: dict[str, Any] | None) -> ExecutionArtifact:
+        return ExecutionArtifact(run_id, state, task.task_id, "A", attempt, started, _now(), exit_code, failure, failure_category, diff_path, log_path, trajectory_path, usage)
 
 
 @dataclass(frozen=True)

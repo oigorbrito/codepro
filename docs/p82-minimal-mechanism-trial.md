@@ -42,6 +42,14 @@ acceptance are explicit, nullable records; missing provider/model identity is
 `BLOCKED`, with no fallback.
 
 Artifacts are append-only under `task_id/attempt-N`. Reusing an existing
-attempt is rejected rather than silently overwritten. No prospective task
-sample is committed until public task artifacts, selection rationale, and an
-independent acceptance authority are available.
+attempt is rejected rather than silently overwritten. The prospective Wave 0
+sample is frozen in `experiments/p82-wave0-task-sample.json` from the official
+`SWE-bench/SWE-bench_Verified` test split; its two strata are explicitly
+`UNKNOWN` because no auditable prior Arkx stratification was available.
+
+The official acceptance adapter is in `arkx.swebench_authority`. It creates a
+SWE-bench prediction without gold patch or grading labels and invokes the
+official harness with a unique `run_id`. Gold qualification and real A runs
+remain blocked until `swebench` and Docker are available, the gold harness
+passes, and one exact provider/model/configuration is frozen. B/C/D and any
+mechanism comparison remain out of scope.

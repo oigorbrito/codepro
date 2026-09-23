@@ -11,6 +11,7 @@ from arkx.p82_baseline import (
     ExplicitVerificationAcceptance,
     MiniSweAgentHeadlessRunner,
     ProspectiveTask,
+    RunnerFailureCategory,
     VerificationResult,
     VerificationState,
     baseline_observation,
@@ -91,6 +92,14 @@ class P82BaselineTests(unittest.TestCase):
         observation = baseline_observation(execution, None, None)
         self.assertIsNone(observation.verified_acceptance)
         self.assertEqual(observation.status, P82RunStatus.EXECUTED)
+
+    def test_headless_failure_is_classified_without_becoming_rejection(self):
+        with tempfile.TemporaryDirectory() as directory:
+            def failing_invoker(*_):
+                raise ValueError("model configuration is invalid")
+            result = MiniSweAgentHeadlessRunner(failing_invoker).run(task(directory), config(directory))
+            self.assertEqual(result.failure_category, RunnerFailureCategory.MODEL_INITIALIZATION_FAILURE)
+            self.assertEqual(result.state, BaselineExecutionState.EXECUTOR_FAILED)
 
     def test_baseline_rejects_non_a_treatment(self):
         with self.assertRaises(ValueError):

@@ -94,8 +94,13 @@ from .p82 import (
 from .p82_baseline import (
     AcceptanceDecision, AcceptanceResult, BaselineExecutionState, BaselineRunConfig,
     BaselineSampleManifest, ExplicitVerificationAcceptance, ExecutionArtifact,
-    MiniSweAgentHeadlessRunner, ProspectiveTask, VerificationResult, VerificationState,
+    MiniSweAgentHeadlessRunner, ProspectiveTask, RunnerFailureCategory, VerificationResult, VerificationState,
     baseline_observation,
+)
+from .swebench_authority import (
+    AUTHORITY_IDENTITY, DATASET_IDENTITY, DATASET_SPLIT, OfficialEvaluationResult,
+    OfficialEvaluationStatus, SWEbenchOfficialAuthority, SWEbenchPrediction, SWEbenchRecord,
+    load_verified_records, qualify_gold,
 )
 
 __all__ = [
@@ -199,7 +204,18 @@ __all__ = [
     "ExecutionArtifact",
     "MiniSweAgentHeadlessRunner",
     "ProspectiveTask",
+    "RunnerFailureCategory",
     "VerificationResult",
     "VerificationState",
     "baseline_observation",
+    "AUTHORITY_IDENTITY",
+    "DATASET_IDENTITY",
+    "DATASET_SPLIT",
+    "OfficialEvaluationResult",
+    "OfficialEvaluationStatus",
+    "SWEbenchOfficialAuthority",
+    "SWEbenchPrediction",
+    "SWEbenchRecord",
+    "load_verified_records",
+    "qualify_gold",
 ]
