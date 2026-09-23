@@ -1,63 +1,70 @@
 # Arkx
 
-Arkx is a greenfield project for empirical, incremental development of reliable capability.
+Arkx is an executor-agnostic software-engineering chassis developed through explicit, falsifiable contracts and reproducible evidence.
 
 > **MINIMUM SUFFICIENT ARCHITECTURE**  
 > **FOR MAXIMUM RELIABLE CAPABILITY**
 
-This repository is the canonical root for the project. It intentionally contains only the foundation in this bootstrap: the project contract, experimental protocol, structural placeholders, and a minimal CI check.
+This repository is the canonical root for the project.
 
-## Scope of this bootstrap
+## Current scope
 
-Included:
+Implemented:
 
-- explicit project invariants;
-- a small, evidence-oriented experimental protocol;
-- stable top-level boundaries for future work;
-- a deterministic structural check and minimal CI.
+- P0 executor-agnostic execution contracts and telemetry;
+- P1 deterministic task characterization;
+- P2 deterministic progress/stagnation assessment;
+- P3 bounded rule-based routing and escalation;
+- P4 repository planning/state artifacts;
+- P5 patch verification;
+- P6 handoff/context accounting;
+- frozen Study Spec, Workload, Treatment, Measurement, Analysis, Validity, Promotion, Environment, Deviation, Failure Attribution, and Run Provenance contracts;
+- fail-closed deserialization and evidence semantics;
+- deterministic architecture, property, metamorphic, mutation-sensitivity, and cross-version verification.
 
-Deferred:
+Not implemented:
 
-- concrete executor integrations;
-- multi-agent orchestration;
-- OpenHands, ReX, mini-SWE-agent, and SWE-agent integrations;
-- product dependencies or automatic migration from `smag-rex`.
+- concrete executor invocation/orchestration;
+- multi-agent runtime;
+- product integrations with Codex, Claude Code, Gemini CLI, mini-SWE-agent, SWE-agent, OpenHands, ReX, or other executors;
+- end-user Arkx CLI packaging/entrypoint.
+
+Executor-specific mechanisms remain outside the core until an experiment justifies promotion.
 
 ## Development posture
 
-Every capability must be introduced through a falsifiable hypothesis, an explicit implementation, an executed experiment, and recorded evidence. Local success is not scientific or upstream evidence. No fallback, executor switch, or scope expansion may be silent.
+Every capability must be introduced through a falsifiable hypothesis, an explicit implementation, an executed experiment, and recorded evidence.
 
-See [the project contract](docs/project-contract.md) and [the experimental protocol](docs/experimental-protocol.md).
+Local success is implementation evidence only:
 
-## Pre-execution empirical design
+```text
+SCIENTIFIC_SIGNAL != LOCAL_PASS
+HYPOTHESIS != IMPLEMENTATION
+IMPLEMENTATION != EXECUTED
+EXECUTED != ACCEPTED
+ACCEPTED != PROMOTED
+```
 
-Comparative and benchmark-style studies must freeze a valid [Study Spec v1](docs/study-spec.md) before treatment execution. The spec records the research question, hypothesis, methodology, experimental unit, workload, metrics, comparison design, repetitions, stopping rule, analysis-plan reference, promotion rule, environment contract, and raw-results policy.
+No fallback, executor switch, or scope expansion may be silent.
 
-The canonical Study Spec hash proves integrity, not temporal precedence. Real runs must also reference an immutable commit/blob containing the exact frozen spec and existing before execution.
+See [the project contract](docs/project-contract.md), [architecture boundary](docs/architecture.md), and [experimental protocol](docs/experimental-protocol.md).
 
-## P0 baseline and telemetry
+## Chassis verification
 
-P0 provides executor-agnostic execution records, explicit event metrics, nullable resource measurements, and fail-closed status resolution. It does not implement performance optimization, routing, planning, or any executor. See [the P0 metrics contract](docs/baseline-metrics.md).
-
-Run the deterministic fixture and tests locally from the repository root:
+From the repository root:
 
 ```text
 PYTHONPATH=src python -m arkx.baseline
 PYTHONPATH=src python -m unittest discover -s tests -t . -v
-```
-
-P1 adds deterministic task characterization from explicit signals only. See [the P1 contract](docs/task-characterization.md). It does not select executors or route work.
-
-P2 adds deterministic progress/stagnation assessment from explicit snapshots only. See [the P2 contract](docs/progress-stagnation.md). It does not control execution or authorize retry/replan.
-
-P3 adds bounded rule-based routing and evidence-based escalation decisions. See [the P3 contract](docs/routing-escalation.md). It does not invoke or select concrete executors.
-
-Block B adds independently removable P4 repository planning/state, P5 patch verification, and P6 handoff/context accounting. None executes a plan, owns acceptance, or creates orchestration.
-
-## Checks
-
-The bootstrap check is dependency-free:
-
-```text
 python tools/check_foundation.py
+python tools/mutation_probe.py
+PYTHONPATH=src python tools/chassis_fingerprint.py
 ```
+
+The CI verifies the suite across Python 3.12, 3.13, and 3.14 and requires the same canonical chassis fingerprint across supported interpreters.
+
+## Product boundary
+
+The current repository exposes Python modules and deterministic contracts. It does not yet contain an installable `arkx` console command or `python -m arkx` entrypoint.
+
+That absence is explicit: the CLI is a future product surface, not an inferred capability of the current chassis.
