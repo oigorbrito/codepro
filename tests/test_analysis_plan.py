@@ -11,7 +11,7 @@ from arkx.analysis_plan import (
     validate_analysis_compatibility,
     validate_analysis_plan,
 )
-from arkx.study import ComparisonMode, Methodology, StudySpec
+from arkx.study import ComparisonMode, Methodology, StudySpec, freeze_study_spec
 
 
 def study():
@@ -34,6 +34,10 @@ def study():
         promotion_rule="use frozen gate",
         environment_contract_ref="env://frozen",
     )
+
+
+def frozen_study():
+    return freeze_study_spec(study())
 
 
 def valid(**overrides):
@@ -95,18 +99,29 @@ class CompatibilityTests(unittest.TestCase):
 class FreezeTests(unittest.TestCase):
     def test_same_plan_has_same_hash(self):
         self.assertEqual(
-            freeze_analysis_plan(valid(), study()).to_json(),
-            freeze_analysis_plan(valid(), study()).to_json(),
+            freeze_analysis_plan(valid(), frozen_study()).to_json(),
+            freeze_analysis_plan(valid(), frozen_study()).to_json(),
         )
 
     def test_rule_change_changes_hash(self):
-        first = freeze_analysis_plan(valid(), study())
-        second = freeze_analysis_plan(replace(valid(), outlier_rule="different frozen rule"), study())
+        first = freeze_analysis_plan(valid(), frozen_study())
+        second = freeze_analysis_plan(replace(valid(), outlier_rule="different frozen rule"), frozen_study())
         self.assertNotEqual(first.content_hash, second.content_hash)
 
     def test_invalid_plan_cannot_be_frozen(self):
         with self.assertRaises(ValueError):
-            freeze_analysis_plan(valid(primary_metric="undeclared"), study())
+            freeze_analysis_plan(valid(primary_metric="undeclared"), frozen_study())
+
+
+    def test_frozen_plan_records_governing_study_hash(self):
+        frozen = freeze_analysis_plan(valid(), frozen_study())
+        self.assertEqual(frozen.study_spec_hash, frozen_study().content_hash)
+
+    def test_compatible_study_change_changes_frozen_identity(self):
+        first = freeze_analysis_plan(valid(), frozen_study())
+        changed_study = freeze_study_spec(replace(study(), hypothesis="a changed frozen hypothesis"))
+        second = freeze_analysis_plan(valid(), changed_study)
+        self.assertNotEqual(first.content_hash, second.content_hash)
 
 
 class FixtureTests(unittest.TestCase):
