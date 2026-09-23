@@ -306,6 +306,8 @@ def record_promotion_decision(
     assessment: GateAssessment,
     *,
     frozen_gate: FrozenPromotionGate,
+    observations: Mapping[str, Scalar | None],
+    evidence: Mapping[str, str | None],
     promote: bool,
     reviewer: str,
     rationale: str,
@@ -316,6 +318,9 @@ def record_promotion_decision(
         raise ValueError("frozen promotion gate hash does not match gate content")
     if assessment.gate_id != frozen_gate.gate.gate_id or assessment.gate_hash != frozen_gate.content_hash:
         raise ValueError("promotion assessment is not bound to the supplied frozen gate")
+    canonical_assessment = assess_promotion_gate(frozen_gate, observations, evidence)
+    if assessment.content_hash != canonical_assessment.content_hash:
+        raise ValueError("promotion assessment does not match canonical gate evaluation")
     if not reviewer.strip() or not rationale.strip():
         raise ValueError("promotion decision requires reviewer and rationale")
     if not evidence_refs or any(not ref.strip() for ref in evidence_refs):
