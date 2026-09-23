@@ -12,7 +12,7 @@ from arkx.measurement import (
     validate_measurement_compatibility,
     validate_measurement_contract,
 )
-from arkx.study import ComparisonMode, Methodology, StudySpec
+from arkx.study import ComparisonMode, Methodology, StudySpec, freeze_study_spec
 
 
 def metric(identifier, *, unit="observation", direction=Direction.NONE):
@@ -51,6 +51,10 @@ def study():
     )
 
 
+def frozen_study():
+    return freeze_study_spec(study())
+
+
 def valid(**overrides):
     values = {
         "measurement_id": "measurement-v1",
@@ -80,7 +84,7 @@ class ValidationTests(unittest.TestCase):
     def test_study_metric_requires_definition(self):
         issues = validate_measurement_compatibility(
             valid(metrics=(metric("verified_resolution"),)),
-            study(),
+            frozen_study(),
         )
         self.assertTrue(any("study metrics lack operational definitions" in issue for issue in issues))
 
@@ -88,18 +92,29 @@ class ValidationTests(unittest.TestCase):
 class FreezeTests(unittest.TestCase):
     def test_same_contract_has_same_hash(self):
         self.assertEqual(
-            freeze_measurement_contract(valid(), study()).to_json(),
-            freeze_measurement_contract(valid(), study()).to_json(),
+            freeze_measurement_contract(valid(), frozen_study()).to_json(),
+            freeze_measurement_contract(valid(), frozen_study()).to_json(),
         )
 
     def test_measurement_rule_change_changes_identity(self):
         original = valid()
-        first = freeze_measurement_contract(original, study())
+        first = freeze_measurement_contract(original, frozen_study())
         changed_metric = replace(original.metrics[0], measurement_rule="a changed operational definition")
         second = freeze_measurement_contract(
             replace(original, metrics=(changed_metric,) + original.metrics[1:]),
             study(),
         )
+        self.assertNotEqual(first.content_hash, second.content_hash)
+
+
+    def test_frozen_contract_records_governing_study_hash(self):
+        frozen = freeze_measurement_contract(valid(), frozen_study())
+        self.assertEqual(frozen.study_spec_hash, frozen_study().content_hash)
+
+    def test_compatible_study_change_changes_frozen_identity(self):
+        first = freeze_measurement_contract(valid(), frozen_study())
+        changed_study = freeze_study_spec(replace(study(), hypothesis="a changed frozen hypothesis"))
+        second = freeze_measurement_contract(valid(), changed_study)
         self.assertNotEqual(first.content_hash, second.content_hash)
 
 
