@@ -64,6 +64,27 @@ class ValidationTests(unittest.TestCase):
         )
 
 
+class ParsingTests(unittest.TestCase):
+    def test_string_boolean_is_rejected(self):
+        payload = valid().to_dict()
+        payload["preauthorized_by_frozen_protocol"] = "false"
+        with self.assertRaises(ValueError):
+            ProtocolDeviation.from_dict(payload)
+
+    def test_blank_evidence_reference_is_invalid(self):
+        value = valid(evidence_refs=("   ",))
+        self.assertIn(
+            "protocol deviation evidence references must be non-blank strings",
+            validate_protocol_deviation(value),
+        )
+
+    def test_string_schema_version_is_rejected(self):
+        payload = valid().to_dict()
+        payload["schema_version"] = "1"
+        with self.assertRaises(ValueError):
+            ProtocolDeviation.from_dict(payload)
+
+
 class FreezeTests(unittest.TestCase):
     def test_same_deviation_has_same_hash(self):
         self.assertEqual(
