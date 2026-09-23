@@ -76,6 +76,12 @@ class RoutingBudget:
     max_path_escalations: int = 2
     max_attempts: int = 3
 
+    def __post_init__(self) -> None:
+        for name in ("max_path_escalations", "max_attempts"):
+            value = getattr(self, name)
+            if isinstance(value, bool) or not isinstance(value, int) or value < 0:
+                raise ValueError(f"{name} must be a non-negative integer")
+
     def to_dict(self) -> dict[str, int]:
         return {
             "max_path_escalations": self.max_path_escalations,
@@ -88,6 +94,12 @@ class BudgetState:
     budget: RoutingBudget = field(default_factory=RoutingBudget)
     attempts_used: int = 0
     path_escalations_used: int = 0
+
+    def __post_init__(self) -> None:
+        for name in ("attempts_used", "path_escalations_used"):
+            value = getattr(self, name)
+            if isinstance(value, bool) or not isinstance(value, int) or value < 0:
+                raise ValueError(f"{name} must be a non-negative integer")
 
     @property
     def attempts_available(self) -> bool:
