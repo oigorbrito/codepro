@@ -46,3 +46,28 @@ jobs:
           PYTHONPATH: src
       - name: Compile Python sources
         run: python -m compileall -q src tests tools
+
+  compatibility:
+    needs: foundation
+    runs-on: ubuntu-24.04
+    strategy:
+      fail-fast: false
+      matrix:
+        python-version: ["3.12", "3.13", "3.14"]
+    steps:
+      - uses: actions/checkout@11d5960a326750d5838078e36cf38b85af677262 # v4 observed in validated run
+      - uses: actions/setup-python@a26af69be951a213d495a4c3e4e4022e16d87065 # v5 observed in validated run
+        with:
+          python-version: ${{ matrix.python-version }}
+      - name: Record compatibility interpreter
+        run: python -VV
+      - name: Run compatibility test suite
+        run: python -m unittest discover -s tests -t . -v
+        env:
+          PYTHONPATH: src
+      - name: Verify semantic fingerprint
+        run: python tools/chassis_fingerprint.py
+        env:
+          PYTHONPATH: src
+      - name: Compile Python sources
+        run: python -m compileall -q src tests tools
