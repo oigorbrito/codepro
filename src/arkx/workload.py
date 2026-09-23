@@ -13,6 +13,35 @@ SCHEMA_VERSION = 1
 FREEZE_SCHEMA_VERSION = 1
 
 
+def _strict_schema(value: Mapping[str, Any]) -> int:
+    raw = value.get("schema_version", 0)
+    if isinstance(raw, bool) or not isinstance(raw, int) or raw != SCHEMA_VERSION:
+        raise ValueError(f"Unsupported workload manifest schema: {raw}")
+    return raw
+
+
+def _required_string(name: str, value: Any) -> str:
+    if not isinstance(value, str) or not value.strip():
+        raise ValueError(f"{name} must be a non-empty string")
+    return value
+
+
+def _string_tuple(name: str, value: Any) -> tuple[str, ...]:
+    if not isinstance(value, (list, tuple)):
+        raise ValueError(f"{name} must be a list or tuple")
+    if any(not isinstance(item, str) for item in value):
+        raise ValueError(f"{name} must contain only strings")
+    return tuple(value)
+
+
+def _optional_int(name: str, value: Any) -> int | None:
+    if value is None:
+        return None
+    if isinstance(value, bool) or not isinstance(value, int):
+        raise ValueError(f"{name} must be an integer when present")
+    return value
+
+
 class _ValueEnum(str, Enum):
     def __str__(self) -> str:
         return self.value
@@ -70,23 +99,23 @@ class WorkloadManifest:
 
     @classmethod
     def from_dict(cls, value: Mapping[str, Any]) -> "WorkloadManifest":
-        schema_version = int(value.get("schema_version", 0))
-        if schema_version != SCHEMA_VERSION:
-            raise ValueError(f"Unsupported workload manifest schema: {schema_version}")
+        if not isinstance(value, Mapping):
+            raise ValueError("workload manifest payload must be a mapping")
+        schema_version = _strict_schema(value)
         return cls(
-            workload_id=str(value["workload_id"]),
-            source_ref=str(value["source_ref"]),
-            source_version=str(value["source_version"]),
-            target_population=str(value["target_population"]),
+            workload_id=_required_string("workload_id", value.get("workload_id")),
+            source_ref=_required_string("source_ref", value.get("source_ref")),
+            source_version=_required_string("source_version", value.get("source_version")),
+            target_population=_required_string("target_population", value.get("target_population")),
             sampling_strategy=SamplingStrategy(value["sampling_strategy"]),
-            selection_rule=str(value["selection_rule"]),
-            selection_justification=str(value["selection_justification"]),
-            inclusion_criteria=tuple(value.get("inclusion_criteria", ())),
-            exclusion_criteria=tuple(value.get("exclusion_criteria", ())),
-            task_refs=tuple(value.get("task_refs", ())),
-            holdout_policy=str(value["holdout_policy"]),
+            selection_rule=_required_string("selection_rule", value.get("selection_rule")),
+            selection_justification=_required_string("selection_justification", value.get("selection_justification")),
+            inclusion_criteria=_string_tuple("inclusion_criteria", value.get("inclusion_criteria", ())),
+            exclusion_criteria=_string_tuple("exclusion_criteria", value.get("exclusion_criteria", ())),
+            task_refs=_string_tuple("task_refs", value.get("task_refs", ())),
+            holdout_policy=_required_string("holdout_policy", value.get("holdout_policy")),
             task_order_policy=TaskOrderPolicy(value["task_order_policy"]),
-            random_seed=value.get("random_seed"),
+            random_seed=_optional_int("random_seed", value.get("random_seed")),
             schema_version=schema_version,
         )
 
