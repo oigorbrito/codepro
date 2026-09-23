@@ -15,6 +15,47 @@ FREEZE_SCHEMA_VERSION = 1
 _DIGEST_RE = re.compile(r"^sha256:[0-9a-f]{64}$")
 
 
+def _strict_schema(value: Mapping[str, Any]) -> int:
+    raw = value.get("schema_version", 0)
+    if isinstance(raw, bool) or not isinstance(raw, int) or raw != SCHEMA_VERSION:
+        raise ValueError(f"Unsupported treatment configuration schema: {raw}")
+    return raw
+
+
+def _required_string(name: str, value: Any) -> str:
+    if not isinstance(value, str) or not value.strip():
+        raise ValueError(f"{name} must be a non-empty string")
+    return value
+
+
+def _optional_string(name: str, value: Any) -> str | None:
+    if value is None:
+        return None
+    if not isinstance(value, str):
+        raise ValueError(f"{name} must be a string when present")
+    return value
+
+
+def _strict_int(name: str, value: Any) -> int:
+    if isinstance(value, bool) or not isinstance(value, int):
+        raise ValueError(f"{name} must be an integer")
+    return value
+
+
+def _optional_int(name: str, value: Any) -> int | None:
+    if value is None:
+        return None
+    return _strict_int(name, value)
+
+
+def _string_tuple(name: str, value: Any) -> tuple[str, ...]:
+    if not isinstance(value, (list, tuple)):
+        raise ValueError(f"{name} must be a list or tuple")
+    if any(not isinstance(item, str) for item in value):
+        raise ValueError(f"{name} must contain only strings")
+    return tuple(value)
+
+
 class _ValueEnum(str, Enum):
     def __str__(self) -> str:
         return self.value
@@ -85,30 +126,33 @@ class TreatmentConfiguration:
 
     @classmethod
     def from_dict(cls, value: Mapping[str, Any]) -> "TreatmentConfiguration":
-        schema_version = int(value.get("schema_version", 0))
-        if schema_version != SCHEMA_VERSION:
-            raise ValueError(f"Unsupported treatment configuration schema: {schema_version}")
+        if not isinstance(value, Mapping):
+            raise ValueError("treatment configuration payload must be a mapping")
+        schema_version = _strict_schema(value)
+        parameters = value.get("parameters", {})
+        if not isinstance(parameters, Mapping):
+            raise ValueError("parameters must be a mapping")
         return cls(
-            configuration_id=str(value["configuration_id"]),
-            executor_id=str(value["executor_id"]),
-            executor_version=str(value["executor_version"]),
-            provider_id=value.get("provider_id"),
-            model_id=value.get("model_id"),
-            model_revision=value.get("model_revision"),
-            model_revision_justification=value.get("model_revision_justification"),
-            prompt_ref=str(value["prompt_ref"]),
-            prompt_hash=str(value["prompt_hash"]),
-            tool_surface_ref=str(value["tool_surface_ref"]),
-            tool_surface_hash=str(value["tool_surface_hash"]),
-            provider_routing_ref=str(value["provider_routing_ref"]),
-            parameters=dict(value.get("parameters", {})),
-            max_attempts=int(value.get("max_attempts", 1)),
-            timeout_seconds=int(value.get("timeout_seconds", 1)),
+            configuration_id=_required_string("configuration_id", value.get("configuration_id")),
+            executor_id=_required_string("executor_id", value.get("executor_id")),
+            executor_version=_required_string("executor_version", value.get("executor_version")),
+            provider_id=_optional_string("provider_id", value.get("provider_id")),
+            model_id=_optional_string("model_id", value.get("model_id")),
+            model_revision=_optional_string("model_revision", value.get("model_revision")),
+            model_revision_justification=_optional_string("model_revision_justification", value.get("model_revision_justification")),
+            prompt_ref=_required_string("prompt_ref", value.get("prompt_ref")),
+            prompt_hash=_required_string("prompt_hash", value.get("prompt_hash")),
+            tool_surface_ref=_required_string("tool_surface_ref", value.get("tool_surface_ref")),
+            tool_surface_hash=_required_string("tool_surface_hash", value.get("tool_surface_hash")),
+            provider_routing_ref=_required_string("provider_routing_ref", value.get("provider_routing_ref")),
+            parameters=dict(parameters),
+            max_attempts=_strict_int("max_attempts", value.get("max_attempts", 1)),
+            timeout_seconds=_strict_int("timeout_seconds", value.get("timeout_seconds", 1)),
             fallback_policy=FallbackPolicy(value.get("fallback_policy", FallbackPolicy.DISABLED.value)),
-            fallback_targets=tuple(value.get("fallback_targets", ())),
+            fallback_targets=_string_tuple("fallback_targets", value.get("fallback_targets", ())),
             seed_support=SeedSupport(value.get("seed_support", SeedSupport.NOT_APPLICABLE.value)),
-            seed=value.get("seed"),
-            seed_justification=value.get("seed_justification"),
+            seed=_optional_int("seed", value.get("seed")),
+            seed_justification=_optional_string("seed_justification", value.get("seed_justification")),
             schema_version=schema_version,
         )
 
