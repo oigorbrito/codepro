@@ -40,6 +40,7 @@ def setup():
 class FakeExecutor:
     def __init__(self, outcome=ExecutionOutcome.COMPLETED): self.outcome = outcome
     def run(self, request, selection): return ExecutionResult("run-1", self.outcome, telemetry={"total_tokens": 0, "wall_time_ms": 0, "cost": 0})
+    def run_with_budget(self, request, selection, *, attempt_id, budget_ledger): return self.run(request, selection)
 
 
 class FakeProgress:
@@ -258,8 +259,18 @@ class OrchestrationTests(unittest.TestCase):
         class NoUsage:
             def run(self, request, selection):
                 return ExecutionResult("run-1", ExecutionOutcome.COMPLETED)
+            def run_with_budget(self, request, selection, *, attempt_id, budget_ledger):
+                return self.run(request, selection)
         result = run_routed_pipeline(governance, characterization, routing, selection, NoUsage(), FakeProgress(), FakeVerifier(), FakeAcceptance())
         self.assertIn(OrchestrationReason.BUDGET_USAGE_UNAVAILABLE, result.reason_codes)
+
+    def test_pipeline_blocks_legacy_runner_without_budget_enforcement(self):
+        governance, characterization, routing, selection = setup()
+        class LegacyRunner:
+            def run(self, request, selection):
+                raise AssertionError("legacy runner must be blocked before execution")
+        result = run_routed_pipeline(governance, characterization, routing, selection, LegacyRunner(), FakeProgress(), FakeVerifier(), FakeAcceptance())
+        self.assertIn(OrchestrationReason.BUDGET_ENFORCEMENT_REQUIRED, result.reason_codes)
 
 
 if __name__ == "__main__":

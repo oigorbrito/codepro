@@ -163,6 +163,12 @@ restored-chain tests, followed by the complete deterministic suite: 365 tests
 passed. This is local evidence only; it does not qualify a real provider,
 model, executor, sandbox, or SWE-bench treatment.
 
+The budget-enforced legacy-runner block was then verified with the complete
+deterministic suite: 366 tests passed. A budgeted plan now blocks a runner that
+cannot declare `run_with_budget`; the neutral contract bridge is the first
+implementation of that boundary. This closes the previously identified silent
+legacy budget-bypass gap locally, but does not qualify any external runner.
+
 ## Conclusion
 
 Arkx is no longer merely a collection of executor-specific experiments: the

@@ -15,6 +15,8 @@
   "budget_ledger_replay_verified": true,
   "lineage_event_chain_audit_verified": true,
   "latest_verified_suite": {"command": "PYTHONPATH=src python -m unittest discover -s tests -p 'test_*.py'", "passed": 365},
+  "budget_enforced_legacy_runner_verified": true,
+  "latest_verified_suite_after_budget_boundary": {"command": "PYTHONPATH=src python -m unittest discover -s tests -p 'test_*.py'", "passed": 366},
   "latest_suite": {"passed": 364},
   "verified_suite": {"passed": 361},
   "current_suite": {"passed": 359},

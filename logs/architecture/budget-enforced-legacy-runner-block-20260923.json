@@ -1,0 +1,14 @@
+{
+  "block": "budget-enforced-legacy-runner",
+  "date": "2026-09-23",
+  "hypothesis": "A budgeted request cannot reach a runner that has not declared the budget enforcement capability.",
+  "criteria": {
+    "legacy_runner_blocked_before_run": "PASS",
+    "contract_bridge_requires_reserved_attempt": "PASS",
+    "missing_usage_remains_blocked": "PASS",
+    "local_suite": "PASS",
+    "external_qualification": "NOT_PERFORMED"
+  },
+  "local_tests_verified": 366,
+  "promotion": "NOT_PROMOTED"
+}

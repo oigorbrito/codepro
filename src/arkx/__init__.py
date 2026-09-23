@@ -43,6 +43,8 @@ from .p82_editing import (
     record_edit_proposal,
 )
 from .orchestration import (
+    BudgetEnforcedExecutorRunner,
+    ContractExecutorRunner,
     ExecutionOutcome,
     ExecutionResult as OrchestrationExecutionResult,
     OrchestrationReason,
@@ -295,6 +297,8 @@ __all__ = [
     "select_executor",
     "select_treatment",
     "ExecutionOutcome",
+    "BudgetEnforcedExecutorRunner",
+    "ContractExecutorRunner",
     "OrchestrationExecutionResult",
     "OrchestrationReason",
     "OrchestrationResult",

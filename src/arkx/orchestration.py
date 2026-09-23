@@ -77,6 +77,7 @@ class OrchestrationReason(_ValueEnum):
     SANDBOX_PREFLIGHT_IDENTITY_MISMATCH = "SANDBOX_PREFLIGHT_IDENTITY_MISMATCH"
     INTEGRATION_PREFLIGHT_BLOCKED = "INTEGRATION_PREFLIGHT_BLOCKED"
     INTEGRATION_PREFLIGHT_PERSISTENCE_REQUIRED = "INTEGRATION_PREFLIGHT_PERSISTENCE_REQUIRED"
+    BUDGET_ENFORCEMENT_REQUIRED = "BUDGET_ENFORCEMENT_REQUIRED"
 
 
 def orchestration_status_for_execution(outcome: ExecutionOutcome) -> OrchestrationStatus:
@@ -138,6 +139,19 @@ class ExecutorRunner(Protocol):
     def run(self, request: GovernanceDecision, selection: SelectionDecision) -> ExecutionResult: ...
 
 
+class BudgetEnforcedExecutorRunner(Protocol):
+    """Legacy seam capability required before a budgeted execution."""
+
+    def run_with_budget(
+        self,
+        request: GovernanceDecision,
+        selection: SelectionDecision,
+        *,
+        attempt_id: str,
+        budget_ledger: BudgetLedger,
+    ) -> ExecutionResult: ...
+
+
 class ContractExecutorRunner:
     """Bridge the neutral Executor contract into the legacy orchestration seam."""
 
@@ -163,6 +177,22 @@ class ContractExecutorRunner:
             configuration_digest=selection.executor.executor.configuration_digest,
         )
         return legacy_execution_from_contract(self.executor.execute(execution_request))
+
+    def run_with_budget(
+        self,
+        request: GovernanceDecision,
+        selection: SelectionDecision,
+        *,
+        attempt_id: str,
+        budget_ledger: BudgetLedger,
+    ) -> ExecutionResult:
+        """Run only after orchestration has reserved this attempt in the ledger."""
+        if attempt_id not in budget_ledger.consumed_attempts:
+            return ExecutionResult("unbound", ExecutionOutcome.BLOCKED, error="budget attempt was not reserved")
+        result = self.run(request, selection)
+        telemetry = dict(result.telemetry)
+        telemetry["budget_enforcement"] = "RESERVED_AND_MEASURED"
+        return replace(result, telemetry=telemetry)
 
 
 class ProgressObserver(Protocol):
@@ -305,6 +335,8 @@ def run_routed_pipeline(
     if hasattr(executor, "execute") and not hasattr(executor, "run"):
         executor = ContractExecutorRunner(executor)
     plan = build_execution_plan(governance, routing, selection, provider_identity=provider_identity, sandbox_identity=sandbox_identity)
+    if plan.budget is not None and not hasattr(executor, "run_with_budget"):
+        return _blocked(OrchestrationReason.BUDGET_ENFORCEMENT_REQUIRED)
     def persist_stage(stage: str, ref: str, data: dict[str, Any] | None = None) -> bool:
         if event_log is None:
             return True
@@ -362,7 +394,10 @@ def run_routed_pipeline(
         if not consumption.accepted:
             return _blocked(OrchestrationReason.EXECUTION_BUDGET_EXHAUSTED)
         budget_ledger = consumption.ledger
-    execution = executor.run(governance, selection)
+    if plan.budget is not None:
+        execution = executor.run_with_budget(governance, selection, attempt_id=plan.reference, budget_ledger=budget_ledger)
+    else:
+        execution = executor.run(governance, selection)
     execution_ref = execution_reference(execution.run_id)
     execution_data = {"artifact_refs": list(execution.evidence_refs), "execution_outcome": execution.outcome.value}
     if budget_ledger is not None:
