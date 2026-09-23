@@ -28,6 +28,8 @@ The plan declares:
 
 The primary metric must match the frozen Study Spec. Secondary metrics must already be declared by the Study Spec.
 
+A frozen Analysis Plan is bound to the exact `study_spec_hash` used during compatibility validation. Its frozen identity is computed from both the plan content and the governing Study Spec hash; the same plan text frozen against a different Study Spec is therefore a different artifact.
+
 ## Fail-closed rules
 
 A frequentist plan without a valid confidence level is invalid. A descriptive-only design cannot silently request inferential statistics. Missing-data, blocked-run, deviation, multiplicity, and outlier rules cannot be left blank.
