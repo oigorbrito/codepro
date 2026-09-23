@@ -24,6 +24,35 @@ class StatusTests(unittest.TestCase):
         record = collector([event(EventType.TASK_FINISHED, {"status": "PASS"})]).summarize()
         self.assertEqual(record.status, ExecutionStatus.UNVERIFIED)
 
+    def test_blank_evidence_cannot_become_pass(self):
+        self.assertEqual(resolve_status("PASS", ["", "   "]), ExecutionStatus.UNVERIFIED)
+        with self.assertRaises(ValueError):
+            collector([
+                event(EventType.EVIDENCE_ADDED, {"ref": "   "}),
+                event(EventType.TASK_FINISHED, {"status": "PASS"}),
+            ])
+
+    def test_evidence_cannot_be_added_after_finish(self):
+        with self.assertRaises(ValueError):
+            collector([
+                event(EventType.TASK_FINISHED, {"status": "PASS"}),
+                event(EventType.EVIDENCE_ADDED, {"ref": "evidence://late"}),
+            ])
+
+    def test_duplicate_task_boundaries_are_rejected(self):
+        with self.assertRaises(ValueError):
+            collector([
+                event(EventType.TASK_STARTED),
+                event(EventType.TASK_STARTED),
+            ])
+
+    def test_regressive_event_timestamps_are_rejected(self):
+        with self.assertRaises(ValueError):
+            collector([
+                event(EventType.TASK_STARTED, timestamp="2026-01-01T00:00:01+00:00"),
+                event(EventType.TASK_FINISHED, timestamp="2026-01-01T00:00:00+00:00"),
+            ])
+
     def test_blocked_remains_blocked(self):
         record = collector([event(EventType.TASK_FINISHED, {"status": "BLOCKED"})]).summarize()
         self.assertEqual(record.status, ExecutionStatus.BLOCKED)
@@ -66,6 +95,12 @@ class UnknownMeasurementTests(unittest.TestCase):
         record = collector([]).summarize()
         self.assertIsNone(record.total_tokens)
         self.assertIsNone(record.monetary_cost)
+
+    def test_negative_or_non_finite_resource_measurements_are_rejected(self):
+        with self.assertRaises(ValueError):
+            collector([event(EventType.EXECUTOR_FINISHED, {"total_tokens": -1})]).summarize()
+        with self.assertRaises(ValueError):
+            collector([event(EventType.EXECUTOR_FINISHED, {"monetary_cost": float("inf")})]).summarize()
 
     def test_explicit_zero_is_preserved_as_zero(self):
         record = collector([event(EventType.EXECUTOR_FINISHED, {"total_tokens": 0, "monetary_cost": 0.0})]).summarize()
