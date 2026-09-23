@@ -123,9 +123,27 @@ class DecisionTests(unittest.TestCase):
             record_promotion_decision(
                 forged,
                 frozen_gate=frozen,
+                observations=observations(),
+                evidence=evidence(),
                 promote=True,
                 reviewer="reviewer",
                 rationale="must not accept a mismatched gate binding",
+                evidence_refs=("analysis://x",),
+            )
+
+    def test_decision_rejects_forged_eligible_status_even_with_correct_gate_hash(self):
+        frozen = frozen_gate()
+        blocked = assess_promotion_gate(frozen, {}, {})
+        forged = replace(blocked, status=GateStatus.ELIGIBLE_FOR_REVIEW)
+        with self.assertRaises(ValueError):
+            record_promotion_decision(
+                forged,
+                frozen_gate=frozen,
+                observations={},
+                evidence={},
+                promote=True,
+                reviewer="reviewer",
+                rationale="status declaration must not replace canonical evaluation",
                 evidence_refs=("analysis://x",),
             )
 
@@ -136,6 +154,8 @@ class DecisionTests(unittest.TestCase):
             record_promotion_decision(
                 eligible,
                 frozen_gate=frozen,
+                observations=observations(),
+                evidence=evidence(),
                 promote=True,
                 reviewer="reviewer",
                 rationale="evidence must be substantive",
@@ -148,6 +168,8 @@ class DecisionTests(unittest.TestCase):
             record_promotion_decision(
                 blocked,
                 frozen_gate=frozen_gate(),
+                observations={},
+                evidence={},
                 promote=True,
                 reviewer="reviewer",
                 rationale="cannot override missing evidence",
@@ -159,6 +181,8 @@ class DecisionTests(unittest.TestCase):
         record = record_promotion_decision(
             eligible,
             frozen_gate=frozen_gate(),
+            observations=observations(),
+            evidence=evidence(),
             promote=True,
             reviewer="reviewer",
             rationale="all frozen gates satisfied and evidence reviewed",
@@ -171,6 +195,8 @@ class DecisionTests(unittest.TestCase):
         record = record_promotion_decision(
             eligible,
             frozen_gate=frozen_gate(),
+            observations=observations(),
+            evidence=evidence(),
             promote=False,
             reviewer="reviewer",
             rationale="residual validity risk remains too high",
