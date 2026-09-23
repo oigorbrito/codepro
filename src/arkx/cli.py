@@ -1,4 +1,4 @@
-"""Minimal dependency-free Dekon command-line interface."""
+"""Minimal dependency-free CodePro command-line interface."""
 
 from __future__ import annotations
 
@@ -16,8 +16,8 @@ _SUPPORTED_MAX = (3, 14)
 
 def build_parser() -> argparse.ArgumentParser:
     parser = argparse.ArgumentParser(
-        prog="dekon",
-        description="Deterministic CLI boundary for the Dekon software-engineering chassis.",
+        prog="codepro",
+        description="Deterministic CLI boundary for the CodePro software-engineering chassis.",
     )
     parser.add_argument(
         "--version",
