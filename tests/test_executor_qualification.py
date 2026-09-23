@@ -39,10 +39,15 @@ def trial(**overrides):
 
 class ExecutorQualificationTests(unittest.TestCase):
     def test_executor_identity_serialization_is_deterministic(self):
-        identity = ExecutorIdentity("mini", "1.2", "adapter", "digest")
-        self.assertEqual(identity.to_json(), '{"configuration_digest":"digest","integration_kind":"adapter","name":"mini","version":"1.2"}')
-        self.assertEqual(identity.to_json(), ExecutorIdentity("mini", "1.2", "adapter", "digest").to_json())
-        self.assertNotEqual(identity, ExecutorIdentity("mini", "1.3", "adapter", "digest"))
+        identity = ExecutorIdentity("mini", "1.2", "adapter", "digest", ("shell", "file_editing"))
+        self.assertEqual(identity.to_json(), '{"advertised_capabilities":["file_editing","shell"],"configuration_digest":"digest","integration_kind":"adapter","name":"mini","version":"1.2"}')
+        self.assertEqual(identity.to_json(), ExecutorIdentity("mini", "1.2", "adapter", "digest", ("file_editing", "shell")).to_json())
+        self.assertNotEqual(identity, ExecutorIdentity("mini", "1.3", "adapter", "digest", ("shell", "file_editing")))
+
+    def test_advertised_capabilities_are_metadata_not_qualification(self):
+        advertised = ExecutorIdentity("mini", "1.2", "adapter", "digest", ("supports_subagents",))
+        trial_with_unknown_result = trial(executor=advertised, observation=ExecutorObservation(accepted=None))
+        self.assertEqual(assess_trial(trial_with_unknown_result), QualificationStatus.UNKNOWN)
 
     def test_unknown_metrics_stay_none_and_explicit_zero_stays_zero(self):
         observation = ExecutorObservation(human_interventions=0, retries=None, accepted=None)

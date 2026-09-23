@@ -78,10 +78,15 @@ class ExecutorIdentity:
     version: str | None
     integration_kind: str
     configuration_digest: str | None
+    advertised_capabilities: tuple[str, ...] = ()
 
     def __post_init__(self) -> None:
         if not self.name or not self.integration_kind:
             raise ValueError("Executor name and integration kind must be non-empty")
+        capabilities = tuple(self.advertised_capabilities)
+        if any(not capability for capability in capabilities):
+            raise ValueError("Advertised capability names must be non-empty")
+        object.__setattr__(self, "advertised_capabilities", tuple(sorted(set(capabilities))))
 
     def to_dict(self) -> dict[str, str | None]:
         return {
@@ -89,6 +94,7 @@ class ExecutorIdentity:
             "version": self.version,
             "integration_kind": self.integration_kind,
             "configuration_digest": self.configuration_digest,
+            "advertised_capabilities": list(self.advertised_capabilities),
         }
 
     def to_json(self) -> str:
