@@ -2,13 +2,13 @@
 
 from __future__ import annotations
 
-from dataclasses import dataclass, field
+from dataclasses import dataclass
 from enum import Enum
 import json
 from typing import Any
 
 
-SCHEMA_VERSION = 1
+SCHEMA_VERSION = 2
 
 
 class _ValueEnum(str, Enum):
@@ -48,8 +48,21 @@ class RepositoryState:
     remaining_steps: tuple[str, ...] | None = None
     schema_version: int = SCHEMA_VERSION
 
+    def __post_init__(self) -> None:
+        completed = set(self.completed_steps or ())
+        remaining = set(self.remaining_steps or ())
+        overlap = completed & remaining
+        if overlap:
+            raise ValueError(
+                f"RepositoryState cannot mark steps both completed and remaining: {sorted(overlap)}"
+            )
+
     def to_dict(self) -> dict[str, Any]:
-        edges = None if self.dependency_edges is None else [list(edge) for edge in sorted(set(self.dependency_edges))]
+        edges = (
+            None
+            if self.dependency_edges is None
+            else [list(edge) for edge in sorted(set(self.dependency_edges))]
+        )
         return {
             "schema_version": self.schema_version,
             "relevant_files": _values(self.relevant_files),
@@ -73,6 +86,12 @@ class PlanStep:
     status: StepStatus = StepStatus.PENDING
     depends_on: tuple[str, ...] = ()
     expected_files: tuple[str, ...] = ()
+
+    def __post_init__(self) -> None:
+        if not self.step_id.strip():
+            raise ValueError("Plan step identity must be non-empty")
+        if not self.goal.strip():
+            raise ValueError("Plan step goal must be non-empty")
 
     def to_dict(self) -> dict[str, Any]:
         return {
@@ -98,7 +117,9 @@ class RepositoryPlan:
         return {
             "schema_version": self.schema_version,
             "goal": self.goal,
-            "steps": [step.to_dict() for step in sorted(self.steps, key=lambda item: item.step_id)],
+            "steps": [
+                step.to_dict() for step in sorted(self.steps, key=lambda item: item.step_id)
+            ],
             "dependencies": [list(edge) for edge in sorted(set(self.dependencies))],
             "acceptance_criteria": _values(self.acceptance_criteria),
             "expected_files": _values(self.expected_files),
@@ -118,17 +139,28 @@ def build_plan(
     expected_files: tuple[str, ...] = (),
     replan_triggers: tuple[ReplanTrigger, ...] = (),
 ) -> RepositoryPlan:
-    """Build and validate a plan without marking steps complete."""
+    """Build and validate a new plan without asserting execution progress."""
+
+    if not goal.strip():
+        raise ValueError("Plan goal must be non-empty")
+    if not steps:
+        raise ValueError("Plan must contain at least one step")
+    if not acceptance_criteria or any(not item.strip() for item in acceptance_criteria):
+        raise ValueError("Plan requires explicit non-empty acceptance criteria")
+    if any(step.status is not StepStatus.PENDING for step in steps):
+        raise ValueError("Plan creation cannot assert step progress or completion")
 
     ids = {step.step_id for step in steps}
-    if len(ids) != len(steps) or "" in ids:
-        raise ValueError("Plan step identities must be unique and non-empty")
+    if len(ids) != len(steps):
+        raise ValueError("Plan step identities must be unique")
+
     edges = set(dependencies)
     for step in steps:
         unknown = set(step.depends_on) - ids
         if unknown:
             raise ValueError(f"Unknown step dependencies: {sorted(unknown)}")
         edges.update((dependency, step.step_id) for dependency in step.depends_on)
+
     _assert_acyclic(ids, edges)
     return RepositoryPlan(
         goal=goal,
@@ -183,10 +215,9 @@ def plan_repository(goal: str, state: RepositoryState) -> RepositoryPlan:
         depends_on=tuple(step.step_id for step in steps),
         expected_files=tuple(state.affected_tests or ()),
     )
-    all_steps = steps + (test_step,)
     return build_plan(
         goal,
-        all_steps,
+        steps + (test_step,),
         acceptance_criteria=("all planned steps have explicit outcomes",),
         expected_files=files,
         replan_triggers=(ReplanTrigger.DEPENDENCY_DISCOVERED, ReplanTrigger.BLOCKED_STEP),
@@ -200,6 +231,14 @@ class ReplanRequest:
     evidence_refs: tuple[str, ...]
     remaining_budget: int | None
     schema_version: int = SCHEMA_VERSION
+
+    def __post_init__(self) -> None:
+        if not self.previous_plan_ref.strip():
+            raise ValueError("ReplanRequest requires previous_plan_ref")
+        if not self.evidence_refs or any(not item.strip() for item in self.evidence_refs):
+            raise ValueError("ReplanRequest requires explicit evidence_refs")
+        if self.remaining_budget is not None and self.remaining_budget < 0:
+            raise ValueError("remaining_budget cannot be negative")
 
     def to_dict(self) -> dict[str, Any]:
         return {
@@ -218,6 +257,10 @@ class ReplanResult:
     trigger: ReplanTrigger
     schema_version: int = SCHEMA_VERSION
 
+    def __post_init__(self) -> None:
+        if not self.previous_plan_ref.strip():
+            raise ValueError("ReplanResult requires previous_plan_ref")
+
     def to_dict(self) -> dict[str, Any]:
         return {
             "schema_version": self.schema_version,
@@ -229,3 +272,12 @@ class ReplanResult:
     def to_json(self) -> str:
         return json.dumps(self.to_dict(), ensure_ascii=False, sort_keys=True, separators=(",", ":"))
 
+
+def build_replan_result(request: ReplanRequest, new_plan: RepositoryPlan) -> ReplanResult:
+    if request.remaining_budget == 0:
+        raise ValueError("Cannot produce a replan result with exhausted replan budget")
+    return ReplanResult(
+        previous_plan_ref=request.previous_plan_ref,
+        new_plan=new_plan,
+        trigger=request.trigger,
+    )

@@ -8,7 +8,7 @@ import json
 from typing import Any
 
 
-SCHEMA_VERSION = 1
+SCHEMA_VERSION = 2
 
 
 class _ValueEnum(str, Enum):
@@ -42,6 +42,24 @@ class HandoffRecord:
     lost_information: tuple[str, ...] | None
     schema_version: int = SCHEMA_VERSION
 
+    def __post_init__(self) -> None:
+        if not self.handoff_id.strip():
+            raise ValueError("handoff_id must be non-empty")
+        for name in (
+            "context_bytes_in",
+            "context_bytes_out",
+            "duplicated_instructions",
+            "duplicated_exploration",
+            "discarded_context",
+        ):
+            value = getattr(self, name)
+            if value is not None and value < 0:
+                raise ValueError(f"{name} cannot be negative")
+        if self.lost_information is not None and any(
+            not item.strip() for item in self.lost_information
+        ):
+            raise ValueError("lost_information cannot contain blank declarations")
+
     def to_dict(self) -> dict[str, Any]:
         return {
             "schema_version": self.schema_version,
@@ -64,6 +82,10 @@ class HandoffRecord:
 class HandoffPolicy:
     max_handoffs: int = 2
     max_executor_transitions: int = 2
+
+    def __post_init__(self) -> None:
+        if self.max_handoffs < 0 or self.max_executor_transitions < 0:
+            raise ValueError("handoff budgets cannot be negative")
 
 
 @dataclass(frozen=True)
@@ -99,22 +121,41 @@ class HandoffSummary:
         return json.dumps(self.to_dict(), ensure_ascii=False, sort_keys=True, separators=(",", ":"))
 
 
-def summarize_handoffs(records: tuple[HandoffRecord, ...], policy: HandoffPolicy | None = None) -> HandoffSummary:
+def summarize_handoffs(
+    records: tuple[HandoffRecord, ...],
+    policy: HandoffPolicy | None = None,
+) -> HandoffSummary:
     policy = policy or HandoffPolicy()
-    transitions = tuple(sorted({(record.source_executor, record.target_executor) for record in records if record.source_executor and record.target_executor}))
+    ids = [record.handoff_id for record in records]
+    if len(set(ids)) != len(ids):
+        raise ValueError("handoff_id values must be unique within one summary")
+
+    transitions = tuple(
+        (record.source_executor, record.target_executor)
+        for record in records
+        if record.source_executor is not None and record.target_executor is not None
+    )
 
     def total(field: str) -> int | None:
         values = [getattr(record, field) for record in records]
         return None if any(value is None for value in values) else sum(values)
 
     lost_values = [record.lost_information for record in records]
-    lost_count = None if any(value is None for value in lost_values) else sum(len(value) for value in lost_values)
+    lost_count = (
+        None
+        if any(value is None for value in lost_values)
+        else sum(len(value) for value in lost_values)
+    )
+
     if len(records) > policy.max_handoffs or len(transitions) > policy.max_executor_transitions:
         budget_status = HandoffBudgetStatus.BUDGET_EXCEEDED
-    elif any(record.source_executor is None or record.target_executor is None for record in records):
+    elif any(
+        record.source_executor is None or record.target_executor is None for record in records
+    ):
         budget_status = HandoffBudgetStatus.UNKNOWN
     else:
         budget_status = HandoffBudgetStatus.WITHIN_BUDGET
+
     return HandoffSummary(
         handoffs=len(records),
         executor_transitions=transitions,
@@ -136,4 +177,3 @@ def summarize_handoffs(records: tuple[HandoffRecord, ...], policy: HandoffPolicy
             "lost_information_count": lost_count,
         },
     )
-

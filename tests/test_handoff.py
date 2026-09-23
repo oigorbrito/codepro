@@ -29,6 +29,19 @@ class HandoffTests(unittest.TestCase):
         summary = summarize_handoffs((record(),))
         self.assertEqual(summary.handoffs, 1)
         self.assertEqual(summary.executor_transitions, (("a", "b"),))
+        self.assertEqual(summary.schema_version, 2)
+
+    def test_repeated_same_transition_is_counted_each_time(self):
+        summary = summarize_handoffs(
+            (record("h1"), record("h2")),
+            HandoffPolicy(max_handoffs=2, max_executor_transitions=1),
+        )
+        self.assertEqual(summary.executor_transitions, (("a", "b"), ("a", "b")))
+        self.assertEqual(summary.budget_status, HandoffBudgetStatus.BUDGET_EXCEEDED)
+
+    def test_duplicate_handoff_ids_are_rejected(self):
+        with self.assertRaises(ValueError):
+            summarize_handoffs((record("same"), record("same")))
 
     def test_context_bytes_and_duplicate_metrics_are_preserved(self):
         summary = summarize_handoffs((record(),))
@@ -38,9 +51,30 @@ class HandoffTests(unittest.TestCase):
         self.assertEqual(summary.duplicated_exploration, 2)
 
     def test_unknown_measurements_are_not_zero(self):
-        summary = summarize_handoffs((record(context_bytes_in=None, context_bytes_out=None),))
+        summary = summarize_handoffs(
+            (record(context_bytes_in=None, context_bytes_out=None),)
+        )
         self.assertIsNone(summary.context_bytes_in)
         self.assertIsNone(summary.context_bytes_out)
+
+    def test_explicit_zero_is_preserved(self):
+        summary = summarize_handoffs(
+            (
+                record(
+                    context_bytes_in=0,
+                    context_bytes_out=0,
+                    duplicated_instructions=0,
+                    duplicated_exploration=0,
+                    discarded_context=0,
+                ),
+            )
+        )
+        self.assertEqual(summary.context_bytes_in, 0)
+        self.assertEqual(summary.duplicated_instructions, 0)
+
+    def test_negative_measurement_is_rejected(self):
+        with self.assertRaises(ValueError):
+            record(context_bytes_in=-1)
 
     def test_transitions_require_known_source_and_target(self):
         summary = summarize_handoffs((record(source_executor=None),))
@@ -54,7 +88,10 @@ class HandoffTests(unittest.TestCase):
         self.assertIsNone(unknown.lost_information_count)
 
     def test_budget_exceeded_is_observable(self):
-        summary = summarize_handoffs((record("h1"), record("h2"), record("h3")), HandoffPolicy(max_handoffs=2))
+        summary = summarize_handoffs(
+            (record("h1"), record("h2"), record("h3")),
+            HandoffPolicy(max_handoffs=2),
+        )
         self.assertEqual(summary.budget_status, HandoffBudgetStatus.BUDGET_EXCEEDED)
 
     def test_same_records_have_same_summary(self):
@@ -71,4 +108,3 @@ class HandoffTests(unittest.TestCase):
 
 if __name__ == "__main__":
     unittest.main()
-
