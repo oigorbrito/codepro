@@ -36,6 +36,51 @@ class SWEbenchAuthorityTests(unittest.TestCase):
         self.assertEqual(rejected.acceptance().decision.value, "REJECTED")
         self.assertEqual(infra.acceptance().decision.value, "INDETERMINATE")
 
+    def test_evaluator_infrastructure_failure_is_not_a_test_failure(self):
+        infra = OfficialEvaluationResult(
+            OfficialEvaluationStatus.INFRASTRUCTURE_ERROR,
+            AUTHORITY_IDENTITY,
+            "r3",
+            "t",
+            None,
+            "report",
+            ("log",),
+            "docker daemon unavailable",
+        )
+        rejected = OfficialEvaluationResult(
+            OfficialEvaluationStatus.TESTS_FAILED,
+            AUTHORITY_IDENTITY,
+            "r4",
+            "t",
+            "failed",
+            "report",
+            (),
+        )
+        error = infra.error_envelope()
+        self.assertEqual(error.domain.value, "VERIFICATION")
+        self.assertEqual(error.code, "EVALUATOR_INFRASTRUCTURE_ERROR")
+        self.assertEqual(error.retryability.value, "UNKNOWN")
+        self.assertEqual(error.raw_evidence_refs, ("log", "report"))
+        self.assertIsNone(rejected.error_envelope())
+
+    def test_evaluator_maps_to_verification_without_acceptance_or_promotion(self):
+        result = OfficialEvaluationResult(
+            OfficialEvaluationStatus.TESTS_FAILED,
+            AUTHORITY_IDENTITY,
+            "r5",
+            "t",
+            "failed",
+            "report",
+            ("log",),
+        )
+        verification = result.verification_result()
+        self.assertEqual(verification.state.value, "FAIL")
+        self.assertEqual(verification.authority, AUTHORITY_IDENTITY)
+        self.assertEqual(verification.commands, ("swebench.harness.run_evaluation",))
+        self.assertEqual(verification.evidence, ("log", "report"))
+        self.assertTrue(verification.reference.startswith("verification://"))
+        self.assertEqual(result.acceptance().decision.value, "REJECTED")
+
     def test_authority_persists_prediction_and_raw_artifact_link(self):
         with tempfile.TemporaryDirectory() as directory:
             def evaluator(payload):

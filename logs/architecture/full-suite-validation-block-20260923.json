@@ -1,0 +1,15 @@
+{
+  "schema_version": "arkx-full-suite-validation-evidence-v1",
+  "date": "2026-09-23",
+  "branch": "codex/auditoriaarquitetural",
+  "environment": {"os": "Windows", "python": "3.11.9", "source_import": "PYTHONPATH=src"},
+  "command": "PYTHONPATH=src python -m unittest discover -s tests -p 'test_*.py'",
+  "tests_reached": 291,
+  "result": "BLOCKED",
+  "blocking_test_module": "tests/test_p82_openrouter_adapter.py",
+  "blocking_error": "ModuleNotFoundError: No module named 'minisweagent'",
+  "interpretation": "Infrastructure/dependency blocker; not classified as functional failure.",
+  "fallback_selected": false,
+  "acceptance": "FULL_SUITE_BLOCKED_BY_MISSING_EXTERNAL_DEPENDENCY",
+  "promotion": "NOT_PROMOTED"
+}

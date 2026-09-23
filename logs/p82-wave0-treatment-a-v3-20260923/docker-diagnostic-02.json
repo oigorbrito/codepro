@@ -1,0 +1,23 @@
+{
+  "diagnostic": "docker-authority-preflight",
+  "state": "BLOCKED",
+  "context_active": "desktop-linux",
+  "contexts": {
+    "default": "npipe:////./pipe/docker_engine",
+    "desktop-linux": "npipe:////./pipe/dockerDesktopLinuxEngine"
+  },
+  "client": {
+    "version": "29.7.2",
+    "api_version": "1.55",
+    "os_arch": "windows/amd64"
+  },
+  "server": null,
+  "processes": [],
+  "service": null,
+  "failure_category": "DOCKER_DAEMON_UNAVAILABLE",
+  "raw_failure": "failed to connect to the docker API at npipe:////./pipe/dockerDesktopLinuxEngine; check if the path is correct and if the daemon is running: open //./pipe/dockerDesktopLinuxEngine: O sistema não pode encontrar o arquivo especificado.",
+  "wave0_executed": false,
+  "fallback_used": false,
+  "protocol_changed": false,
+  "required_manual_action": "Start Docker Desktop and wait until the Linux engine reports Running, then rerun docker version and docker info in context desktop-linux."
+}

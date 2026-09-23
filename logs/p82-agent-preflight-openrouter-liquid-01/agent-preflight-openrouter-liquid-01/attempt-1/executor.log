@@ -1,0 +1,10 @@
+
+[1;31mProvider List: https://docs.litellm.ai/docs/providers[0m
+
+
+[1;31mProvider List: https://docs.litellm.ai/docs/providers[0m
+
+
+[1;31mProvider List: https://docs.litellm.ai/docs/providers[0m
+
+{"result": {"exit_status": "RepeatedFormatError", "submission": ""}, "usage": {"cost": 0.0, "model_calls": 3}}

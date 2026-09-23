@@ -1,0 +1,20 @@
+{
+  "schema": "experiments/p82-block3-t1-functional-v2.json",
+  "candidate": "local/gemma3-4b",
+  "runtime_model": "gemma3:4b",
+  "status": "FORMAT_OR_CONTENT_FAIL",
+  "functional_status": "FORMAT_OR_CONTENT_FAIL",
+  "num_predict": 128,
+  "elapsed_seconds": 6.468,
+  "eval_count": 71,
+  "done": true,
+  "validation_error": "Expecting value: line 1 column 1 (char 0)",
+  "raw_response": "```python\\nimport pytest\\n\\ndef validate_value(value):\\n    if value is None:\\n        raise ValueError('value is required')\\n    return value\\n\\ndef test_validate_value():\\n    pytest.raises(ValueError, validate_value, None)\\n    assert validate_value(7) == 7\\n```",
+  "diagnosis": "complete response, but output contract requested JSON and model returned a Python code block",
+  "interpretation": {
+    "truncation": false,
+    "model_capability_proven": false,
+    "functional_output_contract_under_v2": "FAIL",
+    "semantic_acceptance": "NOT_RUN"
+  }
+}

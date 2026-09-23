@@ -1,0 +1,9 @@
+{
+  "block": "plan-configuration-snapshot-binding",
+  "date": "2026-09-23",
+  "hypothesis": "A plan cannot carry a configuration digest inconsistent with its canonical snapshot.",
+  "criteria": {"digest_derived": "PASS", "digest_mismatch_rejected": "PASS", "secret_material_serialized": "NO"},
+  "local_tests_verified": 347,
+  "external_qualification": "NOT_PERFORMED",
+  "promotion": "NOT_PROMOTED"
+}

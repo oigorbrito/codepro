@@ -1,0 +1,14 @@
+{
+  "schema_version": "arkx-dependency-isolated-suite-evidence-v1",
+  "date": "2026-09-23",
+  "branch": "codex/auditoriaarquitetural",
+  "environment": {"os": "Windows", "python": "3.11.9", "source_import": "PYTHONPATH=src"},
+  "command": "PYTHONPATH=src python -c <unittest loader excluding test_p82_openrouter_adapter>",
+  "excluded_module": "tests.test_p82_openrouter_adapter",
+  "tests_run": 290,
+  "result": "PASS",
+  "interpretation": "Broad local regression evidence; external OpenRouter/minisweagent integration remains unqualified.",
+  "fallback_selected": false,
+  "acceptance": "LOCAL_DEPENDENCY_ISOLATED_SUITE_PASS_EXTERNAL_ADAPTER_BLOCKED",
+  "promotion": "NOT_PROMOTED"
+}

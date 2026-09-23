@@ -1,0 +1,7 @@
+Traceback (most recent call last):
+  File "D:\projetos\arkx\tools\run_mini_headless.py", line 40, in <module>
+    raise SystemExit(main())
+                     ^^^^^^
+  File "D:\projetos\arkx\tools\run_mini_headless.py", line 18, in main
+    from minisweagent.agents import get_agent
+ModuleNotFoundError: No module named 'minisweagent'

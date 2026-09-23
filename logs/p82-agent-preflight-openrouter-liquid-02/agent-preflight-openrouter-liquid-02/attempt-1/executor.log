@@ -1,0 +1,15 @@
+
+[1;31mProvider List: https://docs.litellm.ai/docs/providers[0m
+
+
+[1;31mProvider List: https://docs.litellm.ai/docs/providers[0m
+
+
+[1;31mGive Feedback / Get Help: https://github.com/BerriAI/litellm/issues/new[0m
+LiteLLM.Info: If you need to debug this error, use `litellm._turn_on_debug()'.
+
+
+[1;31mProvider List: https://docs.litellm.ai/docs/providers[0m
+
+{"result": {"exit_status": "RepeatedFormatError", "submission": ""}, "usage": {"cost": 0.0, "model_calls": 3}}
+Retrying <unknown> in 4 seconds as it raised RateLimitError: litellm.RateLimitError: RateLimitError: OpenrouterException - {"error":{"message":"Provider returned error","code":429,"metadata":{"raw":"liquid/lfm-2.5-2.6b:free is temporarily rate-limited upstream. Please retry shortly, or add your own key to accumulate your rate limits: https://openrouter.ai/settings/integrations","provider_name":"Liquid","is_byok":false,"provider_error_code":"rate_limit_exceeded","limit_source":"upstream_provider_shared_pool","remedy_hint":"Retry shortly, add your own provider key (https://openrouter.ai/settings/integrations), or route to another provider with provider routing: https://openrouter.ai/docs/features/provider-routing","retry_after_seconds":32,"retry_after_seconds_raw":32,"headers":{"Retry-After":"32"}}},"user_id":"user_3JSWe2YRaf17sei49utyTsy3tHu"}.

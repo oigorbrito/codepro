@@ -1,0 +1,16 @@
+{
+  "schema_version": "arkx-full-replay-chain-evidence-v1",
+  "date": "2026-09-23",
+  "branch": "codex/auditoriaarquitetural",
+  "environment": {"os": "Windows", "python": "3.11.9", "source_import": "PYTHONPATH=src"},
+  "hypothesis": "Explicit stage references can reconstruct the full lifecycle chain without re-execution or filling missing stages.",
+  "focused_test": {"result": "PASS", "tests_run": 127},
+  "criteria": {
+    "ordered_chain_reconstructed": "PASS",
+    "causal_order_validated": "PASS",
+    "missing_stage_inferred": "NO",
+    "executor_or_acceptance_invoked": "NO"
+  },
+  "acceptance": "LOCAL_FULL_REPLAY_CHAIN_EVIDENCE_PASS_NO_REEXECUTION",
+  "promotion": "NOT_PROMOTED"
+}

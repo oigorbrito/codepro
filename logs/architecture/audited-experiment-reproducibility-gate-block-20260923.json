@@ -1,0 +1,18 @@
+{
+  "schema_version": "arkx-audited-experiment-reproducibility-gate-evidence-v1",
+  "date": "2026-09-23",
+  "branch": "codex/auditoriaarquitetural",
+  "environment": {"os": "Windows", "python": "3.11.9", "source_import": "PYTHONPATH=src"},
+  "test_command": "python -m unittest discover -s tests -p test_*.py",
+  "full_suite": {"tests_run": 314, "result": "PASS"},
+  "criteria": {
+    "complete_audited_experiment_accepted": "PASS",
+    "incomplete_attempt_chain_rejected": "PASS",
+    "declared_reference_presence_checked": "PASS",
+    "legacy_record_validation_preserved": "PASS",
+    "external_reexecution_during_validation": "NO",
+    "promotion_or_qualification_inferred": "NO"
+  },
+  "external_qualification": "NOT_PERFORMED",
+  "promotion": "NOT_PROMOTED"
+}

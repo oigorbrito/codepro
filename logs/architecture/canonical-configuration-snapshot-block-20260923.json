@@ -1,0 +1,9 @@
+{
+  "block": "canonical-configuration-snapshot",
+  "date": "2026-09-23",
+  "hypothesis": "Equivalent configuration mappings produce the same identity while changes produce different identities without serializing secrets.",
+  "criteria": {"canonical_digest": "PASS", "secret_material_absent": "PASS", "identity_change_detected": "PASS"},
+  "local_tests_verified": 344,
+  "external_qualification": "NOT_PERFORMED",
+  "promotion": "NOT_PROMOTED"
+}

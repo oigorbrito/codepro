@@ -1,0 +1,17 @@
+{
+  "schema_version": "arkx-retry-attempt-lineage-evidence-v1",
+  "date": "2026-09-23",
+  "branch": "codex/auditoriaarquitetural",
+  "environment": {"os": "Windows", "python": "3.11.9", "source_import": "PYTHONPATH=src"},
+  "hypothesis": "An authorized retry can create deterministic, non-overwriting attempt lineage without invoking execution.",
+  "focused_test": {"result": "PASS", "tests_run": 109},
+  "criteria": {
+    "stable_next_attempt_identity": "PASS",
+    "previous_attempt_preserved": "PASS",
+    "unauthorized_retry_has_no_plan": "PASS",
+    "executor_invoked": "NO",
+    "artifact_overwritten": "NO"
+  },
+  "acceptance": "LOCAL_RETRY_LINEAGE_EVIDENCE_PASS_ARTIFACT_RESERVATION_SEPARATE",
+  "promotion": "NOT_PROMOTED"
+}

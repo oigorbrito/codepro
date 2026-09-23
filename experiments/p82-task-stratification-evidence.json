@@ -1,0 +1,18 @@
+{
+  "schema_version": "p8.2-task-stratification-v1",
+  "status": "DESIGN_ONLY",
+  "strata": ["T0", "T1", "T2", "T3", "T4", "T5"],
+  "external_evidence": [
+    {"mechanism": "minimal_scaffold", "class": "official_benchmark", "source": "https://www.swebench.com/"},
+    {"mechanism": "agentless_workflow", "class": "primary_paper", "source": "https://arxiv.org/abs/2407.01489"},
+    {"mechanism": "repository_graph", "class": "project_report", "source": "https://github.com/ozyyshr/RepoGraph"},
+    {"mechanism": "ast_repository_tools", "class": "project_report", "source": "https://github.com/AutoCodeRoverSG/auto-code-rover"},
+    {"mechanism": "tree_search_refinement", "class": "peer_reviewed_paper", "source": "https://proceedings.iclr.cc/paper_files/paper/2025/hash/a1e6783e4d739196cad3336f12d402bf-Abstract-Conference.html"},
+    {"mechanism": "trained_verifier", "class": "peer_reviewed_paper", "source": "https://arxiv.org/abs/2412.21139"},
+    {"mechanism": "distribution_shift", "class": "peer_reviewed_paper", "source": "https://proceedings.mlr.press/v267/vergopoulos25a.html"}
+  ],
+  "wave0": {
+    "sympy__sympy-14711": "T1_PROVISIONAL",
+    "sympy__sympy-24443": "T2_PROVISIONAL"
+  }
+}

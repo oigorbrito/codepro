@@ -1,0 +1,16 @@
+{
+  "schema_version": "arkx-budget-aware-lifecycle-evidence-v1",
+  "date": "2026-09-23",
+  "branch": "codex/auditoriaarquitetural",
+  "environment": {"os": "Windows", "python": "3.11.9", "source_import": "PYTHONPATH=src"},
+  "hypothesis": "Budget consumption can gate executor invocation deterministically within the contract lifecycle.",
+  "focused_test": {"result": "PASS", "tests_run": 118},
+  "criteria": {
+    "accepted_budget_invokes_executor_once": "PASS",
+    "accepted_budget_updates_ledger": "PASS",
+    "exhausted_budget_blocks": "PASS",
+    "blocked_budget_invokes_executor": "NO"
+  },
+  "acceptance": "LOCAL_BUDGET_AWARE_LIFECYCLE_EVIDENCE_PASS_EXTERNAL_EXECUTOR_PENDING",
+  "promotion": "NOT_PROMOTED"
+}

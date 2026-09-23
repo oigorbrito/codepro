@@ -1,0 +1,664 @@
+diff --git a/README.md b/README.md
+index 13041af..c729c17 100644
+--- a/README.md
++++ b/README.md
+@@ -1,26 +1,29 @@
+ # Arkx
+ 
+-Arkx is a greenfield project for empirical, incremental development of reliable capability.
++Arkx is a repository for incremental implementation and empirical evaluation of software capability.
+ 
+ > **MINIMUM SUFFICIENT ARCHITECTURE**  
+ > **FOR MAXIMUM RELIABLE CAPABILITY**
+ 
+-This repository is the canonical root for the project. It intentionally contains only the foundation in this bootstrap: the project contract, experimental protocol, structural placeholders, and a minimal CI check.
++This repository is the canonical root for the project. It contains runtime
++contracts, an execution harness, the project contract, the experimental
++protocol, and structural checks.
+ 
+-## Scope of this bootstrap
++## Current scope
+ 
+ Included:
+ 
+ - explicit project invariants;
+-- a small, evidence-oriented experimental protocol;
+-- stable top-level boundaries for future work;
+-- a deterministic structural check and minimal CI.
++- an evidence-oriented experimental protocol;
++- stable top-level boundaries;
++- a deterministic structural check, executable contracts, and a Treatment A
++  baseline harness.
+ 
+-Deferred:
++Still deferred or unqualified:
+ 
+-- routing and planning;
+ - multi-agent orchestration;
+-- OpenHands, ReX, mini-SWE-agent, and SWE-agent integrations;
++- OpenHands, ReX, and SWE-agent integrations;
++- real provider/model adoption and the A/B/C/D mechanism trial;
+ - product dependencies or automatic migration from `smag-rex`.
+ 
+ ## Development posture
+@@ -44,9 +47,9 @@ P1 adds deterministic task characterization from explicit signals only. See [the
+ 
+ P2 adds deterministic progress/stagnation assessment from explicit snapshots only. See [the P2 contract](docs/progress-stagnation.md). It does not control execution or authorize retry/replan.
+ 
+-P3 adds bounded rule-based routing and evidence-based escalation decisions. See [the P3 contract](docs/routing-escalation.md). It does not invoke or select concrete executors.
++P3 adds bounded rule-based routing and evidence-based escalation decisions. See [the P3 contract](docs/routing-escalation.md). It does not invoke concrete executors.
+ 
+-Block B adds independently removable P4 repository planning/state, P5 patch verification, and P6 handoff/context accounting. None executes a plan, owns acceptance, or creates orchestration.
++Block B adds independently removable P4 repository planning/state, P5 patch verification, and P6 handoff/context accounting. P8.2a adds a Treatment A baseline runner and official SWE-bench acceptance adapter; neither owns general orchestration or promotion.
+ 
+ ## Checks
+ 
+diff --git a/docs/architecture.md b/docs/architecture.md
+index 17bbba6..98d1e6a 100644
+--- a/docs/architecture.md
++++ b/docs/architecture.md
+@@ -1,24 +1,75 @@
+ # Architecture boundary
+ 
+-The bootstrap architecture is intentionally small:
++Arkx separates contracts, execution, verification, acceptance, and promotion.
++The executable contracts cover the request-to-acceptance path. Runtime
++capability is qualified per provider, model, executor, and treatment; the
++presence of a contract does not imply adoption.
+ 
+ ```text
+ Arkx
+-â”œâ”€â”€ docs/          contracts, protocol, and decisions
+-â”œâ”€â”€ experiments/   experiment records and fixtures; no runtime yet
+-â”œâ”€â”€ src/           reserved product boundary; no implementation yet
+-â”œâ”€â”€ tests/         reserved verification boundary; no test suite yet
+-â””â”€â”€ tools/         dependency-free repository checks
++â”œâ”€â”€ docs/          contracts, protocol, decisions, and evidence boundaries
++â”œâ”€â”€ experiments/   experiment records and synthetic fixtures; not orchestration
++â”œâ”€â”€ src/arkx/      executable contracts and bounded policy/runtime surfaces
++â”œâ”€â”€ tests/         executable contract and behavior verification
++â””â”€â”€ tools/         repository checks and narrow execution adapters
+ ```
+ 
+-P0 adds a deliberately small executable core under `src/arkx/`: versioned contracts, evidence status resolution, telemetry collection, and a deterministic baseline fixture. P1 adds explicit-signal task characterization, P2 adds snapshot-based progress assessment, P3 adds bounded routing/escalation policy, and Block B adds independent P4/P5/P6 artifacts in the same boundary. No layer has a concrete executor interface or executor orchestration.
++The current executable boundary is layered as follows:
++
++- P0: versioned contracts, evidence status resolution, telemetry collection,
++  and a deterministic baseline fixture;
++- P1: explicit-signal task characterization;
++- P2/P3: progress assessment, bounded routing, and evidence-based escalation;
++- P4/P5/P6: repository planning/state, patch verification, and handoff/context
++  accounting;
++- P7/P8.1/P8.2: composition records, executor qualification contracts, and
++  controlled treatment plans;
++- P8.2a: a narrow Treatment A baseline runner and the official SWE-bench
++  acceptance adapter;
++- current orchestration surfaces: request governance, treatment/executor
++  selection, sequential execution, recovery, independent acceptance, and
++  promotion gates.
++
++The canonical flow is:
++
++```text
++request
++  -> governance / authority
++  -> task characterization
++  -> treatment route
++  -> sufficient executor
++  -> progress / recovery
++  -> verification
++  -> independent acceptance
++  -> evidence for possible promotion
++```
++
++Routing selects the minimum sufficient treatment before selecting an executor.
++Simple, localized, and repository-wide paths are capabilities/regimes, not
++automatic executor cascades. A fallback, executor switch, scope expansion,
++acceptance, or promotion must remain explicit and evidence-backed.
++
++The official SWE-bench Docker authority has been qualified on the frozen Gold
++tasks. That validates the acceptance path and infrastructure, not a real
++provider/model, Treatment A execution, or A/B/C/D mechanism evidence.
+ 
+ ## Boundary rules
+ 
+-- `src/` is reserved for product code and is empty in this bootstrap.
++- `src/arkx/` contains product contracts and bounded policy/runtime code; it
++  must not silently grow into an unqualified general-purpose orchestrator.
+ - `experiments/` contains evidence-oriented records, not an implicit runtime.
+-- `tools/` may validate repository contracts but must not become orchestration.
+-- `tests/` contains P0 executable verification and remains the boundary for future tests.
+-- Integrations and executors require an explicit decision record and experiment evidence.
++- `tools/` may validate contracts or host a narrow adapter, but must not become
++  an untracked orchestration layer.
++- `tests/` verifies contracts and behavior; passing tests are local evidence,
++  not scientific or upstream evidence.
++- Integrations, providers, models, and executors require explicit identity,
++  qualification evidence, and an acceptance authority.
++- Missing provider/model identity, missing evidence, and blocked execution are
++  preserved as blocked or unknown; they never become success.
++- The working tree may contain an implementation under qualification. Merge
++  readiness requires the corresponding decision record, tests, and evidence to
++  be committed together.
+ 
+-An empty boundary is intentional. Creating a directory does not imply that the corresponding capability exists.
++The boundary is explicit: creating a module, fixture, or directory does not by
++itself prove that the corresponding capability exists or is suitable for
++promotion.
+diff --git a/docs/experimental-protocol.md b/docs/experimental-protocol.md
+index f24bf94..2b0f92d 100644
+--- a/docs/experimental-protocol.md
++++ b/docs/experimental-protocol.md
+@@ -1,6 +1,7 @@
+ # Experimental protocol
+ 
+-Arkx develops through small, empirical increments. The protocol below is the minimum record required before a capability can be considered for promotion.
++Arkx develops through empirical increments. The protocol below defines the
++minimum record required before a capability can be considered for promotion.
+ 
+ ## Required record
+ 
+@@ -14,6 +15,9 @@ Each experiment records:
+ - `procedure`: reproducible steps;
+ - `expected_signal`: measurable success and failure criteria;
+ - `result`: `PASS`, `FAIL`, `BLOCKED`, or `NOT_EXECUTED`;
++- `evidence`: links or paths to raw evidence and environment facts;
++- `acceptance`: explicit reviewer decision and rationale;
++- `promotion`: explicit decision to make the change durable, or `NOT_PROMOTED`.
+ 
+ P7 composition trials use their own comparability namespace: `COMPARABLE`, `INCOMPARABLE`, and `UNKNOWN`. P7 records externally supplied measurements and does not convert them into acceptance results.
+ 
+@@ -26,9 +30,14 @@ environment, budget, verification, and independent acceptance authority. It
+ does not invoke an executor or mechanism and does not manufacture acceptance;
+ results remain P8.1 observations. Missing controls and measurements remain
+ `UNKNOWN`, and the only intended treatment difference is the declared arm.
+-- `evidence`: links or paths to raw evidence and environment facts;
+-- `acceptance`: explicit reviewer decision and rationale;
+-- `promotion`: explicit decision to make the change durable, or `NOT_PROMOTED`.
++
++P8.2a adds the Treatment A baseline runner. Each attempt is serial, refuses to
++overwrite an existing attempt directory, derives a stable run identity from
++the task and frozen execution configuration, and writes an `execution.json`
++artifact atomically alongside the log, diff, and trajectory. The artifact
++records execution only; verification, independent acceptance, and promotion
++remain separate records. A missing provider, model, mini version, or Python
++executable blocks the attempt instead of selecting a fallback.
+ 
+ ## State separation
+ 
+diff --git a/docs/p82-minimal-mechanism-trial.md b/docs/p82-minimal-mechanism-trial.md
+index b05ef93..43225e8 100644
+--- a/docs/p82-minimal-mechanism-trial.md
++++ b/docs/p82-minimal-mechanism-trial.md
+@@ -34,8 +34,8 @@ promotion decision.
+ 
+ ## P8.2a baseline execution path
+ 
+-P8.2a is infrastructure qualification, not mechanism evidence. The baseline
+-runner accepts treatment A only, invokes mini-SWE-agent through its public
++P8.2a records infrastructure qualification, not mechanism evidence. The
++baseline runner accepts treatment A only, invokes mini-SWE-agent through its public
+ Python API in a headless worker, and records execution artifacts. It does not
+ run verification or decide acceptance. Verification and independent
+ acceptance are explicit, nullable records; missing provider/model identity is
+@@ -49,7 +49,9 @@ sample is frozen in `experiments/p82-wave0-task-sample.json` from the official
+ 
+ The official acceptance adapter is in `arkx.swebench_authority`. It creates a
+ SWE-bench prediction without gold patch or grading labels and invokes the
+-official harness with a unique `run_id`. Gold qualification and real A runs
+-remain blocked until `swebench` and Docker are available, the gold harness
+-passes, and one exact provider/model/configuration is frozen. B/C/D and any
++official harness with a unique `run_id`. The frozen Docker Gold authority
++returned `resolved: true` for the two Wave 0 tasks recorded under
++`logs/evaluation/`; this qualifies the acceptance path and infrastructure only.
++Real A runs still
++require one exact provider/model/configuration to be frozen. B/C/D and any
+ mechanism comparison remain out of scope.
+diff --git a/docs/project-contract.md b/docs/project-contract.md
+index f2f734a..82054a4 100644
+--- a/docs/project-contract.md
++++ b/docs/project-contract.md
+@@ -40,7 +40,9 @@ NO_SILENT_SCOPE_EXPANSION
+ 5. Any fallback, executor change, or scope change is explicit in the record and review.
+ 6. New architecture requires a decision record describing the observed need, alternatives, evidence, and rollback/removal condition.
+ 
+-## Non-goals of this bootstrap
+-
+-This repository does not yet define routing, planning, multi-agent execution, or integrations with OpenHands, ReX, mini-SWE-agent, or SWE-agent.
++## Current non-goals
+ 
++The repository now defines bounded routing, planning/state, verification,
++recovery, acceptance, promotion gates, and a mini-SWE-agent Treatment A
++baseline path. It does not define general multi-agent execution, automatic
++executor adoption, or integrations with OpenHands, ReX, and SWE-agent.
+diff --git a/experiments/README.md b/experiments/README.md
+index 551f37e..fe93b83 100644
+--- a/experiments/README.md
++++ b/experiments/README.md
+@@ -2,3 +2,4 @@
+ 
+ This directory is reserved for explicit experiment records and small fixtures. Use [the experimental protocol](../docs/experimental-protocol.md). No experiment has been executed by the bootstrap.
+ 
++The exploratory local-model qualification wave is documented in [local model qualification](../docs/local-model-qualification.md). It was run outside the Arkx experiment harness and must not be read as executor adoption or acceptance evidence.
+diff --git a/src/arkx/__init__.py b/src/arkx/__init__.py
+index 39c7d6c..2508056 100644
+--- a/src/arkx/__init__.py
++++ b/src/arkx/__init__.py
+@@ -1,6 +1,62 @@
+ """Minimal, executor-agnostic Arkx execution contracts and telemetry."""
+ 
+ from .contracts import Event, EventType, ExecutionRecord, ExecutionStatus
++from .request import (
++    ArkxRequest,
++    GovernanceDecision,
++    GovernancePolicy,
++    GovernanceReason,
++    GovernanceStatus,
++    RequestBudget,
++    RequestEnvironment,
++    authorize_request,
++    characterize_authorized_request,
++)
++from .selection import (
++    ExecutorBinding,
++    ExecutorRegistry,
++    SelectionDecision,
++    SelectionReason,
++    SelectionStatus,
++    TreatmentCatalog,
++    TreatmentDefinition,
++    select_executor,
++    select_treatment,
++)
++from .p82_localization import (
++    LocalizationArtifact,
++    LocalizationEvidenceBudget,
++    record_localization_artifact,
++)
++from .p82_editing import (
++    EditOperation,
++    StructuredEditProposal,
++    record_edit_proposal,
++)
++from .orchestration import (
++    ExecutionOutcome,
++    ExecutionResult,
++    OrchestrationReason,
++    OrchestrationResult,
++    OrchestrationStatus,
++    run_routed_pipeline,
++)
++from .recovery import (
++    RecoveryAction,
++    RecoveryBudget,
++    RecoveryDecision,
++    RecoveryReason,
++    decide_recovery,
++)
++from .acceptance import AcceptancePolicy, decide_independent_acceptance
++from .promotion import (
++    PromotionCandidate,
++    PromotionDecision,
++    PromotionPolicy,
++    PromotionReason,
++    PromotionStatus,
++    decide_promotion,
++)
+ from .characterization import (
+     CharacterizationConfig,
+     Confidence,
+@@ -108,6 +164,43 @@ __all__ = [
+     "EventType",
+     "ExecutionRecord",
+     "ExecutionStatus",
++    "ArkxRequest",
++    "GovernanceDecision",
++    "GovernancePolicy",
++    "GovernanceReason",
++    "GovernanceStatus",
++    "RequestBudget",
++    "RequestEnvironment",
++    "authorize_request",
++    "characterize_authorized_request",
++    "ExecutorBinding",
++    "ExecutorRegistry",
++    "SelectionDecision",
++    "SelectionReason",
++    "SelectionStatus",
++    "TreatmentCatalog",
++    "TreatmentDefinition",
++    "select_executor",
++    "select_treatment",
++    "ExecutionOutcome",
++    "ExecutionResult",
++    "OrchestrationReason",
++    "OrchestrationResult",
++    "OrchestrationStatus",
++    "run_routed_pipeline",
++    "RecoveryAction",
++    "RecoveryBudget",
++    "RecoveryDecision",
++    "RecoveryReason",
++    "decide_recovery",
++    "AcceptancePolicy",
++    "decide_independent_acceptance",
++    "PromotionCandidate",
++    "PromotionDecision",
++    "PromotionPolicy",
++    "PromotionReason",
++    "PromotionStatus",
++    "decide_promotion",
+     "CharacterizationConfig",
+     "Confidence",
+     "RecommendedPath",
+diff --git a/src/arkx/p82_baseline.py b/src/arkx/p82_baseline.py
+index 9cd9d72..bd37b71 100644
+--- a/src/arkx/p82_baseline.py
++++ b/src/arkx/p82_baseline.py
+@@ -126,6 +126,8 @@ class BaselineRunConfig:
+     runner_version: str
+     artifact_root: str
+     treatment: P82Treatment = P82Treatment.A
++    environment: str = "local"
++    bash_executable: str | None = None
+ 
+     def __post_init__(self) -> None:
+         if self.treatment is not P82Treatment.A:
+@@ -138,6 +140,28 @@ class BaselineRunConfig:
+     def missing_identity(self) -> tuple[str, ...]:
+         return tuple(name for name in ("provider", "model", "mini_version", "python_executable") if getattr(self, name) is None)
+ 
++    def identity_digest(self) -> str:
++        """Return a stable digest for the frozen execution configuration."""
++        value = {
++            "provider": self.provider,
++            "model": self.model,
++            "model_version": self.model_version,
++            "temperature": self.temperature,
++            "reasoning_configuration": self.reasoning_configuration,
++            "model_configuration": self.model_configuration,
++            "max_tokens": self.max_tokens,
++            "max_cost": self.max_cost,
++            "wall_time_seconds": self.wall_time_seconds,
++            "mini_version": self.mini_version,
++            "python_executable": self.python_executable,
++            "runner_version": self.runner_version,
++            "treatment": self.treatment.value,
++            "environment": self.environment,
++            "bash_executable": self.bash_executable,
++        }
++        encoded = json.dumps(value, ensure_ascii=False, sort_keys=True, separators=(",", ":"))
++        return hashlib.sha256(encoded.encode("utf-8")).hexdigest()[:16]
++
+ 
+ @dataclass(frozen=True)
+ class ExecutionArtifact:
+@@ -155,16 +179,21 @@ class ExecutionArtifact:
+     log_path: str | None
+     trajectory_path: str | None
+     model_usage: dict[str, Any] | None
++    artifact_path: str | None = None
+ 
+     def to_dict(self) -> dict[str, Any]:
+         value = {name: getattr(self, name) for name in (
+             "run_id", "state", "task_id", "treatment", "attempt", "started_at", "finished_at",
+-            "exit_code", "failure", "failure_category", "diff_path", "log_path", "trajectory_path", "model_usage")}
++            "exit_code", "failure", "failure_category", "diff_path", "log_path", "trajectory_path",
++            "model_usage", "artifact_path")}
+         for name in ("state", "failure_category"):
+             if isinstance(value[name], Enum):
+                 value[name] = value[name].value
+         return value
+ 
++    def to_json(self) -> str:
++        return json.dumps(self.to_dict(), ensure_ascii=False, sort_keys=True, separators=(",", ":"))
++
+ 
+ class HeadlessInvoker(Protocol):
+     def __call__(self, task: ProspectiveTask, config: BaselineRunConfig, trajectory_path: Path) -> tuple[int, str, dict[str, Any] | None]: ...
+@@ -185,7 +214,9 @@ class MiniSweAgentHeadlessRunner:
+             raise ValueError("attempt must be positive")
+         missing = config.missing_identity()
+         root = Path(config.artifact_root) / task.task_id / f"attempt-{attempt}"
+-        run_id = hashlib.sha256(f"{task.task_id}|A|{attempt}|{config.runner_version}".encode()).hexdigest()[:16]
++        run_id = hashlib.sha256(
++            f"{task.task_id}|{task.base_commit}|A|{attempt}|{config.identity_digest()}".encode("utf-8")
++        ).hexdigest()[:16]
+         if root.exists():
+             return self._blocked(run_id, task, attempt, "artifact already exists; refusing silent overwrite")
+         root.mkdir(parents=True)
+@@ -204,7 +235,16 @@ class MiniSweAgentHeadlessRunner:
+             state = BaselineExecutionState.COMPLETED if exit_code == 0 else BaselineExecutionState.EXECUTOR_FAILED
+             return self._finish(root, run_id, task, attempt, started, state, exit_code, None if exit_code == 0 else "executor returned non-zero", None if exit_code == 0 else RunnerFailureCategory.AGENT_RUN_FAILURE, str(diff_path), str(log_path), str(trajectory), usage)
+         except subprocess.TimeoutExpired as error:
+-            return self._finish(root, run_id, task, attempt, started, BaselineExecutionState.EXECUTOR_FAILED, None, str(error), RunnerFailureCategory.TIMEOUT, None, None, None, None)
++            log_path = root / "executor.log"
++            stdout = self._decode_process_output(error.stdout)
++            stderr = self._decode_process_output(error.stderr)
++            log_path.write_text(stdout + stderr, encoding="utf-8", newline="\n")
++            return self._finish(
++                root, run_id, task, attempt, started,
++                BaselineExecutionState.EXECUTOR_FAILED, None, str(error),
++                RunnerFailureCategory.TIMEOUT, None, str(log_path),
++                str(trajectory) if trajectory.exists() else None, None,
++            )
+         except Exception as error:
+             message = f"{type(error).__name__}: {error}"
+             return self._finish(root, run_id, task, attempt, started, BaselineExecutionState.EXECUTOR_FAILED, None, message, self._classify_failure(message), None, None, None, None)
+@@ -228,21 +268,48 @@ class MiniSweAgentHeadlessRunner:
+             return RunnerFailureCategory.DEADLOCK_HANG
+         return RunnerFailureCategory.AGENT_RUN_FAILURE
+ 
++    @staticmethod
++    def _decode_process_output(value: str | bytes | None) -> str:
++        if value is None:
++            return ""
++        if isinstance(value, bytes):
++            return value.decode("utf-8", errors="replace")
++        return value
++
+     def _subprocess_invoker(self, task: ProspectiveTask, config: BaselineRunConfig, trajectory_path: Path) -> tuple[int, str, dict[str, Any] | None]:
+         worker = Path(__file__).parents[2] / "tools" / "run_mini_headless.py"
+         payload = {"task": task.problem_statement, "workspace": task.workspace, "model": config.model,
+                    "trajectory": str(trajectory_path), "max_cost": config.max_cost, "wall_time_seconds": config.wall_time_seconds,
+-                   "model_configuration": config.model_configuration}
+-        completed = subprocess.run([config.python_executable, str(worker)], input=json.dumps(payload), text=True,
+-                                   capture_output=True, cwd=task.workspace, timeout=config.wall_time_seconds)
+-        return completed.returncode, completed.stdout + completed.stderr, None
++                   "model_configuration": config.model_configuration, "environment": config.environment,
++                   "bash_executable": config.bash_executable}
++        timeout = None if config.wall_time_seconds is None else config.wall_time_seconds + 10
++        completed = subprocess.run(
++            [config.python_executable, str(worker)], input=json.dumps(payload), text=True,
++            capture_output=True, cwd=task.workspace, timeout=timeout,
++        )
++        combined_log = completed.stdout + completed.stderr
++        usage = None
++        if completed.returncode == 0:
++            lines = [line for line in completed.stdout.splitlines() if line.strip()]
++            if lines:
++                try:
++                    worker_result = json.loads(lines[-1])
++                    usage = worker_result.get("usage")
++                except (json.JSONDecodeError, AttributeError):
++                    usage = None
++        return completed.returncode, combined_log, usage
+ 
+     def _blocked(self, run_id: str, task: ProspectiveTask, attempt: int, failure: str) -> ExecutionArtifact:
+         now = _now()
+         return ExecutionArtifact(run_id, BaselineExecutionState.BLOCKED, task.task_id, "A", attempt, now, now, None, failure, RunnerFailureCategory.UNKNOWN, None, None, None, None)
+ 
+     def _finish(self, root: Path, run_id: str, task: ProspectiveTask, attempt: int, started: str, state: BaselineExecutionState, exit_code: int | None, failure: str | None, failure_category: RunnerFailureCategory | None, diff_path: str | None, log_path: str | None, trajectory_path: str | None, usage: dict[str, Any] | None) -> ExecutionArtifact:
+-        return ExecutionArtifact(run_id, state, task.task_id, "A", attempt, started, _now(), exit_code, failure, failure_category, diff_path, log_path, trajectory_path, usage)
++        artifact_path = root / "execution.json"
++        artifact = ExecutionArtifact(run_id, state, task.task_id, "A", attempt, started, _now(), exit_code, failure, failure_category, diff_path, log_path, trajectory_path, usage, str(artifact_path))
++        temporary_path = root / "execution.json.tmp"
++        temporary_path.write_text(artifact.to_json() + "\n", encoding="utf-8", newline="\n")
++        temporary_path.replace(artifact_path)
++        return artifact
+ 
+ 
+ @dataclass(frozen=True)
+diff --git a/tests/test_p82_baseline.py b/tests/test_p82_baseline.py
+index d7d45ab..338b6b6 100644
+--- a/tests/test_p82_baseline.py
++++ b/tests/test_p82_baseline.py
+@@ -1,6 +1,9 @@
+ import tempfile
+ import unittest
++import json
++import subprocess
+ from pathlib import Path
++from unittest.mock import patch
+ 
+ from arkx.p82 import P82RunStatus, P82Treatment, TaskStratum
+ from arkx.p82_baseline import (
+@@ -40,6 +43,43 @@ def config(root, **overrides):
+ 
+ 
+ class P82BaselineTests(unittest.TestCase):
++    def test_subprocess_invoker_passes_limits_and_captures_usage(self):
++        with tempfile.TemporaryDirectory() as directory:
++            workspace = Path(directory) / "workspace"
++            workspace.mkdir()
++            runner = MiniSweAgentHeadlessRunner()
++            completed = type("Completed", (), {
++                "returncode": 0,
++                "stdout": '{"result":"done","usage":{"model_calls":3,"cost":0.25}}\n',
++                "stderr": "worker log\n",
++            })()
++            with patch("arkx.p82_baseline.subprocess.run", return_value=completed) as mocked:
++                usage = runner._subprocess_invoker(task(workspace), config(directory), Path(directory) / "trajectory.json")
++            self.assertEqual(usage, (0, '{"result":"done","usage":{"model_calls":3,"cost":0.25}}\nworker log\n', {"model_calls": 3, "cost": 0.25}))
++            self.assertEqual(mocked.call_args.kwargs["timeout"], 20)
++            payload = json.loads(mocked.call_args.kwargs["input"])
++            self.assertEqual(payload["max_cost"], "1")
++            self.assertEqual(payload["wall_time_seconds"], 10)
++
++    def test_timeout_preserves_partial_output_and_trajectory(self):
++        with tempfile.TemporaryDirectory() as directory:
++            workspace = Path(directory) / "workspace"
++            workspace.mkdir()
++            artifact_root = Path(directory) / "artifacts"
++            trajectory = artifact_root / "task-1" / "attempt-1" / "trajectory.json"
++
++            def timed_out_invoker(run_task, run_config, trajectory_path):
++                trajectory_path.write_text('{"partial":true}', encoding="utf-8")
++                raise subprocess.TimeoutExpired(
++                    cmd="worker", timeout=20, output=b"partial stdout\n", stderr=b"partial stderr\n"
++                )
++
++            result = MiniSweAgentHeadlessRunner(timed_out_invoker).run(task(workspace), config(artifact_root))
++            self.assertEqual(result.failure_category, RunnerFailureCategory.TIMEOUT)
++            self.assertTrue(Path(result.log_path).exists())
++            self.assertEqual(Path(result.log_path).read_text(encoding="utf-8"), "partial stdout\npartial stderr\n")
++            self.assertEqual(Path(result.trajectory_path).read_text(encoding="utf-8"), '{"partial":true}')
++
+     def test_headless_runner_uses_fake_invoker_and_captures_artifacts(self):
+         with tempfile.TemporaryDirectory() as directory:
+             workspace = Path(directory) / "workspace"
+@@ -56,8 +96,46 @@ class P82BaselineTests(unittest.TestCase):
+             self.assertEqual(calls, [("task-1", P82Treatment.A, "trajectory.json")])
+             self.assertTrue(Path(result.log_path).exists())
+             self.assertTrue(Path(result.diff_path).exists())
++            self.assertTrue(Path(result.artifact_path).exists())
++            persisted = json.loads(Path(result.artifact_path).read_text(encoding="utf-8"))
++            self.assertEqual(persisted, result.to_dict())
++            self.assertEqual(result.model_usage, {"calls": 1})
+             self.assertEqual(result.treatment, "A")
+ 
++    def test_run_identity_changes_when_frozen_model_configuration_changes(self):
++        with tempfile.TemporaryDirectory() as directory:
++            first = config(directory, model="model-a")
++            second = config(directory, model="model-b")
++            self.assertNotEqual(first.identity_digest(), second.identity_digest())
++
++            runner = MiniSweAgentHeadlessRunner(lambda *_: (0, "", None))
++            first_result = runner.run(task(directory), first, attempt=1)
++            second_result = runner.run(task(directory), second, attempt=2)
++            self.assertNotEqual(first_result.run_id, second_result.run_id)
++
++    def test_run_identity_changes_when_environment_changes(self):
++        with tempfile.TemporaryDirectory() as directory:
++            first = config(directory, environment="local")
++            second = config(directory, environment="git-bash", bash_executable=r"C:\Program Files\Git\bin\bash.exe")
++            self.assertNotEqual(first.identity_digest(), second.identity_digest())
++
++    def test_subprocess_invoker_passes_explicit_git_bash_environment(self):
++        with tempfile.TemporaryDirectory() as directory:
++            workspace = Path(directory) / "workspace"
++            workspace.mkdir()
++            runner = MiniSweAgentHeadlessRunner()
++            completed = type("Completed", (), {"returncode": 0, "stdout": "{}\n", "stderr": ""})()
++            run_config = config(
++                directory,
++                environment="git-bash",
++                bash_executable=r"C:\Program Files\Git\bin\bash.exe",
++            )
++            with patch("arkx.p82_baseline.subprocess.run", return_value=completed) as mocked:
++                runner._subprocess_invoker(task(workspace), run_config, Path(directory) / "trajectory.json")
++            payload = json.loads(mocked.call_args.kwargs["input"])
++            self.assertEqual(payload["environment"], "git-bash")
++            self.assertEqual(payload["bash_executable"], r"C:\Program Files\Git\bin\bash.exe")
++
+     def test_missing_model_or_provider_is_blocked_without_fallback(self):
+         with tempfile.TemporaryDirectory() as directory:
+             result = MiniSweAgentHeadlessRunner().run(task(directory), config(directory, model=None))
+diff --git a/tools/run_mini_headless.py b/tools/run_mini_headless.py
+index eedd60b..c772505 100644
+--- a/tools/run_mini_headless.py
++++ b/tools/run_mini_headless.py
+@@ -22,17 +22,45 @@ def main() -> int:
+     from minisweagent.utils.serialize import recursive_merge, UNSET
+ 
+     config = get_config_from_spec("mini.yaml")
+-    config = recursive_merge(config, {
+-        "run": {"task": payload["task"] or UNSET},
+-        "agent": {"mode": "yolo", "confirm_exit": False, "output_path": Path(payload["trajectory"])},
+-        "model": {"model_name": payload["model"], "model_class": payload.get("model_class", UNSET), **(payload.get("model_configuration") or payload.get("model_kwargs") or {})},
+-        "environment": {"cwd": payload["workspace"]},
+-    })
++    config = recursive_merge(
++        config,
++        {
++            "run": {"task": payload["task"] or UNSET},
++            "agent": {
++                "mode": "yolo",
++                "confirm_exit": False,
++                "output_path": Path(payload["trajectory"]),
++                "cost_limit": None if payload["max_cost"] is None else float(payload["max_cost"]),
++                "wall_time_limit_seconds": None if payload["wall_time_seconds"] is None else int(payload["wall_time_seconds"]),
++            },
++            "model": {
++                "model_name": payload["model"],
++                "model_class": payload.get("model_class", UNSET),
++                **(payload.get("model_configuration") or payload.get("model_kwargs") or {}),
++            },
++            "environment": {"cwd": payload["workspace"]},
++        },
++    )
+     model = get_model(config=config["model"])
+-    env = get_environment(config["environment"], default_type="local")
++    if payload.get("environment") == "git-bash":
++        from p82_bash_environment import BashLocalEnvironment
++
++        environment_config = config["environment"] | {
++            "bash_executable": payload["bash_executable"],
++        }
++        env = BashLocalEnvironment(**environment_config)
++    else:
++        env = get_environment(config["environment"], default_type="local")
+     agent = get_agent(model, env, config["agent"], default_type="default")
+     result = agent.run(payload["task"] or "")
+-    print(json.dumps(result, ensure_ascii=False, sort_keys=True))
++    output = {
++        "result": result,
++        "usage": {
++            "model_calls": getattr(agent, "n_calls", None),
++            "cost": getattr(agent, "cost", None),
++        },
++    }
++    print(json.dumps(output, ensure_ascii=False, sort_keys=True))
+     return 0
+ 
+ 

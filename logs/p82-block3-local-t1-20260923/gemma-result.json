@@ -1,0 +1,22 @@
+{
+  "schema_version": "p8.2-block3-t1-result-v1",
+  "candidate": "local/gemma3-4b",
+  "runtime_model": "gemma3:4b",
+  "harness": "ollama-api-json-local",
+  "temperature": 0,
+  "num_predict": 32,
+  "status": "FORMAT_OR_CONTENT_FAIL",
+  "functional_status": "FORMAT_OR_CONTENT_FAIL",
+  "elapsed_seconds": 21.188,
+  "eval_count": 32,
+  "done": true,
+  "validation_error": "Expecting value: line 1 column 1 (char 0)",
+  "raw_response_prefix": "```python\\nimport pytest\\n\\ndef validate_value(value):\\n    if value is None:\\n        raise ValueError('value is required')\\n    return",
+  "diagnosis": "response exceeded the 32-token output bound and was truncated before valid JSON and test content completed",
+  "interpretation": {
+    "model_capability_proven": false,
+    "semantic_task_failure_proven": false,
+    "output_contract_under_this_budget": "FAIL"
+  },
+  "next_step": "predeclare a separate functional-probe output budget before any repeat"
+}

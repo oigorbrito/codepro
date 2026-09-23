@@ -1,0 +1,16 @@
+{
+  "schema_version": "arkx-legacy-result-boundary-evidence-v1",
+  "date": "2026-09-23",
+  "branch": "codex/auditoriaarquitetural",
+  "environment": {"os": "Windows", "python": "3.11.9", "source_import": "PYTHONPATH=src"},
+  "hypothesis": "Centralized neutral-to-legacy conversion preserves orchestration compatibility while new executors depend only on the neutral contract.",
+  "focused_test": {"result": "PASS", "tests_run": 95},
+  "criteria": {
+    "conversion_preserves_state_artifacts_and_error": "PASS",
+    "direct_and_bridged_equivalence": "PASS",
+    "legacy_boundary_centralized": "PASS",
+    "legacy_api_removed": false
+  },
+  "acceptance": "LOCAL_COMPATIBILITY_EVIDENCE_PASS_EXTERNAL_INTEGRATION_BLOCKED",
+  "promotion": "NOT_PROMOTED"
+}

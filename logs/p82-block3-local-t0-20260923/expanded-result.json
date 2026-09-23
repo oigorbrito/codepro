@@ -1,0 +1,20 @@
+{
+  "schema_version": "p8.2-block3-t0-expanded-v1",
+  "harness": "ollama-api-json-local",
+  "prompt": "Respond with exactly ARKX_T0_OK and nothing else.",
+  "generation": {"temperature": 0, "num_predict": 32, "stream": false},
+  "results": [
+    {"candidate": "local/gemma3-4b", "runtime_model": "gemma3:4b", "status": "PASS_T0_FORMAT", "elapsed_seconds": 21.34, "eval_count": 9, "replicate": true},
+    {"candidate": "local/phi4-mini", "runtime_model": "phi4-mini:latest", "status": "PASS_T0_FORMAT", "elapsed_seconds": 11.515, "eval_count": 6},
+    {"candidate": "local/granite3.3-8b", "runtime_model": "granite3.3:8b", "status": "PASS_T0_FORMAT", "elapsed_seconds": 29.266, "eval_count": 8},
+    {"candidate": "local/qwen2.5-coder-3b", "runtime_model": "qwen2.5-coder:3b", "status": "PASS_T0_FORMAT", "elapsed_seconds": 25.89, "eval_count": 6},
+    {"candidate": "local/qwen2.5-coder-7b", "runtime_model": "qwen2.5-coder:7b", "status": "INDETERMINATE_CAPTURE", "reason": "no auditable JSON returned within bounded command window"}
+  ],
+  "qualification_boundary": {
+    "t0_format_pass_count": 4,
+    "t1_or_t2_qualified_count": 0,
+    "resolution_evidence": false,
+    "mechanism_evidence": false
+  },
+  "next_gate": "run the fixed functional JSON probe on T1 candidates only"
+}

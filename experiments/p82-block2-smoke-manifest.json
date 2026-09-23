@@ -1,0 +1,37 @@
+{
+  "schema_version": "p8.2-block2-smoke-v1",
+  "status": "PREDECLARED",
+  "purpose": "Run deterministic local smoke cells by task stratum without model or SWE-bench execution.",
+  "evidence_boundary": "contract and harness consistency only; not model capability or mechanism evidence",
+  "cells": [
+    {
+      "cell_id": "T0-headless",
+      "stratum": "T0",
+      "fixture": "experiments/p82-deterministic-headless-probe.json",
+      "test_modules": ["tests.test_p82_baseline"],
+      "required": ["initialization_status=PASS", "run_status=Submitted", "api_calls=1"]
+    },
+    {
+      "cell_id": "T1-localized",
+      "stratum": "T1",
+      "fixture": "experiments/characterization-fixture.json:localized",
+      "test_modules": ["tests.test_characterization"],
+      "required": ["localized fixture is represented", "deterministic characterization"]
+    },
+    {
+      "cell_id": "T2-localization-contract",
+      "stratum": "T2",
+      "fixture": "C1 contract only",
+      "test_modules": ["tests.test_p82_localization"],
+      "required": ["budget enforced", "candidates non-authoritative", "deterministic serialization"]
+    }
+  ],
+  "frozen": {
+    "model_calls": 0,
+    "provider": null,
+    "executor": "local deterministic test runner",
+    "treatment": "contract-smoke-only",
+    "fallback": false
+  },
+  "promotion_rule": "A smoke PASS does not qualify a model, executor, treatment, B1, C1, or D1."
+}

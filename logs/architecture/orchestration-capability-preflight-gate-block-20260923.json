@@ -1,0 +1,17 @@
+{
+  "schema_version": "arkx-orchestration-capability-preflight-gate-evidence-v1",
+  "date": "2026-09-23",
+  "branch": "codex/auditoriaarquitetural",
+  "environment": {"os": "Windows", "python": "3.11.9", "source_import": "PYTHONPATH=src"},
+  "test_command": "python -m unittest discover -s tests -p test_*.py",
+  "full_suite": {"tests_run": 323, "result": "PASS"},
+  "criteria": {
+    "treatment_capabilities_copied_to_plan": "PASS",
+    "missing_preflight_blocks_before_executor": "PASS",
+    "policy_denial_blocks_before_executor": "PASS",
+    "legacy_empty-capability_path_preserved": "PASS",
+    "fallback_or_executor_switch_selected": "NO"
+  },
+  "external_qualification": "NOT_PERFORMED",
+  "promotion": "NOT_PROMOTED"
+}

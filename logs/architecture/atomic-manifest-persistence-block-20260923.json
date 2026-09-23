@@ -1,0 +1,16 @@
+{
+  "schema_version": "arkx-atomic-manifest-persistence-evidence-v1",
+  "date": "2026-09-23",
+  "branch": "codex/auditoriaarquitetural",
+  "environment": {"os": "Windows", "python": "3.11.9", "source_import": "PYTHONPATH=src"},
+  "hypothesis": "A budget-bound execution manifest can be validated and persisted atomically for later replay.",
+  "focused_test": {"result": "PASS", "tests_run": 119},
+  "criteria": {
+    "manifest_round_trip": "PASS",
+    "identity_and_lifecycle_validated": "PASS",
+    "atomic_write_primitive_used": "PASS",
+    "verification_or_acceptance_inferred": "NO"
+  },
+  "acceptance": "LOCAL_ATOMIC_MANIFEST_EVIDENCE_PASS_VERIFICATION_SEPARATE",
+  "promotion": "NOT_PROMOTED"
+}

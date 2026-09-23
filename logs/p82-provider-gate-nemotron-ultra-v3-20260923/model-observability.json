@@ -1,0 +1,1 @@
+{"events": [{"call_index": null, "duration_seconds": 11.235, "event": "model_call", "finished_at": "2026-09-23T13:02:49.792+00:00", "model": "nvidia/nemotron-3-ultra-550b-a55b:free", "outcome": "response", "started_at": "2026-09-23T13:02:38.549+00:00", "timeout_origin": "provider_request"}], "updated_at": "2026-09-23T13:02:49.792+00:00"}

@@ -1,0 +1,18 @@
+{
+  "schema_version": "arkx-experiment-execution-identity-digest-evidence-v1",
+  "date": "2026-09-23",
+  "branch": "codex/auditoriaarquitetural",
+  "environment": {"os": "Windows", "python": "3.11.9", "source_import": "PYTHONPATH=src"},
+  "test_command": "python -m unittest discover -s tests -p test_*.py",
+  "full_suite": {"tests_run": 314, "result": "PASS"},
+  "criteria": {
+    "identity_digest_serializes": "PASS",
+    "attempt_order_does_not_change_digest": "PASS",
+    "execution_field_drift_changes_identity": "PASS",
+    "missing_or_wrong_identity_rejected_for_audited_experiment": "PASS",
+    "legacy_record_readability_preserved": "PASS",
+    "qualification_inferred_from_digest": "NO"
+  },
+  "external_qualification": "NOT_PERFORMED",
+  "promotion": "NOT_PROMOTED"
+}

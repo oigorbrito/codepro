@@ -1,0 +1,9 @@
+{
+  "block": "orchestration-integration-identity-binding",
+  "date": "2026-09-23",
+  "hypothesis": "Identities supplied to orchestration are present on the exact plan that is executed.",
+  "criteria": {"provider_identity_bound": "PASS", "sandbox_identity_bound": "PASS", "implicit_default_selected": "NO"},
+  "local_tests_verified": 351,
+  "external_qualification": "NOT_PERFORMED",
+  "promotion": "NOT_PROMOTED"
+}

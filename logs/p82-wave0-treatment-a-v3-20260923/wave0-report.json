@@ -1,0 +1,94 @@
+{
+  "schema_version": "p8.2a-wave0-report-v1",
+  "treatment": "A",
+  "wave": "wave-0-baseline-smoke",
+  "aggregate": {
+    "terminal_state": "BLOCKED",
+    "resolved": 0,
+    "unresolved": 0,
+    "blocked": 2,
+    "docker_evaluation_invoked": false,
+    "docker_evaluation_reason": "No trustworthy patch was produced by either agent execution."
+  },
+  "identity": {
+    "provider": "OpenRouter",
+    "model": "nvidia/nemotron-3-ultra-550b-a55b:free",
+    "runner_version": "p8.2a-runner-v3",
+    "environment": "git-bash",
+    "bash_executable": "C:\\Program Files\\Git\\bin\\bash.exe",
+    "model_adapter": "p82_openrouter_model.ArkxOpenRouterModel",
+    "temperature": 0,
+    "reasoning": "disabled",
+    "provider_allow_fallbacks": false,
+    "provider_retry_attempts": 3,
+    "provider_retry_backoff_seconds": 2.0,
+    "wall_time_seconds": 180,
+    "max_cost": "0",
+    "mini_version": "2.4.6",
+    "task_manifest": "experiments/p82-wave0-task-sample.json",
+    "protocol": "experiments/p82-wave0-comparison-protocol.json"
+  },
+  "tasks": [
+    {
+      "instance_id": "sympy__sympy-14711",
+      "terminal_state": "BLOCKED",
+      "classification": "BLOCKED",
+      "failure_category": "PROVIDER_AVAILABILITY_FAILURE",
+      "raw_runner_state": "EXECUTOR_FAILED",
+      "raw_runner_failure_category": "TIMEOUT",
+      "model_calls": 1,
+      "model_calls_note": "One call is preserved in the final partial trajectory; the process timed out before aggregate retry usage was emitted.",
+      "tokens": null,
+      "cost": 0.0,
+      "latency_seconds": 190.017,
+      "retries_policy": 3,
+      "retries_observed": null,
+      "executor_result": "ProviderAvailabilityError: provider_error code=503 error_type=provider_overloaded: Upstream error from Nvidia: Service temporarily overloaded",
+      "swebench_result": "NOT_EXECUTED",
+      "patch": null,
+      "artifacts": {
+        "execution": "logs/p82-wave0-treatment-a-v3-20260923/sympy__sympy-14711/sympy__sympy-14711/attempt-1/execution.json",
+        "executor_log": "logs/p82-wave0-treatment-a-v3-20260923/sympy__sympy-14711/sympy__sympy-14711/attempt-1/executor.log",
+        "trajectory": "logs/p82-wave0-treatment-a-v3-20260923/sympy__sympy-14711/sympy__sympy-14711/attempt-1/trajectory.json",
+        "diff": null
+      },
+      "workspace_diff": "empty"
+    },
+    {
+      "instance_id": "sympy__sympy-24443",
+      "terminal_state": "BLOCKED",
+      "classification": "BLOCKED",
+      "failure_category": "PROVIDER_OR_RUNTIME_TIMEOUT",
+      "raw_runner_state": "EXECUTOR_FAILED",
+      "raw_runner_failure_category": "TIMEOUT",
+      "model_calls": null,
+      "tokens": null,
+      "cost": null,
+      "latency_seconds": 190.023,
+      "retries_policy": 3,
+      "retries_observed": null,
+      "executor_result": "No structured executor result before wall-time timeout",
+      "swebench_result": "NOT_EXECUTED",
+      "patch": null,
+      "artifacts": {
+        "execution": "logs/p82-wave0-treatment-a-v3-20260923/sympy__sympy-24443/sympy__sympy-24443/attempt-1/execution.json",
+        "executor_log": "logs/p82-wave0-treatment-a-v3-20260923/sympy__sympy-24443/sympy__sympy-24443/attempt-1/executor.log",
+        "trajectory": null,
+        "diff": null
+      },
+      "workspace_diff": "empty"
+    }
+  ],
+  "gate": {
+    "b1_c1": "CLOSED",
+    "evidence_sufficient_to_open": false,
+    "reason": "Wave 0 produced no authoritative task acceptance results."
+  },
+  "divergence": [],
+  "notes": [
+    "Docker context desktop-linux was validated with Client and Server before execution.",
+    "No fallback executor was used.",
+    "B1, C1, and D1 were not executed.",
+    "No commit, push, or merge was performed."
+  ]
+}

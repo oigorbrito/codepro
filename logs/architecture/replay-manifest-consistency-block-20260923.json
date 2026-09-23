@@ -1,0 +1,16 @@
+{
+  "schema_version": "arkx-replay-manifest-consistency-evidence-v1",
+  "date": "2026-09-23",
+  "branch": "codex/auditoriaarquitetural",
+  "environment": {"os": "Windows", "python": "3.11.9", "source_import": "PYTHONPATH=src"},
+  "hypothesis": "Replayed lifecycle facts can be checked against a persisted manifest without state repair or execution.",
+  "focused_test": {"result": "PASS", "tests_run": 124},
+  "criteria": {
+    "matching_replay_accepted": "PASS",
+    "status_divergence_rejected": "PASS",
+    "missing_status_inferred": "NO",
+    "executor_invoked": "NO"
+  },
+  "acceptance": "LOCAL_REPLAY_MANIFEST_CONSISTENCY_EVIDENCE_PASS_NO_STATE_REPAIR",
+  "promotion": "NOT_PROMOTED"
+}

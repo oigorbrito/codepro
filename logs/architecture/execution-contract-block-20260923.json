@@ -1,0 +1,22 @@
+{
+  "schema_version": "arkx-execution-contract-evidence-v1",
+  "date": "2026-09-23",
+  "branch": "codex/auditoriaarquitetural",
+  "environment": {"os": "Windows", "python": "3.11.9", "source_import": "PYTHONPATH=src"},
+  "hypothesis": "Executor, provider and sandbox protocols allow deterministic core tests without importing a concrete executor, provider, Docker or SWE-bench.",
+  "focused_test": {
+    "command": "PYTHONPATH=src python -m unittest tests.test_execution tests.test_harness tests.test_promotion tests.test_p82_baseline tests.test_core_outcomes tests.test_p0_telemetry tests.test_swebench_authority",
+    "result": "PASS",
+    "tests_run": 79
+  },
+  "criteria": {
+    "fake_executor": "PASS",
+    "fake_provider": "PASS",
+    "fake_sandbox": "PASS",
+    "structured_error_for_failed_or_blocked": "PASS",
+    "missing_provider_and_model_preserved": "PASS",
+    "real_executor_selected": false
+  },
+  "acceptance": "LOCAL_CONTRACT_EVIDENCE_PASS_EXTERNAL_INTEGRATION_NOT_ATTEMPTED",
+  "promotion": "NOT_PROMOTED"
+}

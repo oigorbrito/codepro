@@ -1,0 +1,13 @@
+{
+  "block": "lineage-event-chain-audit",
+  "date": "2026-09-23",
+  "hypothesis": "An attempt with inconsistent execution, recovery, source, or budget facts cannot pass lineage audit.",
+  "criteria": {
+    "matching_execution_recovery_source_ledger": "PASS",
+    "recovery_reference_drift_rejected": "PASS",
+    "local_suite": "PASS",
+    "external_qualification": "NOT_PERFORMED"
+  },
+  "local_tests_verified": 365,
+  "promotion": "NOT_PROMOTED"
+}

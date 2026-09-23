@@ -1,0 +1,10 @@
+{
+  "error": {
+    "code": 503,
+    "message": "Upstream error from Nvidia: Service temporarily overloaded",
+    "metadata": {
+      "error_type": "provider_overloaded"
+    }
+  },
+  "id": "gen-1790166542-dZrcZ5dpD1xQXtjn0sfg"
+}

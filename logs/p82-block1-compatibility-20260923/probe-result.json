@@ -1,0 +1,64 @@
+{
+  "schema_version": "p8.2-block1-probe-v1",
+  "block": "BLOCK_1",
+  "status": "QUALIFIED_FOR_NEXT_BLOCK",
+  "timestamp_local": "2026-09-23",
+  "scope": "bounded compatibility probes only; no SWE-bench execution",
+  "candidate_identity": {
+    "provider": "OpenRouter",
+    "model": "nvidia/nemotron-3-ultra-550b-a55b:free",
+    "runner_version": "p8.2a-runner-v3",
+    "environment": "git-bash",
+    "bash_executable": "C:\\Program Files\\Git\\bin\\bash.exe",
+    "docker_context": "desktop-linux",
+    "fallbacks": false
+  },
+  "probes": {
+    "git_bash": {
+      "command": "printf 'ARKX_BLOCK1_GIT_BASH_OK\\n'",
+      "exit_code": 0,
+      "stdout": "ARKX_BLOCK1_GIT_BASH_OK",
+      "status": "PASS"
+    },
+    "docker_context": {
+      "command": "docker context show",
+      "stdout": "desktop-linux",
+      "status": "PASS"
+    },
+    "docker_version": {
+      "client": "29.7.2",
+      "server": "29.7.2",
+      "os": "linux",
+      "architecture": "amd64",
+      "status": "PASS"
+    },
+    "docker_info": {
+      "server_version": "29.7.2",
+      "os_type": "linux",
+      "architecture": "x86_64",
+      "status": "PASS"
+    },
+    "adapter_and_parser": {
+      "tests": [
+        "tests.test_p82_openrouter_adapter",
+        "tests.test_p82_block_plan"
+      ],
+      "tests_passed": 6,
+      "status": "PASS"
+    }
+  },
+  "sandbox_observation": {
+    "initial_git_bash_probe": "CreateFileMapping Win32 error 5",
+    "initial_docker_probe": "permission denied on dockerDesktopLinuxEngine named pipe",
+    "interpretation": "sandbox access restriction; both probes passed with elevated access"
+  },
+  "execution_boundary": {
+    "swebench_executed": false,
+    "wave0_executed": false,
+    "b1_executed": false,
+    "c1_executed": false,
+    "d1_executed": false,
+    "protocol_changed": false
+  },
+  "next_gate": "BLOCK_2_DIFFICULTY_SMOKE_REQUIRES_EXPLICIT_FIXTURE_SET"
+}

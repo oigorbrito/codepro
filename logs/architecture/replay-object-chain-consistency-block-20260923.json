@@ -1,0 +1,18 @@
+{
+  "schema_version": "arkx-replay-object-chain-consistency-evidence-v1",
+  "date": "2026-09-23",
+  "branch": "codex/auditoriaarquitetural",
+  "environment": {"os": "Windows", "python": "3.11.9", "source_import": "PYTHONPATH=src"},
+  "test_command": "python -m unittest discover -s tests -p test_*.py",
+  "full_suite": {"tests_run": 308, "result": "PASS"},
+  "criteria": {
+    "matching_outcome_objects_accepted": "PASS",
+    "verification_reference_drift_rejected": "PASS",
+    "acceptance_reference_drift_rejected": "PASS",
+    "promotion_reference_drift_rejected": "PASS",
+    "external_reexecution_during_validation": "NO",
+    "fallback_selected": "NO"
+  },
+  "external_qualification": "NOT_PERFORMED",
+  "promotion": "NOT_PROMOTED"
+}

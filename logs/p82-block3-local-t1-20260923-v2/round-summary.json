@@ -1,0 +1,11 @@
+{
+  "schema": "experiments/p82-block3-t1-functional-v2.json",
+  "status": "INCOMPLETE_OBSERVABILITY",
+  "results": [
+    {"candidate": "local/gemma3-4b", "status": "FORMAT_OR_CONTENT_FAIL", "evidence": "gemma-result.json"},
+    {"candidate": "local/phi4-mini", "status": "INDETERMINATE_CAPTURE", "reason": "no auditable stdout returned"},
+    {"candidate": "local/granite3.3-8b", "status": "INDETERMINATE_CAPTURE", "reason": "no auditable stdout returned"},
+    {"candidate": "local/qwen2.5-coder-3b", "status": "INDETERMINATE_CAPTURE", "reason": "no auditable stdout returned"}
+  ],
+  "interpretation": "Only Gemma produced a classified functional response; no other candidate is promoted or rejected from this round."
+}

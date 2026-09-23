@@ -1,0 +1,64 @@
+{
+  "schema_version": "p8.2a-wave0-execution-v1",
+  "run_id": "p82-wave0-treatment-a-v3-20260923",
+  "treatment": "A",
+  "wave": "wave-0-baseline-smoke",
+  "state": "BLOCKED",
+  "executor_authority": "Docker",
+  "identity": {
+    "provider": "OpenRouter",
+    "model": "nvidia/nemotron-3-ultra-550b-a55b:free",
+    "runner_version": "p8.2a-runner-v3",
+    "environment": "git-bash",
+    "bash_executable": "C:\\Program Files\\Git\\bin\\bash.exe",
+    "mini_version": "2.4.6",
+    "temperature": 0,
+    "reasoning": "disabled",
+    "provider_allow_fallbacks": false,
+    "provider_retry_attempts": 3,
+    "provider_retry_backoff_seconds": 2.0,
+    "wall_time_seconds": 180,
+    "max_cost": "0",
+    "tasks_manifest": "experiments/p82-wave0-task-sample.json",
+    "protocol": "experiments/p82-wave0-comparison-protocol.json"
+  },
+  "blocker": {
+    "category": "DOCKER_DAEMON_UNAVAILABLE",
+    "command": "docker version --format '{{.Server.Version}}'",
+    "raw_output": "failed to connect to the docker API at npipe:////./pipe/dockerDesktopLinuxEngine; check if the path is correct and if the daemon is running: open //./pipe/dockerDesktopLinuxEngine: O sistema não pode encontrar o arquivo especificado."
+  },
+  "tasks": [
+    {
+      "instance_id": "sympy__sympy-14711",
+      "terminal_state": "BLOCKED",
+      "classification": "BLOCKED",
+      "failure_category": "DOCKER_DAEMON_UNAVAILABLE",
+      "model_calls": null,
+      "tokens": null,
+      "cost": null,
+      "latency_seconds": null,
+      "executor_result": null,
+      "patch": null,
+      "artifacts": []
+    },
+    {
+      "instance_id": "sympy__sympy-24443",
+      "terminal_state": "BLOCKED",
+      "classification": "BLOCKED",
+      "failure_category": "DOCKER_DAEMON_UNAVAILABLE",
+      "model_calls": null,
+      "tokens": null,
+      "cost": null,
+      "latency_seconds": null,
+      "executor_result": null,
+      "patch": null,
+      "artifacts": []
+    }
+  ],
+  "notes": [
+    "No model execution was started.",
+    "No local evaluation substituted for Docker.",
+    "B1, C1, and D1 were not implemented or executed.",
+    "No protocol, commit, push, or merge was performed."
+  ]
+}

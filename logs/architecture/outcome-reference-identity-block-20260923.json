@@ -1,0 +1,17 @@
+{
+  "schema_version": "arkx-outcome-reference-identity-evidence-v1",
+  "date": "2026-09-23",
+  "branch": "codex/auditoriaarquitetural",
+  "environment": {"os": "Windows", "python": "3.11.9", "source_import": "PYTHONPATH=src"},
+  "hypothesis": "Verification and acceptance outcomes can have distinct deterministic identities before promotion.",
+  "focused_test": {"result": "PASS", "tests_run": 139},
+  "criteria": {
+    "stable_verification_reference": "PASS",
+    "stable_acceptance_reference": "PASS",
+    "namespaces_distinct": "PASS",
+    "reference_drift_rejected": "PASS",
+    "promotion_invoked": "NO"
+  },
+  "acceptance": "LOCAL_OUTCOME_REFERENCE_EVIDENCE_PASS_PROMOTION_SEPARATE",
+  "promotion": "NOT_PROMOTED"
+}

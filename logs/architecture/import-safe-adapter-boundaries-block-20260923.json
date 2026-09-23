@@ -1,0 +1,21 @@
+{
+  "schema_version": "arkx-import-safe-adapter-boundaries-evidence-v1",
+  "date": "2026-09-23",
+  "branch": "codex/auditoriaarquitetural",
+  "environment": {"os": "Windows", "python": "3.11.9", "source_import": "PYTHONPATH=src"},
+  "test_command": "python -m unittest discover -s tests -p test_*.py",
+  "full_suite": {"tests_run": 298, "result": "PASS"},
+  "criteria": {
+    "adapter_modules_import_without_optional_runtime": "PASS",
+    "unavailable_adapter_construction_is_explicitly_blocked": "PASS",
+    "fallback_selected": "NO"
+  },
+  "concrete_preflight": {
+    "openrouter": "BLOCKED",
+    "git_bash": "BLOCKED",
+    "docker_swebench": "BLOCKED",
+    "ollama": "UNKNOWN"
+  },
+  "external_qualification": "NOT_PERFORMED",
+  "promotion": "NOT_PROMOTED"
+}

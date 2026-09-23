@@ -1,0 +1,19 @@
+{
+  "schema_version": "arkx-orchestration-persisted-lifecycle-chain-evidence-v1",
+  "date": "2026-09-23",
+  "branch": "codex/auditoriaarquitetural",
+  "environment": {"os": "Windows", "python": "3.11.9", "source_import": "PYTHONPATH=src"},
+  "test_command": "python -m unittest discover -s tests -p test_*.py",
+  "full_suite": {"tests_run": 327, "result": "PASS"},
+  "criteria": {
+    "plan_persisted": "PASS",
+    "execution_persisted": "PASS",
+    "verification_persisted": "PASS",
+    "acceptance_persisted": "PASS",
+    "causal_replay_order_preserved": "PASS",
+    "promotion_performed_by_orchestration": "NO",
+    "fallback_selected": "NO"
+  },
+  "external_qualification": "NOT_PERFORMED",
+  "promotion": "NOT_PROMOTED"
+}

@@ -14,7 +14,8 @@ import json
 from pathlib import Path
 from typing import Any, Callable, Iterable
 
-from .p82_baseline import AcceptanceDecision, AcceptanceResult, VerificationState
+from .harness import ErrorDomain, ErrorEnvelope, Retryability
+from .outcomes import AcceptanceDecision, AcceptanceResult, VerificationResult, VerificationState
 
 
 DATASET_IDENTITY = "SWE-bench/SWE-bench_Verified"
@@ -123,6 +124,40 @@ class OfficialEvaluationResult:
     report_path: str | None
     log_paths: tuple[str, ...]
     error: str | None = None
+
+    def verification_result(self) -> VerificationResult:
+        """Convert the evaluator observation into a neutral verification outcome."""
+        mapping = {
+            OfficialEvaluationStatus.RESOLVED: VerificationState.PASS,
+            OfficialEvaluationStatus.TESTS_FAILED: VerificationState.FAIL,
+            OfficialEvaluationStatus.INFRASTRUCTURE_ERROR: VerificationState.INDETERMINATE,
+            OfficialEvaluationStatus.AMBIGUOUS: VerificationState.INDETERMINATE,
+            OfficialEvaluationStatus.NOT_EXECUTED: VerificationState.NOT_EXECUTED,
+            OfficialEvaluationStatus.BLOCKED: VerificationState.BLOCKED,
+        }
+        evidence = tuple(sorted(path for path in (self.report_path, *self.log_paths) if path))
+        outcomes = tuple(value for value in (self.raw_outcome, self.error) if value)
+        return VerificationResult(
+            mapping[self.status],
+            self.authority,
+            ("swebench.harness.run_evaluation",),
+            outcomes or (self.status.value,),
+            evidence,
+        )
+
+    def error_envelope(self) -> ErrorEnvelope | None:
+        """Expose evaluator/infrastructure failure without turning test failure into an error."""
+        if self.status in (OfficialEvaluationStatus.RESOLVED, OfficialEvaluationStatus.TESTS_FAILED):
+            return None
+        references = tuple(path for path in (self.report_path, *self.log_paths) if path)
+        message = self.error or self.raw_outcome or f"official evaluation status: {self.status.value}"
+        return ErrorEnvelope(
+            ErrorDomain.VERIFICATION,
+            f"EVALUATOR_{self.status.value}",
+            message,
+            Retryability.UNKNOWN,
+            references,
+        )
 
     def acceptance(self) -> AcceptanceResult:
         mapping = {

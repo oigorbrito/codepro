@@ -1,0 +1,16 @@
+{
+  "schema_version": "arkx-deterministic-event-replay-evidence-v1",
+  "date": "2026-09-23",
+  "branch": "codex/auditoriaarquitetural",
+  "environment": {"os": "Windows", "python": "3.11.9", "source_import": "PYTHONPATH=src"},
+  "hypothesis": "Persisted lifecycle events can reconstruct declared facts deterministically without re-execution or acceptance inference.",
+  "focused_test": {"result": "PASS", "tests_run": 123},
+  "criteria": {
+    "declared_facts_reconstructed": "PASS",
+    "identity_validated": "PASS",
+    "no_executor_or_verifier_invoked": "PASS",
+    "acceptance_inferred": "NO"
+  },
+  "acceptance": "LOCAL_EVENT_REPLAY_EVIDENCE_PASS_REEXECUTION_SEPARATE",
+  "promotion": "NOT_PROMOTED"
+}

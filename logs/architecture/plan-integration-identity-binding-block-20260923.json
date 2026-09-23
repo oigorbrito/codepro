@@ -1,0 +1,9 @@
+{
+  "block": "plan-integration-identity-binding",
+  "date": "2026-09-23",
+  "hypothesis": "A plan cannot bind a provider or sandbox identity from another component.",
+  "criteria": {"matching_identities_accepted": "PASS", "identity_mismatch_rejected": "PASS", "provider_or_sandbox_selected_by_plan": "NO"},
+  "local_tests_verified": 350,
+  "external_qualification": "NOT_PERFORMED",
+  "promotion": "NOT_PROMOTED"
+}

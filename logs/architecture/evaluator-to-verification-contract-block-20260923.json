@@ -1,0 +1,18 @@
+{
+  "schema_version": "arkx-evaluator-to-verification-contract-evidence-v1",
+  "date": "2026-09-23",
+  "branch": "codex/auditoriaarquitetural",
+  "environment": {"os": "Windows", "python": "3.11.9", "source_import": "PYTHONPATH=src"},
+  "test_command": "python -m unittest discover -s tests -p test_*.py",
+  "full_suite": {"tests_run": 303, "result": "PASS"},
+  "criteria": {
+    "resolved_maps_to_verification_pass": "PASS",
+    "tests_failed_maps_to_verification_fail": "PASS",
+    "infrastructure_and_ambiguous_map_to_indeterminate": "PASS",
+    "evidence_is_deterministically_ordered": "PASS",
+    "acceptance_remains_separate": "PASS",
+    "promotion_implicitly_performed": "NO"
+  },
+  "docker_swebench_qualification": "NOT_PERFORMED",
+  "promotion": "NOT_PROMOTED"
+}

@@ -1,0 +1,17 @@
+{
+  "schema_version": "arkx-plan-budget-binding-evidence-v1",
+  "date": "2026-09-23",
+  "branch": "codex/auditoriaarquitetural",
+  "environment": {"os": "Windows", "python": "3.11.9", "source_import": "PYTHONPATH=src"},
+  "hypothesis": "Execution plans can carry an explicit budget specification and validate its identity without changing execution behavior.",
+  "focused_test": {"result": "PASS", "tests_run": 115},
+  "criteria": {
+    "budget_serialized_in_plan": "PASS",
+    "missing_digest_derived": "PASS",
+    "mismatched_digest_rejected": "PASS",
+    "orchestration_preserves_binding": "PASS",
+    "executor_invoked_by_binding": "NO"
+  },
+  "acceptance": "LOCAL_PLAN_BUDGET_BINDING_EVIDENCE_PASS_LEDGER_CONSUMPTION_SEPARATE",
+  "promotion": "NOT_PROMOTED"
+}

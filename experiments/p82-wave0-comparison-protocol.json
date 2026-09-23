@@ -1,0 +1,100 @@
+{
+  "schema_version": "p8.2-comparison-v1",
+  "status": "PREDECLARED_NOT_EXECUTED",
+  "purpose": "Freeze the comparison matrix and outcome taxonomy before operational B1 or C1 implementation.",
+  "task_sample": {
+    "manifest": "experiments/p82-wave0-task-sample.json",
+    "tasks": [
+      "sympy__sympy-14711",
+      "sympy__sympy-24443"
+    ],
+    "repository_revision_source": "task manifest base_commit per instance",
+    "task_statement_source": "task manifest problem_statement per instance"
+  },
+  "treatments": {
+    "A": {
+      "definition": "original mini-SWE-agent",
+      "status": "CONTROL_IMPLEMENTED"
+    },
+    "B1": {
+      "definition": "A + structured editing interface only",
+      "changed_variable": "editing interface",
+      "status": "CONTRACT_IMPLEMENTED_MECHANISM_NOT_IMPLEMENTED"
+    },
+    "C1": {
+      "definition": "A + exactly one bounded pre-execution repository-localization intervention",
+      "changed_variable": "information presented before the agent's first action",
+      "status": "CONTRACT_IMPLEMENTED_MECHANISM_NOT_IMPLEMENTED"
+    },
+    "D1": {
+      "definition": "A + B1 + C1",
+      "status": "NOT_AUTHORIZED_UNTIL_B1_AND_C1_HAVE_INDEPENDENT_EVIDENCE"
+    }
+  },
+  "frozen_dimensions": {
+    "provider": "OpenRouter",
+    "model": "nvidia/nemotron-3-ultra-550b-a55b:free",
+    "model_version": "nvidia/nemotron-3-ultra-550b-a55b:free",
+    "generation": {
+      "temperature": 0,
+      "reasoning": "disabled",
+      "provider_allow_fallbacks": false
+    },
+    "runner_version": "p8.2a-runner-v2",
+    "mini_version": "2.4.6",
+    "wall_time_seconds": 180,
+    "max_cost": "0",
+    "max_tokens": 64,
+    "verification_authority": "swebench.harness.run_evaluation",
+    "acceptance_authority": "swebench.harness.run_evaluation",
+    "replicates": 1
+  },
+  "outcomes": {
+    "primary": [
+      "official_task_acceptance",
+      "official_resolution"
+    ],
+    "secondary": [
+      "executor_completed",
+      "patch_created",
+      "verification_result",
+      "wall_time_seconds",
+      "model_calls",
+      "token_usage",
+      "cost"
+    ],
+    "mechanism_diagnostics": {
+      "B1": [
+        "edit_attempts",
+        "malformed_edit_requests",
+        "applied_edits"
+      ],
+      "C1": [
+        "candidate_files",
+        "candidate_symbols",
+        "evidence_budget",
+        "accepted_patch_touched_candidates"
+      ]
+    }
+  },
+  "interpretation_rules": {
+    "BLOCKED": "not FAIL",
+    "EXECUTOR_FAILED": "not TASK_REJECTED",
+    "PATCH_CREATED": "not ACCEPTED",
+    "VERIFICATION_PASS": "not ACCEPTED",
+    "CONTRACT_TEST_PASS": "not MECHANISM_EVIDENCE"
+  },
+  "diagnostic_classifications": {
+    "B1": [
+      "structured_request_malformed",
+      "request_valid_edit_wrong",
+      "edit_correct_task_failed"
+    ],
+    "C1": [
+      "localization_wrong",
+      "localization_plausible_agent_failed",
+      "localization_correct_patch_rejected"
+    ]
+  },
+  "execution_gate": "Do not implement or activate operational B1/C1 until A completes real-agent preflight with a responsive provider/model."
+}

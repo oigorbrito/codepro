@@ -1,0 +1,14 @@
+{
+  "block": "orchestration-budget-enforcement",
+  "date": "2026-09-23",
+  "hypothesis": "A zero invocation budget never reaches a runner.",
+  "criteria": {
+    "runner_not_called": "PASS",
+    "explicit_budget_block": "PASS",
+    "ledger_persisted_when_execution_occurs": "PASS",
+    "token_cost_inferred_without_measurement": "NO"
+  },
+  "external_qualification": "NOT_PERFORMED",
+  "local_tests_verified": 339,
+  "promotion": "NOT_PROMOTED"
+}

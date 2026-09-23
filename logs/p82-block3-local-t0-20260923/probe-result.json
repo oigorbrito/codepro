@@ -1,0 +1,45 @@
+{
+  "schema_version": "p8.2-block3-t0-result-v1",
+  "matrix": "experiments/p82-candidate-matrix.json",
+  "harness": "ollama-api-json-local",
+  "prompt": "Respond with exactly ARKX_T0_OK and nothing else.",
+  "generation": {"temperature": 0, "num_predict": 32, "stream": false},
+  "results": [
+    {
+      "candidate": "local/gemma3-4b",
+      "runtime_model": "gemma3:4b",
+      "status": "PASS_T0_FORMAT",
+      "response": "ARKX_T0_OK",
+      "done": true,
+      "elapsed_seconds": 21.34,
+      "eval_count": 9
+    },
+    {
+      "candidates": [
+        "local/granite3.3-8b",
+        "local/phi4-mini",
+        "local/qwen2.5-coder-3b",
+        "local/qwen2.5-coder-7b",
+        "local/qwen2.5-coder-14b",
+        "local/glm4-9b",
+        "local/starcoder2-7b",
+        "local/nemotron-nano-4b",
+        "local/deepseek-r1-7b"
+      ],
+      "status": "INDETERMINATE_CAPTURE",
+      "reason": "probe command did not return auditable JSON within the bounded command window; no failure is inferred"
+    }
+  ],
+  "runtime_inventory": {
+    "ollama_version": "0.34.3",
+    "api_tags_count": 11,
+    "excluded": {"qwen3.6:35b": "outside recorded 16 GB envelope"}
+  },
+  "interpretation": {
+    "qualifies_for_next_t0_adapter_work": ["local/gemma3-4b"],
+    "qualifies_for_t1_or_t2": [],
+    "model_capability_evidence": false,
+    "task_resolution_evidence": false
+  },
+  "next_gate": "stabilize bounded local JSON collector before additional candidate probes"
+}

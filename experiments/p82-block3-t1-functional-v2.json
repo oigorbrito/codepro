@@ -1,0 +1,10 @@
+{
+  "schema_version": "p8.2-block3-t1-functional-v2",
+  "status": "PREDECLARED",
+  "changed_from_v1": "output budget only",
+  "model_set": ["gemma3:4b", "phi4-mini:latest", "granite3.3:8b", "qwen2.5-coder:3b"],
+  "prompt": "Return only one valid JSON object with keys code and test. code must define validate_value(value): raise ValueError('value is required') when value is None, otherwise return value. test must use pytest.raises to check the None case and assert that validate_value(7) == 7.",
+  "generation": {"temperature": 0, "num_predict": 128, "stream": false},
+  "validation": ["JSON keys exactly code and test", "both fields parse as Python", "function behavior executes", "test contains pytest.raises"],
+  "interpretation": "This is a new functional smoke cell; it does not revise the v1 result or qualify SWE-bench resolution."
+}

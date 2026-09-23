@@ -1,0 +1,22 @@
+{
+  "schema": "p8.2-local-runtime-diagnostic-v1",
+  "source": "C:\\Users\\igorb\\AppData\\Local\\Ollama\\server.log",
+  "observed": [
+    "Load failed: timed out waiting for llama-server to start: context canceled",
+    "waiting for llama-server to become available: status=llm server error",
+    "repeated llama-server started cycles followed by availability errors"
+  ],
+  "affected_probe_group": [
+    "local/phi4-mini",
+    "local/granite3.3-8b",
+    "local/qwen2.5-coder-3b"
+  ],
+  "classification": "LOCAL_RUNTIME_MODEL_LOAD_FAILURE_OR_AVAILABILITY",
+  "confidence": "supported_for_runtime_layer_only",
+  "not_concluded": [
+    "individual model incapability",
+    "T1 semantic failure",
+    "candidate rejection"
+  ],
+  "decision": "pause additional local T1 probes until one stable model load and response capture are observed"
+}

@@ -1,0 +1,17 @@
+{
+  "schema_version": "arkx-execution-plan-evidence-v1",
+  "date": "2026-09-23",
+  "branch": "codex/auditoriaarquitetural",
+  "environment": {"os": "Windows", "python": "3.11.9", "source_import": "PYTHONPATH=src"},
+  "hypothesis": "Plan and result can remain separate contracts while plan construction stays deterministic and side-effect free.",
+  "focused_test": {"result": "PASS", "tests_run": 101},
+  "criteria": {
+    "deterministic_serialization": "PASS",
+    "identity_validation": "PASS",
+    "plan_to_request_preserves_identity": "PASS",
+    "result_state_absent_from_plan": "PASS",
+    "executor_invoked": false
+  },
+  "acceptance": "LOCAL_EXECUTION_PLAN_EVIDENCE_PASS_EXTERNAL_INTEGRATION_BLOCKED",
+  "promotion": "NOT_PROMOTED"
+}

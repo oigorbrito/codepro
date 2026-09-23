@@ -1,0 +1,20 @@
+{
+  "schema_version": "arkx-direct-neutral-orchestration-evidence-v1",
+  "date": "2026-09-23",
+  "branch": "codex/auditoriaarquitetural",
+  "environment": {"os": "Windows", "python": "3.11.9", "source_import": "PYTHONPATH=src"},
+  "hypothesis": "Direct neutral-executor orchestration produces the same result as the explicit legacy bridge.",
+  "focused_test": {
+    "command": "PYTHONPATH=src python -m unittest tests.test_orchestration tests.test_execution tests.test_execution_lifecycle tests.test_p82_baseline tests.test_harness tests.test_promotion tests.test_core_outcomes tests.test_p0_telemetry tests.test_swebench_authority",
+    "result": "PASS",
+    "tests_run": 94
+  },
+  "criteria": {
+    "direct_neutral_executor": "PASS",
+    "direct_bridge_equivalence": "PASS",
+    "blocked_and_failed_fail_closed": "PASS",
+    "fallback_or_executor_switch": false
+  },
+  "acceptance": "LOCAL_ORCHESTRATION_EQUIVALENCE_EVIDENCE_PASS_EXTERNAL_INTEGRATION_BLOCKED",
+  "promotion": "NOT_PROMOTED"
+}

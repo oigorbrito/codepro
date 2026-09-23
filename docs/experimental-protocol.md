@@ -1,6 +1,7 @@
 # Experimental protocol
 
-Arkx develops through small, empirical increments. The protocol below is the minimum record required before a capability can be considered for promotion.
+Arkx develops through empirical increments. The protocol below defines the
+minimum record required before a capability can be considered for promotion.
 
 ## Required record
 
@@ -14,6 +15,9 @@ Each experiment records:
 - `procedure`: reproducible steps;
 - `expected_signal`: measurable success and failure criteria;
 - `result`: `PASS`, `FAIL`, `BLOCKED`, or `NOT_EXECUTED`;
+- `evidence`: links or paths to raw evidence and environment facts;
+- `acceptance`: explicit reviewer decision and rationale;
+- `promotion`: explicit decision to make the change durable, or `NOT_PROMOTED`.
 
 P7 composition trials use their own comparability namespace: `COMPARABLE`, `INCOMPARABLE`, and `UNKNOWN`. P7 records externally supplied measurements and does not convert them into acceptance results.
 
@@ -26,9 +30,14 @@ environment, budget, verification, and independent acceptance authority. It
 does not invoke an executor or mechanism and does not manufacture acceptance;
 results remain P8.1 observations. Missing controls and measurements remain
 `UNKNOWN`, and the only intended treatment difference is the declared arm.
-- `evidence`: links or paths to raw evidence and environment facts;
-- `acceptance`: explicit reviewer decision and rationale;
-- `promotion`: explicit decision to make the change durable, or `NOT_PROMOTED`.
+
+P8.2a adds the Treatment A baseline runner. Each attempt is serial, refuses to
+overwrite an existing attempt directory, derives a stable run identity from
+the task and frozen execution configuration, and writes an `execution.json`
+artifact atomically alongside the log, diff, and trajectory. The artifact
+records execution only; verification, independent acceptance, and promotion
+remain separate records. A missing provider, model, mini version, or Python
+executable blocks the attempt instead of selecting a fallback.
 
 ## State separation
 

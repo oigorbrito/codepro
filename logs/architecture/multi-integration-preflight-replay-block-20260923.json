@@ -1,0 +1,9 @@
+{
+  "block": "multi-integration-preflight-replay",
+  "date": "2026-09-23",
+  "hypothesis": "A multi-integration plan can be replayed without losing one preflight to another.",
+  "criteria": {"provider_preflight_required": "PASS", "sandbox_preflight_required": "PASS", "both_references_replayed": "PASS", "implicit_integration_selected": "NO"},
+  "local_tests_verified": 354,
+  "external_qualification": "NOT_PERFORMED",
+  "promotion": "NOT_PROMOTED"
+}

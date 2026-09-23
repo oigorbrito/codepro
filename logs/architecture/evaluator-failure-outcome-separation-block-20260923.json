@@ -1,0 +1,18 @@
+{
+  "schema_version": "arkx-evaluator-failure-outcome-separation-evidence-v1",
+  "date": "2026-09-23",
+  "branch": "codex/auditoriaarquitetural",
+  "environment": {"os": "Windows", "python": "3.11.9", "source_import": "PYTHONPATH=src"},
+  "test_command": "python -m unittest discover -s tests -p test_*.py",
+  "full_suite": {"tests_run": 302, "result": "PASS"},
+  "criteria": {
+    "infrastructure_error_maps_to_verification_domain": "PASS",
+    "test_failure_is_not_error_envelope": "PASS",
+    "raw_report_and_log_references_preserved": "PASS",
+    "unknown_retryability_preserved": "PASS",
+    "acceptance_mapping_remains_separate": "PASS",
+    "fallback_selected": "NO"
+  },
+  "docker_swebench_qualification": "NOT_PERFORMED",
+  "promotion": "NOT_PROMOTED"
+}

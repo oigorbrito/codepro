@@ -1,0 +1,21 @@
+{
+  "schema_version": "arkx-contract-lifecycle-evidence-v1",
+  "date": "2026-09-23",
+  "branch": "codex/auditoriaarquitetural",
+  "environment": {"os": "Windows", "python": "3.11.9", "source_import": "PYTHONPATH=src"},
+  "hypothesis": "A fake executor can traverse completed and blocked flows while verification and acceptance remain independent attachments.",
+  "focused_test": {
+    "command": "PYTHONPATH=src python -m unittest tests.test_execution tests.test_execution_lifecycle tests.test_harness tests.test_promotion tests.test_p82_baseline tests.test_core_outcomes tests.test_p0_telemetry tests.test_swebench_authority",
+    "result": "PASS",
+    "tests_run": 82
+  },
+  "criteria": {
+    "completed_lifecycle": "PASS",
+    "completion_does_not_imply_acceptance": "PASS",
+    "independent_verification_and_acceptance": "PASS",
+    "blocked_requires_error": "PASS",
+    "real_executor_invoked": false
+  },
+  "acceptance": "LOCAL_CONTRACT_EVIDENCE_PASS_EXTERNAL_INTEGRATION_NOT_ATTEMPTED",
+  "promotion": "NOT_PROMOTED"
+}

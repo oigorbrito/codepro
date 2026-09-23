@@ -40,7 +40,9 @@ NO_SILENT_SCOPE_EXPANSION
 5. Any fallback, executor change, or scope change is explicit in the record and review.
 6. New architecture requires a decision record describing the observed need, alternatives, evidence, and rollback/removal condition.
 
-## Non-goals of this bootstrap
+## Current non-goals
 
-This repository does not yet define routing, planning, multi-agent execution, or integrations with OpenHands, ReX, mini-SWE-agent, or SWE-agent.
-
+The repository now defines bounded routing, planning/state, verification,
+recovery, acceptance, promotion gates, and a mini-SWE-agent Treatment A
+baseline path. It does not define general multi-agent execution, automatic
+executor adoption, or integrations with OpenHands, ReX, and SWE-agent.

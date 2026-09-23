@@ -1,0 +1,17 @@
+{
+  "schema_version": "arkx-capability-preflight-provenance-evidence-v1",
+  "date": "2026-09-23",
+  "branch": "codex/auditoriaarquitetural",
+  "environment": {"os": "Windows", "python": "3.11.9", "source_import": "PYTHONPATH=src"},
+  "test_command": "python -m unittest discover -s tests -p test_*.py",
+  "full_suite": {"tests_run": 318, "result": "PASS"},
+  "criteria": {
+    "capability_digest_transported": "PASS",
+    "declared_and_observed_distinguished": "PASS",
+    "qualified_requires_evidence": "PASS",
+    "ready_implies_qualified": "NO",
+    "fallback_selected": "NO"
+  },
+  "external_qualification": "NOT_PERFORMED",
+  "promotion": "NOT_PROMOTED"
+}

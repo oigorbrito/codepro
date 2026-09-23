@@ -1,0 +1,10 @@
+{
+  "block": "versioned-provider-identity",
+  "date": "2026-09-23",
+  "hypothesis": "A provider cannot enter the neutral contract without reproducible identity.",
+  "criteria": {"versioned_provider_accepted": "PASS", "anonymous_provider_rejected": "PASS", "provider_behavior_qualified": "NO"},
+  "latest_local_tests_verified": 350,
+  "local_tests_verified": 349,
+  "external_qualification": "NOT_PERFORMED",
+  "promotion": "NOT_PROMOTED"
+}

@@ -1,0 +1,18 @@
+{
+  "schema_version": "arkx-promotion-event-persistence-gate-evidence-v1",
+  "date": "2026-09-23",
+  "branch": "codex/auditoriaarquitetural",
+  "environment": {"os": "Windows", "python": "3.11.9", "source_import": "PYTHONPATH=src"},
+  "test_command": "python -m unittest discover -s tests -p test_*.py",
+  "full_suite": {"tests_run": 329, "result": "PASS"},
+  "criteria": {
+    "promotion_persisted_after_verification_and_acceptance": "PASS",
+    "missing_acceptance_rejected": "PASS",
+    "mismatched_acceptance_rejected": "PASS",
+    "promotion_reference_replayable": "PASS",
+    "candidate_mutated_by_persistence": "NO",
+    "fallback_selected": "NO"
+  },
+  "external_qualification": "NOT_PERFORMED",
+  "promotion": "NOT_PROMOTED"
+}

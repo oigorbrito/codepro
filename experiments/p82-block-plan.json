@@ -1,0 +1,77 @@
+{
+  "schema_version": "p8.2-block-plan-v1",
+  "status": "DESIGN_ONLY",
+  "purpose": "Organize qualification and empirical work into independently auditable blocks.",
+  "global_rules": [
+    "A remains the only executable treatment until its real-agent preflight is qualified.",
+    "B1 and C1 contracts may be tested, but their operational mechanisms remain disabled.",
+    "D1 is not executable.",
+    "A blocked infrastructure outcome is not an agent failure.",
+    "No candidate advances on smoke evidence alone."
+  ],
+  "blocks": [
+    {
+      "id": "BLOCK_0",
+      "name": "contracts-and-matrix",
+      "scope": "schemas, identities, strata, outcomes, artifact paths",
+      "input": "repository state and predeclared protocol",
+      "output": "validated design artifacts",
+      "execution": "deterministic tests only",
+      "stop_when": "schema and identity invariants pass"
+    },
+    {
+      "id": "BLOCK_1",
+      "name": "compatibility",
+      "scope": "model query, action parser, Git Bash, Docker, hardened adapter",
+      "input": "one model-harness candidate",
+      "output": "qualified, blocked, or incompatible probe record",
+      "execution": "bounded disposable probes; no SWE-bench",
+      "stop_when": "one complete response and required runtime checks are observed"
+    },
+    {
+      "id": "BLOCK_2",
+      "name": "difficulty-smoke",
+      "scope": "T0, T1, and T2 deterministic fixtures",
+      "input": "Block 1 qualified candidate",
+      "output": "stratified smoke evidence and diagnostics",
+      "execution": "serial fixture runs with frozen identity",
+      "stop_when": "predeclared fixture budget is exhausted"
+    },
+    {
+      "id": "BLOCK_3",
+      "name": "candidate-qualification",
+      "scope": "model x harness x stratum cells",
+      "input": "Block 2 evidence",
+      "output": "executor-qualified candidate records",
+      "execution": "bounded cells; no silent fallback",
+      "stop_when": "candidate set for the next comparison wave is frozen"
+    },
+    {
+      "id": "BLOCK_4",
+      "name": "baseline-A",
+      "scope": "frozen Treatment A and Wave 0",
+      "input": "qualified provider/model and Docker authority",
+      "output": "Wave 0 acceptance evidence",
+      "execution": "only the predeclared tasks and identity",
+      "stop_when": "all tasks are terminal or the declared blocker is exhausted"
+    },
+    {
+      "id": "BLOCK_5",
+      "name": "stratified-exploration",
+      "scope": "T1 through T5 exploratory cells",
+      "input": "Block 3 candidate set and accepted baseline evidence",
+      "output": "task-stratum-specific comparisons",
+      "execution": "same authority and identity within each comparison",
+      "stop_when": "the predeclared exploratory allocation is complete"
+    },
+    {
+      "id": "BLOCK_6",
+      "name": "mechanism-gate",
+      "scope": "authorization of operational B1 or C1",
+      "input": "independent baseline and mechanism evidence",
+      "output": "gate decision only",
+      "execution": "review and acceptance; no automatic promotion",
+      "stop_when": "an independent acceptance decision is recorded"
+    }
+  ]
+}

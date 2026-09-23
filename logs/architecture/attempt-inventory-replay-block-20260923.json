@@ -1,0 +1,16 @@
+{
+  "schema_version": "arkx-attempt-inventory-replay-evidence-v1",
+  "date": "2026-09-23",
+  "branch": "codex/auditoriaarquitetural",
+  "environment": {"os": "Windows", "python": "3.11.9", "source_import": "PYTHONPATH=src"},
+  "hypothesis": "Replay chain references can be classified against the validated attempt inventory without scanning or selecting artifacts.",
+  "focused_test": {"result": "PASS", "tests_run": 130},
+  "criteria": {
+    "validated_artifact_present": "PASS",
+    "missing_reference_detected": "PASS",
+    "arbitrary_directory_scan": "NO",
+    "artifact_substitution": "NO"
+  },
+  "acceptance": "LOCAL_ATTEMPT_INVENTORY_REPLAY_EVIDENCE_PASS",
+  "promotion": "NOT_PROMOTED"
+}

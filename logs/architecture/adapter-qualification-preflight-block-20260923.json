@@ -1,0 +1,18 @@
+{
+  "schema_version": "arkx-adapter-qualification-preflight-evidence-v1",
+  "date": "2026-09-23",
+  "branch": "codex/auditoriaarquitetural",
+  "environment": {"os": "Windows", "python": "3.11.9", "source_import": "PYTHONPATH=src"},
+  "focused_suite": {"tests_run": 294, "result": "PASS", "excluded": "tests.test_p82_openrouter_adapter"},
+  "criteria": {
+    "ready_status_distinguished": "PASS",
+    "blocked_status_distinguished": "PASS",
+    "unknown_status_distinguished": "PASS",
+    "stable_serialization": "PASS",
+    "fallback_selected": "NO",
+    "error_envelope_boundary_mapping": "PASS",
+    "unknown_retryability_preserved": "PASS"
+  },
+  "acceptance": "LOCAL_ADAPTER_PREFLIGHT_CONTRACT_PASS_EXTERNAL_ADAPTERS_UNQUALIFIED",
+  "promotion": "NOT_PROMOTED"
+}

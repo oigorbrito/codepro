@@ -1,0 +1,47 @@
+2026-09-23 05:41:35,743 - INFO - Creating container for sympy__sympy-14711...
+2026-09-23 05:41:35,872 - INFO - Container for sympy__sympy-14711 created: eaea60ff36e3b175514a17192083e88f8cb914b6aa29e875ac64594d13e2e419
+2026-09-23 05:41:36,141 - INFO - Container for sympy__sympy-14711 started: eaea60ff36e3b175514a17192083e88f8cb914b6aa29e875ac64594d13e2e419
+2026-09-23 05:41:36,141 - INFO - Intermediate patch for sympy__sympy-14711 written to logs\evaluation\arkx-p82-gold-docker-20260923-03\gold\sympy__sympy-14711\patch.diff, now applying to container...
+2026-09-23 05:41:36,275 - INFO - Failed to apply patch to container: git apply --verbose
+2026-09-23 05:41:36,777 - INFO - Failed to apply patch to container: git apply --verbose --3way
+2026-09-23 05:41:37,087 - INFO - Failed to apply patch to container: git apply --verbose --reject
+2026-09-23 05:41:37,213 - INFO - >>>>> Applied Patch:
+(Stripping trailing CRs from patch; use --binary to disable.)
+patching file sympy/physics/vector/vector.py
+
+2026-09-23 05:41:37,272 - INFO - Git diff before:
+diff --git a/sympy/physics/vector/vector.py b/sympy/physics/vector/vector.py
+index a048ee57f..884911921 100644
+--- a/sympy/physics/vector/vector.py
++++ b/sympy/physics/vector/vector.py
+@@ -57,6 +57,8 @@ def __hash__(self):
+ 
+     def __add__(self, other):
+         """The add operator for Vector. """
++        if other == 0:
++            return self
+         other = _check_vector(other)
+         return Vector(self.args + other.args)
+2026-09-23 05:41:37,273 - INFO - Eval script for sympy__sympy-14711 written to logs\evaluation\arkx-p82-gold-docker-20260923-03\gold\sympy__sympy-14711\eval.sh; copying to container...
+2026-09-23 05:41:43,106 - INFO - Test runtime: 5.77 seconds
+2026-09-23 05:41:43,107 - INFO - Test output for sympy__sympy-14711 written to logs\evaluation\arkx-p82-gold-docker-20260923-03\gold\sympy__sympy-14711\test_output.txt
+2026-09-23 05:41:43,161 - INFO - Git diff after:
+diff --git a/sympy/physics/vector/vector.py b/sympy/physics/vector/vector.py
+index a048ee57f..884911921 100644
+--- a/sympy/physics/vector/vector.py
++++ b/sympy/physics/vector/vector.py
+@@ -57,6 +57,8 @@ def __hash__(self):
+ 
+     def __add__(self, other):
+         """The add operator for Vector. """
++        if other == 0:
++            return self
+         other = _check_vector(other)
+         return Vector(self.args + other.args)
+2026-09-23 05:41:43,161 - INFO - Grading answer for sympy__sympy-14711...
+2026-09-23 05:41:43,162 - INFO - report: {'sympy__sympy-14711': {'patch_is_None': False, 'patch_exists': True, 'patch_successfully_applied': True, 'resolved': True, 'infra_failure': False, 'tests_status': {'FAIL_TO_PASS': {'success': ['test_Vector'], 'failure': []}, 'PASS_TO_PASS': {'success': ['test_Vector_diffs', 'test_vector_var_in_dcm'], 'failure': []}, 'FAIL_TO_FAIL': {'success': [], 'failure': []}, 'PASS_TO_FAIL': {'success': [], 'failure': []}}}}
+Result for sympy__sympy-14711: resolved: True
+2026-09-23 05:41:43,162 - INFO - Attempting to stop container sweb.eval.sympy__sympy-14711.arkx-p82-gold-docker-20260923-03...
+2026-09-23 05:41:58,635 - INFO - Container sweb.eval.sympy__sympy-14711.arkx-p82-gold-docker-20260923-03 stopped successfully.
+2026-09-23 05:41:58,635 - INFO - Attempting to remove container sweb.eval.sympy__sympy-14711.arkx-p82-gold-docker-20260923-03...
+2026-09-23 05:41:58,905 - INFO - Container sweb.eval.sympy__sympy-14711.arkx-p82-gold-docker-20260923-03 removed successfully.

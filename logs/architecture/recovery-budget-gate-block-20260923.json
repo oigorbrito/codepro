@@ -1,0 +1,9 @@
+{
+  "block": "recovery-budget-gate",
+  "date": "2026-09-23",
+  "hypothesis": "Recovery cannot bypass a persisted attempts budget.",
+  "criteria": {"budget_exhaustion_rejected": "PASS", "directory_not_created": "PASS", "ledger_mutated_by_reservation": "NO"},
+  "local_tests_verified": 359,
+  "external_qualification": "NOT_PERFORMED",
+  "promotion": "NOT_PROMOTED"
+}

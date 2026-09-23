@@ -1,0 +1,17 @@
+{
+  "schema_version": "arkx-artifact-store-retry-lineage-evidence-v1",
+  "date": "2026-09-23",
+  "branch": "codex/auditoriaarquitetural",
+  "environment": {"os": "Windows", "python": "3.11.9", "source_import": "PYTHONPATH=src"},
+  "hypothesis": "Retry lineage can be reserved append-only and persisted atomically without executor invocation or artifact overwrite.",
+  "focused_test": {"result": "PASS", "tests_run": 111},
+  "criteria": {
+    "lineage_persisted": "PASS",
+    "duplicate_reservation_rejected": "PASS",
+    "identity_drift_rejected": "PASS",
+    "executor_invoked": "NO",
+    "attempt_overwritten": "NO"
+  },
+  "acceptance": "LOCAL_ARTIFACT_LINEAGE_EVIDENCE_PASS_EXECUTION_SEPARATE",
+  "promotion": "NOT_PROMOTED"
+}

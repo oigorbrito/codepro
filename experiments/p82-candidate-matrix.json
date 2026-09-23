@@ -1,0 +1,45 @@
+{
+  "schema_version": "p8.2-candidate-matrix-v1",
+  "status": "DESIGN_ONLY",
+  "evidence_boundary": "Prior observations are qualification metadata, not resolution evidence.",
+  "frozen_harnesses": [
+    {"id": "mini-gitbash-docker", "agent": "mini-SWE-agent-2.4.6", "environment": "Git Bash", "executor": "Docker", "fallback": false},
+    {"id": "ollama-machine-readable", "agent": "bounded-json-probe", "environment": "Ollama", "executor": "local", "fallback": false}
+  ],
+  "difficulty_targets": {
+    "T0": "startup and action compatibility",
+    "T1": "localized one-file reasoning and editing",
+    "T2": "repository localization and diagnosis",
+    "T3": "multi-module planning and verification",
+    "T4": "cross-cutting API or dependency change",
+    "T5": "long-horizon or distribution-shifted task"
+  },
+  "candidates": [
+    {"id": "local/gemma3-4b", "family": "local", "harness": "ollama-machine-readable", "prior_state": "observed_candidate", "initial_targets": ["T0", "T1"]},
+    {"id": "local/granite3.3-8b", "family": "local", "harness": "ollama-machine-readable", "prior_state": "smoke_qualified_only", "initial_targets": ["T0", "T1"]},
+    {"id": "local/phi4-mini", "family": "local", "harness": "ollama-machine-readable", "prior_state": "inconclusive", "initial_targets": ["T0", "T1"]},
+    {"id": "local/qwen2.5-coder-3b", "family": "local", "harness": "ollama-machine-readable", "prior_state": "review_required", "initial_targets": ["T0", "T1"]},
+    {"id": "local/qwen2.5-coder-7b", "family": "local", "harness": "ollama-machine-readable", "prior_state": "smoke_qualified_only", "initial_targets": ["T0", "T1", "T2"]},
+    {"id": "local/qwen2.5-coder-14b", "family": "local", "harness": "ollama-machine-readable", "prior_state": "inconclusive", "initial_targets": ["T1", "T2"]},
+    {"id": "local/glm4-9b", "family": "local", "harness": "ollama-machine-readable", "prior_state": "inconclusive", "initial_targets": ["T0", "T1"]},
+    {"id": "local/starcoder2-7b", "family": "local", "harness": "ollama-machine-readable", "prior_state": "inconclusive", "initial_targets": ["T0", "T1"]},
+    {"id": "local/nemotron-nano-4b", "family": "local", "harness": "ollama-machine-readable", "prior_state": "output_contract_risk", "initial_targets": ["T0"]},
+    {"id": "local/deepseek-r1-7b", "family": "local", "harness": "ollama-machine-readable", "prior_state": "not_qualified", "initial_targets": ["T0"]},
+    {"id": "openrouter/nemotron-ultra-550b", "family": "openrouter_free", "harness": "mini-gitbash-docker", "prior_state": "provider_unstable_executor_pending", "initial_targets": ["T0", "T1", "T2"]},
+    {"id": "openrouter/laguna-s-2.1", "family": "openrouter_free", "harness": "mini-gitbash-docker", "prior_state": "unqualified", "initial_targets": ["T0", "T1"]},
+    {"id": "openrouter/nex-n2.5-mini", "family": "openrouter_free", "harness": "mini-gitbash-docker", "prior_state": "unqualified", "initial_targets": ["T0", "T1"]},
+    {"id": "openrouter/nemotron-3.5-lightning", "family": "openrouter_free", "harness": "mini-gitbash-docker", "prior_state": "unqualified", "initial_targets": ["T0", "T1", "T2"]},
+    {"id": "openrouter/liquid", "family": "openrouter_free", "harness": "mini-gitbash-docker", "prior_state": "observed_incompatible_or_unstable", "initial_targets": ["T0"]},
+    {"id": "openrouter/north", "family": "openrouter_free", "harness": "mini-gitbash-docker", "prior_state": "observed_incompatible_or_unstable", "initial_targets": ["T0"]},
+    {"id": "openrouter/gpt-5-mini", "family": "openrouter_paid", "harness": "mini-gitbash-docker", "prior_state": "not_tested_in_current_wave", "initial_targets": ["T0", "T1", "T2"]},
+    {"id": "nooa/0.0.10", "family": "harness_candidate", "harness": "nooa", "prior_state": "investigation_only", "initial_targets": ["T0", "T1", "T2", "T3"]}
+  ],
+  "advancement_rules": [
+    "A smoke response does not qualify task resolution.",
+    "A candidate must pass the same machine-readable action and runtime contract before task cells.",
+    "A candidate is qualified per harness and stratum, never globally by model name.",
+    "Provider failure, runtime failure, parser incompatibility, and task rejection remain distinct.",
+    "No fallback or silent harness substitution is allowed."
+  ],
+  "next_execution": "bounded T0 compatibility cells, then T1/T2 only for candidates that pass the same adapter contract"
+}

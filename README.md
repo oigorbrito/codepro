@@ -1,26 +1,29 @@
 # Arkx
 
-Arkx is a greenfield project for empirical, incremental development of reliable capability.
+Arkx is a repository for incremental implementation and empirical evaluation of software capability.
 
 > **MINIMUM SUFFICIENT ARCHITECTURE**  
 > **FOR MAXIMUM RELIABLE CAPABILITY**
 
-This repository is the canonical root for the project. It intentionally contains only the foundation in this bootstrap: the project contract, experimental protocol, structural placeholders, and a minimal CI check.
+This repository is the canonical root for the project. It contains runtime
+contracts, an execution harness, the project contract, the experimental
+protocol, and structural checks.
 
-## Scope of this bootstrap
+## Current scope
 
 Included:
 
 - explicit project invariants;
-- a small, evidence-oriented experimental protocol;
-- stable top-level boundaries for future work;
-- a deterministic structural check and minimal CI.
+- an evidence-oriented experimental protocol;
+- stable top-level boundaries;
+- a deterministic structural check, executable contracts, and a Treatment A
+  baseline harness.
 
-Deferred:
+Still deferred or unqualified:
 
-- routing and planning;
 - multi-agent orchestration;
-- OpenHands, ReX, mini-SWE-agent, and SWE-agent integrations;
+- OpenHands, ReX, and SWE-agent integrations;
+- real provider/model adoption and the A/B/C/D mechanism trial;
 - product dependencies or automatic migration from `smag-rex`.
 
 ## Development posture
@@ -44,9 +47,9 @@ P1 adds deterministic task characterization from explicit signals only. See [the
 
 P2 adds deterministic progress/stagnation assessment from explicit snapshots only. See [the P2 contract](docs/progress-stagnation.md). It does not control execution or authorize retry/replan.
 
-P3 adds bounded rule-based routing and evidence-based escalation decisions. See [the P3 contract](docs/routing-escalation.md). It does not invoke or select concrete executors.
+P3 adds bounded rule-based routing and evidence-based escalation decisions. See [the P3 contract](docs/routing-escalation.md). It does not invoke concrete executors.
 
-Block B adds independently removable P4 repository planning/state, P5 patch verification, and P6 handoff/context accounting. None executes a plan, owns acceptance, or creates orchestration.
+Block B adds independently removable P4 repository planning/state, P5 patch verification, and P6 handoff/context accounting. P8.2a adds a Treatment A baseline runner and official SWE-bench acceptance adapter; neither owns general orchestration or promotion.
 
 ## Checks
 

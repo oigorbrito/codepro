@@ -1,0 +1,16 @@
+{
+  "schema_version": "arkx-recovery-replay-lineage-evidence-v1",
+  "date": "2026-09-23",
+  "branch": "codex/auditoriaarquitetural",
+  "environment": {"os": "Windows", "python": "3.11.9", "source_import": "PYTHONPATH=src"},
+  "hypothesis": "Recovery plans can be represented in replay causally without making recovery mandatory or breaking legacy positional consumers.",
+  "focused_test": {"result": "PASS", "tests_run": 138},
+  "criteria": {
+    "recovery_order_validated": "PASS",
+    "recovery_optional": "PASS",
+    "legacy_positional_compatibility": "PASS",
+    "recovery_executed": "NO"
+  },
+  "acceptance": "LOCAL_RECOVERY_REPLAY_EVIDENCE_PASS_COMPATIBILITY_PRESERVED",
+  "promotion": "NOT_PROMOTED"
+}

@@ -1,0 +1,22 @@
+Traceback (most recent call last):
+  File "D:\projetos\arkx\tools\run_mini_headless.py", line 60, in <module>
+    raise SystemExit(main())
+                     ^^^^^^
+  File "D:\projetos\arkx\tools\run_mini_headless.py", line 47, in main
+    result = agent.run(payload["task"] or "")
+             ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "D:\projetos\arkx\.venv-mini\Lib\site-packages\minisweagent\agents\default.py", line 98, in run
+    self.step()
+  File "D:\projetos\arkx\.venv-mini\Lib\site-packages\minisweagent\agents\default.py", line 128, in step
+    return self.execute_actions(self.query())
+                                ^^^^^^^^^^^^
+  File "D:\projetos\arkx\.venv-mini\Lib\site-packages\minisweagent\agents\default.py", line 149, in query
+    message = self.model.query(self.messages)
+              ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "D:\projetos\arkx\.venv-mini\Lib\site-packages\minisweagent\models\openrouter_model.py", line 104, in query
+    actions = self._parse_actions(response)
+              ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "D:\projetos\arkx\.venv-mini\Lib\site-packages\minisweagent\models\openrouter_model.py", line 134, in _parse_actions
+    tool_calls = response["choices"][0]["message"].get("tool_calls") or []
+                 ~~~~~~~~^^^^^^^^^^^
+KeyError: 'choices'

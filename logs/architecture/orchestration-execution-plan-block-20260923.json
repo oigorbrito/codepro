@@ -1,0 +1,16 @@
+{
+  "schema_version": "arkx-orchestration-execution-plan-evidence-v1",
+  "date": "2026-09-23",
+  "branch": "codex/auditoriaarquitetural",
+  "environment": {"os": "Windows", "python": "3.11.9", "source_import": "PYTHONPATH=src"},
+  "hypothesis": "Equivalent authorized inputs produce the same immutable execution plan before executor invocation.",
+  "focused_test": {"result": "PASS", "tests_run": 101},
+  "criteria": {
+    "plan_built_before_execution": "PASS",
+    "equivalent_inputs_produce_equal_plans": "PASS",
+    "neutral_and_legacy_paths_remain_compatible": "PASS",
+    "plan_serialization_is_deterministic": "PASS"
+  },
+  "acceptance": "LOCAL_ORCHESTRATION_PLAN_EVIDENCE_PASS_EXTERNAL_INTEGRATION_BLOCKED",
+  "promotion": "NOT_PROMOTED"
+}

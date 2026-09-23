@@ -34,12 +34,20 @@ promotion decision.
 
 ## P8.2a baseline execution path
 
-P8.2a is infrastructure qualification, not mechanism evidence. The baseline
-runner accepts treatment A only, invokes mini-SWE-agent through its public
+P8.2a records infrastructure qualification, not mechanism evidence. The
+baseline runner accepts treatment A only, invokes mini-SWE-agent through its public
 Python API in a headless worker, and records execution artifacts. It does not
 run verification or decide acceptance. Verification and independent
 acceptance are explicit, nullable records; missing provider/model identity is
 `BLOCKED`, with no fallback.
+
+The Windows runner-v3 qualification adds an explicit Git Bash environment
+(`C:\\Program Files\\Git\\bin\\bash.exe`) without changing the model,
+prompt, parser, or treatment. The Arkx OpenRouter adapter recognizes provider
+error envelopes before action parsing. A retryable `503`/`provider_overloaded`
+response is recorded as `BLOCKED` with
+`PROVIDER_AVAILABILITY_FAILURE`; it is not converted into a parser or task
+failure. The bounded retry policy is an execution-availability policy only.
 
 Artifacts are append-only under `task_id/attempt-N`. Reusing an existing
 attempt is rejected rather than silently overwritten. The prospective Wave 0
@@ -49,7 +57,9 @@ sample is frozen in `experiments/p82-wave0-task-sample.json` from the official
 
 The official acceptance adapter is in `arkx.swebench_authority`. It creates a
 SWE-bench prediction without gold patch or grading labels and invokes the
-official harness with a unique `run_id`. Gold qualification and real A runs
-remain blocked until `swebench` and Docker are available, the gold harness
-passes, and one exact provider/model/configuration is frozen. B/C/D and any
+official harness with a unique `run_id`. The frozen Docker Gold authority
+returned `resolved: true` for the two Wave 0 tasks recorded under
+`logs/evaluation/`; this qualifies the acceptance path and infrastructure only.
+Real A runs still
+require one exact provider/model/configuration to be frozen. B/C/D and any
 mechanism comparison remain out of scope.

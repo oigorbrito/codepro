@@ -1,0 +1,17 @@
+{
+  "schema_version": "arkx-execution-plan-capability-gate-evidence-v1",
+  "date": "2026-09-23",
+  "branch": "codex/auditoriaarquitetural",
+  "environment": {"os": "Windows", "python": "3.11.9", "source_import": "PYTHONPATH=src"},
+  "test_command": "python -m unittest discover -s tests -p test_*.py",
+  "full_suite": {"tests_run": 322, "result": "PASS"},
+  "criteria": {
+    "plan_carries_required_capabilities": "PASS",
+    "minimum_provenance_enforced": "PASS",
+    "preflight_denial_prevents_execution_authorization": "PASS",
+    "fallback_selected": "NO",
+    "executor_invoked_by_plan_validation": "NO"
+  },
+  "external_qualification": "NOT_PERFORMED",
+  "promotion": "NOT_PROMOTED"
+}

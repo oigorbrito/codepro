@@ -13,6 +13,7 @@ from typing import Any
 
 from .characterization import Confidence, RecommendedPath, Scope, TaskCharacterization
 from .progress import ProgressAssessment, ProgressStatus
+from .integration import AdapterPreflight, CapabilityProvenance, PreflightStatus
 
 
 SCHEMA_VERSION = 1
@@ -62,6 +63,45 @@ class ReasonCode(_ValueEnum):
     NO_HIGHER_PATH = "NO_HIGHER_PATH"
     INVALID_PATH_TRANSITION = "INVALID_PATH_TRANSITION"
     INVALID_CHARACTERIZATION = "INVALID_CHARACTERIZATION"
+
+
+class CapabilityPolicyReason(_ValueEnum):
+    CAPABILITY_READY = "CAPABILITY_READY"
+    PREFLIGHT_NOT_READY = "PREFLIGHT_NOT_READY"
+    CAPABILITY_PROVENANCE_INSUFFICIENT = "CAPABILITY_PROVENANCE_INSUFFICIENT"
+    CAPABILITY_MISSING = "CAPABILITY_MISSING"
+    CAPABILITY_IDENTITY_MISSING = "CAPABILITY_IDENTITY_MISSING"
+
+
+@dataclass(frozen=True)
+class CapabilityPolicyDecision:
+    allowed: bool
+    reason: CapabilityPolicyReason
+    required: tuple[str, ...]
+    missing: tuple[str, ...] = ()
+    required_provenance: CapabilityProvenance = CapabilityProvenance.DECLARED
+    observed_provenance: CapabilityProvenance | None = None
+
+
+def assess_capability_policy(
+    preflight: AdapterPreflight,
+    required: tuple[str, ...],
+    *,
+    minimum_provenance: CapabilityProvenance = CapabilityProvenance.DECLARED,
+) -> CapabilityPolicyDecision:
+    """Authorize capability use without selecting an executor or fallback."""
+    required = tuple(sorted(set(required)))
+    if preflight.status is not PreflightStatus.READY:
+        return CapabilityPolicyDecision(False, CapabilityPolicyReason.PREFLIGHT_NOT_READY, required, required_provenance=minimum_provenance, observed_provenance=preflight.capability_provenance)
+    if not preflight.capability_digest:
+        return CapabilityPolicyDecision(False, CapabilityPolicyReason.CAPABILITY_IDENTITY_MISSING, required, required_provenance=minimum_provenance, observed_provenance=preflight.capability_provenance)
+    rank = {CapabilityProvenance.DECLARED: 0, CapabilityProvenance.OBSERVED: 1, CapabilityProvenance.QUALIFIED: 2}
+    if rank[preflight.capability_provenance] < rank[minimum_provenance]:
+        return CapabilityPolicyDecision(False, CapabilityPolicyReason.CAPABILITY_PROVENANCE_INSUFFICIENT, required, required_provenance=minimum_provenance, observed_provenance=preflight.capability_provenance)
+    missing = tuple(sorted(set(required) - set(preflight.capabilities)))
+    if missing:
+        return CapabilityPolicyDecision(False, CapabilityPolicyReason.CAPABILITY_MISSING, required, missing, minimum_provenance, preflight.capability_provenance)
+    return CapabilityPolicyDecision(True, CapabilityPolicyReason.CAPABILITY_READY, required, required_provenance=minimum_provenance, observed_provenance=preflight.capability_provenance)
 
 
 PATH_LADDER: tuple[RecommendedPath, ...] = (

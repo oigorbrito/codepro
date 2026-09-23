@@ -15,7 +15,10 @@ from arkx.routing import (
     RoutingDecisionType,
     assess_escalation,
     route_characterization,
+    CapabilityPolicyReason,
+    assess_capability_policy,
 )
+from arkx.integration import AdapterIdentity, CapabilityProvenance, DependencyObservation, IntegrationKind, assess_preflight
 from arkx.telemetry import TelemetryCollector
 
 
@@ -215,6 +218,36 @@ class DeterminismTests(unittest.TestCase):
             self.assertEqual(decision.action.value, scenario["expected_action"])
             if "expected_target" in scenario:
                 self.assertEqual(decision.target_path.value, scenario["expected_target"])
+
+class CapabilityRoutingTests(unittest.TestCase):
+    def _preflight(self, provenance=CapabilityProvenance.OBSERVED, capabilities=("patch",)):
+        return assess_preflight(
+            AdapterIdentity(IntegrationKind.EXECUTOR, "executor", "1", "cfg"),
+            (DependencyObservation("runtime", True, "1"),),
+            capabilities=capabilities,
+            capability_digest="capability-digest",
+            capability_provenance=provenance,
+        )
+
+    def test_policy_requires_minimum_capability_provenance(self):
+        decision = assess_capability_policy(self._preflight(), ("patch",), minimum_provenance=CapabilityProvenance.QUALIFIED)
+        self.assertFalse(decision.allowed)
+        self.assertEqual(decision.reason, CapabilityPolicyReason.CAPABILITY_PROVENANCE_INSUFFICIENT)
+
+    def test_policy_does_not_route_when_preflight_is_not_ready(self):
+        preflight = assess_preflight(
+            AdapterIdentity(IntegrationKind.EXECUTOR, "executor", "1", "cfg"),
+            (DependencyObservation("runtime", False),),
+            capabilities=("patch",), capability_digest="capability-digest",
+            capability_provenance=CapabilityProvenance.OBSERVED,
+        )
+        decision = assess_capability_policy(preflight, ("patch",))
+        self.assertFalse(decision.allowed)
+        self.assertEqual(decision.reason, CapabilityPolicyReason.PREFLIGHT_NOT_READY)
+
+    def test_policy_allows_observed_capability_when_required(self):
+        decision = assess_capability_policy(self._preflight(), ("patch",), minimum_provenance=CapabilityProvenance.OBSERVED)
+        self.assertTrue(decision.allowed)
 
 
 if __name__ == "__main__":
