@@ -8,7 +8,7 @@ import hashlib
 import json
 from typing import Any, Mapping
 
-from arkx.study import StudySpec
+from arkx.study import FrozenStudySpec, StudySpec, freeze_study_spec
 
 
 SCHEMA_VERSION = 1
@@ -152,12 +152,14 @@ class ValidityPlan:
 class FrozenValidityPlan:
     validity_plan: ValidityPlan
     content_hash: str
+    study_spec_hash: str
     freeze_schema_version: int = FREEZE_SCHEMA_VERSION
 
     def to_json(self) -> str:
         value = {
             "freeze_schema_version": self.freeze_schema_version,
             "content_hash": self.content_hash,
+            "study_spec_hash": self.study_spec_hash,
             "validity_plan": self.validity_plan.to_dict(),
         }
         return json.dumps(value, ensure_ascii=False, sort_keys=True, separators=(",", ":"))
@@ -231,9 +233,23 @@ def validate_validity_compatibility(plan: ValidityPlan, study: StudySpec) -> tup
     return tuple(sorted(set(issues)))
 
 
-def freeze_validity_plan(plan: ValidityPlan, study: StudySpec) -> FrozenValidityPlan:
-    issues = validate_validity_compatibility(plan, study)
+def freeze_validity_plan(plan: ValidityPlan, study: FrozenStudySpec) -> FrozenValidityPlan:
+    canonical = freeze_study_spec(study.study_spec)
+    if canonical.content_hash != study.content_hash:
+        raise ValueError("frozen Study Spec hash does not match Study Spec content")
+    issues = validate_validity_compatibility(plan, study.study_spec)
     if issues:
         raise ValueError("Invalid validity plan: " + "; ".join(issues))
-    digest = hashlib.sha256(plan.to_json().encode("utf-8")).hexdigest()
-    return FrozenValidityPlan(validity_plan=plan, content_hash=f"sha256:{digest}")
+    identity = json.dumps(
+        {"validity_plan": plan.to_dict(), "study_spec_hash": study.content_hash},
+        ensure_ascii=False,
+        sort_keys=True,
+        separators=(",", ":"),
+        allow_nan=False,
+    )
+    digest = hashlib.sha256(identity.encode("utf-8")).hexdigest()
+    return FrozenValidityPlan(
+        validity_plan=plan,
+        content_hash=f"sha256:{digest}",
+        study_spec_hash=study.content_hash,
+    )
