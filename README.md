@@ -1,6 +1,6 @@
-# Arkx
+# Dekon
 
-Arkx is an executor-agnostic software-engineering chassis developed through explicit, falsifiable contracts and reproducible evidence.
+Dekon is an executor-agnostic software-engineering chassis developed through explicit, falsifiable contracts and reproducible evidence.
 
 > **MINIMUM SUFFICIENT ARCHITECTURE**  
 > **FOR MAXIMUM RELIABLE CAPABILITY**
@@ -20,16 +20,44 @@ Implemented:
 - P6 handoff/context accounting;
 - frozen Study Spec, Workload, Treatment, Measurement, Analysis, Validity, Promotion, Environment, Deviation, Failure Attribution, and Run Provenance contracts;
 - fail-closed deserialization and evidence semantics;
-- deterministic architecture, property, metamorphic, mutation-sensitivity, and cross-version verification.
+- deterministic architecture, property, metamorphic, mutation-sensitivity, and cross-version verification;
+- a minimal installable CLI boundary with no runtime dependencies.
 
 Not implemented:
 
 - concrete executor invocation/orchestration;
 - multi-agent runtime;
 - product integrations with Codex, Claude Code, Gemini CLI, mini-SWE-agent, SWE-agent, OpenHands, ReX, or other executors;
-- end-user Arkx CLI packaging/entrypoint.
+- interactive TUI;
+- CLI task execution.
 
 Executor-specific mechanisms remain outside the core until an experiment justifies promotion.
+
+## CLI
+
+Install the current checkout:
+
+```text
+python -m pip install --no-deps -e .
+```
+
+Then:
+
+```text
+dekon --help
+dekon --version
+dekon doctor
+```
+
+The equivalent module entrypoint is:
+
+```text
+python -m arkx --help
+```
+
+The public product command is `dekon`. The Python implementation namespace remains `arkx` for now so the CLI introduction does not also become a package-rename migration.
+
+Running `dekon` with no arguments prints help and performs no task execution.
 
 ## Development posture
 
@@ -57,14 +85,8 @@ From the repository root:
 PYTHONPATH=src python -m arkx.baseline
 PYTHONPATH=src python -m unittest discover -s tests -t . -v
 python tools/check_foundation.py
-python tools/mutation_probe.py
+PYTHONPATH=src python tools/mutation_probe.py
 PYTHONPATH=src python tools/chassis_fingerprint.py
 ```
 
-The CI verifies the suite across Python 3.12, 3.13, and 3.14 and requires the same canonical chassis fingerprint across supported interpreters.
-
-## Product boundary
-
-The current repository exposes Python modules and deterministic contracts. It does not yet contain an installable `arkx` console command or `python -m arkx` entrypoint.
-
-That absence is explicit: the CLI is a future product surface, not an inferred capability of the current chassis.
+The CI installs the CLI and verifies the suite across Python 3.12, 3.13, and 3.14 while requiring the same canonical chassis fingerprint across supported interpreters.
