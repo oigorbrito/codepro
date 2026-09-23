@@ -1,6 +1,6 @@
 # Protocol Deviation v1
 
-A frozen protocol can encounter reality that was not anticipated. Arkx does not solve that by silently rewriting the study.
+A frozen protocol can encounter reality that was not anticipated. CodePro does not solve that by silently rewriting the study.
 
 Every behavior-affecting departure from the frozen design is recorded as a separate Protocol Deviation.
 
