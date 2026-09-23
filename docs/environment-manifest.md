@@ -4,13 +4,13 @@ The Environment Manifest records the execution facts required to reproduce or au
 
 ## Current foundation posture
 
-Arkx foundation CI pins:
+CodePro foundation CI pins:
 
 - Ubuntu runner label `ubuntu-24.04`;
 - CPython `3.14.7`;
 - GitHub Actions by immutable commit SHA.
 
-The CI fingerprint also records the actual hosted runner image version, architecture, locale/timezone signal, platform, and Arkx commit.
+The CI fingerprint also records the actual hosted runner image version, architecture, locale/timezone signal, platform, and CodePro commit.
 
 The hosted runner remains **non-hermetic** because `ubuntu-24.04` selects a GitHub-managed image whose exact build is observed at run time rather than selected by an immutable container digest.
 
