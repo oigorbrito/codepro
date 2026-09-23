@@ -1,7 +1,7 @@
 {
   "fixture_type": "RUN_MANIFEST_FIXTURE",
   "run_manifest": {
-    "schema_version": 1,
+    "schema_version": 2,
     "run_id": "run-001",
     "study_spec_hash": "sha256:aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa",
     "study_spec_ref": "git:47da1e44e2fb3830c344d98c13dcb03a2f24eba8:experiments/study.json",
@@ -14,6 +14,9 @@
     "environment_ref": "env://arkx-ci-python-3.14.7-ubuntu-24.04",
     "execution_record_ref": "raw://runs/run-001.json",
     "execution_record_hash": "sha256:bbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbb",
-    "protocol_deviations": []
+    "protocol_deviations": [],
+    "workload_hash": "sha256:cccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccc",
+    "configuration_hash": "sha256:dddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddd",
+    "environment_hash": "sha256:eeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeee"
   }
 }
