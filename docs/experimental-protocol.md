@@ -14,6 +14,8 @@ Each experiment records:
 - `procedure`: reproducible steps;
 - `expected_signal`: measurable success and failure criteria;
 - `result`: `PASS`, `FAIL`, `BLOCKED`, or `NOT_EXECUTED`;
+
+P7 composition trials use their own comparability namespace: `COMPARABLE`, `INCOMPARABLE`, and `UNKNOWN`. P7 records externally supplied measurements and does not convert them into acceptance results.
 - `evidence`: links or paths to raw evidence and environment facts;
 - `acceptance`: explicit reviewer decision and rationale;
 - `promotion`: explicit decision to make the change durable, or `NOT_PROMOTED`.
@@ -54,4 +56,3 @@ evidence:
 acceptance: "PENDING"
 promotion: NOT_PROMOTED
 ```
-

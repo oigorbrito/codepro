@@ -57,6 +57,18 @@ from .handoff import (
     HandoffSummary,
     summarize_handoffs,
 )
+from .composition import (
+    ComparabilityStatus,
+    ExperimentIdentity,
+    ExperimentManifest,
+    ExperimentSummary,
+    Mechanism,
+    Treatment,
+    TrialObservation,
+    compare_trials,
+    initial_manifest,
+    summarize_trials,
+)
 
 __all__ = [
     "Event",
@@ -107,4 +119,14 @@ __all__ = [
     "HandoffRecord",
     "HandoffSummary",
     "summarize_handoffs",
+    "ComparabilityStatus",
+    "ExperimentIdentity",
+    "ExperimentManifest",
+    "ExperimentSummary",
+    "Mechanism",
+    "Treatment",
+    "TrialObservation",
+    "compare_trials",
+    "initial_manifest",
+    "summarize_trials",
 ]
