@@ -72,6 +72,18 @@ class HandoffTests(unittest.TestCase):
         self.assertEqual(summary.context_bytes_in, 0)
         self.assertEqual(summary.duplicated_instructions, 0)
 
+    def test_blank_executor_identity_or_evidence_is_rejected(self):
+        with self.assertRaises(ValueError):
+            record(source_executor="")
+        with self.assertRaises(ValueError):
+            record(target_executor="   ")
+        with self.assertRaises(ValueError):
+            record(evidence_refs=("",))
+
+    def test_boolean_measurement_is_rejected(self):
+        with self.assertRaises(ValueError):
+            record(context_bytes_in=True)
+
     def test_negative_measurement_is_rejected(self):
         with self.assertRaises(ValueError):
             record(context_bytes_in=-1)
