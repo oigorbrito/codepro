@@ -39,8 +39,12 @@ MUTATIONS = (
     Mutation(
         "p3-negative-budget",
         "src/arkx/routing.py",
-        'if isinstance(value, bool) or not isinstance(value, int) or value < 0:',
-        'if isinstance(value, bool) or not isinstance(value, int) or value < -1:',
+        'for name in ("max_path_escalations", "max_attempts"):\n'
+        '            value = getattr(self, name)\n'
+        '            if isinstance(value, bool) or not isinstance(value, int) or value < 0:',
+        'for name in ("max_path_escalations", "max_attempts"):\n'
+        '            value = getattr(self, name)\n'
+        '            if isinstance(value, bool) or not isinstance(value, int) or value < -1:',
         "tests.test_routing",
     ),
     Mutation(
