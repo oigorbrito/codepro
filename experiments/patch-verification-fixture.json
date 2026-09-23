@@ -1,0 +1,12 @@
+{
+  "fixture_type": "PATCH_VERIFICATION_FIXTURE",
+  "description": "Synthetic verification gate scenarios; not an acceptance benchmark.",
+  "scenarios": [
+    "A_verified_patch",
+    "B_missing_reproduction",
+    "C_regression_failure",
+    "D_post_patch_reproduction_failure",
+    "E_scope_expansion",
+    "F_incomplete_evidence"
+  ]
+}

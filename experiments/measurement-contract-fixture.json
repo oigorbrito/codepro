@@ -1,0 +1,42 @@
+{
+  "fixture_type": "MEASUREMENT_CONTRACT_FIXTURE",
+  "contract": {
+    "schema_version": 1,
+    "measurement_id": "measurement-v1",
+    "metrics": [
+      {
+        "metric_id": "monetary_cost",
+        "data_type": "FLOAT",
+        "unit": "USD",
+        "direction": "LOWER_IS_BETTER",
+        "source": "provider-reported raw execution metadata",
+        "measurement_rule": "record observed monetary cost once per valid run without imputing missing values",
+        "missing_semantics": "unknown or unreported cost is JSON null and is never coerced to zero",
+        "invalid_semantics": "invalid runs remain invalid and do not receive a fabricated cost",
+        "precision_rule": "preserve provider precision in raw data; round only for display"
+      },
+      {
+        "metric_id": "verified_resolution",
+        "data_type": "BOOLEAN",
+        "unit": "boolean",
+        "direction": "HIGHER_IS_BETTER",
+        "source": "independent frozen verifier",
+        "measurement_rule": "true only when the frozen verifier criteria are satisfied for the run",
+        "missing_semantics": "unexecuted or unavailable verification is unknown and never coerced to zero",
+        "invalid_semantics": "invalid runs do not receive a fabricated verifier outcome",
+        "precision_rule": "boolean raw value; no rounding"
+      },
+      {
+        "metric_id": "wall_time_ms",
+        "data_type": "INTEGER",
+        "unit": "milliseconds",
+        "direction": "LOWER_IS_BETTER",
+        "source": "P0 task start and finish event timestamps",
+        "measurement_rule": "elapsed milliseconds between first TASK_STARTED and last TASK_FINISHED",
+        "missing_semantics": "missing either time boundary yields JSON null and is never coerced to zero",
+        "invalid_semantics": "invalid event chronology invalidates the observation",
+        "precision_rule": "integer milliseconds in raw record"
+      }
+    ]
+  }
+}

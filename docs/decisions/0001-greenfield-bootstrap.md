@@ -18,7 +18,17 @@ Start with documentation, empty structural boundaries, a dependency-free foundat
 - Future changes must introduce their own evidence and decision records.
 - No donor repository is a dependency of the product.
 
+## P0 follow-up
+
+P0 baseline telemetry is implemented, executed, and tested on a branch derived from this bootstrap:
+
+```text
+P0_TELEMETRY = IMPLEMENTED / EXECUTED / TESTED
+P0_BASELINE_TELEMETRY = EXECUTED_WITH_SCOPE
+```
+
+It is not marked `ACCEPTED` or `PROMOTED` by this record.
+
 ## Revisit when
 
 The first concrete capability has a reproducible hypothesis and a need for executable product code, experiment fixtures, or a runtime dependency.
-

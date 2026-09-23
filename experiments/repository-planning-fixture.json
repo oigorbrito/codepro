@@ -1,0 +1,11 @@
+{
+  "fixture_type": "REPOSITORY_PLANNING_FIXTURE",
+  "description": "Synthetic planning stability scenarios; not a performance benchmark.",
+  "scenarios": [
+    {"id": "A_multi_file_bounded_plan", "components": ["api", "tests"], "files": ["src/api.py", "tests/test_api.py"]},
+    {"id": "B_dependency_chain", "components": ["a", "b", "c"], "files": ["src/a.py", "src/b.py", "src/c.py"], "edges": [["inspect-01", "inspect-02"], ["inspect-02", "inspect-03"]]},
+    {"id": "C_invalid_dependency", "invalid": true},
+    {"id": "D_replan_after_discovered_dependency", "trigger": "DEPENDENCY_DISCOVERED", "previous_plan_ref": "plan://old"},
+    {"id": "E_unresolved_question", "components": ["unknown"], "unresolved_questions": ["Which acceptance surface is authoritative?"]}
+  ]
+}
