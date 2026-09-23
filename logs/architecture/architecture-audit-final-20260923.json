@@ -19,6 +19,7 @@
   "latest_verified_suite_after_budget_boundary": {"command": "PYTHONPATH=src python -m unittest discover -s tests -p 'test_*.py'", "passed": 366},
   "orchestration_configuration_snapshot_verified": true,
   "latest_verified_suite_after_configuration_snapshot": {"command": "PYTHONPATH=src python -m unittest discover -s tests -p 'test_*.py'", "passed": 367},
+  "persistence_coordination_scope_verified": true,
   "suite_history": [
     {"passed": 359, "label": "prior local suite"},
     {"passed": 361, "label": "budget/recovery verification"},
@@ -31,9 +32,9 @@
   "external_authority": {"swebench_docker_gold": "resolved_true_for_frozen_tasks", "real_provider_model": "UNQUALIFIED", "mechanism_trial": "UNQUALIFIED"},
   "critical_gaps": [
     "legacy runners without explicit budget enforcement remain blocked",
-    "orchestration remains a large composition seam",
-    "execution and orchestration state vocabularies remain intentionally separate and need coordinated lifecycle persistence",
-    "configuration snapshot propagation is available but optional for legacy callers; crash-resume protocol remains incomplete",
+    "orchestration remains a large composition seam, with extraction deferred until an isolated consumer requires it",
+    "execution and orchestration state vocabularies remain intentionally separate and are crosswalked explicitly",
+    "configuration snapshot propagation is available but optional for legacy callers; real-runtime crash-resume effectiveness remains unqualified",
     "concrete provider/executor/sandbox qualification remains blocked"
   ],
   "promotion": "NOT_PROMOTED"

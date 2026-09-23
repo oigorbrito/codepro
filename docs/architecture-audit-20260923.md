@@ -179,8 +179,10 @@ one remain explicitly weaker rather than being upgraded by inference.
 Arkx is no longer merely a collection of executor-specific experiments: the
 neutral contract, capability, lifecycle, audit and replay foundations are
 materially present. It is not yet a complete executor-agnostic architecture.
-The decisive remaining issues are lifecycle composition, coordinated
-crash-resume/persistence semantics, and concrete adapter qualification. Budget
-enforcement and typed configuration identity now have explicit local gates, but
-legacy callers without the new evidence remain blocked or weaker rather than
-being upgraded by inference.
+The decisive remaining issues are concrete adapter qualification and empirical
+validation of retry/recovery under real runtimes. Persistence coordination is
+deliberately audit-based at the current single-process scope; a transaction
+coordinator or event bus is deferred until concurrent or distributed consumers
+create evidence for that need. Budget enforcement and typed configuration
+identity now have explicit local gates, while legacy callers without the new
+evidence remain blocked or weaker rather than being upgraded by inference.
