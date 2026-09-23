@@ -1,4 +1,4 @@
-# Raw-run provenance v1
+# Raw-run provenance v2
 
 Every empirical run must remain attributable to the exact study design, code, task, configuration, executor, environment, repetition, and raw execution record that produced it.
 
@@ -14,11 +14,11 @@ Run Manifest
   - study_spec_hash
   - study_spec_ref
   - arkx_commit
-  - task_ref
-  - configuration_ref
+  - task_ref + workload_hash
+  - configuration_ref + configuration_hash
   - repetition_index
   - executor_id + executor_version
-  - environment_ref
+  - environment_ref + environment_hash
   - execution_record_ref + execution_record_hash
   - protocol_deviations
       |
@@ -30,9 +30,9 @@ A summary, table, mean, median, success rate, or chart is never a substitute for
 
 ## Integrity and chronology
 
-The Run Manifest is deterministically serialized and content-addressed. Its hashes prove integrity, not chronology.
+The Run Manifest is deterministically serialized and content-addressed. Schema v2 binds the run to canonical SHA-256 identities for the Study Spec, workload, treatment/configuration, environment, and raw execution record. Nominal references remain for navigation and human review; hashes carry content identity.
 
-Chronology is established by immutable external references: the frozen Study Spec reference must exist before the governed run, and the raw execution record must be retained after the run. Later analysis must consume the referenced raw records rather than reconstructing them from aggregates.
+The `study_spec_ref` must be anchored to a full Git commit. Hashes prove content integrity, while the commit-anchored reference establishes an auditable chronology boundary. The raw execution record must be retained after the run. Later analysis must consume the referenced raw records rather than reconstructing them from aggregates.
 
 ## Protocol deviations
 
