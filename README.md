@@ -18,7 +18,7 @@ Included:
 
 Deferred:
 
-- routing and planning;
+- concrete executor integrations;
 - multi-agent orchestration;
 - OpenHands, ReX, mini-SWE-agent, and SWE-agent integrations;
 - product dependencies or automatic migration from `smag-rex`.
@@ -28,6 +28,12 @@ Deferred:
 Every capability must be introduced through a falsifiable hypothesis, an explicit implementation, an executed experiment, and recorded evidence. Local success is not scientific or upstream evidence. No fallback, executor switch, or scope expansion may be silent.
 
 See [the project contract](docs/project-contract.md) and [the experimental protocol](docs/experimental-protocol.md).
+
+## Pre-execution empirical design
+
+Comparative and benchmark-style studies must freeze a valid [Study Spec v1](docs/study-spec.md) before treatment execution. The spec records the research question, hypothesis, methodology, experimental unit, workload, metrics, comparison design, repetitions, stopping rule, analysis-plan reference, promotion rule, environment contract, and raw-results policy.
+
+The canonical Study Spec hash proves integrity, not temporal precedence. Real runs must also reference an immutable commit/blob containing the exact frozen spec and existing before execution.
 
 ## P0 baseline and telemetry
 
