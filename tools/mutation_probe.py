@@ -1,4 +1,4 @@
-"""Small deterministic mutation probe for critical Arkx fail-closed invariants.
+"""Small deterministic mutation probe for critical CodePro fail-closed invariants.
 
 This is intentionally not a general mutation-testing framework. It introduces a
 few high-value known-bad changes in temporary source copies and verifies that
