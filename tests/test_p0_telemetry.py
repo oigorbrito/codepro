@@ -3,7 +3,7 @@ from tempfile import TemporaryDirectory
 from pathlib import Path
 
 from arkx.baseline import RUN_ID, baseline_events, build_baseline_record
-from arkx.contracts import Event, EventType, ExecutionStatus
+from arkx.contracts import Event, EventType, ExecutionRecord, ExecutionStatus
 from arkx.evidence import resolve_status
 from arkx.telemetry import TelemetryCollector
 
@@ -109,6 +109,37 @@ class UnknownMeasurementTests(unittest.TestCase):
 
 
 class SerializationTests(unittest.TestCase):
+    def test_imported_record_rejects_type_coercion_and_invalid_values(self):
+        payload = build_baseline_record().to_dict()
+        for field, invalid in (
+            ("retry_count", "0"),
+            ("handoff_count", True),
+            ("wall_time_ms", -1),
+            ("monetary_cost", float("inf")),
+        ):
+            corrupted = dict(payload)
+            corrupted[field] = invalid
+            with self.assertRaises(ValueError):
+                ExecutionRecord.from_dict(corrupted)
+
+    def test_imported_record_rejects_blank_evidence_and_inverted_timestamps(self):
+        payload = build_baseline_record().to_dict()
+        corrupted = dict(payload)
+        corrupted["evidence_refs"] = ["   "]
+        with self.assertRaises(ValueError):
+            ExecutionRecord.from_dict(corrupted)
+        corrupted = dict(payload)
+        corrupted["started_at"] = "2026-01-01T00:00:01+00:00"
+        corrupted["finished_at"] = "2026-01-01T00:00:00+00:00"
+        with self.assertRaises(ValueError):
+            ExecutionRecord.from_dict(corrupted)
+
+    def test_imported_record_rejects_string_schema_version(self):
+        payload = build_baseline_record().to_dict()
+        payload["schemaVersion"] = "1"
+        with self.assertRaises(ValueError):
+            ExecutionRecord.from_dict(payload)
+
     def test_record_json_round_trip_preserves_semantics(self):
         record = build_baseline_record()
         restored = type(record).from_json(record.to_json())
