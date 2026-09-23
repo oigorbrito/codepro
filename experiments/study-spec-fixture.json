@@ -1,0 +1,35 @@
+{
+  "fixture_type": "STUDY_SPEC_FIXTURE",
+  "expected_content_hash": "sha256:4bba48cd3b6e035b655682f16f904ad08ecc938ab9769b04977ad680dcb26302",
+  "study_spec": {
+    "schema_version": 1,
+    "study_id": "study-routing-v1",
+    "methodology": "ENGINEERING_RESEARCH_BENCHMARKING",
+    "research_question": "Does bounded routing reduce cost without reducing verified resolution?",
+    "hypothesis": "Bounded routing reduces median cost while preserving verified resolution.",
+    "experimental_unit": "one benchmark task attempt",
+    "quality_attribute": "cost-efficient reliable resolution",
+    "workload_refs": [
+      "benchmark://swebench/verified/pinned-set-v1"
+    ],
+    "metrics": [
+      "monetary_cost",
+      "verified_resolution",
+      "wall_time_ms"
+    ],
+    "primary_metric": "verified_resolution",
+    "comparison_mode": "CONTROL_TREATMENT",
+    "control_ref": "config://direct-v1",
+    "treatment_refs": [
+      "config://bounded-routing-v1"
+    ],
+    "comparator_justification": null,
+    "repetitions": 3,
+    "repetition_justification": null,
+    "stopping_rule": "run every frozen task/configuration/repetition unless externally blocked",
+    "analysis_plan_ref": "analysis://routing-v1",
+    "promotion_rule": "promote only if the frozen acceptance gate is satisfied",
+    "environment_contract_ref": "env://arkx-ci-python-3.14.7-ubuntu-24.04",
+    "raw_results_policy": "PERSIST_ALL_RAW_RUNS"
+  }
+}
