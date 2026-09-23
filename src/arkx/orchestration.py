@@ -21,6 +21,7 @@ from .routing import RoutingDecision, RoutingDecisionType
 from .selection import SelectionDecision, SelectionStatus
 from .execution import BudgetLedger, ExecutionBudgetSpec, ExecutionPlan, ExecutionRequest, ExecutionResult as ContractExecutionResult, Executor, execution_reference
 from .integration import AdapterIdentity, AdapterPreflight, IntegrationKind, PreflightStatus
+from .configuration import ConfigurationSnapshot
 from .contracts import EventType
 from .harness import RunState
 
@@ -251,11 +252,17 @@ def build_execution_plan(
     *,
     provider_identity: AdapterIdentity | None = None,
     sandbox_identity: AdapterIdentity | None = None,
+    configuration_snapshot: ConfigurationSnapshot | None = None,
 ) -> ExecutionPlan:
     request = governance.request
     if request is None or selection.executor is None or selection.treatment is None:
         raise ValueError("governance request, treatment and executor are required for an execution plan")
     identity = selection.executor.executor
+    configuration_digest = identity.configuration_digest
+    if configuration_snapshot is not None:
+        if configuration_digest is not None and configuration_digest != configuration_snapshot.digest():
+            raise ValueError("configuration snapshot does not match executor identity")
+        configuration_digest = configuration_snapshot.digest()
     budget = None if request.budget is None else ExecutionBudgetSpec(
         max_attempts=request.budget.max_attempts,
         max_tokens=request.budget.max_tokens,
@@ -270,6 +277,7 @@ def build_execution_plan(
         "provider": None if provider_identity is None else provider_identity.to_dict(),
         "sandbox": None if sandbox_identity is None else sandbox_identity.to_dict(),
         "budget": None if request.budget is None else request.budget.to_dict(),
+        "configuration_snapshot": None if configuration_snapshot is None else configuration_snapshot.to_dict(),
     }, sort_keys=True, separators=(",", ":"))
     return ExecutionPlan(
         plan_id=hashlib.sha256(payload.encode("utf-8")).hexdigest()[:16],
@@ -281,12 +289,13 @@ def build_execution_plan(
         model_id=None,
         sandbox_id=sandbox_identity.name if sandbox_identity is not None else (None if request.environment is None else request.environment.environment_id),
         budget_digest=None if budget is None else budget.digest(),
-        configuration_digest=identity.configuration_digest,
+        configuration_digest=configuration_digest,
         steps=("execute",),
         budget=budget,
         required_capabilities=selection.treatment.required_capabilities,
         provider_identity=provider_identity,
         sandbox_identity=sandbox_identity,
+        configuration_snapshot=configuration_snapshot,
     )
 
 
@@ -305,6 +314,7 @@ def run_routed_pipeline(
     sandbox_identity: AdapterIdentity | None = None,
     provider_preflight: AdapterPreflight | None = None,
     sandbox_preflight: AdapterPreflight | None = None,
+    configuration_snapshot: ConfigurationSnapshot | None = None,
 ) -> OrchestrationResult:
     """Run one selected treatment sequentially through independent gates."""
 
@@ -334,7 +344,7 @@ def run_routed_pipeline(
 
     if hasattr(executor, "execute") and not hasattr(executor, "run"):
         executor = ContractExecutorRunner(executor)
-    plan = build_execution_plan(governance, routing, selection, provider_identity=provider_identity, sandbox_identity=sandbox_identity)
+    plan = build_execution_plan(governance, routing, selection, provider_identity=provider_identity, sandbox_identity=sandbox_identity, configuration_snapshot=configuration_snapshot)
     if plan.budget is not None and not hasattr(executor, "run_with_budget"):
         return _blocked(OrchestrationReason.BUDGET_ENFORCEMENT_REQUIRED)
     def persist_stage(stage: str, ref: str, data: dict[str, Any] | None = None) -> bool:

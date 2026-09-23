@@ -17,6 +17,8 @@
   "latest_verified_suite": {"command": "PYTHONPATH=src python -m unittest discover -s tests -p 'test_*.py'", "passed": 365},
   "budget_enforced_legacy_runner_verified": true,
   "latest_verified_suite_after_budget_boundary": {"command": "PYTHONPATH=src python -m unittest discover -s tests -p 'test_*.py'", "passed": 366},
+  "orchestration_configuration_snapshot_verified": true,
+  "latest_verified_suite_after_configuration_snapshot": {"command": "PYTHONPATH=src python -m unittest discover -s tests -p 'test_*.py'", "passed": 367},
   "latest_suite": {"passed": 364},
   "verified_suite": {"passed": 361},
   "current_suite": {"passed": 359},
@@ -26,10 +28,10 @@
   "external_qualification": "NOT_COMPLETE",
   "external_authority": {"swebench_docker_gold": "resolved_true_for_frozen_tasks", "real_provider_model": "UNQUALIFIED", "mechanism_trial": "UNQUALIFIED"},
   "critical_gaps": [
-    "budget enforcement is not guaranteed for every legacy runner",
+    "legacy runners without explicit budget enforcement remain blocked",
     "orchestration remains a large composition seam",
-    "execution and orchestration state vocabularies are duplicated",
-    "configuration snapshot and crash-resume protocol are incomplete",
+    "execution and orchestration state vocabularies remain intentionally separate and need coordinated lifecycle persistence",
+    "configuration snapshot propagation is available but optional for legacy callers; crash-resume protocol remains incomplete",
     "concrete provider/executor/sandbox qualification remains blocked"
   ],
   "promotion": "NOT_PROMOTED"

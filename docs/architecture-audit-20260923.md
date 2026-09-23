@@ -46,7 +46,7 @@ idempotency and persistence; observability/tests; risks/debt/maturity.
 | task state | `RunState`, transition validation, orchestration status and explicit terminal lifecycle. | State transitions are deterministic and terminal states immutable. Manifest and event log both persist state-related facts. Tests cover illegal transitions and replay mismatch. | Two state vocabularies (`RunState` and `OrchestrationStatus`) are bridged manually; no single lifecycle state machine authority. `FUNCTIONAL_BUT_WEAK`. |
 | artifact/state persistence | Atomic manifest/artifact store, attempt/retry lineage, event log, audit and replay. | Depends on stable references and identity digests; incomplete chains are not accepted. Tests cover atomicity, audit, comparison and replay. | No transactional coordination across artifact files and event log; resume/restart semantics are not complete. `FUNCTIONAL_BUT_WEAK`. |
 | experimental protocol | Frozen task/treatment identity, manifests, comparability and qualification gates. | Depends on provider/model/config/budget/runtime identity and raw logs. Blocks missing identity and separates local evidence from external authority. Tests cover audited experiments and comparability. | Experimental protocol is strong conceptually but still P8.2-shaped and lacks a universal experiment service. `FUNCTIONAL_BUT_WEAK`. |
-| configuration | Configuration digests exist on plans, adapters and experiments. | Configuration is passed through request/plan/adapter identities; mismatch is rejected in audited paths. | No central typed configuration schema, resolution record, or secret-free canonical config snapshot for all adapters. `PARTIAL`. |
+| configuration | Configuration digests and typed secret-safe snapshots exist on plans, adapters and experiments. | Configuration is passed through request/plan/adapter identities; mismatch is rejected in audited paths. | Snapshot propagation is optional for legacy callers and there is no universal resolution record for every adapter. `FUNCTIONAL_BUT_WEAK`. |
 | CLI / entrypoints | Tools and scripts expose baseline/preflight/probe flows. | Entrypoints preserve strict failure and write logs/manifests where implemented. Tests cover selected tools, not every invocation path. | CLI surface is experimental and not a stable public command contract. `PARTIAL`. |
 | package/public API | `arkx.__init__` exports neutral contracts, lifecycle, routing, integration and audit APIs. | Import boundaries are tested and optional dependencies are lazy/strict at execution. | Public API is broad and currently exposes both legacy P8.2 and neutral seams without deprecation/version policy. `FUNCTIONAL_BUT_WEAK`. |
 
@@ -169,11 +169,18 @@ cannot declare `run_with_budget`; the neutral contract bridge is the first
 implementation of that boundary. This closes the previously identified silent
 legacy budget-bypass gap locally, but does not qualify any external runner.
 
+The orchestration-configuration-snapshot block was then verified with 367
+passing deterministic tests. A supplied typed snapshot now survives into the
+execution plan and is checked against executor identity; legacy callers without
+one remain explicitly weaker rather than being upgraded by inference.
+
 ## Conclusion
 
 Arkx is no longer merely a collection of executor-specific experiments: the
 neutral contract, capability, lifecycle, audit and replay foundations are
 materially present. It is not yet a complete executor-agnostic architecture.
-The decisive remaining issue is enforcement, not naming: budgets, lifecycle
-state, configuration identity, recovery/resume, and concrete adapter
-qualification must be enforced and persisted at every integration seam.
+The decisive remaining issues are lifecycle composition, coordinated
+crash-resume/persistence semantics, and concrete adapter qualification. Budget
+enforcement and typed configuration identity now have explicit local gates, but
+legacy callers without the new evidence remain blocked or weaker rather than
+being upgraded by inference.

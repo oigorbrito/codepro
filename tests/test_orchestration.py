@@ -21,6 +21,7 @@ from arkx.harness import RunState
 from arkx.orchestration import ContractExecutorRunner
 from arkx.orchestration import legacy_execution_from_contract
 from arkx.orchestration import build_execution_plan
+from arkx.configuration import ConfigurationSnapshot
 
 
 def setup():
@@ -271,6 +272,16 @@ class OrchestrationTests(unittest.TestCase):
                 raise AssertionError("legacy runner must be blocked before execution")
         result = run_routed_pipeline(governance, characterization, routing, selection, LegacyRunner(), FakeProgress(), FakeVerifier(), FakeAcceptance())
         self.assertIn(OrchestrationReason.BUDGET_ENFORCEMENT_REQUIRED, result.reason_codes)
+
+    def test_execution_plan_persists_typed_configuration_snapshot(self):
+        governance, characterization, routing, selection = setup()
+        snapshot = ConfigurationSnapshot("executor", "1", {"mode": "fake"})
+        binding = selection.executor
+        binding_executor = binding.executor.__class__(binding.executor.name, binding.executor.version, binding.executor.integration_kind, snapshot.digest(), binding.executor.advertised_capabilities)
+        selection = selection.__class__(selection.status, selection.reason_codes, path=selection.path, treatment=selection.treatment, executor=binding.__class__(binding_executor, binding.capabilities, binding.qualification_status, binding.evidence_refs), telemetry=selection.telemetry)
+        plan = build_execution_plan(governance, routing, selection, configuration_snapshot=snapshot)
+        self.assertEqual(plan.configuration_snapshot, snapshot)
+        self.assertEqual(plan.configuration_digest, snapshot.digest())
 
 
 if __name__ == "__main__":
