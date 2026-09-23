@@ -40,5 +40,9 @@ jobs:
         run: python tools/mutation_probe.py
         env:
           PYTHONPATH: src
+      - name: Record chassis semantic fingerprint
+        run: python tools/chassis_fingerprint.py
+        env:
+          PYTHONPATH: src
       - name: Compile Python sources
         run: python -m compileall -q src tests tools
