@@ -46,6 +46,8 @@ P2 adds deterministic progress/stagnation assessment from explicit snapshots onl
 
 P3 adds bounded rule-based routing and evidence-based escalation decisions. See [the P3 contract](docs/routing-escalation.md). It does not invoke or select concrete executors.
 
+Block B adds independently removable P4 repository planning/state, P5 patch verification, and P6 handoff/context accounting. None executes a plan, owns acceptance, or creates orchestration.
+
 ## Checks
 
 The bootstrap check is dependency-free:

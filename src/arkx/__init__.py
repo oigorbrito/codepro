@@ -31,6 +31,32 @@ from .routing import (
     assess_escalation,
     route_characterization,
 )
+from .planning import (
+    PlanStep,
+    ReplanRequest,
+    ReplanResult,
+    ReplanTrigger,
+    RepositoryPlan,
+    RepositoryState,
+    StepStatus,
+    build_plan,
+    plan_repository,
+)
+from .verification import (
+    PatchVerificationInput,
+    PatchVerificationResult,
+    PatchVerificationStatus,
+    TestResult,
+    TestResultStatus,
+    verify_patch,
+)
+from .handoff import (
+    HandoffBudgetStatus,
+    HandoffPolicy,
+    HandoffRecord,
+    HandoffSummary,
+    summarize_handoffs,
+)
 
 __all__ = [
     "Event",
@@ -61,4 +87,24 @@ __all__ = [
     "RoutingDecisionType",
     "assess_escalation",
     "route_characterization",
+    "PlanStep",
+    "ReplanRequest",
+    "ReplanResult",
+    "ReplanTrigger",
+    "RepositoryPlan",
+    "RepositoryState",
+    "StepStatus",
+    "build_plan",
+    "plan_repository",
+    "PatchVerificationInput",
+    "PatchVerificationResult",
+    "PatchVerificationStatus",
+    "TestResult",
+    "TestResultStatus",
+    "verify_patch",
+    "HandoffBudgetStatus",
+    "HandoffPolicy",
+    "HandoffRecord",
+    "HandoffSummary",
+    "summarize_handoffs",
 ]
