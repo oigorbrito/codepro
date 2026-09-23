@@ -85,7 +85,12 @@ from .executor_qualification import (
     compare_trials as compare_qualification_trials,
     summarize_experiment,
 )
-from .p82 import P82ExperimentConfig, P82ExperimentPlan, P82Treatment, P82TrialPlan, build_p82_plan, p82_manifest, plan_is_comparable
+from .p82 import (
+    P82Comparability, P82Criteria, P82ExperimentConfig, P82ExperimentPlan,
+    P82Observation, P82ObservationRecord, P82RunManifest, P82RunStatus, P82Treatment,
+    P82TreatmentSummary, P82TrialPlan, TaskSampleManifest, TaskSampleTask, TaskStratum,
+    build_p82_plan, compare_run_manifests, p82_manifest, plan_is_comparable, summarize_p82,
+)
 
 __all__ = [
     "Event",
@@ -162,9 +167,21 @@ __all__ = [
     "summarize_experiment",
     "P82ExperimentConfig",
     "P82ExperimentPlan",
+    "P82Comparability",
+    "P82Criteria",
+    "P82Observation",
+    "P82ObservationRecord",
+    "P82RunManifest",
+    "P82RunStatus",
     "P82Treatment",
+    "P82TreatmentSummary",
     "P82TrialPlan",
+    "TaskSampleManifest",
+    "TaskSampleTask",
+    "TaskStratum",
     "build_p82_plan",
+    "compare_run_manifests",
     "p82_manifest",
     "plan_is_comparable",
+    "summarize_p82",
 ]

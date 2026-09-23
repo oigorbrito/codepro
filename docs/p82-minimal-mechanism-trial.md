@@ -20,3 +20,14 @@ P8.1 `ExecutorTrial` contract with `Treatment` set to the corresponding arm.
 The primary outcomes are independently verified acceptance and cost to
 acceptance. False-pass rate is a guardrail. P8.2 produces no promotion or
 executor-adoption decision.
+
+The run manifest also records protocol version, model/temperature/reasoning
+configuration, task sample and stratum, attempts, token/cost/wall-time limits,
+verification identity, and independent acceptance identity. Task provenance is
+evidence metadata only; it grants no authority to a task or treatment.
+
+Run comparison is tri-state: `COMPARABLE` means controls are known and equal,
+`NOT_COMPARABLE` means a confounder differs, and `INDETERMINATE` means a
+required control is unknown. Summaries retain `NOT_EXECUTED` and `BLOCKED`
+counts, aggregate only observed metrics, and never produce a winner or a
+promotion decision.
