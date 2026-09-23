@@ -69,6 +69,22 @@ from .composition import (
     initial_manifest,
     summarize_trials,
 )
+from .executor_qualification import (
+    ComparisonAxis,
+    ExecutionEnvironment,
+    ExecutionOutcome,
+    ExecutionBudget,
+    ExecutorIdentity,
+    ExecutorObservation,
+    ExecutorTrial,
+    QualificationExperiment,
+    QualificationStatus,
+    QualificationSummary,
+    QualificationTask,
+    assess_trial,
+    compare_trials as compare_qualification_trials,
+    summarize_experiment,
+)
 
 __all__ = [
     "Event",
@@ -129,4 +145,18 @@ __all__ = [
     "compare_trials",
     "initial_manifest",
     "summarize_trials",
+    "ComparisonAxis",
+    "ExecutionEnvironment",
+    "ExecutionOutcome",
+    "ExecutionBudget",
+    "ExecutorIdentity",
+    "ExecutorObservation",
+    "ExecutorTrial",
+    "QualificationExperiment",
+    "QualificationStatus",
+    "QualificationSummary",
+    "QualificationTask",
+    "assess_trial",
+    "compare_qualification_trials",
+    "summarize_experiment",
 ]

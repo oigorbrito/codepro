@@ -16,6 +16,8 @@ Each experiment records:
 - `result`: `PASS`, `FAIL`, `BLOCKED`, or `NOT_EXECUTED`;
 
 P7 composition trials use their own comparability namespace: `COMPARABLE`, `INCOMPARABLE`, and `UNKNOWN`. P7 records externally supplied measurements and does not convert them into acceptance results.
+
+P8.1 adds executor qualification records with explicit `EXECUTOR` and `TREATMENT` comparison axes. P8.1 records externally supplied execution outcomes and acceptance observations; it does not execute an executor, infer acceptance, rank executors, or promote components.
 - `evidence`: links or paths to raw evidence and environment facts;
 - `acceptance`: explicit reviewer decision and rationale;
 - `promotion`: explicit decision to make the change durable, or `NOT_PROMOTED`.
