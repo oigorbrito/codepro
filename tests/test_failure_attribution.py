@@ -60,6 +60,27 @@ class ValidationTests(unittest.TestCase):
         )
 
 
+class ParsingTests(unittest.TestCase):
+    def test_string_boolean_is_rejected(self):
+        payload = valid().to_dict()
+        payload["affects_primary_analysis"] = "false"
+        with self.assertRaises(ValueError):
+            RunIssueAttribution.from_dict(payload)
+
+    def test_blank_evidence_reference_is_invalid(self):
+        value = valid(evidence_refs=("   ",))
+        self.assertIn(
+            "attribution evidence references must be non-blank strings",
+            validate_run_issue_attribution(value),
+        )
+
+    def test_string_schema_version_is_rejected(self):
+        payload = valid().to_dict()
+        payload["schema_version"] = "1"
+        with self.assertRaises(ValueError):
+            RunIssueAttribution.from_dict(payload)
+
+
 class FreezeTests(unittest.TestCase):
     def test_same_attribution_has_same_hash(self):
         self.assertEqual(
