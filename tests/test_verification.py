@@ -67,6 +67,22 @@ class VerificationTests(unittest.TestCase):
         self.assertEqual(result.status, PatchVerificationStatus.REJECTED)
         self.assertIn(ReasonCode.ISSUE_NOT_REPRODUCED_BEFORE_PATCH, result.reason_codes)
 
+    def test_empty_or_optional_only_regression_set_is_blocked(self):
+        result = verify_patch(valid(regression_results=()))
+        self.assertEqual(result.status, PatchVerificationStatus.BLOCKED)
+        self.assertIn(ReasonCode.REQUIRED_REGRESSION_MISSING, result.reason_codes)
+        optional = verify_patch(
+            valid(regression_results=(TestResult("optional", TestResultStatus.PASSED, False, "e://optional"),))
+        )
+        self.assertEqual(optional.status, PatchVerificationStatus.BLOCKED)
+
+    def test_passing_required_regression_requires_its_own_evidence(self):
+        result = verify_patch(
+            valid(regression_results=(TestResult("regression", TestResultStatus.PASSED, True, None),))
+        )
+        self.assertEqual(result.status, PatchVerificationStatus.BLOCKED)
+        self.assertIn(ReasonCode.EVIDENCE_MISSING, result.reason_codes)
+
     def test_regression_failure_is_rejected(self):
         result = verify_patch(
             valid(
@@ -111,6 +127,11 @@ class VerificationTests(unittest.TestCase):
         )
         self.assertEqual(result.status, PatchVerificationStatus.BLOCKED)
         self.assertIsNone(result.regression_tests_passed)
+
+    def test_blank_evidence_refs_are_blocked(self):
+        result = verify_patch(valid(evidence_refs=("   ",)))
+        self.assertEqual(result.status, PatchVerificationStatus.BLOCKED)
+        self.assertFalse(result.evidence_sufficient)
 
     def test_missing_evidence_refs_is_blocked(self):
         result = verify_patch(valid(evidence_refs=()))
