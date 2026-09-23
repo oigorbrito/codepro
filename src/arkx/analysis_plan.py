@@ -15,6 +15,35 @@ SCHEMA_VERSION = 1
 FREEZE_SCHEMA_VERSION = 1
 
 
+def _strict_schema(value: Mapping[str, Any]) -> int:
+    raw = value.get("schema_version", 0)
+    if isinstance(raw, bool) or not isinstance(raw, int) or raw != SCHEMA_VERSION:
+        raise ValueError(f"Unsupported analysis plan schema: {raw}")
+    return raw
+
+
+def _required_string(name: str, value: Any) -> str:
+    if not isinstance(value, str) or not value.strip():
+        raise ValueError(f"{name} must be a non-empty string")
+    return value
+
+
+def _string_tuple(name: str, value: Any) -> tuple[str, ...]:
+    if not isinstance(value, (list, tuple)):
+        raise ValueError(f"{name} must be a list or tuple")
+    if any(not isinstance(item, str) for item in value):
+        raise ValueError(f"{name} must contain only strings")
+    return tuple(value)
+
+
+def _optional_float(name: str, value: Any) -> float | None:
+    if value is None:
+        return None
+    if isinstance(value, bool) or not isinstance(value, (int, float)):
+        raise ValueError(f"{name} must be numeric when present")
+    return float(value)
+
+
 class _ValueEnum(str, Enum):
     def __str__(self) -> str:
         return self.value
@@ -78,26 +107,26 @@ class AnalysisPlan:
 
     @classmethod
     def from_dict(cls, value: Mapping[str, Any]) -> "AnalysisPlan":
-        schema_version = int(value.get("schema_version", 0))
-        if schema_version != SCHEMA_VERSION:
-            raise ValueError(f"Unsupported analysis plan schema: {schema_version}")
+        if not isinstance(value, Mapping):
+            raise ValueError("analysis plan payload must be a mapping")
+        schema_version = _strict_schema(value)
         return cls(
-            analysis_id=str(value["analysis_id"]),
+            analysis_id=_required_string("analysis_id", value.get("analysis_id")),
             design=AnalysisDesign(value["design"]),
-            primary_metric=str(value["primary_metric"]),
-            secondary_metrics=tuple(value.get("secondary_metrics", ())),
-            estimand=str(value["estimand"]),
-            summary_statistics=tuple(value.get("summary_statistics", ())),
+            primary_metric=_required_string("primary_metric", value.get("primary_metric")),
+            secondary_metrics=_string_tuple("secondary_metrics", value.get("secondary_metrics", ())),
+            estimand=_required_string("estimand", value.get("estimand")),
+            summary_statistics=_string_tuple("summary_statistics", value.get("summary_statistics", ())),
             inference_mode=InferenceMode(value["inference_mode"]),
-            uncertainty_method=str(value["uncertainty_method"]),
-            confidence_level=value.get("confidence_level"),
-            analysis_population_rule=str(value["analysis_population_rule"]),
-            missing_data_rule=str(value["missing_data_rule"]),
-            blocked_run_rule=str(value["blocked_run_rule"]),
-            protocol_deviation_rule=str(value["protocol_deviation_rule"]),
-            multiplicity_rule=str(value["multiplicity_rule"]),
-            outlier_rule=str(value["outlier_rule"]),
-            analysis_script_ref=str(value["analysis_script_ref"]),
+            uncertainty_method=_required_string("uncertainty_method", value.get("uncertainty_method")),
+            confidence_level=_optional_float("confidence_level", value.get("confidence_level")),
+            analysis_population_rule=_required_string("analysis_population_rule", value.get("analysis_population_rule")),
+            missing_data_rule=_required_string("missing_data_rule", value.get("missing_data_rule")),
+            blocked_run_rule=_required_string("blocked_run_rule", value.get("blocked_run_rule")),
+            protocol_deviation_rule=_required_string("protocol_deviation_rule", value.get("protocol_deviation_rule")),
+            multiplicity_rule=_required_string("multiplicity_rule", value.get("multiplicity_rule")),
+            outlier_rule=_required_string("outlier_rule", value.get("outlier_rule")),
+            analysis_script_ref=_required_string("analysis_script_ref", value.get("analysis_script_ref")),
             schema_version=schema_version,
         )
 
