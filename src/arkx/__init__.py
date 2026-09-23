@@ -20,6 +20,17 @@ from .progress import (
     assess_progress,
     assess_progress_timed,
 )
+from .routing import (
+    BudgetState,
+    EscalationAction,
+    EscalationDecision,
+    EvidenceSufficiency,
+    RoutingBudget,
+    RoutingDecision,
+    RoutingDecisionType,
+    assess_escalation,
+    route_characterization,
+)
 
 __all__ = [
     "Event",
@@ -41,4 +52,13 @@ __all__ = [
     "ProgressStatus",
     "assess_progress",
     "assess_progress_timed",
+    "BudgetState",
+    "EscalationAction",
+    "EscalationDecision",
+    "EvidenceSufficiency",
+    "RoutingBudget",
+    "RoutingDecision",
+    "RoutingDecisionType",
+    "assess_escalation",
+    "route_characterization",
 ]

@@ -44,6 +44,8 @@ P1 adds deterministic task characterization from explicit signals only. See [the
 
 P2 adds deterministic progress/stagnation assessment from explicit snapshots only. See [the P2 contract](docs/progress-stagnation.md). It does not control execution or authorize retry/replan.
 
+P3 adds bounded rule-based routing and evidence-based escalation decisions. See [the P3 contract](docs/routing-escalation.md). It does not invoke or select concrete executors.
+
 ## Checks
 
 The bootstrap check is dependency-free:

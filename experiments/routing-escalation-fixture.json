@@ -1,0 +1,13 @@
+{
+  "fixture_type": "ROUTING_POLICY_FIXTURE",
+  "description": "Synthetic policy stability scenarios; not an accuracy benchmark.",
+  "scenarios": [
+    {"id": "A_simple_success_path", "route_scope": "SIMPLE", "expected_path": "SIMPLE_PATH", "progress": "PROGRESS_PROVEN", "evidence": "SUFFICIENT", "expected_action": "STOP_SUFFICIENT_EVIDENCE"},
+    {"id": "B_simple_to_localized", "route_scope": "SIMPLE", "expected_path": "SIMPLE_PATH", "progress": "NO_PROGRESS", "evidence": "INSUFFICIENT", "expected_action": "ESCALATE", "expected_target": "LOCALIZED_PATH"},
+    {"id": "C_localized_to_repository_wide", "route_scope": "LOCALIZED", "expected_path": "LOCALIZED_PATH", "progress": "NO_PROGRESS", "evidence": "INSUFFICIENT", "expected_action": "ESCALATE", "expected_target": "REPOSITORY_WIDE_PATH"},
+    {"id": "D_repository_wide_stagnation", "route_scope": "REPOSITORY_WIDE", "expected_path": "REPOSITORY_WIDE_PATH", "progress": "NO_PROGRESS", "evidence": "INSUFFICIENT", "expected_action": "BLOCK"},
+    {"id": "E_unknown_characterization", "route_scope": "UNKNOWN", "expected_path": "QUALIFICATION_REQUIRED", "progress": "UNKNOWN", "evidence": "UNKNOWN", "expected_route_decision": "REQUIRE_QUALIFICATION"},
+    {"id": "F_exhausted_budget", "route_scope": "SIMPLE", "expected_path": "SIMPLE_PATH", "progress": "NO_PROGRESS", "evidence": "INSUFFICIENT", "attempts_used": 3, "path_escalations_used": 2, "expected_action": "BLOCK"},
+    {"id": "G_sufficient_evidence_early_stop", "route_scope": "LOCALIZED", "expected_path": "LOCALIZED_PATH", "progress": "PROGRESS_PROVEN", "evidence": "SUFFICIENT", "expected_action": "STOP_SUFFICIENT_EVIDENCE"}
+  ]
+}
