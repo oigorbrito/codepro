@@ -11,7 +11,7 @@ from pathlib import Path
 from typing import Any, Mapping
 
 
-def _nonblank_string(name: str, value: Any, *, optional: bool = false):
+def _nonblank_string(name: str, value: Any, *, optional: bool = False):
     if value is None and optional:
         return None
     if not isinstance(value, str) or not value.strip():
@@ -19,7 +19,7 @@ def _nonblank_string(name: str, value: Any, *, optional: bool = false):
     return value
 
 
-def _nonnegative_int(name: str, value: Any, *, optional: bool = false):
+def _nonnegative_int(name: str, value: Any, *, optional: bool = False):
     if value is None and optional:
         return None
     if isinstance(value, bool) or not isinstance(value, int) or value < 0:
