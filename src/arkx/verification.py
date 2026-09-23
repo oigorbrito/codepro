@@ -61,10 +61,10 @@ class TestResult:
 class PatchVerificationInput:
     task_id: str
     issue_reproduction_required: bool
-    reproduction_before: bool | None
+    reproduces_issue_before_patch: bool | None
     patch_applied: bool | None
     regression_results: tuple[TestResult, ...] | None
-    reproduction_after: bool | None
+    reproduces_issue_after_patch: bool | None
     changed_files: tuple[str, ...] | None
     expected_scope: tuple[str, ...] | None
     evidence_refs: tuple[str, ...] | None
@@ -74,10 +74,10 @@ class PatchVerificationInput:
 @dataclass(frozen=True)
 class PatchVerificationResult:
     task_id: str
-    reproduces_issue: bool | None
+    reproduces_issue_before_patch: bool | None
     patch_applied: bool | None
     regression_tests_passed: bool | None
-    reproduction_passed_after_patch: bool | None
+    reproduces_issue_after_patch: bool | None
     scope_changed: bool | None
     evidence_sufficient: bool | None
     status: PatchVerificationStatus
@@ -89,10 +89,10 @@ class PatchVerificationResult:
         return {
             "schema_version": self.schema_version,
             "task_id": self.task_id,
-            "reproduces_issue": self.reproduces_issue,
+            "reproduces_issue_before_patch": self.reproduces_issue_before_patch,
             "patch_applied": self.patch_applied,
             "regression_tests_passed": self.regression_tests_passed,
-            "reproduction_passed_after_patch": self.reproduction_passed_after_patch,
+            "reproduces_issue_after_patch": self.reproduces_issue_after_patch,
             "scope_changed": self.scope_changed,
             "evidence_sufficient": self.evidence_sufficient,
             "status": self.status.value,
@@ -106,41 +106,41 @@ class PatchVerificationResult:
 
 def verify_patch(value: PatchVerificationInput) -> PatchVerificationResult:
     reasons: list[ReasonCode] = []
-    if value.issue_reproduction_required and value.reproduction_before is None:
+    if value.issue_reproduction_required and value.reproduces_issue_before_patch is None:
         return _result(value, PatchVerificationStatus.BLOCKED, None, None, None, None, None, [ReasonCode.REPRODUCTION_REQUIRED_MISSING])
-    if value.issue_reproduction_required and value.reproduction_before is False:
+    if value.issue_reproduction_required and value.reproduces_issue_before_patch is False:
         return _result(value, PatchVerificationStatus.REJECTED, False, value.patch_applied, None, None, None, [ReasonCode.ISSUE_NOT_REPRODUCED])
-    if value.patch_applied is None or value.regression_results is None or value.reproduction_after is None or value.changed_files is None or value.expected_scope is None:
-        return _result(value, PatchVerificationStatus.UNKNOWN, value.reproduction_before, value.patch_applied, None, value.reproduction_after, None, [ReasonCode.EVIDENCE_MISSING])
+    if value.patch_applied is None or value.regression_results is None or value.reproduces_issue_after_patch is None or value.changed_files is None or value.expected_scope is None:
+        return _result(value, PatchVerificationStatus.UNKNOWN, value.reproduces_issue_before_patch, value.patch_applied, None, value.reproduces_issue_after_patch, None, [ReasonCode.EVIDENCE_MISSING])
     if value.patch_applied is False:
-        return _result(value, PatchVerificationStatus.REJECTED, value.reproduction_before, False, None, value.reproduction_after, False, [ReasonCode.PATCH_NOT_APPLIED])
+        return _result(value, PatchVerificationStatus.REJECTED, value.reproduces_issue_before_patch, False, None, value.reproduces_issue_after_patch, False, [ReasonCode.PATCH_NOT_APPLIED])
 
     required = [test for test in value.regression_results if test.required]
     if any(test.status is TestResultStatus.FAILED for test in required):
         reasons.append(ReasonCode.REQUIRED_REGRESSION_FAILED)
-        return _result(value, PatchVerificationStatus.REJECTED, value.reproduction_before, True, False, value.reproduction_after, None, reasons)
+        return _result(value, PatchVerificationStatus.REJECTED, value.reproduces_issue_before_patch, True, False, value.reproduces_issue_after_patch, None, reasons)
     if any(test.status in (TestResultStatus.NOT_EXECUTED, TestResultStatus.UNKNOWN) for test in required):
-        return _result(value, PatchVerificationStatus.BLOCKED, value.reproduction_before, True, None, value.reproduction_after, None, [ReasonCode.REQUIRED_TEST_NOT_EXECUTED])
-    if value.reproduction_after is True:
-        return _result(value, PatchVerificationStatus.REJECTED, value.reproduction_before, True, True, True, None, [ReasonCode.POST_PATCH_REPRODUCTION_FAILED])
+        return _result(value, PatchVerificationStatus.BLOCKED, value.reproduces_issue_before_patch, True, None, value.reproduces_issue_after_patch, None, [ReasonCode.REQUIRED_TEST_NOT_EXECUTED])
+    if value.reproduces_issue_after_patch is True:
+        return _result(value, PatchVerificationStatus.REJECTED, value.reproduces_issue_before_patch, True, True, True, None, [ReasonCode.POST_PATCH_REPRODUCTION_FAILED])
 
     scope_changed = bool(set(value.changed_files) - set(value.expected_scope))
     if scope_changed:
-        return _result(value, PatchVerificationStatus.REJECTED, value.reproduction_before, True, True, False, True, [ReasonCode.SCOPE_CHANGED])
+        return _result(value, PatchVerificationStatus.REJECTED, value.reproduces_issue_before_patch, True, True, False, True, [ReasonCode.SCOPE_CHANGED])
     evidence_sufficient = bool(value.evidence_refs)
     if not evidence_sufficient:
-        return _result(value, PatchVerificationStatus.BLOCKED, value.reproduction_before, True, True, False, False, [ReasonCode.EVIDENCE_MISSING])
+        return _result(value, PatchVerificationStatus.BLOCKED, value.reproduces_issue_before_patch, True, True, False, False, [ReasonCode.EVIDENCE_MISSING])
     reasons.append(ReasonCode.ALL_GATES_SATISFIED)
-    return _result(value, PatchVerificationStatus.VERIFIED, value.reproduction_before, True, True, False, False, reasons)
+    return _result(value, PatchVerificationStatus.VERIFIED, value.reproduces_issue_before_patch, True, True, False, False, reasons)
 
 
-def _result(value, status, reproduces, applied, regressions, after, scope_changed, reasons):
+def _result(value, status, reproduces_before, applied, regressions, reproduces_after, scope_changed, reasons):
     return PatchVerificationResult(
         task_id=value.task_id,
-        reproduces_issue=reproduces,
+        reproduces_issue_before_patch=reproduces_before,
         patch_applied=applied,
         regression_tests_passed=regressions,
-        reproduction_passed_after_patch=after,
+        reproduces_issue_after_patch=reproduces_after,
         scope_changed=scope_changed,
         evidence_sufficient=(bool(value.evidence_refs) if value.evidence_refs is not None else None),
         status=status,
@@ -152,7 +152,7 @@ def _result(value, status, reproduces, applied, regressions, after, scope_change
             "failed_tests": None if value.regression_results is None else sum(test.status is TestResultStatus.FAILED for test in value.regression_results),
             "scope_changed": scope_changed,
             "reproduction_required": value.issue_reproduction_required,
-            "reproduction_passed": after,
+            "reproduces_issue_before_patch": reproduces_before,
+            "reproduces_issue_after_patch": reproduces_after,
         },
     )
-

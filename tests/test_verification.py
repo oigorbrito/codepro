@@ -16,10 +16,10 @@ def valid(**overrides):
     values = {
         "task_id": "task",
         "issue_reproduction_required": True,
-        "reproduction_before": True,
+        "reproduces_issue_before_patch": True,
         "patch_applied": True,
         "regression_results": (TestResult("regression", TestResultStatus.PASSED, True, "e://test"),),
-        "reproduction_after": False,
+        "reproduces_issue_after_patch": False,
         "changed_files": ("src/a.py",),
         "expected_scope": ("src/a.py",),
         "evidence_refs": ("e://patch",),
@@ -35,7 +35,7 @@ class VerificationTests(unittest.TestCase):
         self.assertNotIn("PASS", result.to_json())
 
     def test_required_reproduction_absent_is_blocked(self):
-        result = verify_patch(valid(reproduction_before=None))
+        result = verify_patch(valid(reproduces_issue_before_patch=None))
         self.assertEqual(result.status, PatchVerificationStatus.BLOCKED)
         self.assertIn(ReasonCode.REPRODUCTION_REQUIRED_MISSING, result.reason_codes)
 
@@ -43,9 +43,21 @@ class VerificationTests(unittest.TestCase):
         result = verify_patch(valid(regression_results=(TestResult("regression", TestResultStatus.FAILED, True),)))
         self.assertEqual(result.status, PatchVerificationStatus.REJECTED)
 
-    def test_post_patch_reproduction_failure_is_rejected(self):
-        result = verify_patch(valid(reproduction_after=True))
+    def test_reproduction_before_true_after_true_is_rejected(self):
+        result = verify_patch(valid(reproduces_issue_after_patch=True))
         self.assertEqual(result.status, PatchVerificationStatus.REJECTED)
+        self.assertIn(ReasonCode.POST_PATCH_REPRODUCTION_FAILED, result.reason_codes)
+
+    def test_reproduction_before_true_after_false_is_verified(self):
+        result = verify_patch(valid(reproduces_issue_before_patch=True, reproduces_issue_after_patch=False))
+        self.assertEqual(result.status, PatchVerificationStatus.VERIFIED)
+        self.assertTrue(result.reproduces_issue_before_patch)
+        self.assertFalse(result.reproduces_issue_after_patch)
+
+    def test_missing_after_reproduction_is_unknown(self):
+        result = verify_patch(valid(reproduces_issue_after_patch=None))
+        self.assertEqual(result.status, PatchVerificationStatus.UNKNOWN)
+        self.assertIsNone(result.reproduces_issue_after_patch)
 
     def test_scope_expansion_is_rejected(self):
         result = verify_patch(valid(changed_files=("src/a.py", "src/unexpected.py")))
@@ -72,7 +84,15 @@ class VerificationTests(unittest.TestCase):
         self.assertEqual(value["fixture_type"], "PATCH_VERIFICATION_FIXTURE")
         self.assertEqual(len(value["scenarios"]), 6)
 
+    def test_json_uses_unambiguous_reproduction_names(self):
+        payload = json.loads(verify_patch(valid()).to_json())
+        self.assertEqual(payload["reproduces_issue_before_patch"], True)
+        self.assertEqual(payload["reproduces_issue_after_patch"], False)
+        self.assertNotIn("reproduction_before", payload)
+        self.assertNotIn("reproduction_after", payload)
+        self.assertNotIn("reproduction_passed_after_patch", payload)
+        self.assertEqual(payload["telemetry"]["reproduces_issue_after_patch"], False)
+
 
 if __name__ == "__main__":
     unittest.main()
-
