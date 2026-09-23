@@ -63,6 +63,26 @@ class ValidationTests(unittest.TestCase):
         self.assertIn("hermetic environment cannot declare nonhermetic_reasons", issues)
 
 
+class ParsingTests(unittest.TestCase):
+    def test_string_false_is_not_coerced_to_true(self):
+        payload = valid().to_dict()
+        payload["hermetic"] = "false"
+        with self.assertRaises(ValueError):
+            EnvironmentManifest.from_dict(payload)
+
+    def test_string_schema_version_is_rejected(self):
+        payload = valid().to_dict()
+        payload["schema_version"] = "1"
+        with self.assertRaises(ValueError):
+            EnvironmentManifest.from_dict(payload)
+
+    def test_non_collection_action_pins_are_rejected(self):
+        payload = valid().to_dict()
+        payload["action_pins"] = "actions/checkout"
+        with self.assertRaises(ValueError):
+            EnvironmentManifest.from_dict(payload)
+
+
 class FreezeTests(unittest.TestCase):
     def test_same_environment_has_same_hash(self):
         self.assertEqual(
