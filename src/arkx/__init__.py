@@ -1,4 +1,4 @@
-"""Minimal, executor-agnostic Dekon chassis exposed through the arkx namespace."""
+"""Minimal, executor-agnostic CodePro chassis exposed through the arkx namespace."""
 
 __version__ = "0.1.0"
 

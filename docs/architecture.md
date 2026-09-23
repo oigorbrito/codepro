@@ -3,7 +3,7 @@
 The bootstrap architecture is intentionally small:
 
 ```text
-Arkx
+CodePro
 ├── docs/          contracts, protocol, and decisions
 ├── experiments/   experiment records and fixtures; no implicit runtime
 ├── src/           small deterministic product and research contracts
@@ -15,7 +15,7 @@ P0 adds a deliberately small executable core under `src/arkx/`: versioned contra
 
 Study Spec v1 adds a pre-execution research-design contract above P0-P6. It validates and content-addresses study design but does not execute a task, choose an executor, analyze results, accept evidence, or promote architecture.
 
-The product surface now includes a minimal `dekon` CLI implemented with the Python standard library. The CLI exposes help, version, and a read-only doctor command only; it does not invoke executors or execute tasks.
+The product surface now includes a minimal `codepro` CLI implemented with the Python standard library. The CLI exposes help, version, and a read-only doctor command only; it does not invoke executors or execute tasks.
 
 No layer has a concrete executor interface or executor orchestration.
 

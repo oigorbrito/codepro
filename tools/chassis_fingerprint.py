@@ -1,4 +1,4 @@
-"""Deterministic semantic fingerprint for the executor-agnostic Arkx chassis."""
+"""Deterministic semantic fingerprint for the executor-agnostic CodePro chassis."""
 
 from __future__ import annotations
 

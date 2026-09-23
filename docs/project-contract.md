@@ -1,4 +1,4 @@
-# Arkx project contract
+# CodePro project contract
 
 ## North star
 

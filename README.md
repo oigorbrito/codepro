@@ -1,6 +1,6 @@
-# Dekon
+# CodePro
 
-Dekon is an executor-agnostic software-engineering chassis developed through explicit, falsifiable contracts and reproducible evidence.
+CodePro is an executor-agnostic software-engineering chassis developed through explicit, falsifiable contracts and reproducible evidence.
 
 > **MINIMUM SUFFICIENT ARCHITECTURE**  
 > **FOR MAXIMUM RELIABLE CAPABILITY**
@@ -44,9 +44,9 @@ python -m pip install --no-deps -e .
 Then:
 
 ```text
-dekon --help
-dekon --version
-dekon doctor
+codepro --help
+codepro --version
+codepro doctor
 ```
 
 The equivalent module entrypoint is:
@@ -55,9 +55,9 @@ The equivalent module entrypoint is:
 python -m arkx --help
 ```
 
-The public product command is `dekon`. The Python implementation namespace remains `arkx` for now so the CLI introduction does not also become a package-rename migration.
+The public product command is `codepro`. The Python implementation namespace remains `arkx` for now so the CLI introduction does not also become a package-rename migration.
 
-Running `dekon` with no arguments prints help and performs no task execution.
+Running `codepro` with no arguments prints help and performs no task execution.
 
 ## Development posture
 

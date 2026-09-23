@@ -2,7 +2,7 @@
 
 ## Status
 
-Accepted for the first Dekon product surface.
+Superseded by ADR 0022. This record preserves the CLI decision as originally accepted before the product rename.
 
 ## Observed need
 

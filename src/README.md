@@ -1,6 +1,6 @@
 # Product boundary
 
-`src/arkx/` contains the executor-agnostic Arkx chassis.
+`src/arkx/` contains the executor-agnostic CodePro chassis.
 
 The current product boundary includes deterministic contracts for execution telemetry, characterization, progress assessment, routing/escalation, repository planning, patch verification, handoff accounting, and empirical-study governance.
 

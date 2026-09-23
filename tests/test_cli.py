@@ -23,7 +23,7 @@ class CliFunctionTests(unittest.TestCase):
     def test_no_args_prints_help_and_succeeds(self):
         code, output = self.capture([])
         self.assertEqual(code, 0)
-        self.assertIn("usage: dekon", output)
+        self.assertIn("usage: codepro", output)
         self.assertIn("doctor", output)
 
     def test_help_succeeds(self):
@@ -35,7 +35,7 @@ class CliFunctionTests(unittest.TestCase):
             check=False,
         )
         self.assertEqual(result.returncode, 0)
-        self.assertIn("usage: dekon", result.stdout)
+        self.assertIn("usage: codepro", result.stdout)
         self.assertEqual(result.stderr, "")
 
     def test_version_is_explicit_and_stable(self):
@@ -47,7 +47,7 @@ class CliFunctionTests(unittest.TestCase):
             check=False,
         )
         self.assertEqual(result.returncode, 0)
-        self.assertEqual(result.stdout.strip(), f"dekon {__version__}")
+        self.assertEqual(result.stdout.strip(), f"codepro {__version__}")
         self.assertEqual(result.stderr, "")
 
     def test_doctor_succeeds_on_supported_interpreter(self):
@@ -73,8 +73,8 @@ class CliFunctionTests(unittest.TestCase):
 class PackagingContractTests(unittest.TestCase):
     def test_console_script_points_to_cli_main(self):
         project = tomllib.loads((ROOT / "pyproject.toml").read_text(encoding="utf-8"))
-        self.assertEqual(project["project"]["name"], "dekon")
-        self.assertEqual(project["project"]["scripts"], {"dekon": "arkx.cli:main"})
+        self.assertEqual(project["project"]["name"], "codepro")
+        self.assertEqual(project["project"]["scripts"], {"codepro": "arkx.cli:main"})
         self.assertEqual(project["project"]["requires-python"], ">=3.12")
 
     def test_no_runtime_dependencies_are_declared(self):

@@ -1,4 +1,4 @@
-"""Dependency-free checks for the Arkx project foundation."""
+"""Dependency-free checks for the CodePro project foundation."""
 
 from pathlib import Path
 import sys
