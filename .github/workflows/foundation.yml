@@ -26,12 +26,12 @@ jobs:
           printf 'locale=%s\n' "${LANG:-unknown}"
           date +'%Z %z'
           git rev-parse HEAD
-      - name: Install Dekon CLI
+      - name: Install CodePro CLI
         run: python -m pip install --disable-pip-version-check --no-input --no-deps -e .
-      - name: Probe Dekon CLI
+      - name: Probe CodePro CLI
         run: |
-          dekon --help
-          dekon --version
+          codepro --help
+          codepro --version
           dekon doctor
           python -m arkx --help
       - name: Check foundation contract
@@ -69,11 +69,11 @@ jobs:
           python-version: ${{ matrix.python-version }}
       - name: Record compatibility interpreter
         run: python -VV
-      - name: Install Dekon CLI
+      - name: Install CodePro CLI
         run: python -m pip install --disable-pip-version-check --no-input --no-deps -e .
-      - name: Probe Dekon CLI
+      - name: Probe CodePro CLI
         run: |
-          dekon --version
+          codepro --version
           dekon doctor
           python -m arkx --help
       - name: Run compatibility test suite
