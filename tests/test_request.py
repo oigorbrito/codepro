@@ -98,6 +98,15 @@ class GovernanceTests(unittest.TestCase):
         self.assertIn(GovernanceReason.REQUESTER_NOT_ALLOWED, result.reason_codes)
         self.assertIn(GovernanceReason.ENVIRONMENT_NOT_ALLOWED, result.reason_codes)
 
+    def test_environment_requires_workspace_and_revision(self):
+        result = authorize_request(
+            valid_request(environment=RequestEnvironment("local", None, None)),
+            policy(),
+        )
+        self.assertEqual(result.status, GovernanceStatus.BLOCKED)
+        self.assertIn(GovernanceReason.WORKSPACE_MISSING, result.reason_codes)
+        self.assertIn(GovernanceReason.REVISION_MISSING, result.reason_codes)
+
     def test_unauthorized_request_cannot_be_characterized(self):
         decision = authorize_request(valid_request(authorized_paths=None), policy())
         self.assertIsNone(characterize_authorized_request(decision))

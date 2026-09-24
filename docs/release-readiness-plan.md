@@ -302,6 +302,12 @@ O plano foi auditado contra as fontes acima e contra a árvore local.
   separado e `pip check` retornaram `No broken requirements found`. O workflow
   foi fortalecido para executar esses mesmos checks, mas essa alteração ainda
   aguarda CI externo após o desbloqueio da conta.
+- revisão benchmark-driven do governance boundary: SWE-bench e
+  Terminal-Bench exigem identidade de revisão, ambiente e verificador. O
+  chassi agora bloqueia request sem `environment.workspace` ou
+  `environment.revision`; o focused suite de request passou `9/9` e a suíte
+  completa passou `373` testes. Isso fortalece reprodutibilidade e falha
+  fechada, mas não qualifica executor nem demonstra resolução de tarefa.
 
 ## Primeiro trabalho autorizado pelo plano
 

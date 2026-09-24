@@ -37,6 +37,8 @@ class GovernanceReason(_ValueEnum):
     AUTHORIZED_SCOPE_MISSING = "AUTHORIZED_SCOPE_MISSING"
     ACCEPTANCE_AUTHORITY_MISSING = "ACCEPTANCE_AUTHORITY_MISSING"
     ENVIRONMENT_MISSING = "ENVIRONMENT_MISSING"
+    WORKSPACE_MISSING = "WORKSPACE_MISSING"
+    REVISION_MISSING = "REVISION_MISSING"
     ENVIRONMENT_NOT_ALLOWED = "ENVIRONMENT_NOT_ALLOWED"
     BUDGET_MISSING = "BUDGET_MISSING"
     BUDGET_INVALID = "BUDGET_INVALID"
@@ -184,8 +186,13 @@ def authorize_request(request: ArkxRequest, policy: GovernancePolicy) -> Governa
         reasons.append(GovernanceReason.ACCEPTANCE_AUTHORITY_MISSING)
     if request.environment is None or not request.environment.environment_id:
         reasons.append(GovernanceReason.ENVIRONMENT_MISSING)
-    elif policy.allowed_environments and request.environment.environment_id not in policy.allowed_environments:
-        reasons.append(GovernanceReason.ENVIRONMENT_NOT_ALLOWED)
+    else:
+        if not request.environment.workspace:
+            reasons.append(GovernanceReason.WORKSPACE_MISSING)
+        if not request.environment.revision:
+            reasons.append(GovernanceReason.REVISION_MISSING)
+        if policy.allowed_environments and request.environment.environment_id not in policy.allowed_environments:
+            reasons.append(GovernanceReason.ENVIRONMENT_NOT_ALLOWED)
     if request.budget is None:
         reasons.append(GovernanceReason.BUDGET_MISSING)
     elif not request.budget.valid():
