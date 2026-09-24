@@ -354,20 +354,20 @@ def execute_governed(
         command_result=result,
         invocation_state=InvocationState.OBSERVED,
     )
-    if result.environment_error is not None:
-        return _record(
-            request,
-            governance,
-            SpineStatus.BLOCKED,
-            SpineReason.ENVIRONMENT_ERROR,
-            **common,
-        )
     if result.timed_out:
         return _record(
             request,
             governance,
             SpineStatus.BLOCKED,
             SpineReason.COMMAND_TIMEOUT,
+            **common,
+        )
+    if result.environment_error is not None:
+        return _record(
+            request,
+            governance,
+            SpineStatus.BLOCKED,
+            SpineReason.ENVIRONMENT_ERROR,
             **common,
         )
     return _record(
