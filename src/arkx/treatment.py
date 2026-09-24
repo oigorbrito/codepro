@@ -1,4 +1,4 @@
-"""Frozen treatment/executor/model configuration for empirical Arkx studies."""
+"""Frozen treatment/executor/model configuration for empirical CodePro studies."""
 
 from __future__ import annotations
 
