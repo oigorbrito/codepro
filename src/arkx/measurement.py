@@ -1,4 +1,4 @@
-"""Versioned operational definitions for empirical Arkx metrics."""
+"""Versioned operational definitions for empirical CodePro metrics."""
 
 from __future__ import annotations
 

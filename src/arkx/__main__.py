@@ -1,4 +1,4 @@
-"""Allow `python -m arkx` to use the Dekon CLI boundary."""
+"""Allow `python -m arkx` to use the CodePro CLI boundary."""
 
 from .cli import main
 

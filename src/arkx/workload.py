@@ -1,4 +1,4 @@
-"""Frozen workload manifest for reproducible Arkx benchmark studies."""
+"""Frozen workload manifest for reproducible CodePro benchmark studies."""
 
 from __future__ import annotations
 

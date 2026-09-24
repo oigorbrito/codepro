@@ -1,4 +1,4 @@
-"""Versioned pre-execution study specification for empirical Arkx experiments."""
+"""Versioned pre-execution study specification for empirical CodePro experiments."""
 
 from __future__ import annotations
 

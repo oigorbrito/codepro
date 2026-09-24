@@ -22,7 +22,7 @@ The artifact must record strengths, weaknesses, and limitations. State-of-art al
 
 ## Required dimensions
 
-For the current benchmark-oriented Arkx methodology, at least one claim-linked threat must address:
+For the current benchmark-oriented CodePro methodology, at least one claim-linked threat must address:
 
 - construct validity;
 - external validity;

@@ -21,7 +21,7 @@ A change to any of these fields produces a different configuration hash and ther
 
 ## Provider limitations
 
-Provider-hosted models may expose a stable model name without exposing the exact serving-weight revision. Arkx records that limitation rather than treating the name as an immutable model binary.
+Provider-hosted models may expose a stable model name without exposing the exact serving-weight revision. CodePro records that limitation rather than treating the name as an immutable model binary.
 
 Likewise, unsupported seeding is not replaced with a fabricated seed. Stochastic stability must then be addressed through the frozen repetition design.
 

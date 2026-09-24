@@ -1,6 +1,6 @@
 # Study Spec v1
 
-Study Spec v1 is the pre-execution design contract for empirical Arkx studies. It exists above P0-P6 and does not execute tasks, select an executor, verify a patch, accept a result, or promote architecture.
+Study Spec v1 is the pre-execution design contract for empirical CodePro studies. It exists above P0-P6 and does not execute tasks, select an executor, verify a patch, accept a result, or promote architecture.
 
 The contract is intentionally small:
 

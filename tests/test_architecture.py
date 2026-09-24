@@ -65,7 +65,7 @@ def assert_acyclic(testcase: unittest.TestCase, graph: dict[str, set[str]]) -> N
 
     def visit(node: str, trail: tuple[str, ...]) -> None:
         if node in visiting:
-            testcase.fail("internal Arkx import cycle: " + " -> ".join(trail + (node,)))
+            testcase.fail("internal CodePro import cycle: " + " -> ".join(trail + (node,)))
         if node in visited:
             return
         visiting.add(node)
@@ -219,6 +219,31 @@ class NormativeDocumentationTests(unittest.TestCase):
         source_boundary = (ROOT / "src" / "README.md").read_text(encoding="utf-8")
         self.assertNotIn("does not yet define routing, planning", project_contract)
         self.assertNotIn("No runtime implementation is part of the foundation bootstrap", source_boundary)
+
+    def test_current_product_docs_use_codepro_identity(self):
+        current_product_docs = (
+            "docs/environment-manifest.md",
+            "docs/experimental-protocol.md",
+            "docs/protocol-deviation.md",
+            "docs/study-spec.md",
+            "docs/treatment-configuration.md",
+            "docs/validity-plan.md",
+            "src/arkx/__main__.py",
+            "src/arkx/analysis_plan.py",
+            "src/arkx/deviation.py",
+            "src/arkx/environment.py",
+            "src/arkx/measurement.py",
+            "src/arkx/promotion.py",
+            "src/arkx/study.py",
+            "src/arkx/treatment.py",
+            "src/arkx/validity.py",
+            "src/arkx/workload.py",
+        )
+        for path in current_product_docs:
+            with self.subTest(path=path):
+                content = (ROOT / path).read_text(encoding="utf-8")
+                self.assertNotIn("Arkx", content)
+                self.assertNotIn("Dekon", content)
 
 
 if __name__ == "__main__":
