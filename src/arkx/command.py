@@ -19,6 +19,7 @@ from typing import Any, Mapping, Protocol
 
 
 SCHEMA_VERSION = 1
+ENVIRONMENT_POLICY = "INHERIT_PROCESS"
 
 
 class EnvironmentErrorKind(str, Enum):
@@ -92,6 +93,7 @@ class CommandSpec:
             "argv": list(self.argv),
             "cwd": self.cwd,
             "timeout_seconds": self.timeout_seconds,
+            "environment_policy": ENVIRONMENT_POLICY,
         }
 
     def to_json(self) -> str:
@@ -113,6 +115,11 @@ class CommandSpec:
         argv = value.get("argv")
         cwd = value.get("cwd")
         timeout = value.get("timeout_seconds")
+        environment_policy = value.get("environment_policy")
+        if environment_policy != ENVIRONMENT_POLICY:
+            raise ValueError(
+                f"environment_policy must be {ENVIRONMENT_POLICY!r}"
+            )
         if not isinstance(argv, list):
             raise ValueError("argv must be a list")
         if not isinstance(cwd, str):
@@ -326,7 +333,9 @@ class LocalCommandEnvironment:
             )
         except subprocess.TimeoutExpired:
             termination_error = _terminate_process_tree(process)
-            stdout, stderr = process.communicate()
+            stdout, stderr, cleanup_error = _bounded_communicate_after_timeout(process)
+            if termination_error is None:
+                termination_error = cleanup_error
             return CommandResult(
                 argv=spec.argv,
                 cwd=str(cwd),
@@ -360,6 +369,38 @@ def _environment_failure(
         duration_ms=_elapsed_ms(started),
         environment_error=CommandEnvironmentError(kind=kind, message=message),
     )
+
+
+def _bounded_communicate_after_timeout(
+    process: subprocess.Popen[str],
+) -> tuple[str, str, CommandEnvironmentError | None]:
+    try:
+        stdout, stderr = process.communicate(timeout=5)
+        return stdout, stderr, None
+    except subprocess.TimeoutExpired:
+        try:
+            process.kill()
+        except OSError:
+            pass
+        try:
+            stdout, stderr = process.communicate(timeout=5)
+            return (
+                stdout,
+                stderr,
+                CommandEnvironmentError(
+                    kind=EnvironmentErrorKind.TERMINATION_ERROR,
+                    message="process required fallback kill after timeout",
+                ),
+            )
+        except subprocess.TimeoutExpired as exc:
+            return (
+                exc.output or "",
+                exc.stderr or "",
+                CommandEnvironmentError(
+                    kind=EnvironmentErrorKind.TERMINATION_ERROR,
+                    message="process did not terminate after timeout cleanup",
+                ),
+            )
 
 
 def _terminate_process_tree(
