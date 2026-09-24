@@ -84,6 +84,19 @@ class ImportArchitectureTests(unittest.TestCase):
         self.assertGreaterEqual(len(graph), 20)
         assert_acyclic(self, graph)
 
+    def test_command_observation_boundary_does_not_depend_on_task_status(self):
+        source = (SRC / "command.py").read_text(encoding="utf-8")
+        tree = ast.parse(source)
+        imported_names = set()
+        for node in ast.walk(tree):
+            if isinstance(node, ast.ImportFrom):
+                imported_names.update(alias.name for alias in node.names)
+            elif isinstance(node, ast.Import):
+                imported_names.update(alias.name for alias in node.names)
+        self.assertNotIn("ExecutionStatus", imported_names)
+        self.assertNotIn("PatchVerificationStatus", imported_names)
+        self.assertNotIn("PromotionDecisionStatus", imported_names)
+
 
 class VerticalCompositionTests(unittest.TestCase):
     def test_p1_through_p6_compose_without_execution_or_acceptance_leakage(self):
