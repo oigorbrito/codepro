@@ -1,0 +1,16 @@
+{
+  "project": "Codepro",
+  "date": "2026-09-24",
+  "candidate": "Google Cloud CLI",
+  "binary": "C:\\Users\\igorb\\AppData\\Local\\Google\\Cloud SDK\\google-cloud-sdk\\bin\\gcloud.cmd",
+  "version": "Google Cloud SDK 586.0.0; core 2026.09.20",
+  "path_status": "NOT_ON_PATH",
+  "auth_probe": {
+    "command": "gcloud auth list --format=value(status)",
+    "observed": "Unable to create private file ... credentials.db: WinError 5 Access denied",
+    "account_identity_exposed": false,
+    "status": "BLOCKED_CONFIG_ACCESS"
+  },
+  "executor_qualification": "NOT_APPLICABLE",
+  "reason": "Google Cloud CLI is a cloud administration/authentication CLI, not a task-solving executor with patch extraction and shared verifier boundary."
+}

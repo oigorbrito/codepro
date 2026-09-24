@@ -73,6 +73,14 @@ Jinja cache under the protected user profile. It remains a promising candidate
 but is `BLOCKED_RUNTIME`, not qualified. Raw observations are in
 `logs/architecture/openhands-headless-audit-20260924.json`.
 
+The installed source was checked for a cache override. Persistence and
+workspace directories are configurable, but the Jinja and several SDK caches
+are constructed directly from `Path.home()/.openhands`; no supported CLI cache
+directory setting was found. A process-wide profile override or package
+monkeypatch is intentionally not part of this qualification. The remaining
+blocker therefore requires a writable execution profile supplied by the
+environment, not a protocol change.
+
 Antigravity/Google CLI was checked locally on 2026-09-24. No matching process,
 PATH command, desktop shortcut, or Start Menu entry was discovered, and the
 Windows UI automation surface was unavailable in this session. A logged-in

@@ -53,6 +53,11 @@
       "kind": "TERMINAL_OUTPUT",
       "detail": "Rich reported a non-interactive terminal; JSONL evidence was not produced because execution failed before the task cycle",
       "status": "BLOCKED_EVIDENCE"
+    },
+    {
+      "kind": "CACHE_CONFIGURATION",
+      "detail": "Installed CLI exposes persistence/workspace overrides, but Jinja and several SDK caches are built directly from Path.home()/.openhands and no CLI cache-dir override was found in the installed source.",
+      "status": "BLOCKED_CONFIGURATION"
     }
   ],
   "required_but_unobserved": [
@@ -64,5 +69,5 @@
     "fallback absence during a completed task"
   ],
   "qualification_decision": "BLOCKED",
-  "qualification_reason": "OpenHands is a technically promising independent headless candidate, but its installed CLI cannot complete a local Ollama task without writing to a protected user cache path."
+  "qualification_reason": "OpenHands is a technically promising independent headless candidate, but its installed CLI cannot complete a local Ollama task without writing to a protected user cache path. A process-wide HOME/profile override or package monkeypatch was not used because it would alter global identity/state semantics."
 }
