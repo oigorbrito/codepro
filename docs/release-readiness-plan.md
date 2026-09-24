@@ -290,6 +290,11 @@ O plano foi auditado contra as fontes acima e contra a árvore local.
   GitHub registrou falha de pagamentos recentes ou limite de spending da conta.
   Isso não é aprovação nem reprovação funcional. A aceitação externa só pode
   ser repetida após a correção de Billing & Plans/spending limit.
+- verificação local de artefatos da revisão seguinte: `python -m build` gerou
+  wheel e sdist; `twine check` aprovou ambos; instalação do wheel em venv
+  separado e `pip check` retornaram `No broken requirements found`. O workflow
+  foi fortalecido para executar esses mesmos checks, mas essa alteração ainda
+  aguarda CI externo após o desbloqueio da conta.
 
 ## Primeiro trabalho autorizado pelo plano
 
