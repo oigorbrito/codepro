@@ -7,6 +7,9 @@ marcado como `PASS` com evidência executada e arquivada. `PASS` de teste local
 não será chamado de benchmark externo, qualificação de executor ou evidência
 de usuário.
 
+Para a matriz operacional de bloqueios e a distinção entre release do chassi e
+release operacional, consulte [o plano passo a passo](release-blocker-plan.md).
+
 ## Objetivo do release
 
 O release de produto só será promovido quando um usuário conseguir, em um
