@@ -23,7 +23,8 @@ Implemented:
 - deterministic architecture, property, metamorphic, mutation-sensitivity, and cross-version verification;
 - a minimal installable CLI boundary with no runtime dependencies;
 - a low-level command observation boundary with no task-status inference;
-- capability qualification and executor binding contracts that distinguish availability from qualification and refuse hidden ranking.
+- capability qualification and executor binding contracts that distinguish availability from qualification and refuse hidden ranking;
+- request/governance authority contracts for explicit scope, permissions, execution budgets, environment, and independent acceptance authority.
 
 Not implemented:
 
