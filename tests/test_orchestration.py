@@ -1,4 +1,7 @@
 import unittest
+import sys
+from pathlib import Path
+from tempfile import TemporaryDirectory
 
 from arkx.characterization import RecommendedPath, TaskCharacterization, TaskSignals, characterize
 from arkx.orchestration import (
@@ -22,6 +25,7 @@ from arkx.orchestration import ContractExecutorRunner
 from arkx.orchestration import legacy_execution_from_contract
 from arkx.orchestration import build_execution_plan
 from arkx.configuration import ConfigurationSnapshot
+from arkx.verifier import CommandVerifier, VerificationEvidenceStore
 
 
 def setup():
@@ -76,6 +80,23 @@ class OrchestrationTests(unittest.TestCase):
         self.assertEqual(result.status, OrchestrationStatus.ACCEPTED)
         self.assertIsNotNone(result.verification)
         self.assertIsNotNone(result.acceptance)
+
+    def test_pipeline_uses_persisted_command_verifier_before_acceptance(self):
+        governance, characterization, routing, selection = setup()
+        with TemporaryDirectory() as directory:
+            verifier = CommandVerifier(
+                authority="authority-1",
+                workspace=directory,
+                command=(sys.executable, "-c", "print('pipeline-verified')"),
+                test_id="pipeline-smoke",
+                evidence_store=VerificationEvidenceStore(directory + "/evidence"),
+            )
+            result = run_routed_pipeline(governance, characterization, routing, selection, FakeExecutor(), FakeProgress(), verifier, FakeAcceptance())
+            files = list((Path(directory) / "evidence" / "run-1").glob("verification-*.json"))
+            content = files[0].read_text(encoding="utf-8")
+        self.assertEqual(result.status, OrchestrationStatus.ACCEPTED)
+        self.assertEqual(len(files), 1)
+        self.assertIn("pipeline-verified", content)
 
     def test_invalid_governance_blocks_before_executor(self):
         governance, characterization, routing, selection = setup()
