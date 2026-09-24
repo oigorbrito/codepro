@@ -1,4 +1,4 @@
-"""Explicit validity argument for Arkx empirical studies."""
+"""Explicit validity argument for CodePro empirical studies."""
 
 from __future__ import annotations
 
