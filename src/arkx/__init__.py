@@ -66,6 +66,13 @@ from .recovery import (
     RecoveryRequest,
     decide_recovery,
 )
+from .acceptance import (
+    AcceptanceAuthority,
+    AcceptanceDecision,
+    AcceptanceReason,
+    AcceptanceStatus,
+    decide_acceptance,
+)
 
 __all__ = [
     "__version__",
@@ -122,4 +129,9 @@ __all__ = [
     "RecoveryReason",
     "RecoveryRequest",
     "decide_recovery",
+    "AcceptanceAuthority",
+    "AcceptanceDecision",
+    "AcceptanceReason",
+    "AcceptanceStatus",
+    "decide_acceptance",
 ]
