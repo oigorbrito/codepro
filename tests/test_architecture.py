@@ -84,6 +84,24 @@ class ImportArchitectureTests(unittest.TestCase):
         self.assertGreaterEqual(len(graph), 20)
         assert_acyclic(self, graph)
 
+    def test_governed_spine_has_only_declared_execution_dependencies(self):
+        graph = internal_import_graph()
+        self.assertEqual(
+            graph["spine"],
+            {
+                "characterization",
+                "command",
+                "governance",
+                "progress",
+                "qualification",
+                "routing",
+                "verification",
+            },
+        )
+        self.assertTrue(
+            graph["spine"].isdisjoint({"promotion", "handoff", "planning"})
+        )
+
     def test_governance_does_not_depend_on_routing_or_executor_binding(self):
         graph = internal_import_graph()
         self.assertTrue(
