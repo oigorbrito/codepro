@@ -82,6 +82,13 @@ MUTATIONS = (
         "if False and not set(request.requested_scope).issubset(grant.authorized_scope):",
         "tests.test_governance",
     ),
+    Mutation(
+        "spine-ignore-request-scope",
+        "src/arkx/spine.py",
+        "and not set(normalized_signals.candidate_files).issubset(request.requested_scope)",
+        "and False",
+        "tests.test_spine",
+    ),
 )
 
 
