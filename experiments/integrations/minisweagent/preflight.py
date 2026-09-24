@@ -8,7 +8,6 @@ configuration before any model/provider call. It deliberately has no fallback.
 from __future__ import annotations
 
 import argparse
-import hashlib
 import json
 from pathlib import Path
 import subprocess
@@ -59,19 +58,14 @@ def _run(argv: list[str], *, cwd: Path | None = None, timeout: int = 30) -> dict
         }
 
 
-def _git_blob_sha(path: Path) -> str:
-    payload = path.read_bytes()
-    header = f"blob {len(payload)}\0".encode()
-    return hashlib.sha1(header + payload).hexdigest()  # noqa: S324 - Git object identity
-
-
 def _check_config(mini_repo: Path) -> dict[str, Any]:
     path = mini_repo / BUNDLED_CONFIG
     if not path.is_file():
         return {"status": "FAIL", "reason": "PINNED_CONFIG_MISSING", "path": str(path)}
 
     text = path.read_text(encoding="utf-8")
-    blob_sha = _git_blob_sha(path)
+    blob = _run(["git", "rev-parse", f"HEAD:{BUNDLED_CONFIG.as_posix()}"], cwd=mini_repo)
+    blob_sha = blob["stdout"].strip() if blob["returncode"] == 0 else None
     required_fragments = (
         'cwd: "/testbed"',
         'interpreter: ["bash", "-c"]',
@@ -86,6 +80,7 @@ def _check_config(mini_repo: Path) -> dict[str, Any]:
         "path": str(path),
         "git_blob_sha": blob_sha,
         "expected_git_blob_sha": PINNED_CONFIG_BLOB_SHA,
+        "git_blob_lookup": blob,
         "missing_required_fragments": missing,
     }
 
@@ -116,6 +111,16 @@ def main() -> int:
         "actual": actual_head,
         "expected": PINNED_MINI_COMMIT,
         "status": "PASS" if actual_head == PINNED_MINI_COMMIT else "FAIL",
+    }
+
+    status = _run(["git", "status", "--porcelain"], cwd=mini_repo)
+    report["checks"]["mini_worktree"] = {
+        **status,
+        "status": (
+            "PASS"
+            if status["returncode"] == 0 and not status["stdout"].strip()
+            else "FAIL"
+        ),
     }
 
     report["checks"]["benchmark_config"] = _check_config(mini_repo)
@@ -161,7 +166,7 @@ def main() -> int:
             "reason": "NO_PROBE_IMAGE_SUPPLIED",
         }
 
-    required = ("mini_commit", "benchmark_config", "docker_cli", "docker_daemon")
+    required = ("mini_commit", "mini_worktree", "benchmark_config", "docker_cli", "docker_daemon")
     if all(report["checks"][name]["status"] == "PASS" for name in required):
         probe = report["checks"]["container_probe"]["status"]
         report["classification"] = (
