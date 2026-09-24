@@ -19,6 +19,7 @@ chassi isoladamente nem autorizam adotar um executor.
 | revisão/base precisa ser identificável | request exige `environment.revision` | implementado |
 | tarefa precisa de workspace definido | governance exige `environment.workspace` | implementado |
 | solução precisa de verificação declarada | `acceptance_checks` e autoridade devem permanecer explícitos | contrato existente |
+| verificador precisa ser reproduzível | `TestResult` preserva `command`, `exit_code` e `duration_ms` quando observados | implementado |
 | resultado precisa separar correção de execução | verification/acceptance continuam estados distintos | contrato existente |
 | ambiente e recursos afetam o resultado | environment, configuração e budget precisam ser persistidos | parcial |
 | falhas de infraestrutura não são rejeições da tarefa | erro de ambiente permanece `BLOCKED`/explícito | contrato existente |

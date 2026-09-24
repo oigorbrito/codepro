@@ -52,9 +52,30 @@ class TestResult:
     status: TestResultStatus
     required: bool
     evidence_ref: str | None = None
+    command: tuple[str, ...] | None = None
+    exit_code: int | None = None
+    duration_ms: int | None = None
+
+    def __post_init__(self) -> None:
+        if not self.test_id.strip():
+            raise ValueError("test_id must be non-empty")
+        if self.command is not None:
+            if not self.command or any(not item.strip() for item in self.command):
+                raise ValueError("command must contain non-empty argv items")
+            object.__setattr__(self, "command", tuple(self.command))
+        if self.duration_ms is not None and self.duration_ms < 0:
+            raise ValueError("duration_ms must be non-negative")
 
     def to_dict(self) -> dict[str, Any]:
-        return {"test_id": self.test_id, "status": self.status.value, "required": self.required, "evidence_ref": self.evidence_ref}
+        return {
+            "test_id": self.test_id,
+            "status": self.status.value,
+            "required": self.required,
+            "evidence_ref": self.evidence_ref,
+            "command": None if self.command is None else list(self.command),
+            "exit_code": self.exit_code,
+            "duration_ms": self.duration_ms,
+        }
 
 
 @dataclass(frozen=True)

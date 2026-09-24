@@ -93,6 +93,26 @@ class VerificationTests(unittest.TestCase):
         self.assertNotIn("reproduction_passed_after_patch", payload)
         self.assertEqual(payload["telemetry"]["reproduces_issue_after_patch"], False)
 
+    def test_test_result_preserves_verifier_execution_identity(self):
+        result = TestResult(
+            "regression",
+            TestResultStatus.PASSED,
+            True,
+            "e://test",
+            ("python", "-m", "pytest", "tests/test_example.py"),
+            0,
+            1250,
+        )
+        self.assertEqual(result.to_dict()["command"][0], "python")
+        self.assertEqual(result.to_dict()["exit_code"], 0)
+        self.assertEqual(result.to_dict()["duration_ms"], 1250)
+
+    def test_test_result_rejects_invalid_execution_metadata(self):
+        with self.assertRaises(ValueError):
+            TestResult("regression", TestResultStatus.PASSED, True, command=())
+        with self.assertRaises(ValueError):
+            TestResult("regression", TestResultStatus.PASSED, True, duration_ms=-1)
+
 
 if __name__ == "__main__":
     unittest.main()

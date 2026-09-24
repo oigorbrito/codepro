@@ -308,6 +308,11 @@ O plano foi auditado contra as fontes acima e contra a árvore local.
   `environment.revision`; o focused suite de request passou `9/9` e a suíte
   completa passou `373` testes. Isso fortalece reprodutibilidade e falha
   fechada, mas não qualifica executor nem demonstra resolução de tarefa.
+- melhoria benchmark-driven do verificador: `TestResult` agora preserva
+  `command`, `exit_code` e `duration_ms` quando observados, com validação de
+  metadados inválidos. O focused suite de verification passou `14/14` e a
+  suíte completa passou `375` testes. Esses campos tornam o verificador
+  auditável; ainda precisam ser preenchidos por uma execução real no M1.
 
 ## Primeiro trabalho autorizado pelo plano
 
