@@ -77,6 +77,9 @@ class CapabilityRequirement:
             "source_ref": self.source_ref,
         }
 
+    def to_json(self) -> str:
+        return _json(self.to_dict())
+
 
 @dataclass(frozen=True)
 class ExecutorRuntime:
@@ -115,6 +118,9 @@ class ExecutorRuntime:
             "available": self.available,
             "evidence_ref": self.evidence_ref,
         }
+
+    def to_json(self) -> str:
+        return _json(self.to_dict())
 
 
 @dataclass(frozen=True)
@@ -168,6 +174,9 @@ class ExecutorQualification:
             "evidence_refs": list(self.evidence_refs),
         }
 
+    def to_json(self) -> str:
+        return _json(self.to_dict())
+
 
 @dataclass(frozen=True)
 class ExecutorBinding:
@@ -198,7 +207,10 @@ class ExecutorBinding:
             self.availability_evidence_ref,
         )
         if self.status is BindingStatus.BOUND:
-            if any(value is None or not value.strip() for value in bound_fields):
+            if any(
+                not isinstance(value, str) or not value.strip()
+                for value in bound_fields
+            ):
                 raise ValueError("BOUND requires complete executor and availability identity")
             object.__setattr__(
                 self,
