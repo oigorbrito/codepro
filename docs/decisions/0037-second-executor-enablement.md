@@ -73,6 +73,14 @@ Jinja cache under the protected user profile. It remains a promising candidate
 but is `BLOCKED_RUNTIME`, not qualified. Raw observations are in
 `logs/architecture/openhands-headless-audit-20260924.json`.
 
+Antigravity/Google CLI was checked locally on 2026-09-24. No matching process,
+PATH command, desktop shortcut, or Start Menu entry was discovered, and the
+Windows UI automation surface was unavailable in this session. A logged-in
+browser or desktop state, without an observable headless invocation and
+artifact boundary, is not executor evidence. The candidate remains
+`NOT_DISCOVERED`; raw checks are in
+`logs/architecture/antigravity-preflight-20260924.json`.
+
 These observations are infrastructure evidence. They do not qualify a second
 executor and do not authorize a paired benchmark.
 

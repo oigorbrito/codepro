@@ -1,0 +1,28 @@
+{
+  "project": "Codepro",
+  "date": "2026-09-24",
+  "candidate": "Antigravity/Google CLI",
+  "checks": {
+    "processes": {
+      "commands": "Get-Process filtered by antigravity|google|gemini|gravity",
+      "observed": [],
+      "status": "NOT_DISCOVERED"
+    },
+    "path_commands": {
+      "commands": "Get-Command filtered by gravity|gemini|google",
+      "observed": [],
+      "status": "NOT_DISCOVERED"
+    },
+    "start_menu_desktop_entries": {
+      "commands": "recursive read-only search for Antigravity|Gemini|Google",
+      "observed": [],
+      "status": "NOT_DISCOVERED"
+    },
+    "computer_use_surface": {
+      "observed": "UI automation RPC unavailable: Trusted RPC service is not configured: sky",
+      "status": "UNAVAILABLE"
+    }
+  },
+  "qualification_decision": "NOT_DISCOVERED",
+  "reason": "A logged-in UI session was not exposed as a local headless executable or inspectable automation surface; no executor contract evidence exists."
+}
