@@ -65,6 +65,7 @@ class InvocationState(str, Enum):
 class SpineReason(str, Enum):
     GOVERNANCE_BLOCKED = "GOVERNANCE_BLOCKED"
     GOVERNANCE_UNKNOWN = "GOVERNANCE_UNKNOWN"
+    CHARACTERIZATION_SCOPE_OUTSIDE_REQUEST = "CHARACTERIZATION_SCOPE_OUTSIDE_REQUEST"
     ROUTING_REQUIRES_QUALIFICATION = "ROUTING_REQUIRES_QUALIFICATION"
     ROUTING_INVALID = "ROUTING_INVALID"
     BINDING_REQUIRES_QUALIFICATION = "BINDING_REQUIRES_QUALIFICATION"
@@ -100,6 +101,7 @@ class BoundExecutorInvoker(Protocol):
 class GovernedExecutionRecord:
     request_id: str
     task_ref: str
+    requested_scope: tuple[str, ...]
     status: SpineStatus
     reason: SpineReason
     invocation_state: InvocationState
@@ -119,6 +121,10 @@ class GovernedExecutionRecord:
     def __post_init__(self) -> None:
         if not self.request_id.strip() or not self.task_ref.strip():
             raise ValueError("request_id and task_ref must be non-empty")
+        if not self.requested_scope or any(
+            not isinstance(item, str) or not item.strip() for item in self.requested_scope
+        ):
+            raise ValueError("requested_scope must contain non-blank entries")
         if not isinstance(self.status, SpineStatus):
             raise ValueError("status must be a SpineStatus")
         if not isinstance(self.reason, SpineReason):
@@ -171,6 +177,7 @@ class GovernedExecutionRecord:
             "schema_version": self.schema_version,
             "request_id": self.request_id,
             "task_ref": self.task_ref,
+            "requested_scope": list(self.requested_scope),
             "status": self.status.value,
             "reason": self.reason.value,
             "invocation_state": self.invocation_state.value,
@@ -242,7 +249,20 @@ def execute_governed(
             acceptance_authority_ref=acceptance_authority,
         )
 
-    characterization = characterize(signals)
+    normalized_signals = signals.normalized()
+    if (
+        normalized_signals.candidate_files is not None
+        and not set(normalized_signals.candidate_files).issubset(request.requested_scope)
+    ):
+        return _record(
+            request,
+            governance,
+            SpineStatus.BLOCKED,
+            SpineReason.CHARACTERIZATION_SCOPE_OUTSIDE_REQUEST,
+            acceptance_authority_ref=acceptance_authority,
+        )
+
+    characterization = characterize(normalized_signals)
     characterization_ref = _artifact_ref("characterization", characterization.to_json())
     routing = route_characterization(
         request.task_ref,
@@ -393,6 +413,11 @@ def verify_observation(
         raise ValueError("verification requires an observed command result")
     if verification_input.task_id != record.task_ref:
         raise ValueError("verification input task_id must match record task_ref")
+    if (
+        verification_input.expected_scope is not None
+        and not set(verification_input.expected_scope).issubset(record.requested_scope)
+    ):
+        raise ValueError("verification expected_scope cannot exceed requested_scope")
 
     progress = assess_progress(previous_progress, current_progress)
     verification = verify_patch(verification_input)
@@ -443,6 +468,7 @@ def _record(
     return GovernedExecutionRecord(
         request_id=request.request_id,
         task_ref=request.task_ref,
+        requested_scope=request.requested_scope,
         status=status,
         reason=reason,
         invocation_state=invocation_state,
