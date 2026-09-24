@@ -65,7 +65,7 @@ def assert_acyclic(testcase: unittest.TestCase, graph: dict[str, set[str]]) -> N
 
     def visit(node: str, trail: tuple[str, ...]) -> None:
         if node in visiting:
-            testcase.fail("internal Arkx import cycle: " + " -> ".join(trail + (node,)))
+            testcase.fail("internal CodePro import cycle: " + " -> ".join(trail + (node,)))
         if node in visited:
             return
         visiting.add(node)
