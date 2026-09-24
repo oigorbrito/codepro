@@ -25,7 +25,7 @@ Implemented:
 
 Not implemented:
 
-- concrete executor invocation/orchestration;
+- concrete Codex/Claude/Gemini executor adapters or orchestration;
 - multi-agent runtime;
 - product integrations with Codex, Claude Code, Gemini CLI, mini-SWE-agent, SWE-agent, OpenHands, ReX, or other executors;
 - interactive TUI;
@@ -62,6 +62,8 @@ The public product command is `codepro`. The Python implementation namespace rem
 Running `codepro` with no arguments prints help and performs no task execution.
 
 `codepro inspect` is observational only. It may invoke read-only Git queries and inspect filesystem markers/PATH, but it does not modify the repository, select an executor, or execute a task.
+
+The internal command primitive is also observational: a process exit code, timeout, or environment error is recorded as raw execution evidence. It does not infer task success/failure, verification, acceptance, or promotion.
 
 ## Development posture
 
