@@ -58,6 +58,13 @@ is preserved in
 qualification is recorded as `BLOCKED` in
 `logs/qualification/executor-qualification-v1-20260924.json`.
 
+The dedicated OpenCode audit found version `2.0.15`, a documented headless
+`run` entrypoint, model syntax `provider/model#variant`, and JSON output via
+`--format json`. However, the installed CLI rejects `--standalone` when used
+with `run`, while the default and isolated invocations fail before execution
+with `EPERM`. Detailed observations are preserved in
+`logs/architecture/opencode-headless-audit-20260924.json`.
+
 These observations are infrastructure evidence. They do not qualify a second
 executor and do not authorize a paired benchmark.
 

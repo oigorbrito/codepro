@@ -1,0 +1,57 @@
+{
+  "project": "Codepro",
+  "date": "2026-09-24",
+  "candidate": "OpenCode",
+  "binary": "C:\\Users\\igorb\\AppData\\Roaming\\npm\\node_modules\\@opencode\\cli\\bin\\opencode.exe",
+  "version": {
+    "observed": "opencode v2.0.15",
+    "source": "successful --version probe before server-dependent subcommand probe"
+  },
+  "default_environment_reproduction": {
+    "commands": [
+      "opencode --version",
+      "opencode models",
+      "opencode run --help"
+    ],
+    "exit_code": 1,
+    "stderr_stdout_observation": "PlatformError: FileSystem.open ... C:\\Users\\igorb\\.local\\share\\opencode\\log\\opencode.log; EPERM",
+    "status": "BLOCKED_SHARED_LOG"
+  },
+  "isolated_environment": {
+    "method": "XDG_DATA_HOME and XDG_STATE_HOME pointed to disposable workspace state",
+    "result": "CLI attempted to start background server and failed with EPERM uv_spawn of opencode.exe",
+    "status": "BLOCKED_RUNTIME"
+  },
+  "observed_help_contract": {
+    "root_flags": ["--standalone", "--server", "--prompt", "--model", "--log-level", "--print-logs"],
+    "run_flags": ["--standalone", "--server", "--model", "--format {default,json}", "--agent", "--file", "--auto"],
+    "model_syntax": "provider/model#variant",
+    "structured_output": "--format json",
+    "headless_entrypoint": "opencode run <message...>"
+  },
+  "standalone_probe": {
+    "command": "opencode --standalone run -m ollama/qwen2.5-coder:3b --format json <message>",
+    "exit_code": 1,
+    "observed": "Unrecognized flag: --standalone in command opencode run",
+    "status": "CLI_FLAG_INCONSISTENCY"
+  },
+  "free_provider": {
+    "provider": "ollama",
+    "runtime_version": "ollama version is 0.34.3",
+    "model_observed": "qwen2.5-coder:3b",
+    "model_available_locally": true,
+    "executor_run": "NOT_EXECUTED",
+    "reason": "OpenCode failed before provider/model invocation"
+  },
+  "required_but_unobserved": [
+    "bounded timeout during task execution",
+    "provider/model identity in an execution record",
+    "stdout/stderr from a completed task run",
+    "exit status from a completed task run",
+    "workspace patch or diff extraction",
+    "termination reason from a completed task run",
+    "absence of fallback during a completed task run"
+  ],
+  "qualification_decision": "BLOCKED",
+  "qualification_reason": "OpenCode is installed but not operational as a headless task executor in this environment; no protocol relaxation is justified."
+}
