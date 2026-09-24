@@ -17,7 +17,9 @@ Study Spec v1 adds a pre-execution research-design contract above P0-P6. It vali
 
 The product surface includes a dependency-free `codepro` CLI implemented with the Python standard library. The CLI exposes help, version, doctor, and read-only project inspection. Inspection may query Git and PATH and detect project markers, but it does not invoke executors or execute tasks.
 
-No layer has a concrete executor interface or executor orchestration.
+A low-level command environment boundary may execute an explicit argv vector with explicit cwd and timeout. Its output is a `CommandResult` observation only: exit code, stdout, stderr, timeout, duration, and environment error. It does not map process outcomes to task status.
+
+No layer has a concrete Codex/Claude/Gemini adapter or executor orchestration.
 
 ## Boundary rules
 
