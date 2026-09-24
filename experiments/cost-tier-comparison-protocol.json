@@ -1,0 +1,49 @@
+{
+  "protocol": "cost-tier-comparison-v1",
+  "project": "Codepro",
+  "status": "BLOCKED_ON_EXECUTOR_QUALIFICATION",
+  "routing": false,
+  "cascade": false,
+  "purpose": "Measure cost tiers without treating cost as quality or selecting a winner before evidence.",
+  "tiers": [
+    "FREE_SHORT",
+    "FREE_GENERAL",
+    "FREE_LARGE_CONTEXT",
+    "SUBSCRIPTION",
+    "PAYG"
+  ],
+  "controlled_dimensions": [
+    "task_id",
+    "task_revision",
+    "executor_identity",
+    "provider_identity",
+    "model_identity",
+    "tier",
+    "environment_identity",
+    "budget_digest",
+    "verifier_identity",
+    "instrumentation_identity",
+    "replicate_id"
+  ],
+  "observations": [
+    "resolved",
+    "patch_validity",
+    "cost",
+    "wall_time",
+    "tokens",
+    "context_used",
+    "calls",
+    "retries",
+    "blocked_class",
+    "failure_class"
+  ],
+  "sequence": [
+    "SECOND_EXECUTOR_ENABLEMENT",
+    "EXECUTOR_QUALIFICATION_V1",
+    "NON_ROUTED_TIER_MATRIX",
+    "ECONOMIC_BASELINE_V1",
+    "EXPLICIT_ESCALATION_TREATMENT",
+    "HELD_OUT_ROUTING_TREATMENT"
+  ],
+  "promotion_rule": "No routing promotion without held-out improvement over Economic Baseline v1 in verified resolution per unit cost and declared guardrails."
+}
