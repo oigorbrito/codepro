@@ -18,6 +18,7 @@ from arkx.executor_qualification import (
     assess_trial,
     compare_trials,
     summarize_experiment,
+    validate_paired_executor_experiment,
 )
 
 
@@ -119,6 +120,39 @@ class ExecutorQualificationTests(unittest.TestCase):
         value = json.loads(path.read_text(encoding="utf-8"))
         self.assertEqual(value["fixture_type"], "EXECUTOR_QUALIFICATION_FIXTURE")
         self.assertEqual(value["comparison_axes"], ["EXECUTOR", "TREATMENT"])
+
+    def test_paired_protocol_requires_shared_verifier_and_instrumentation(self):
+        experiment = QualificationExperiment(
+            (trial(), trial(executor=ExecutorIdentity("other", "1.0", "external", "config-b"), replicate_id="rep-1")),
+            ComparisonAxis.EXECUTOR,
+        )
+        report = validate_paired_executor_experiment(experiment)
+        self.assertEqual(report.status, QualificationStatus.UNKNOWN)
+        self.assertIn("VERIFIER_IDENTITY_MISSING", report.reason_codes)
+        self.assertIn("INSTRUMENTATION_IDENTITY_MISSING", report.reason_codes)
+
+    def test_paired_protocol_accepts_complete_controlled_cells_without_ranking(self):
+        experiment = QualificationExperiment(
+            (trial(), trial(executor=ExecutorIdentity("other", "1.0", "external", "config-b"), replicate_id="rep-1")),
+            ComparisonAxis.EXECUTOR,
+            verifier_identity="verifier-v1",
+            instrumentation_identity="telemetry-v1",
+        )
+        report = validate_paired_executor_experiment(experiment)
+        self.assertEqual(report.status, QualificationStatus.QUALIFIABLE)
+        self.assertEqual(report.executor_names, ("executor", "other"))
+        self.assertNotIn("winner", report.to_json())
+
+    def test_paired_protocol_rejects_missing_executor_cell(self):
+        experiment = QualificationExperiment(
+            (trial(),),
+            ComparisonAxis.EXECUTOR,
+            verifier_identity="verifier-v1",
+            instrumentation_identity="telemetry-v1",
+        )
+        report = validate_paired_executor_experiment(experiment)
+        self.assertEqual(report.status, QualificationStatus.INCOMPARABLE)
+        self.assertIn("AT_LEAST_TWO_EXECUTORS_REQUIRED", report.reason_codes)
 
 
 if __name__ == "__main__":

@@ -258,12 +258,37 @@ class QualificationExperiment:
     trials: tuple[ExecutorTrial, ...]
     comparison_axis: ComparisonAxis
     schema_version: int = SCHEMA_VERSION
+    verifier_identity: str | None = None
+    instrumentation_identity: str | None = None
 
     def to_dict(self) -> dict[str, Any]:
         return {
             "schema_version": self.schema_version,
             "comparison_axis": self.comparison_axis.value,
+            "verifier_identity": self.verifier_identity,
+            "instrumentation_identity": self.instrumentation_identity,
             "trials": [trial.to_dict() for trial in sorted(self.trials, key=lambda item: (item.replicate_id, item.executor.name, item.treatment.name))],
+        }
+
+    def to_json(self) -> str:
+        return _json(self.to_dict())
+
+
+@dataclass(frozen=True)
+class PairedQualificationReport:
+    status: QualificationStatus
+    executor_names: tuple[str, ...]
+    task_count: int
+    replicate_count: int
+    reason_codes: tuple[str, ...]
+
+    def to_dict(self) -> dict[str, Any]:
+        return {
+            "status": self.status.value,
+            "executor_names": list(self.executor_names),
+            "task_count": self.task_count,
+            "replicate_count": self.replicate_count,
+            "reason_codes": list(self.reason_codes),
         }
 
     def to_json(self) -> str:
@@ -319,6 +344,50 @@ def compare_trials(left: ExecutorTrial, right: ExecutorTrial, axis: ComparisonAx
     if left.executor != right.executor:
         return QualificationStatus.INCOMPARABLE
     return QualificationStatus.INCOMPARABLE if left.treatment == right.treatment else _pair_status(left, right)
+
+
+def validate_paired_executor_experiment(experiment: QualificationExperiment) -> PairedQualificationReport:
+    """Validate the structural controls for an executor-only paired run.
+
+    This function never ranks executors and never infers a performance result.
+    It only decides whether the submitted observations form a comparable pair
+    set for a later analysis.
+    """
+    trials = tuple(experiment.trials)
+    executors = tuple(sorted({trial.executor.name for trial in trials}))
+    reasons: list[str] = []
+    if experiment.comparison_axis is not ComparisonAxis.EXECUTOR:
+        reasons.append("COMPARISON_AXIS_NOT_EXECUTOR")
+    if len(executors) < 2:
+        reasons.append("AT_LEAST_TWO_EXECUTORS_REQUIRED")
+    if not experiment.verifier_identity:
+        reasons.append("VERIFIER_IDENTITY_MISSING")
+    if not experiment.instrumentation_identity:
+        reasons.append("INSTRUMENTATION_IDENTITY_MISSING")
+    cells: dict[tuple[str, str | None, str | None, str], list[ExecutorTrial]] = {}
+    for trial in trials:
+        key = (trial.task.task_id, trial.task.task_revision, trial.task.acceptance_definition, trial.replicate_id)
+        cells.setdefault(key, []).append(trial)
+    if any(len(cell) != len(executors) for cell in cells.values()):
+        reasons.append("PAIRED_CELL_INCOMPLETE")
+    if any(len({trial.executor.name for trial in cell}) != len(cell) for cell in cells.values()):
+        reasons.append("DUPLICATE_EXECUTOR_CELL")
+    for cell in cells.values():
+        first = cell[0]
+        for other in cell[1:]:
+            if compare_trials(first, other, ComparisonAxis.EXECUTOR) is QualificationStatus.INCOMPARABLE:
+                reasons.append("CONTROL_DIMENSION_MISMATCH")
+                break
+    if any(assess_trial(trial) is QualificationStatus.BLOCKED for trial in trials):
+        reasons.append("OBSERVED_BLOCKED_TRIAL")
+    elif any(assess_trial(trial) is QualificationStatus.UNKNOWN for trial in trials):
+        reasons.append("OBSERVATION_INCOMPLETE")
+    status = QualificationStatus.QUALIFIABLE if not reasons else (
+        QualificationStatus.BLOCKED if "OBSERVED_BLOCKED_TRIAL" in reasons else QualificationStatus.UNKNOWN
+    )
+    if any(reason in reasons for reason in ("COMPARISON_AXIS_NOT_EXECUTOR", "AT_LEAST_TWO_EXECUTORS_REQUIRED", "PAIRED_CELL_INCOMPLETE", "DUPLICATE_EXECUTOR_CELL", "CONTROL_DIMENSION_MISMATCH")):
+        status = QualificationStatus.INCOMPARABLE
+    return PairedQualificationReport(status, executors, len({key[:3] for key in cells}), len({key[3] for key in cells}), tuple(sorted(set(reasons))))
 
 
 def _pair_status(left: ExecutorTrial, right: ExecutorTrial) -> QualificationStatus:

@@ -9,3 +9,10 @@ Comparisons use an explicit axis. `EXECUTOR` requires the same task revision, ac
 `COMPLETED` with `accepted=False` is a valid observed outcome. Infrastructure, executor, budget, and blocked outcomes are not silently converted into rejection. P8 records external acceptance; it never infers acceptance from patch verification or execution completion.
 
 Summaries aggregate dimensions without producing a winner or global ranking. Promotion and removal decisions remain outside P8.
+
+Decision `0035` adds the first executable paired-protocol gate. It requires at
+least two executor identities, complete task/replicate cells, shared verifier
+and instrumentation identities, and matching control dimensions before a
+comparison can be called `QUALIFIABLE`. This is a comparability gate only; it
+does not rank or promote an executor. The real protocol remains
+`NOT_EXECUTED` until concrete executors produce raw observations.
