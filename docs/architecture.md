@@ -21,6 +21,8 @@ A low-level command environment boundary may execute an explicit argv vector wit
 
 Capability qualification is a separate pure boundary. A runtime executor identity is bindable only when the exact executor version + adapter version has explicit qualification evidence for the required capability. Availability alone is never qualification. Multiple equally qualified available executors are blocked rather than silently ranked.
 
+Request/governance is an independent authority boundary. It can authorize scope, permissions, command/time budgets, an environment reference, and an acceptance authority. Missing information remains UNKNOWN; explicit denial is BLOCKED. Governance cannot choose an executor or declare acceptance.
+
 No layer has a concrete Codex/Claude/Gemini adapter or executor orchestration.
 
 ## Boundary rules
