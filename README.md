@@ -36,12 +36,26 @@ See [the project contract](docs/project-contract.md) and [the experimental proto
 
 P0 provides executor-agnostic execution records, explicit event metrics, nullable resource measurements, and fail-closed status resolution. It does not implement performance optimization, routing, planning, or any executor. See [the P0 metrics contract](docs/baseline-metrics.md).
 
-Run the deterministic fixture and tests locally from the repository root:
+Install the development distribution in a clean environment and run the
+deterministic fixture and tests:
 
 ```text
-PYTHONPATH=src python -m arkx.baseline
-PYTHONPATH=src python -m unittest discover -s tests -t . -v
+python -m pip install .
+python -m arkx.baseline
+python -m unittest discover -s tests -t . -v
 ```
+
+The distribution is currently `codepro==0.3.0.dev0`; it is a packaged
+pre-release chassis. The public commands are limited to health and the
+deterministic baseline:
+
+```text
+codepro --version
+codepro doctor --json
+codepro baseline
+```
+
+There is intentionally no task-submission or executor command yet.
 
 P1 adds deterministic task characterization from explicit signals only. See [the P1 contract](docs/task-characterization.md). It does not select executors or route work.
 

@@ -1,4 +1,6 @@
-"""Minimal, executor-agnostic Arkx execution contracts and telemetry."""
+"""Minimal, executor-agnostic CodePro execution contracts and telemetry."""
+
+__version__ = "0.3.0.dev0"
 
 from .contracts import Event, EventType, ExecutionRecord, ExecutionStatus
 from .configuration import ConfigurationSnapshot
