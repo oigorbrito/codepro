@@ -37,7 +37,22 @@ class CommandSpecTests(unittest.TestCase):
         self.assertEqual(spec.to_json(), spec.to_json())
         restored = CommandSpec.from_json(spec.to_json())
         self.assertEqual(restored, spec)
-        self.assertEqual(json.loads(spec.to_json())["schema_version"], 1)
+        payload = json.loads(spec.to_json())
+        self.assertEqual(payload["schema_version"], 1)
+        self.assertEqual(payload["environment_policy"], "INHERIT_PROCESS")
+
+    def test_deserialization_rejects_implicit_environment_policy(self):
+        payload = {
+            "schema_version": 1,
+            "argv": [sys.executable, "-c", "print(1)"],
+            "cwd": ".",
+            "timeout_seconds": 1,
+        }
+        with self.assertRaises(ValueError):
+            CommandSpec.from_dict(payload)
+        payload["environment_policy"] = "REPLACE"
+        with self.assertRaises(ValueError):
+            CommandSpec.from_dict(payload)
 
 
 class LocalCommandEnvironmentTests(unittest.TestCase):
