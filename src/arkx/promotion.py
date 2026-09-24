@@ -9,6 +9,8 @@ import json
 from math import isfinite
 from typing import Any, Mapping
 
+from .acceptance import AcceptanceDecision, AcceptanceStatus
+
 
 SCHEMA_VERSION = 1
 FREEZE_SCHEMA_VERSION = 1
@@ -196,6 +198,14 @@ class PromotionRecord:
     reviewer: str
     rationale: str
     evidence_refs: tuple[str, ...]
+    acceptance_ref: str | None = None
+    acceptance_run_id: str | None = None
+    acceptance_authority_ref: str | None = None
+    acceptance_evidence_refs: tuple[str, ...] = ()
+    component_ref: str | None = None
+    path_refs: tuple[str, ...] = ()
+    configuration_ref: str | None = None
+    study_evidence_refs: tuple[str, ...] = ()
 
     def to_json(self) -> str:
         payload = {
@@ -205,6 +215,14 @@ class PromotionRecord:
             "reviewer": self.reviewer,
             "rationale": self.rationale,
             "evidence_refs": sorted(set(self.evidence_refs)),
+            "acceptance_ref": self.acceptance_ref,
+            "acceptance_run_id": self.acceptance_run_id,
+            "acceptance_authority_ref": self.acceptance_authority_ref,
+            "acceptance_evidence_refs": sorted(set(self.acceptance_evidence_refs)),
+            "component_ref": self.component_ref,
+            "path_refs": sorted(set(self.path_refs)),
+            "configuration_ref": self.configuration_ref,
+            "study_evidence_refs": sorted(set(self.study_evidence_refs)),
         }
         return json.dumps(payload, ensure_ascii=False, sort_keys=True, separators=(",", ":"))
 
@@ -343,6 +361,12 @@ def record_promotion_decision(
     reviewer: str,
     rationale: str,
     evidence_refs: tuple[str, ...],
+    acceptance_decision: AcceptanceDecision | None = None,
+    acceptance_ref: str | None = None,
+    component_ref: str | None = None,
+    path_refs: tuple[str, ...] = (),
+    configuration_ref: str | None = None,
+    study_evidence_refs: tuple[str, ...] = (),
 ) -> PromotionRecord:
     canonical = freeze_promotion_gate(frozen_gate.gate)
     if canonical.content_hash != frozen_gate.content_hash:
@@ -358,6 +382,19 @@ def record_promotion_decision(
         raise ValueError("promotion decision requires non-blank evidence references")
     if promote and assessment.status is not GateStatus.ELIGIBLE_FOR_REVIEW:
         raise ValueError("cannot promote when promotion gate is not ELIGIBLE_FOR_REVIEW")
+    if promote:
+        if acceptance_decision is None or acceptance_decision.status is not AcceptanceStatus.ACCEPTED:
+            raise ValueError("promotion requires an ACCEPTED independent acceptance decision")
+        if not acceptance_ref or not acceptance_ref.strip():
+            raise ValueError("promotion requires an acceptance_ref")
+        if not component_ref or not component_ref.strip():
+            raise ValueError("promotion requires a component_ref")
+        if not path_refs or any(not ref.strip() for ref in path_refs):
+            raise ValueError("promotion requires non-blank path_refs")
+        if not configuration_ref or not configuration_ref.strip():
+            raise ValueError("promotion requires a configuration_ref")
+        if not study_evidence_refs or any(not ref.strip() for ref in study_evidence_refs):
+            raise ValueError("promotion requires study_evidence_refs")
     return PromotionRecord(
         gate_hash=frozen_gate.content_hash,
         gate_assessment_hash=assessment.content_hash,
@@ -365,4 +402,12 @@ def record_promotion_decision(
         reviewer=reviewer,
         rationale=rationale,
         evidence_refs=evidence_refs,
+        acceptance_ref=acceptance_ref,
+        acceptance_run_id=acceptance_decision.run_id if acceptance_decision else None,
+        acceptance_authority_ref=acceptance_decision.authority_ref if acceptance_decision else None,
+        acceptance_evidence_refs=acceptance_decision.evidence_refs if acceptance_decision else (),
+        component_ref=component_ref,
+        path_refs=path_refs,
+        configuration_ref=configuration_ref,
+        study_evidence_refs=study_evidence_refs,
     )
