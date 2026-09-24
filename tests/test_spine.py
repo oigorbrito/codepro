@@ -239,6 +239,19 @@ class GateOrderingTests(unittest.TestCase):
         self.assertEqual(record.reason, SpineReason.GOVERNANCE_UNKNOWN)
         self.assertEqual(executor.calls, [])
 
+    def test_characterization_scope_cannot_expand_original_request(self):
+        executor = FixtureExecutor()
+        record, _ = execute_fixture(
+            executor=executor,
+            signals_value=signals(candidate_files=("src/b.py",)),
+        )
+        self.assertEqual(record.status, SpineStatus.BLOCKED)
+        self.assertEqual(
+            record.reason,
+            SpineReason.CHARACTERIZATION_SCOPE_OUTSIDE_REQUEST,
+        )
+        self.assertEqual(executor.calls, [])
+
     def test_uncertain_characterization_requires_qualification_before_binding(self):
         executor = FixtureExecutor()
         record, _ = execute_fixture(
@@ -425,6 +438,27 @@ class VerificationPhaseTests(unittest.TestCase):
                 current_progress(),
                 verification(),
             )
+
+    def test_verification_expected_scope_cannot_expand_original_request(self):
+        record, _ = execute_fixture()
+        with self.assertRaises(ValueError):
+            verify_observation(
+                record,
+                previous_progress(),
+                current_progress(),
+                verification(expected_scope=("src/a.py", "src/b.py")),
+            )
+
+    def test_changed_files_outside_request_are_rejected_even_with_verification_phase(self):
+        record, _ = execute_fixture()
+        final = verify_observation(
+            record,
+            previous_progress(),
+            current_progress(),
+            verification(changed_files=("src/a.py", "src/b.py")),
+        )
+        self.assertEqual(final.status, SpineStatus.REJECTED)
+        self.assertEqual(final.reason, SpineReason.VERIFICATION_REJECTED)
 
     def test_verification_task_identity_must_match(self):
         record, _ = execute_fixture()
