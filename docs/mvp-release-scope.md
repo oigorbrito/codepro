@@ -6,6 +6,17 @@ O produto está em MVP. O objetivo não é publicar a arquitetura acumulada nem
 preservar uma solução provisória como se fosse produto. O objetivo é provar uma
 única jornada operacional vertical, privada e reproduzível.
 
+## Regra contra gambiarra
+
+A única adaptação aceitável é a restrição financeira de infraestrutura: usar
+recursos locais, gratuitos ou self-hosted em vez de serviços pagos. Essa
+adaptação não pode alterar o contrato, esconder falhas, produzir falso sucesso
+ou substituir evidência por opinião. Limitações de hardware, tempo ou custo
+devem ser registradas na identidade da execução.
+
+Nenhum atalho técnico, fallback silencioso, fixture apresentada como execução
+real ou camada incompleta será promovido como parte do MVP.
+
 ## O que o MVP precisa fazer
 
 1. receber uma tarefa real em um repositório autorizado;
