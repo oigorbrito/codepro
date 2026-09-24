@@ -8,6 +8,7 @@ import sys
 from collections.abc import Sequence
 
 from . import __version__
+from .project import inspect_project
 
 
 _SUPPORTED_MIN = (3, 12)
@@ -31,6 +32,14 @@ def build_parser() -> argparse.ArgumentParser:
         help="Check whether the local Python runtime can execute the current chassis.",
         description="Check the local runtime and core package import boundary.",
     )
+
+    inspect_parser = subparsers.add_parser(
+        "inspect",
+        help="Inspect the current project without changing it.",
+        description="Inspect Git context, project markers, tests, and known executor binaries.",
+    )
+    inspect_parser.add_argument("path", nargs="?", default=".")
+    inspect_parser.add_argument("--json", action="store_true", dest="as_json")
     return parser
 
 
@@ -51,6 +60,33 @@ def _doctor() -> int:
     return 0 if overall else 1
 
 
+def _inspect(path: str, *, as_json: bool) -> int:
+    try:
+        inspection = inspect_project(path)
+    except ValueError as exc:
+        print(f"codepro: error: {exc}", file=sys.stderr)
+        return 2
+
+    if as_json:
+        print(inspection.to_json())
+        return 0
+
+    print(f"Project: {inspection.project_name}")
+    print(f"Root: {inspection.project_root}")
+    print(f"Git: {'yes' if inspection.git_available else 'no'}")
+    print(f"Repository: {'yes' if inspection.git_repository else 'no'}")
+    print(f"Branch: {inspection.branch or 'n/a'}")
+    print("Languages: " + (", ".join(inspection.languages) if inspection.languages else "none"))
+    print(
+        "Test surfaces: "
+        + (", ".join(inspection.test_surfaces) if inspection.test_surfaces else "none")
+    )
+    print("Executors:")
+    for name, command, available in inspection.executors:
+        print(f"  {name}: {'available' if available else 'unavailable'} ({command})")
+    return 0
+
+
 def main(argv: Sequence[str] | None = None) -> int:
     parser = build_parser()
     args = parser.parse_args(argv)
@@ -60,6 +96,8 @@ def main(argv: Sequence[str] | None = None) -> int:
         return 0
     if args.command == "doctor":
         return _doctor()
+    if args.command == "inspect":
+        return _inspect(args.path, as_json=args.as_json)
 
     parser.error(f"unsupported command: {args.command}")
     return 2
