@@ -47,6 +47,8 @@ Then:
 codepro --help
 codepro --version
 codepro doctor
+codepro inspect
+codepro inspect --json
 ```
 
 The equivalent module entrypoint is:
@@ -58,6 +60,8 @@ python -m arkx --help
 The public product command is `codepro`. The Python implementation namespace remains `arkx` for now so the CLI introduction does not also become a package-rename migration.
 
 Running `codepro` with no arguments prints help and performs no task execution.
+
+`codepro inspect` is observational only. It may invoke read-only Git queries and inspect filesystem markers/PATH, but it does not modify the repository, select an executor, or execute a task.
 
 ## Development posture
 
