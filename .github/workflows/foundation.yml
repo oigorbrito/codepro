@@ -63,6 +63,42 @@ jobs:
           PY
         env:
           PYTHONPATH: src
+      - name: Probe qualification binding boundary
+        run: |
+          python - <<'PY'
+          from arkx.qualification import (
+              BindingStatus,
+              CapabilityRequirement,
+              ExecutorQualification,
+              ExecutorRuntime,
+              QualificationStatus,
+              bind_executor,
+          )
+
+          req = CapabilityRequirement("req-ci", "repository-edit", "fixture://route")
+          runtime = ExecutorRuntime(
+              "fixture",
+              "1.0",
+              "fixture-adapter",
+              "1.0",
+              True,
+              "fixture://availability",
+          )
+          qualification = ExecutorQualification(
+              "fixture",
+              "1.0",
+              "fixture-adapter",
+              "1.0",
+              "repository-edit",
+              QualificationStatus.QUALIFIED,
+              ("fixture://qualification",),
+          )
+          result = bind_executor(req, (runtime,), (qualification,))
+          print(result.to_json())
+          assert result.status is BindingStatus.BOUND
+          PY
+        env:
+          PYTHONPATH: src
       - name: Run unit tests
         run: python -m unittest discover -s tests -t . -v
         env:

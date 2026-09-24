@@ -84,6 +84,12 @@ class ImportArchitectureTests(unittest.TestCase):
         self.assertGreaterEqual(len(graph), 20)
         assert_acyclic(self, graph)
 
+    def test_qualification_binding_does_not_depend_on_routing_or_executor_names(self):
+        graph = internal_import_graph()
+        self.assertTrue(
+            graph["qualification"].isdisjoint({"routing", "characterization", "project"})
+        )
+
     def test_command_observation_boundary_does_not_depend_on_task_status(self):
         source = (SRC / "command.py").read_text(encoding="utf-8")
         tree = ast.parse(source)

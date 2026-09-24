@@ -68,6 +68,13 @@ MUTATIONS = (
         '"shell": True,',
         "tests.test_command",
     ),
+    Mutation(
+        "qualification-ignore-ambiguity",
+        "src/arkx/qualification.py",
+        "if len(candidates) > 1:",
+        "if False and len(candidates) > 1:",
+        "tests.test_qualification",
+    ),
 )
 
 
