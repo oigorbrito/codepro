@@ -99,6 +99,40 @@ jobs:
           PY
         env:
           PYTHONPATH: src
+      - name: Probe governance authority boundary
+        run: |
+          python - <<'PY'
+          from arkx.governance import AuthorityGrant, GovernanceStatus, TaskRequest, evaluate_governance
+
+          request = TaskRequest(
+              "request-ci",
+              "user://ci",
+              "task://ci",
+              "git://codepro@fixture",
+              ("src/arkx",),
+              ("edit", "test"),
+          )
+          grant = AuthorityGrant(
+              "grant-ci",
+              "request-ci",
+              "authority://ci",
+              ("src/arkx", "tests"),
+              ("edit", "test"),
+              20,
+              300,
+              "environment://ci",
+              "acceptance://ci",
+              ("evidence://ci-authority",),
+          )
+          result = evaluate_governance(request, grant)
+          print(result.to_json())
+          assert result.status is GovernanceStatus.AUTHORIZED
+          assert result.max_commands == 20
+          assert result.acceptance_authority_ref == "acceptance://ci"
+          assert "executor_id" not in result.to_dict()
+          PY
+        env:
+          PYTHONPATH: src
       - name: Run unit tests
         run: python -m unittest discover -s tests -t . -v
         env:
