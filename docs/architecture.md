@@ -1,12 +1,14 @@
-# Architecture boundary
+# Codepro architecture boundary
 
-Arkx separates contracts, execution, verification, acceptance, and promotion.
+Codepro separates contracts, execution, verification, acceptance, and
+promotion. `arkx` remains the current Python namespace and source package path
+for compatibility.
 The executable contracts cover the request-to-acceptance path. Runtime
 capability is qualified per provider, model, executor, and treatment; the
 presence of a contract does not imply adoption.
 
 ```text
-Arkx
+Codepro
 ├── docs/          contracts, protocol, decisions, and evidence boundaries
 ├── experiments/   experiment records and synthetic fixtures; not orchestration
 ├── src/arkx/      executable contracts and bounded policy/runtime surfaces

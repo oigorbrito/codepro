@@ -1,6 +1,10 @@
-# Arkx
+# Codepro
 
-Arkx is a repository for incremental implementation and empirical evaluation of software capability.
+Codepro is a repository for incremental implementation and empirical
+evaluation of software capability.
+
+The current Python import namespace is `arkx` for compatibility; the product,
+distribution, CLI, and release identity are `codepro`.
 
 > **MINIMUM SUFFICIENT ARCHITECTURE**  
 > **FOR MAXIMUM RELIABLE CAPABILITY**

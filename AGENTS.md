@@ -1,4 +1,7 @@
-# Arkx agent operating rules
+# Codepro agent operating rules
+
+The product identity is Codepro. `arkx` is the current Python namespace and
+must not be treated as a separate product identity.
 
 ## Scope
 

@@ -1,4 +1,7 @@
-# Plano de prontidão para release
+# Codepro — plano de prontidão para release
+
+Identidade do produto: **Codepro**. O namespace técnico atual é `arkx`, por
+compatibilidade; isso não altera a identidade da distribuição nem do release.
 
 Status inicial: **NO-GO** para release de produto operacional.
 

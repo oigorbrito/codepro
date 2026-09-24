@@ -1,6 +1,6 @@
 # Experimental protocol
 
-Arkx develops through empirical increments. The protocol below defines the
+Codepro develops through empirical increments. The protocol below defines the
 minimum record required before a capability can be considered for promotion.
 
 ## Required record

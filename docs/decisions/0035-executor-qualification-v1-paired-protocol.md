@@ -18,7 +18,7 @@ accept or promote an executor.
 
 ## Falsifiable hypothesis
 
-Two independently implemented executors can pass through the same Arkx
+Two independently implemented executors can pass through the same Codepro
 execution, verification and evidence pipeline without executor-specific
 branches, while preserving comparable observations for every task/replicate
 cell.

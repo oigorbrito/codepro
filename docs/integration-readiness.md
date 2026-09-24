@@ -1,4 +1,4 @@
-# Arkx — external integration readiness
+# Codepro — external integration readiness
 
 Data da leitura: 2026-09-23  
 Branch: `codex/auditoriaarquitetural`  
