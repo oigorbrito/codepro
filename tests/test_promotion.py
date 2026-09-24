@@ -3,6 +3,7 @@ import unittest
 from dataclasses import replace
 from pathlib import Path
 
+from arkx.acceptance import AcceptanceDecision, AcceptanceReason, AcceptanceStatus
 from arkx.promotion import (
     CriterionOperator,
     GateStatus,
@@ -62,6 +63,19 @@ def evidence():
         "validity": "validity://review",
         "raw_run_completeness": "provenance://complete",
     }
+
+
+def accepted_acceptance():
+    return AcceptanceDecision(
+        status=AcceptanceStatus.ACCEPTED,
+        reason=AcceptanceReason.VERIFIED,
+        authority_ref="acceptance://reviewer",
+        run_id="run://verified-1",
+        execution_artifact_ref="artifact://execution-1",
+        verification_ref="artifact://verification-1",
+        evidence_refs=("evidence://acceptance",),
+        rationale="independent acceptance completed",
+    )
 
 
 class ValidationTests(unittest.TestCase):
@@ -187,8 +201,17 @@ class DecisionTests(unittest.TestCase):
             reviewer="reviewer",
             rationale="all frozen gates satisfied and evidence reviewed",
             evidence_refs=("analysis://frozen-result",),
+            acceptance_decision=accepted_acceptance(),
+            acceptance_ref="acceptance://record-1",
+            component_ref="component://routing",
+            path_refs=("src/arkx/routing.py",),
+            configuration_ref="config://trial-a",
+            study_evidence_refs=("study://run-1",),
         )
         self.assertEqual(record.decision, PromotionDecisionStatus.PROMOTED)
+        payload = json.loads(record.to_json())
+        self.assertEqual(payload["acceptance_run_id"], "run://verified-1")
+        self.assertEqual(payload["component_ref"], "component://routing")
 
     def test_not_promoted_is_valid_even_when_eligible(self):
         eligible = assess_promotion_gate(frozen_gate(), observations(), evidence())
@@ -203,6 +226,36 @@ class DecisionTests(unittest.TestCase):
             evidence_refs=("validity://review",),
         )
         self.assertEqual(record.decision, PromotionDecisionStatus.NOT_PROMOTED)
+
+    def test_promotion_requires_acceptance_and_promotion_scope(self):
+        eligible = assess_promotion_gate(frozen_gate(), observations(), evidence())
+        with self.assertRaisesRegex(ValueError, "ACCEPTED independent acceptance"):
+            record_promotion_decision(
+                eligible,
+                frozen_gate=frozen_gate(), observations=observations(), evidence=evidence(),
+                promote=True, reviewer="reviewer", rationale="missing acceptance", evidence_refs=("analysis://x",),
+            )
+
+    def test_non_accepted_status_cannot_be_promoted(self):
+        eligible = assess_promotion_gate(frozen_gate(), observations(), evidence())
+        blocked = AcceptanceDecision(
+            status=AcceptanceStatus.BLOCKED,
+            reason=AcceptanceReason.AUTHORITY_NOT_INDEPENDENT,
+            authority_ref="acceptance://reviewer",
+            run_id="run://blocked",
+            execution_artifact_ref=None,
+            verification_ref=None,
+            evidence_refs=("evidence://blocked",),
+            rationale="authority is not independent",
+        )
+        with self.assertRaisesRegex(ValueError, "ACCEPTED independent acceptance"):
+            record_promotion_decision(
+                eligible,
+                frozen_gate=frozen_gate(), observations=observations(), evidence=evidence(),
+                promote=True, reviewer="reviewer", rationale="must remain blocked", evidence_refs=("analysis://x",),
+                acceptance_decision=blocked, acceptance_ref="acceptance://blocked", component_ref="component://routing",
+                path_refs=("src/arkx/routing.py",), configuration_ref="config://trial-a", study_evidence_refs=("study://x",),
+            )
 
 
 class FreezeTests(unittest.TestCase):
