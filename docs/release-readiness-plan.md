@@ -280,6 +280,11 @@ O plano foi auditado contra as fontes acima e contra a árvore local.
   `doctor --json`, `baseline` e executa a suíte sem `PYTHONPATH`. A alteração
   foi validada localmente por comandos equivalentes, mas o job GitHub ainda é
   `NOT_EXECUTED` até uma execução CI observável.
+- reprodutibilidade do commit rastreado: `git archive` de `7e4b510a` foi
+  extraído sem arquivos não rastreados; o wheel foi construído e instalado em
+  venv limpo, `codepro --version`, `doctor --json` e `baseline` passaram, e a
+  suíte passou com `372` testes, `OK`. Hash do wheel desse archive:
+  `89E4C6DCA68F2BE494EC4EF2FD82AC859F6773A5DC3548B5F423BC5AF887B091`.
 
 ## Primeiro trabalho autorizado pelo plano
 
