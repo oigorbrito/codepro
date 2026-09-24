@@ -1,0 +1,47 @@
+name: Release evidence
+
+on:
+  release:
+    types: [published]
+
+permissions:
+  contents: read
+
+jobs:
+  package-and-smoke:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          ref: ${{ github.event.release.tag_name }}
+      - uses: actions/setup-python@v5
+        with:
+          python-version: "3.12"
+      - name: Install packaging tools
+        run: python -m pip install --upgrade build twine pip-audit
+      - name: Build distributions
+        run: python -m build
+      - name: Validate distribution metadata
+        run: python -m twine check dist/*
+      - name: Audit runtime dependencies
+        run: python -m pip_audit --strict --no-deps --format json --output pip-audit.json
+      - name: Install release wheel
+        shell: bash
+        run: python -m pip install dist/*.whl
+      - name: Smoke test published CLI contract
+        run: |
+          codepro --version
+          codepro --help
+          codepro doctor
+          codepro inspect --json
+      - name: Hash release artifacts
+        shell: bash
+        run: sha256sum dist/* > SHA256SUMS
+      - name: Upload release evidence artifact
+        uses: actions/upload-artifact@v4
+        with:
+          name: codepro-${{ github.event.release.tag_name }}-release-evidence
+          path: |
+            dist/*
+            SHA256SUMS
+            pip-audit.json
