@@ -1,4 +1,4 @@
-"""Pre-execution statistical analysis plan for Arkx empirical studies."""
+"""Pre-execution statistical analysis plan for CodePro empirical studies."""
 
 from __future__ import annotations
 
