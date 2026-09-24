@@ -61,6 +61,13 @@ MUTATIONS = (
         "if False and assessment.content_hash != canonical_assessment.content_hash:",
         "tests.test_promotion",
     ),
+    Mutation(
+        "command-enable-shell",
+        "src/arkx/command.py",
+        '"shell": False,',
+        '"shell": True,',
+        "tests.test_command",
+    ),
 )
 
 
