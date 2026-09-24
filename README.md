@@ -24,7 +24,8 @@ Implemented:
 - a minimal installable CLI boundary with no runtime dependencies;
 - a low-level command observation boundary with no task-status inference;
 - capability qualification and executor binding contracts that distinguish availability from qualification and refuse hidden ranking;
-- request/governance authority contracts for explicit scope, permissions, execution budgets, environment, and independent acceptance authority.
+- request/governance authority contracts for explicit scope, permissions, execution budgets, environment, and independent acceptance authority;
+- version-freshness governance that separates historical controls from current candidates and requires requalification for materially stale external components.
 
 Not implemented:
 
@@ -80,11 +81,13 @@ HYPOTHESIS != IMPLEMENTATION
 IMPLEMENTATION != EXECUTED
 EXECUTED != ACCEPTED
 ACCEPTED != PROMOTED
+LATEST != BEST
+HISTORICAL_CONTROL != CURRENT_CANDIDATE
 ```
 
-No fallback, executor switch, or scope expansion may be silent.
+No fallback, executor switch, scope expansion, or external-component version substitution may be silent.
 
-See [the project contract](docs/project-contract.md), [architecture boundary](docs/architecture.md), and [experimental protocol](docs/experimental-protocol.md).
+See [the project contract](docs/project-contract.md), [version freshness policy](docs/version-freshness-policy.md), [architecture boundary](docs/architecture.md), and [experimental protocol](docs/experimental-protocol.md).
 
 ## Chassis verification
 
