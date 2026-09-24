@@ -65,6 +65,14 @@ with `run`, while the default and isolated invocations fail before execution
 with `EPERM`. Detailed observations are preserved in
 `logs/architecture/opencode-headless-audit-20260924.json`.
 
+OpenHands CLI was also audited as an independent candidate. Version `1.21.0`
+exposes `--headless --json`, explicit local workspace/persistence overrides,
+and `LLM_BASE_URL`/`LLM_MODEL` overrides. It initialized against local Ollama
+`qwen2.5-coder:3b`, but failed before the first task cycle while creating its
+Jinja cache under the protected user profile. It remains a promising candidate
+but is `BLOCKED_RUNTIME`, not qualified. Raw observations are in
+`logs/architecture/openhands-headless-audit-20260924.json`.
+
 These observations are infrastructure evidence. They do not qualify a second
 executor and do not authorize a paired benchmark.
 

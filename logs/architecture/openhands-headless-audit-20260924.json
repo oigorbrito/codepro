@@ -1,0 +1,68 @@
+{
+  "project": "Codepro",
+  "date": "2026-09-24",
+  "candidate": "OpenHands CLI",
+  "version": "OpenHands SDK v1.21.0",
+  "headless_contract": {
+    "flags_observed": [
+      "--headless",
+      "--json",
+      "--task",
+      "--override-with-envs",
+      "--exit-without-confirmation"
+    ],
+    "structured_output": "JSONL stream when --headless --json are used",
+    "workspace_override": "OPENHANDS_WORK_DIR",
+    "persistence_overrides": [
+      "OPENHANDS_PERSISTENCE_DIR",
+      "OPENHANDS_CONVERSATIONS_DIR"
+    ],
+    "provider_model_override": [
+      "LLM_BASE_URL",
+      "LLM_API_KEY",
+      "LLM_MODEL"
+    ]
+  },
+  "probe": {
+    "executor": "OpenHands CLI",
+    "provider": "Ollama",
+    "base_url": "http://127.0.0.1:11434/v1",
+    "model": "qwen2.5-coder:3b",
+    "cost_tier": "FREE_SHORT",
+    "task": "append exactly CODEPRO_OPENHANDS_PROBE_OK to probe.txt and modify no other file",
+    "workspace": "disposable workspace under the repository; removed after probe",
+    "observed": [
+      "agent initialized with model qwen2.5-coder:3b",
+      "workspace identity was resolved",
+      "no model/tool task cycle completed",
+      "probe.txt remained unchanged"
+    ]
+  },
+  "blockers": [
+    {
+      "kind": "PERSISTENCE_CACHE",
+      "detail": "PermissionError creating C:\\Users\\igorb\\.openhands\\cache\\jinja",
+      "status": "BLOCKED_RUNTIME"
+    },
+    {
+      "kind": "NETWORK_PREFLIGHT",
+      "detail": "LiteLLM attempted three remote cost-map fetches and fell back to its local backup; no paid provider was configured",
+      "status": "NON_FATAL_BUT_UNDESIRED"
+    },
+    {
+      "kind": "TERMINAL_OUTPUT",
+      "detail": "Rich reported a non-interactive terminal; JSONL evidence was not produced because execution failed before the task cycle",
+      "status": "BLOCKED_EVIDENCE"
+    }
+  ],
+  "required_but_unobserved": [
+    "bounded task timeout",
+    "completed-task exit code",
+    "captured stdout/stderr for a completed task",
+    "extracted patch/diff",
+    "termination reason from a completed task",
+    "fallback absence during a completed task"
+  ],
+  "qualification_decision": "BLOCKED",
+  "qualification_reason": "OpenHands is a technically promising independent headless candidate, but its installed CLI cannot complete a local Ollama task without writing to a protected user cache path."
+}
