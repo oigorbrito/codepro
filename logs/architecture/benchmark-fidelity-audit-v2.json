@@ -1,0 +1,102 @@
+{
+  "schema_version": 2,
+  "audit": "benchmark-fidelity-audit-v2",
+  "date": "2026-09-24",
+  "conclusion": "REFERENCE_BASELINE_PARTIALLY_FAITHFUL",
+  "promotion": "PROMOTION_NOT_AUTHORIZED",
+  "qualification_run_v1": "BLOCKED",
+  "reference": {
+    "repository": "SWE-agent/mini-swe-agent",
+    "commit": "a83fcae82d2a08f0ee0c688f9d137b3566c097f8",
+    "version": "2.4.6",
+    "config": "src/minisweagent/config/benchmarks/swebench.yaml",
+    "config_git_blob": "106decd160e72e5164e29d15d23da354c29c309d",
+    "runner": "src/minisweagent/run/benchmarks/swebench.py",
+    "environment": "minisweagent.environments.docker.DockerEnvironment",
+    "verifier_authority": "swebench.harness.run_evaluation"
+  },
+  "codepro": {
+    "qualification_worktree": "D:/projetos/codepro-qv2",
+    "qualification_commit": "eb8ec36337c0b936d869c2bf49d2e062a5935e4a",
+    "historical_checkout": "D:/projetos/arkx",
+    "baseline_codepro_logic": "disabled",
+    "provider_called_during_audit": false
+  },
+  "evidence": [
+    {
+      "reference_repository": "SWE-agent/mini-swe-agent",
+      "reference_commit": "a83fcae82d2a08f0ee0c688f9d137b3566c097f8",
+      "reference_config": "src/minisweagent/config/benchmarks/swebench.yaml",
+      "benchmark_result": "BENCHMARK_RESULT_PROVEN",
+      "codepro_path": "experiments/integrations/minisweagent/preflight.py",
+      "classification": "REFERENCE_MIRROR",
+      "differences": [],
+      "materiality": "low",
+      "evidence": ["git blob identity", "provider-free preflight"],
+      "next_experiment": "none"
+    },
+    {
+      "reference_repository": "Docker Desktop",
+      "reference_commit": null,
+      "reference_config": "python:3.11 probe image",
+      "benchmark_result": "REPRODUCTION_PATH_DOCUMENTED",
+      "codepro_path": "logs/architecture/qualification-v2-linux-container-probe-1.json",
+      "classification": "REFERENCE_DERIVED",
+      "differences": ["probe image is not the SWE-bench task image"],
+      "materiality": "high",
+      "evidence": ["3/3 container probes passed", "Linux daemon", "no residual probe containers"],
+      "next_experiment": "probe exact SWE-bench image provider-free"
+    },
+    {
+      "reference_repository": "SWE-agent/mini-swe-agent",
+      "reference_commit": "a83fcae82d2a08f0ee0c688f9d137b3566c097f8",
+      "reference_config": "DockerEnvironment / python:3.11 control",
+      "benchmark_result": "REPRODUCTION_PATH_DOCUMENTED",
+      "codepro_path": ".tmp/mini-docker-environment-summary.json",
+      "classification": "SUBSTRATE_MISMATCH",
+      "differences": ["Windows host", "intermittent docker exec failure", "upstream cleanup residuals"],
+      "materiality": "high",
+      "evidence": ["1 complete run", "2 unstable runs", "manual cleanup required"],
+      "next_experiment": "exact SWE-bench image and environment control"
+    },
+    {
+      "reference_repository": "SWE-agent/mini-swe-agent",
+      "reference_commit": "a83fcae82d2a08f0ee0c688f9d137b3566c097f8",
+      "reference_config": "bundled swebench.yaml",
+      "benchmark_result": "EVIDENCE_NOT_FOUND",
+      "codepro_path": "Qualification Run v1 / Gate B",
+      "classification": "AUDIT_REQUIRED",
+      "differences": ["no complete task", "no patch", "official verifier not executed"],
+      "materiality": "high",
+      "evidence": ["Gate B BLOCKED", "verifier NOT_EXECUTED"],
+      "next_experiment": "provider-free exact task substrate, then one frozen provider run"
+    }
+  ],
+  "subsystems": {
+    "environment": "SUBSTRATE_MISMATCH",
+    "runner": "AUDIT_REQUIRED",
+    "agent": "SEMANTIC_MISMATCH",
+    "prompt": "CONFIG_DRIFT",
+    "tools": "AUDIT_REQUIRED",
+    "model_adapter": "SEMANTIC_MISMATCH",
+    "provider": "CONFIG_DRIFT",
+    "retry": "SEMANTIC_MISMATCH",
+    "timeout": "CONFIG_DRIFT",
+    "context": "CODEPRO_ORIGINAL",
+    "compaction": "SYNTHETIC_ONLY",
+    "routing": "CODEPRO_ORIGINAL",
+    "planning": "CODEPRO_ORIGINAL",
+    "recovery": "CODEPRO_ORIGINAL",
+    "handoff": "CODEPRO_ORIGINAL",
+    "patch_extraction": "AUDIT_REQUIRED",
+    "verifier": "SEMANTIC_MISMATCH",
+    "dataset": "AUDIT_REQUIRED",
+    "instrumentation": "AUDIT_REQUIRED",
+    "governance": "REFERENCE_DERIVED",
+    "acceptance": "SEMANTIC_MISMATCH",
+    "promotion": "PROMOTION_NOT_AUTHORIZED"
+  },
+  "baseline_allowed": ["REFERENCE_MIRROR", "REFERENCE_DERIVED"],
+  "baseline_excluded": ["SUBSTRATE_MISMATCH", "SEMANTIC_MISMATCH", "CONFIG_DRIFT", "SYNTHETIC_ONLY", "CODEPRO_ORIGINAL", "AUDIT_REQUIRED"],
+  "next_gate": "provider-free exact SWE-bench DockerEnvironment and official verifier control"
+}
