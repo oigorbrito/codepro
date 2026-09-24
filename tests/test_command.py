@@ -193,6 +193,46 @@ class LocalCommandEnvironmentTests(unittest.TestCase):
                 "timed-out command left a live child process",
             )
 
+    def test_result_rejects_impossible_state_combinations(self):
+        with self.assertRaises(ValueError):
+            CommandResult(
+                argv=("example",),
+                cwd="/tmp/example",
+                exit_code=None,
+                stdout="",
+                stderr="",
+                timed_out=False,
+                duration_ms=1,
+            )
+        with self.assertRaises(ValueError):
+            CommandResult(
+                argv=("example",),
+                cwd="/tmp/example",
+                exit_code=2,
+                stdout="",
+                stderr="",
+                timed_out=False,
+                duration_ms=1,
+                environment_error=__import__("arkx.command", fromlist=["CommandEnvironmentError"]).CommandEnvironmentError(
+                    EnvironmentErrorKind.EXECUTABLE_NOT_FOUND,
+                    "missing",
+                ),
+            )
+        with self.assertRaises(ValueError):
+            CommandResult(
+                argv=("example",),
+                cwd="/tmp/example",
+                exit_code=None,
+                stdout="",
+                stderr="",
+                timed_out=False,
+                duration_ms=1,
+                environment_error=__import__("arkx.command", fromlist=["CommandEnvironmentError"]).CommandEnvironmentError(
+                    EnvironmentErrorKind.TERMINATION_ERROR,
+                    "cleanup",
+                ),
+            )
+
     def test_result_serialization_round_trip_preserves_observation(self):
         value = CommandResult(
             argv=("example", "--flag"),
