@@ -84,6 +84,14 @@ class ImportArchitectureTests(unittest.TestCase):
         self.assertGreaterEqual(len(graph), 20)
         assert_acyclic(self, graph)
 
+    def test_governance_does_not_depend_on_routing_or_executor_binding(self):
+        graph = internal_import_graph()
+        self.assertTrue(
+            graph["governance"].isdisjoint(
+                {"routing", "characterization", "qualification", "command", "project"}
+            )
+        )
+
     def test_qualification_binding_does_not_depend_on_routing_or_executor_names(self):
         graph = internal_import_graph()
         self.assertTrue(
