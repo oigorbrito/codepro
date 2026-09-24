@@ -58,3 +58,6 @@ MVP, mas não constituem por si só uma release operacional.
 Nenhum executor adicional, benchmark amplo ou camada arquitetural nova deve ser
 adicionada antes de M1–M3 passarem. A implementação deve preferir remover
 complexidade do caminho do MVP a criar novos pontos de extensão.
+
+O contrato detalhado de M0 está em
+[0033-mvp-vertical-contract.md](decisions/0033-mvp-vertical-contract.md).
