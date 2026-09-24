@@ -41,6 +41,28 @@ jobs:
         run: python -m arkx.baseline
         env:
           PYTHONPATH: src
+      - name: Probe command observation boundary
+        run: |
+          python - <<'PY'
+          import sys
+          from arkx.command import CommandSpec, LocalCommandEnvironment
+
+          result = LocalCommandEnvironment().execute(
+              CommandSpec(
+                  (sys.executable, "-c", "import sys; print('reproduced'); raise SystemExit(7)"),
+                  ".",
+                  5,
+              )
+          )
+          print(result.to_json())
+          assert result.exit_code == 7
+          assert result.stdout == "reproduced\n"
+          assert result.timed_out is False
+          assert result.environment_error is None
+          assert "status" not in result.to_dict()
+          PY
+        env:
+          PYTHONPATH: src
       - name: Run unit tests
         run: python -m unittest discover -s tests -t . -v
         env:
