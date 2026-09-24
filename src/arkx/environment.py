@@ -1,4 +1,4 @@
-"""Versioned execution-environment manifest for empirical Arkx runs."""
+"""Versioned execution-environment manifest for empirical CodePro runs."""
 
 from __future__ import annotations
 
