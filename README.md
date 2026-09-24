@@ -21,7 +21,9 @@ Implemented:
 - frozen Study Spec, Workload, Treatment, Measurement, Analysis, Validity, Promotion, Environment, Deviation, Failure Attribution, and Run Provenance contracts;
 - fail-closed deserialization and evidence semantics;
 - deterministic architecture, property, metamorphic, mutation-sensitivity, and cross-version verification;
-- a minimal installable CLI boundary with no runtime dependencies.
+- a minimal installable CLI boundary with no runtime dependencies;
+- a low-level command observation boundary with no task-status inference;
+- capability qualification and executor binding contracts that distinguish availability from qualification and refuse hidden ranking.
 
 Not implemented:
 
