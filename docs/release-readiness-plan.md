@@ -285,6 +285,11 @@ O plano foi auditado contra as fontes acima e contra a árvore local.
   venv limpo, `codepro --version`, `doctor --json` e `baseline` passaram, e a
   suíte passou com `372` testes, `OK`. Hash do wheel desse archive:
   `89E4C6DCA68F2BE494EC4EF2FD82AC859F6773A5DC3548B5F423BC5AF887B091`.
+- execução CI externa do commit `2206e3cb`: `BLOCKED_INFRA`. Os jobs
+  `foundation` e `packaged-cli` foram criados, mas nenhum passo iniciou; o
+  GitHub registrou falha de pagamentos recentes ou limite de spending da conta.
+  Isso não é aprovação nem reprovação funcional. A aceitação externa só pode
+  ser repetida após a correção de Billing & Plans/spending limit.
 
 ## Primeiro trabalho autorizado pelo plano
 
