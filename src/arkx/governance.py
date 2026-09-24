@@ -232,6 +232,28 @@ class GovernanceDecision:
             "reasons",
             tuple(sorted(set(self.reasons), key=lambda item: item.value)),
         )
+        object.__setattr__(self, "grant_id", _optional_nonblank("grant_id", self.grant_id))
+        object.__setattr__(
+            self,
+            "authority_ref",
+            _optional_nonblank("authority_ref", self.authority_ref),
+        )
+        object.__setattr__(
+            self,
+            "authorized_scope",
+            _optional_strings("authorized_scope", self.authorized_scope),
+        )
+        object.__setattr__(
+            self,
+            "permissions",
+            _optional_strings("permissions", self.permissions),
+        )
+        if self.evidence_refs:
+            object.__setattr__(
+                self,
+                "evidence_refs",
+                _strings("evidence_refs", self.evidence_refs, allow_empty=False),
+            )
 
         if self.status is GovernanceStatus.AUTHORIZED:
             required_strings = {
@@ -248,11 +270,8 @@ class GovernanceDecision:
                 raise ValueError("AUTHORIZED requires explicit permissions")
             _positive_int("max_commands", self.max_commands)
             _positive_number("max_wall_time_seconds", self.max_wall_time_seconds)
-            object.__setattr__(
-                self,
-                "evidence_refs",
-                _strings("evidence_refs", self.evidence_refs, allow_empty=False),
-            )
+            if not self.evidence_refs:
+                raise ValueError("AUTHORIZED requires evidence_refs")
             if self.reasons != (GovernanceReason.AUTHORIZED,):
                 raise ValueError("AUTHORIZED requires the AUTHORIZED reason only")
         else:
