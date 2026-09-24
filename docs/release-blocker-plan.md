@@ -38,6 +38,11 @@ será privado, sem promessa de publicação aberta. O chassi é um gate obrigat�
 desse alvo. Privado altera a distribuição e o licenciamento público, mas não
 reduz os requisitos de funcionamento, evidência, segurança ou aceitação.
 
+O escopo operacional foi reduzido ao MVP descrito em
+[mvp-release-scope.md](mvp-release-scope.md): uma jornada vertical, um executor
+e uma classe de tarefa. A arquitetura histórica, o baseline e o CLI mínimo não
+serão confundidos com o produto operacional.
+
 ## Matriz de bloqueios
 
 | Ordem | Gate | Evidência atual | Classificação | Próxima ação | Alvo |
