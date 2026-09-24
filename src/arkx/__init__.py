@@ -59,6 +59,13 @@ from .handoff import (
     HandoffSummary,
     summarize_handoffs,
 )
+from .recovery import (
+    RecoveryAction,
+    RecoveryDecision,
+    RecoveryReason,
+    RecoveryRequest,
+    decide_recovery,
+)
 
 __all__ = [
     "__version__",
@@ -110,4 +117,9 @@ __all__ = [
     "HandoffRecord",
     "HandoffSummary",
     "summarize_handoffs",
+    "RecoveryAction",
+    "RecoveryDecision",
+    "RecoveryReason",
+    "RecoveryRequest",
+    "decide_recovery",
 ]
