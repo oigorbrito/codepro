@@ -1,0 +1,13 @@
+{
+  "fixture_type": "HANDOFF_ACCOUNTING_FIXTURE",
+  "description": "Synthetic handoff accounting scenarios; not a performance benchmark.",
+  "scenarios": [
+    "A_no_handoff",
+    "B_one_justified_handoff",
+    "C_multiple_bounded_handoffs",
+    "D_duplicated_instructions",
+    "E_discarded_lost_context",
+    "F_unknown_context_metrics",
+    "G_budget_exceeded"
+  ]
+}

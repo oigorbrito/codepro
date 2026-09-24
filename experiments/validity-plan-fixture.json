@@ -1,0 +1,67 @@
+{
+  "fixture_type": "VALIDITY_PLAN_FIXTURE",
+  "validity_plan": {
+    "schema_version": 1,
+    "validity_id": "validity-v1",
+    "workload_refs": ["workload://wave0"],
+    "target_population": "repository-level repair tasks within the declared benchmark scope",
+    "workload_representativeness_argument": "the frozen workload samples the benchmark population under treatment-independent criteria",
+    "artifact_strengths": ["explicit fail-closed evidence semantics"],
+    "artifact_weaknesses": ["rule-based routing may not fit all task distributions"],
+    "artifact_limitations": ["claims do not extend beyond the frozen benchmark population without further evidence"],
+    "state_of_art_alternative_refs": ["alternative://direct-execution"],
+    "no_alternative_justification": null,
+    "construct_mappings": [
+      {
+        "metric": "monetary_cost",
+        "construct": "resource efficiency",
+        "rationale": "provider-reported monetary cost",
+        "limitations": "provider accounting may omit external costs"
+      },
+      {
+        "metric": "verified_resolution",
+        "construct": "reliable task resolution",
+        "rationale": "independent verifier outcome",
+        "limitations": "benchmark verifier coverage is imperfect"
+      }
+    ],
+    "threats": [
+      {
+        "threat_id": "conclusion-1",
+        "dimension": "CONCLUSION",
+        "claim_at_risk": "the comparative claim",
+        "mechanism": "the stated threat can distort the observed comparison",
+        "mitigation": "freeze and report the relevant design choice",
+        "residual_risk": "generalization remains bounded to the declared scope",
+        "evidence_refs": []
+      },
+      {
+        "threat_id": "construct-1",
+        "dimension": "CONSTRUCT",
+        "claim_at_risk": "the comparative claim",
+        "mechanism": "the stated threat can distort the observed comparison",
+        "mitigation": "freeze and report the relevant design choice",
+        "residual_risk": "generalization remains bounded to the declared scope",
+        "evidence_refs": []
+      },
+      {
+        "threat_id": "external-1",
+        "dimension": "EXTERNAL",
+        "claim_at_risk": "the comparative claim",
+        "mechanism": "the stated threat can distort the observed comparison",
+        "mitigation": "freeze and report the relevant design choice",
+        "residual_risk": "generalization remains bounded to the declared scope",
+        "evidence_refs": []
+      },
+      {
+        "threat_id": "repro-1",
+        "dimension": "RELIABILITY_REPRODUCIBILITY",
+        "claim_at_risk": "the comparative claim",
+        "mechanism": "the stated threat can distort the observed comparison",
+        "mitigation": "freeze and report the relevant design choice",
+        "residual_risk": "generalization remains bounded to the declared scope",
+        "evidence_refs": []
+      }
+    ]
+  }
+}

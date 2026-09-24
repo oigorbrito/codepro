@@ -7,6 +7,19 @@ from collections.abc import Iterable
 from .contracts import ExecutionStatus
 
 
+def normalize_evidence_refs(evidence_refs: Iterable[str]) -> tuple[str, ...]:
+    """Return only explicit, non-blank evidence references."""
+
+    normalized: list[str] = []
+    for ref in evidence_refs:
+        if not isinstance(ref, str):
+            raise ValueError("evidence references must be strings")
+        value = ref.strip()
+        if value:
+            normalized.append(value)
+    return tuple(normalized)
+
+
 def resolve_status(
     requested: ExecutionStatus | str | None,
     evidence_refs: Iterable[str],
@@ -18,7 +31,7 @@ def resolve_status(
     """
 
     status = ExecutionStatus(requested) if requested is not None else ExecutionStatus.NOT_EXECUTED
-    refs = list(evidence_refs)
+    refs = normalize_evidence_refs(evidence_refs)
     if status is ExecutionStatus.PASS and not refs:
         return ExecutionStatus.UNVERIFIED
     return status

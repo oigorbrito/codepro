@@ -1,0 +1,29 @@
+{
+  "fixture_type": "TREATMENT_CONFIGURATION_FIXTURE",
+  "configuration": {
+    "schema_version": 1,
+    "configuration_id": "openrouter-mini-v1",
+    "executor_id": "mini-swe-agent-adapter",
+    "executor_version": "pinned-revision-v1",
+    "provider_id": "openrouter",
+    "model_id": "provider/model",
+    "model_revision": null,
+    "model_revision_justification": "provider exposes a stable model identifier but no immutable serving-weight revision",
+    "prompt_ref": "prompt://repair-v1",
+    "prompt_hash": "sha256:aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa",
+    "tool_surface_ref": "tools://bash-edit-test-v1",
+    "tool_surface_hash": "sha256:bbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbb",
+    "provider_routing_ref": "routing://single-provider-no-silent-switch-v1",
+    "parameters": {
+      "max_tokens": 4096,
+      "temperature": 0
+    },
+    "max_attempts": 3,
+    "timeout_seconds": 600,
+    "fallback_policy": "DISABLED",
+    "fallback_targets": [],
+    "seed_support": "UNSUPPORTED",
+    "seed": null,
+    "seed_justification": "provider endpoint does not guarantee deterministic seeding"
+  }
+}

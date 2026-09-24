@@ -1,0 +1,108 @@
+{
+  "fixture_type": "PROGRESS_DETECTION_FIXTURE",
+  "description": "Synthetic progression and stagnation sequences; not a real-world benchmark.",
+  "sequences": [
+    {
+      "id": "A_productive_progression",
+      "expected": "PROGRESS_PROVEN",
+      "previous": {
+        "useful_files": ["src/a.py"],
+        "passing_tests": [],
+        "explained_failures": [],
+        "diff_distance": 4,
+        "acceptance_distance": 3,
+        "recent_actions": ["inspect a"],
+        "failure_signatures": ["missing-test"]
+      },
+      "current": {
+        "useful_files": ["src/a.py", "tests/test_a.py"],
+        "passing_tests": ["test_a"],
+        "explained_failures": ["missing-test"],
+        "diff_distance": 3,
+        "acceptance_distance": 2,
+        "recent_actions": ["inspect a", "add test_a"],
+        "failure_signatures": ["missing-test"]
+      }
+    },
+    {
+      "id": "B_repeated_failure_without_new_evidence",
+      "expected": "NO_PROGRESS",
+      "previous": {
+        "useful_files": ["src/a.py"],
+        "passing_tests": [],
+        "explained_failures": [],
+        "diff_distance": 4,
+        "acceptance_distance": 3,
+        "recent_actions": ["run test_a"],
+        "failure_signatures": ["assertion-a"]
+      },
+      "current": {
+        "useful_files": ["src/a.py"],
+        "passing_tests": [],
+        "explained_failures": [],
+        "diff_distance": 4,
+        "acceptance_distance": 3,
+        "recent_actions": ["run test_a"],
+        "failure_signatures": ["assertion-a"]
+      }
+    },
+    {
+      "id": "C_partial_progress",
+      "expected": "PROGRESS_PROVEN",
+      "previous": {
+        "useful_files": ["src/a.py"],
+        "passing_tests": [],
+        "explained_failures": [],
+        "diff_distance": 5,
+        "acceptance_distance": 4,
+        "recent_actions": ["inspect a"],
+        "failure_signatures": ["assertion-a"]
+      },
+      "current": {
+        "useful_files": ["src/a.py", "src/contracts.py"],
+        "passing_tests": [],
+        "explained_failures": ["assertion-a"],
+        "diff_distance": 5,
+        "acceptance_distance": 4,
+        "recent_actions": ["inspect a", "inspect contracts"],
+        "failure_signatures": ["assertion-a"]
+      }
+    },
+    {
+      "id": "D_unknown_missing_telemetry",
+      "expected": "UNKNOWN",
+      "previous": null,
+      "current": {
+        "useful_files": null,
+        "passing_tests": null,
+        "explained_failures": null,
+        "diff_distance": null,
+        "acceptance_distance": null,
+        "recent_actions": null,
+        "failure_signatures": null
+      }
+    },
+    {
+      "id": "E_contradictory_signals",
+      "expected": "UNKNOWN",
+      "previous": {
+        "useful_files": [],
+        "passing_tests": [],
+        "explained_failures": [],
+        "diff_distance": -1,
+        "acceptance_distance": 1,
+        "recent_actions": [],
+        "failure_signatures": []
+      },
+      "current": {
+        "useful_files": ["src/a.py"],
+        "passing_tests": [],
+        "explained_failures": [],
+        "diff_distance": 0,
+        "acceptance_distance": 1,
+        "recent_actions": [],
+        "failure_signatures": []
+      }
+    }
+  ]
+}

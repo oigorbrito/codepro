@@ -1,0 +1,21 @@
+{
+  "fixture_type": "PROTOCOL_DEVIATION_FIXTURE",
+  "deviation": {
+    "schema_version": 1,
+    "deviation_id": "dev-001",
+    "study_spec_ref": "git:frozen-study",
+    "scope_ref": "run://001",
+    "deviation_type": "MODEL_OR_PROVIDER_SWITCH",
+    "phase": "DURING_EXECUTION",
+    "frozen_value": "provider-a/model-a",
+    "observed_value": "provider-b/model-b",
+    "reason": "provider-a unavailable",
+    "evidence_refs": [
+      "raw://provider-a-unavailable.json"
+    ],
+    "preauthorized_by_frozen_protocol": false,
+    "analysis_impact": "REQUIRES_NEW_STUDY",
+    "impact_rationale": "treatment identity changed",
+    "replacement_study_spec_ref": "git:new-frozen-study"
+  }
+}

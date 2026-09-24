@@ -3,7 +3,7 @@ from tempfile import TemporaryDirectory
 from pathlib import Path
 
 from arkx.baseline import RUN_ID, baseline_events, build_baseline_record
-from arkx.contracts import Event, EventType, ExecutionStatus
+from arkx.contracts import Event, EventType, ExecutionRecord, ExecutionStatus
 from arkx.evidence import resolve_status
 from arkx.telemetry import TelemetryCollector
 
@@ -23,6 +23,35 @@ class StatusTests(unittest.TestCase):
         self.assertEqual(resolve_status("PASS", []), ExecutionStatus.UNVERIFIED)
         record = collector([event(EventType.TASK_FINISHED, {"status": "PASS"})]).summarize()
         self.assertEqual(record.status, ExecutionStatus.UNVERIFIED)
+
+    def test_blank_evidence_cannot_become_pass(self):
+        self.assertEqual(resolve_status("PASS", ["", "   "]), ExecutionStatus.UNVERIFIED)
+        with self.assertRaises(ValueError):
+            collector([
+                event(EventType.EVIDENCE_ADDED, {"ref": "   "}),
+                event(EventType.TASK_FINISHED, {"status": "PASS"}),
+            ])
+
+    def test_evidence_cannot_be_added_after_finish(self):
+        with self.assertRaises(ValueError):
+            collector([
+                event(EventType.TASK_FINISHED, {"status": "PASS"}),
+                event(EventType.EVIDENCE_ADDED, {"ref": "evidence://late"}),
+            ])
+
+    def test_duplicate_task_boundaries_are_rejected(self):
+        with self.assertRaises(ValueError):
+            collector([
+                event(EventType.TASK_STARTED),
+                event(EventType.TASK_STARTED),
+            ])
+
+    def test_regressive_event_timestamps_are_rejected(self):
+        with self.assertRaises(ValueError):
+            collector([
+                event(EventType.TASK_STARTED, timestamp="2026-01-01T00:00:01+00:00"),
+                event(EventType.TASK_FINISHED, timestamp="2026-01-01T00:00:00+00:00"),
+            ])
 
     def test_blocked_remains_blocked(self):
         record = collector([event(EventType.TASK_FINISHED, {"status": "BLOCKED"})]).summarize()
@@ -67,6 +96,12 @@ class UnknownMeasurementTests(unittest.TestCase):
         self.assertIsNone(record.total_tokens)
         self.assertIsNone(record.monetary_cost)
 
+    def test_negative_or_non_finite_resource_measurements_are_rejected(self):
+        with self.assertRaises(ValueError):
+            collector([event(EventType.EXECUTOR_FINISHED, {"total_tokens": -1})]).summarize()
+        with self.assertRaises(ValueError):
+            collector([event(EventType.EXECUTOR_FINISHED, {"monetary_cost": float("inf")})]).summarize()
+
     def test_explicit_zero_is_preserved_as_zero(self):
         record = collector([event(EventType.EXECUTOR_FINISHED, {"total_tokens": 0, "monetary_cost": 0.0})]).summarize()
         self.assertEqual(record.total_tokens, 0)
@@ -74,6 +109,37 @@ class UnknownMeasurementTests(unittest.TestCase):
 
 
 class SerializationTests(unittest.TestCase):
+    def test_imported_record_rejects_type_coercion_and_invalid_values(self):
+        payload = build_baseline_record().to_dict()
+        for field, invalid in (
+            ("retry_count", "0"),
+            ("handoff_count", True),
+            ("wall_time_ms", -1),
+            ("monetary_cost", float("inf")),
+        ):
+            corrupted = dict(payload)
+            corrupted[field] = invalid
+            with self.assertRaises(ValueError):
+                ExecutionRecord.from_dict(corrupted)
+
+    def test_imported_record_rejects_blank_evidence_and_inverted_timestamps(self):
+        payload = build_baseline_record().to_dict()
+        corrupted = dict(payload)
+        corrupted["evidence_refs"] = ["   "]
+        with self.assertRaises(ValueError):
+            ExecutionRecord.from_dict(corrupted)
+        corrupted = dict(payload)
+        corrupted["started_at"] = "2026-01-01T00:00:01+00:00"
+        corrupted["finished_at"] = "2026-01-01T00:00:00+00:00"
+        with self.assertRaises(ValueError):
+            ExecutionRecord.from_dict(corrupted)
+
+    def test_imported_record_rejects_string_schema_version(self):
+        payload = build_baseline_record().to_dict()
+        payload["schemaVersion"] = "1"
+        with self.assertRaises(ValueError):
+            ExecutionRecord.from_dict(payload)
+
     def test_record_json_round_trip_preserves_semantics(self):
         record = build_baseline_record()
         restored = type(record).from_json(record.to_json())

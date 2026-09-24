@@ -1,0 +1,27 @@
+{
+  "fixture_type": "WORKLOAD_MANIFEST_FIXTURE",
+  "workload": {
+    "schema_version": 1,
+    "workload_id": "swebench-verified-wave0",
+    "source_ref": "benchmark://swebench-verified",
+    "source_version": "pinned-revision-v1",
+    "target_population": "repository-level software repair tasks represented by SWE-bench Verified",
+    "sampling_strategy": "FIXED_SAMPLE",
+    "selection_rule": "use the frozen verifier-qualified Wave 0 task list",
+    "selection_justification": "qualification is frozen before treatment and applies equally to all configurations",
+    "inclusion_criteria": [
+      "repository materializable",
+      "verifier executable"
+    ],
+    "exclusion_criteria": [
+      "known corrupted task"
+    ],
+    "task_refs": [
+      "task://one",
+      "task://two"
+    ],
+    "holdout_policy": "no treatment-specific task replacement; holdout membership remains frozen",
+    "task_order_policy": "FIXED",
+    "random_seed": null
+  }
+}

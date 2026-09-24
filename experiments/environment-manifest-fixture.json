@@ -1,0 +1,36 @@
+{
+  "fixture_type": "ENVIRONMENT_MANIFEST_FIXTURE",
+  "environment": {
+    "schema_version": 1,
+    "environment_id": "arkx-ci-python-3.14.7-ubuntu-24.04",
+    "operating_system": "Ubuntu",
+    "operating_system_version": "24.04",
+    "runner_image": "ubuntu-24.04",
+    "runner_image_version": "record-at-run-time",
+    "architecture": "x86_64",
+    "python_implementation": "CPython",
+    "python_version": "3.14.7",
+    "locale": "C.UTF-8",
+    "timezone": "UTC",
+    "dependency_lock_ref": null,
+    "dependency_lock_hash": null,
+    "dependency_lock_justification": "current chassis uses Python standard library only",
+    "container_image_digest": null,
+    "non_container_justification": "foundation CI uses a GitHub-hosted runner and records its image version per run",
+    "action_pins": [
+      {
+        "repository": "actions/checkout",
+        "commit_sha": "11d5960a326750d5838078e36cf38b85af677262"
+      },
+      {
+        "repository": "actions/setup-python",
+        "commit_sha": "a26af69be951a213d495a4c3e4e4022e16d87065"
+      }
+    ],
+    "hermetic": false,
+    "nonhermetic_reasons": [
+      "GitHub-hosted ubuntu-24.04 image is versioned at run time but not selected by immutable image digest"
+    ],
+    "network_policy": "network is not required by foundation tests"
+  }
+}

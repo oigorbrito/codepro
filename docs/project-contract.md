@@ -40,7 +40,9 @@ NO_SILENT_SCOPE_EXPANSION
 5. Any fallback, executor change, or scope change is explicit in the record and review.
 6. New architecture requires a decision record describing the observed need, alternatives, evidence, and rollback/removal condition.
 
-## Non-goals of this bootstrap
+## Current product boundary
 
-This repository does not yet define routing, planning, multi-agent execution, or integrations with OpenHands, ReX, mini-SWE-agent, or SWE-agent.
+This repository defines deterministic task characterization, progress assessment, rule-based routing/escalation, repository planning artifacts, patch verification, handoff accounting, and empirical-study contracts.
+
+It does not yet define multi-agent execution, concrete executor invocation/orchestration, or product integrations with OpenHands, ReX, mini-SWE-agent, SWE-agent, or other executors. Executor-specific mechanisms remain outside the core until an experiment justifies promotion.
 

@@ -10,8 +10,10 @@ REQUIRED_FILES = (
     "README.md",
     "docs/project-contract.md",
     "docs/experimental-protocol.md",
+    "docs/study-spec.md",
     "docs/architecture.md",
     "docs/decisions/0001-greenfield-bootstrap.md",
+    "docs/decisions/0008-study-spec-freeze.md",
     "experiments/README.md",
     "src/README.md",
     "tests/README.md",
@@ -49,10 +51,23 @@ def main() -> int:
         print("\n".join(f"- {invariant}" for invariant in absent))
         return 1
 
-    print(f"Foundation check passed: {len(REQUIRED_FILES)} files and {len(INVARIANTS)} invariants verified.")
+    study_doc = (ROOT / "docs/study-spec.md").read_text(encoding="utf-8")
+    study_guards = (
+        "STUDY_SPEC_FROZEN != STUDY_EXECUTED",
+        "CONTENT_HASH != TEMPORAL_PRE_REGISTRATION_PROOF",
+    )
+    absent_study = [guard for guard in study_guards if guard not in study_doc]
+    if absent_study:
+        print("Missing study-spec guards:")
+        print("\n".join(f"- {guard}" for guard in absent_study))
+        return 1
+
+    print(
+        f"Foundation check passed: {len(REQUIRED_FILES)} files, "
+        f"{len(INVARIANTS)} invariants, and {len(study_guards)} study guards verified."
+    )
     return 0
 
 
 if __name__ == "__main__":
     sys.exit(main())
-

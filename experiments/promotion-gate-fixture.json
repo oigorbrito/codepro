@@ -1,0 +1,28 @@
+{
+  "fixture_type": "PROMOTION_GATE_FIXTURE",
+  "gate": {
+    "schema_version": 1,
+    "gate_id": "routing-promotion-v1",
+    "criteria": [
+      {
+        "criterion_id": "cost-ceiling",
+        "observation_key": "median_cost_ratio",
+        "operator": "LTE",
+        "target": 1.0,
+        "rationale": "promotion requires no increase in median cost"
+      },
+      {
+        "criterion_id": "resolution-nondegradation",
+        "observation_key": "verified_resolution_delta",
+        "operator": "GTE",
+        "target": -0.01,
+        "rationale": "verified resolution may not materially degrade"
+      }
+    ],
+    "required_evidence_keys": [
+      "analysis",
+      "raw_run_completeness",
+      "validity"
+    ]
+  }
+}
