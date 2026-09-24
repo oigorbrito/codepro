@@ -1,4 +1,4 @@
-"""Structured protocol-deviation records for frozen Arkx empirical studies."""
+"""Structured protocol-deviation records for frozen CodePro empirical studies."""
 
 from __future__ import annotations
 
