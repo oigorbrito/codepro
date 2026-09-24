@@ -56,6 +56,13 @@ agent:
     - Directory or environment variable changes are not persistent. Every action is executed in a new subshell.
     - However, you can prefix any action with `MY_ENV_VAR=MY_VALUE cd /path/to/working/dir && ...` or write/load environment variables from files
 
+    Example of a CORRECT response:
+    <example_response>
+    I need to understand the Builder-related code. Let me find relevant files and check the project structure.
+
+    [Makes multiple bash tool calls: {"command": "ls -la"}, {"command": "find src -name '*.java' | grep -i builder"}, {"command": "cat README.md | head -50"}]
+    </example_response>
+
     ## Environment Details
 
     - You have a full Linux shell environment
@@ -115,6 +122,8 @@ environment:
     LESS: -R
     PIP_PROGRESS_BAR: "off"
     TQDM_DISABLE: "1"
+    # bash -c is non-login so it won't source ~/.bashrc; point BASH_ENV at it so the
+    # image's `conda activate testbed` runs (else commands use the base env, no testbed).
     BASH_ENV: /root/.bashrc
   environment_class: docker
 
@@ -132,6 +141,9 @@ model:
     <warning>
     The output of your last command was too long.
     Please try a different command that produces less output.
+    If you're looking at a file you can try use head, tail or sed to view a smaller number of lines selectively.
+    If you're using grep or find and it produced too much output, you can use a more selective search pattern.
+    If you really need to see something from the full command's output, you can redirect output to a file and then search in that file.
     </warning>
     {%- set elided_chars = output.output | length - 10000 -%}
     <output_head>
@@ -145,13 +157,26 @@ model:
     </output_tail>
     {%- endif -%}
   format_error_template: |
+    {% if finish_reason is defined and (finish_reason == "length" or (finish_reason == "tool_calls" and not has_tool_calls)) -%}
+    Your previous response reached the output token limit (finish_reason={{ finish_reason }}) before you produced a tool call, so it was cut off. Respond more concisely and finish with exactly one bash tool call. If you need to think more, do so briefly.
+    {%- else -%}
     Tool call error:
 
     <error>
     {{error}}
     </error>
 
+    Here is general guidance on how to submit correct toolcalls:
+
     Every response needs to use the 'bash' tool at least once to execute commands.
+
+    Call the bash tool with your command as the argument:
+    - Tool: bash
+    - Arguments: {"command": "your_command_here"}
+
+    If you have completed your assignment, please consult the first message about how to
+    submit your solution (you will not be able to continue working on this task after that).
+    {%- endif %}
   model_name: "anthropic/claude-sonnet-4-5-20250929"
   model_kwargs:
     drop_params: true
