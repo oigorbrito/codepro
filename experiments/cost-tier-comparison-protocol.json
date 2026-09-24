@@ -28,12 +28,14 @@
   "observations": [
     "resolved",
     "patch_validity",
-    "cost",
+    "marginal_cost",
+    "context_limit",
+    "context_used",
     "wall_time",
     "tokens",
-    "context_used",
     "calls",
     "retries",
+    "termination_reason",
     "blocked_class",
     "failure_class"
   ],

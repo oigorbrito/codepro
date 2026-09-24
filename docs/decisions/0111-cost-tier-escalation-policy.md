@@ -50,8 +50,13 @@ No candidate is silently retried on another tier during steps 3–5.
 
 Each candidate/task/replicate cell records:
 
-`task → executor → provider/model → tier → resolved → patch validity → cost →
-latency → tokens/context → calls → retries → blocked/failure class`.
+`task → executor → provider → model → tier → marginal cost → context limit →
+resolved → patch validity → latency → tokens/context used → calls → retries →
+termination reason → blocked/failure class`.
+
+`executor`, `provider`, `model`, `marginal_cost`, `context_limit`, and
+`termination_reason` are separate fields. A provider quota, context limit, or
+early termination must not be attributed to executor quality.
 
 The task revision, verifier identity, acceptance definition, environment,
 budget, instrumentation, serial order, and replicate must be frozen and
@@ -69,4 +74,3 @@ blocked rate, patch validity, or reproducibility.
 
 Until those criteria are met, this decision is a protocol and hypothesis, not
 evidence that any tier or routing policy is effective.
-
