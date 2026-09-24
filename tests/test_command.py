@@ -8,6 +8,7 @@ import time
 import unittest
 
 from arkx.command import (
+    CommandEnvironmentError,
     CommandResult,
     CommandSpec,
     EnvironmentErrorKind,
@@ -213,7 +214,7 @@ class LocalCommandEnvironmentTests(unittest.TestCase):
                 stderr="",
                 timed_out=False,
                 duration_ms=1,
-                environment_error=__import__("arkx.command", fromlist=["CommandEnvironmentError"]).CommandEnvironmentError(
+                environment_error=CommandEnvironmentError(
                     EnvironmentErrorKind.EXECUTABLE_NOT_FOUND,
                     "missing",
                 ),
@@ -227,7 +228,7 @@ class LocalCommandEnvironmentTests(unittest.TestCase):
                 stderr="",
                 timed_out=False,
                 duration_ms=1,
-                environment_error=__import__("arkx.command", fromlist=["CommandEnvironmentError"]).CommandEnvironmentError(
+                environment_error=CommandEnvironmentError(
                     EnvironmentErrorKind.TERMINATION_ERROR,
                     "cleanup",
                 ),
