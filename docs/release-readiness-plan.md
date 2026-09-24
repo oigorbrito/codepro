@@ -313,12 +313,18 @@ O plano foi auditado contra as fontes acima e contra a árvore local.
   metadados inválidos. O focused suite de verification passou `14/14` e a
   suíte completa passou `375` testes. Esses campos tornam o verificador
   auditável; ainda precisam ser preenchidos por uma execução real no M1.
+- boundary neutro de verificação implementado: `run_verification_command`
+  executa argv declarado com `shell=False`, workspace existente e timeout;
+  captura stdout/stderr, exit code e duração, e classifica timeout, executável
+  ausente e erro de invocação como `UNKNOWN` explícito. Testes focados: `5/5`;
+  suíte completa: `380` testes, `OK`. Isso fecha parte do verificador do
+  chassi, mas a persistência da evidência e o vínculo a um executor real ainda
+  pertencem ao M1.
 
 ## Primeiro trabalho autorizado pelo plano
 
-O próximo trabalho é a aceitação independente de G1 e a definição do
-entrypoint público do chassi. O empacotamento já tem evidência local, mas ainda
-não é `ACCEPTED` nem `PROMOTED`. O fluxo G3 não deve ser reaproveitado por
-cherry-pick cego: seus contratos precisam ser adaptados aos módulos atuais e
-testados em instalação limpa. Nenhuma alegação de executor ou release de
-produto será feita antes desses gates.
+O próximo trabalho é fechar M0/M1 do MVP: ligar request autorizado, workspace,
+executor escolhido, verificador neutro e persistência de evidência em uma
+jornada real. A aceitação independente, CI externo e promoção continuam
+obrigatórios antes de qualquer release. Nenhuma alegação de executor ou
+release de produto será feita antes desses gates.
