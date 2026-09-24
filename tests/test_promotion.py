@@ -159,6 +159,12 @@ class DecisionTests(unittest.TestCase):
                 reviewer="reviewer",
                 rationale="status declaration must not replace canonical evaluation",
                 evidence_refs=("analysis://x",),
+                acceptance_decision=accepted_acceptance(),
+                acceptance_ref="acceptance://record-1",
+                component_ref="component://routing",
+                path_refs=("src/arkx/routing.py",),
+                configuration_ref="config://trial-a",
+                study_evidence_refs=("study://run-1",),
             )
 
     def test_decision_rejects_blank_evidence_reference(self):
