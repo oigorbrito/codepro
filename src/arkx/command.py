@@ -175,6 +175,23 @@ class CommandResult:
             self.environment_error, CommandEnvironmentError
         ):
             raise ValueError("environment_error must be a CommandEnvironmentError")
+        launch_error_kinds = {
+            EnvironmentErrorKind.CWD_UNAVAILABLE,
+            EnvironmentErrorKind.EXECUTABLE_NOT_FOUND,
+            EnvironmentErrorKind.PERMISSION_DENIED,
+            EnvironmentErrorKind.OS_ERROR,
+        }
+        if self.environment_error is None and self.exit_code is None:
+            raise ValueError("completed command observation requires an exit_code")
+        if self.environment_error is not None and self.environment_error.kind in launch_error_kinds:
+            if self.exit_code is not None or self.timed_out:
+                raise ValueError("launch errors cannot also report process exit or timeout")
+        if (
+            self.environment_error is not None
+            and self.environment_error.kind is EnvironmentErrorKind.TERMINATION_ERROR
+            and not self.timed_out
+        ):
+            raise ValueError("termination errors require timed_out=true")
         if isinstance(self.schema_version, bool) or self.schema_version != SCHEMA_VERSION:
             raise ValueError(f"Unsupported command result schema: {self.schema_version}")
 
