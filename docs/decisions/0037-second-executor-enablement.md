@@ -49,6 +49,15 @@ The latest read-only collection found:
 - OpenRouter boundary: `UNKNOWN` because provider/configuration identity is not
   frozen for the current run.
 
+Additional installed candidates were checked on 2026-09-24. Claude Code was
+blocked by missing login, OpenCode was blocked while spawning its server, and
+Aider was blocked by local application-control policy. Codex was not counted
+because it is the controlling agent, not an independent comparator. Raw output
+is preserved in
+`logs/architecture/second-executor-preflight-20260924.json`; the attempted
+qualification is recorded as `BLOCKED` in
+`logs/qualification/executor-qualification-v1-20260924.json`.
+
 These observations are infrastructure evidence. They do not qualify a second
 executor and do not authorize a paired benchmark.
 
@@ -58,4 +67,3 @@ When the evidence above exists, run `Executor Qualification v1` unchanged:
 same frozen task set, revisions, verifier, instrumentation, budget,
 replicates, and serial order. Only after that run produces complete comparable
 cells may `Baseline v1` begin. Routing remains out of scope until then.
-

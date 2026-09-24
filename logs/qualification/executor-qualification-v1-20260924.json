@@ -1,0 +1,23 @@
+{
+  "project": "Codepro",
+  "run_id": "executor-qualification-v1-20260924",
+  "protocol": "0035-executor-qualification-v1-paired-protocol",
+  "status": "BLOCKED",
+  "executed": false,
+  "reason": "Second Executor Enablement did not complete.",
+  "required_pair": {
+    "executors": 2,
+    "task_set": "frozen",
+    "verifier": "same verifier identity",
+    "budget": "same budget",
+    "instrumentation": "same instrumentation",
+    "fallback": false
+  },
+  "evidence_ref": "logs/architecture/second-executor-preflight-20260924.json",
+  "non_promotions": [
+    "Baseline v1",
+    "routing",
+    "comparative benchmark",
+    "release qualification"
+  ]
+}

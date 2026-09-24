@@ -1,0 +1,47 @@
+{
+  "project": "Codepro",
+  "date": "2026-09-24",
+  "purpose": "Second Executor Enablement preflight",
+  "classification": "INFRASTRUCTURE_EVIDENCE_ONLY",
+  "existing_executor": {
+    "name": "mini-swe-agent",
+    "entrypoint": "mini-swe-agent.exe",
+    "status": "AVAILABLE_ENTRYPOINT",
+    "qualification": "EXISTING_PATH_ONLY"
+  },
+  "candidates": [
+    {
+      "name": "claude-code",
+      "entrypoint": "claude.exe",
+      "headless_probe": "claude -p ... --output-format json --tools \"\" --permission-prompts none --max-turns 1",
+      "observed": "Not logged in · Please run /login",
+      "status": "BLOCKED_IDENTITY"
+    },
+    {
+      "name": "opencode",
+      "version": "2.0.15",
+      "headless_probe": "opencode --help",
+      "observed": "help succeeded; models/server startup failed with EPERM while spawning opencode.exe",
+      "status": "BLOCKED_RUNTIME"
+    },
+    {
+      "name": "aider",
+      "entrypoint": "aider.exe",
+      "headless_probe": "aider --help",
+      "observed": "Application Control blocked process start",
+      "status": "BLOCKED_RUNTIME"
+    },
+    {
+      "name": "codex",
+      "entrypoint": "codex.exe",
+      "observed": "Current controlling agent; not accepted as an independent executor for this experiment",
+      "status": "NOT_COMPARABLE"
+    }
+  ],
+  "qualification_run_v1": {
+    "status": "BLOCKED",
+    "reason": "No second independent executor completed headless preflight with patch/artefact extraction, bounded execution, and the shared verifier.",
+    "next_gate": "Second Executor Enablement",
+    "downstream": ["Qualification Run v1", "Baseline v1", "routing"]
+  }
+}
