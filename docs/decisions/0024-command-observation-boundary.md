@@ -37,6 +37,7 @@ Introduce a minimal command observation boundary:
   - explicit argv tuple;
   - explicit cwd;
   - finite positive timeout;
+  - explicit `INHERIT_PROCESS` environment policy for schema v1;
   - no implicit shell.
 
 - `CommandResult`
@@ -56,7 +57,8 @@ Introduce a minimal command observation boundary:
   - direct argv execution with `shell=False`;
   - separate stdout/stderr capture;
   - process-group/session isolation where supported;
-  - timeout attempts to terminate the complete child process group.
+  - timeout attempts to terminate the complete child process group;
+  - timeout cleanup is itself bounded, avoiding an unbounded post-timeout `communicate()` wait.
 
 ## Normative invariants
 
@@ -84,8 +86,9 @@ Tests must demonstrate:
 7. timeout is distinct from non-zero exit;
 8. POSIX timeout kills child processes in the command process group;
 9. serialization is deterministic and round-trips;
-10. the repository CI can deliberately observe exit code 7 while the observation probe itself remains valid;
-11. existing mutation, property, metamorphic, fingerprint, and cross-Python checks remain green.
+10. environment inheritance is explicit in the serialized spec;
+11. the repository CI can deliberately observe exit code 7 while the observation probe itself remains valid;
+12. existing mutation, property, metamorphic, fingerprint, and cross-Python checks remain green.
 
 ## Non-goals
 
