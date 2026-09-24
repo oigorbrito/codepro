@@ -61,3 +61,9 @@ complexidade do caminho do MVP a criar novos pontos de extensão.
 
 O contrato detalhado de M0 está em
 [0033-mvp-vertical-contract.md](decisions/0033-mvp-vertical-contract.md).
+
+O inventário atual contém um candidato experimental (`p82-baseline-mini-swe-agent`),
+mas ele está `FUNCTIONAL_BUT_UNQUALIFIED`: depende de runtime externo e a
+superfície de sandbox Git Bash está bloqueada. Ele só pode entrar no MVP depois
+de preflight, identidade congelada, execução local reproduzível e aceitação;
+não é um executor adotado por existir no código.

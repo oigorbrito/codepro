@@ -55,7 +55,7 @@ serão confundidos com o produto operacional.
 | 5 | CI externo | jobs criados, mas nenhum passo iniciou por falha de Billing/spending limit | `BLOCKED_INFRA` | corrigir Billing ou configurar runner próprio | A/B |
 | 6 | Política privada e notas de release | não há política de distribuição privada nem `CHANGELOG`/release notes identificados | `PENDING_HUMAN_DECISION` | definir acesso, retenção de evidências e notas da versão | B |
 | 7 | Aceitação independente | ainda não existe decisão `ACCEPT` para a revisão candidata | `PENDING` | autoridade independente revisar evidências | A/B |
-| 8 | Executor/CLI externo | execução real é requisito do novo alvo | `NO-GO` | escolher um executor autorizado e qualificá-lo | B |
+| 8 | Executor/CLI externo | execução real é requisito; candidato P8 baseline está funcional, mas não qualificado e depende de runtime/sandbox bloqueados | `NO-GO` | escolher um executor autorizado e qualificá-lo | B |
 | 9 | Benchmark operacional | SWE-bench/provider benchmark requer executor e tarefa real | `PENDING` | executar após o fluxo operacional local passar | B |
 | 10 | Promoção | branch de auditoria diverge de `main`; sem tag/release candidate | `PENDING` | congelar revisão, revisar diff, aceitar e só então taggear | A/B |
 
