@@ -221,6 +221,10 @@ O plano foi auditado contra as fontes acima e contra a árvore local.
   executor real e ainda não é promoção para `main`.
 - escopo atual confirmado: G5 está `DEFERRED`; nenhum executor real será
   procurado, selecionado ou promovido durante a preparação do chassi.
+- decisão de escopo: integração com CLI externo permanece `PENDING`, fora do
+  acceptance atual do chassi. Isso não bloqueia a avaliação do pacote, do CLI
+  mínimo e dos contratos executor-agnostic; bloqueia qualquer release que se
+  anuncie como produto operacional capaz de executar tarefas reais.
 - G4 na implementação G3 (`ef1cf6cb`): `110` testes focados, `1` skip,
   `PASS`, cobrindo comando sem shell, governança, autorização, qualificação,
   escopo, CLI, verificação, promoção e proveniência. O foundation check também
