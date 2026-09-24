@@ -12,7 +12,7 @@ from .execution import (
 )
 from .harness import AcceptanceEvidence, ArtifactRecord, ArtifactStatus, ArtifactStore, AuditedComparison, AttemptComparison, AttemptEvidence, AttemptSnapshot, AttemptStore, ComparabilityStatus, ComparisonReport, ErrorDomain, ErrorEnvelope, ExperimentRecord, ExperimentSnapshot, LifecycleEvent, PairComparison, RecoveryLineage, RetryLineage, Retryability, RunManifest, RunState, VerificationEvidence, compare_attempt_collection, compare_attempts, derive_attempt_id, derive_experiment_identity_digest, evidence_from_snapshot, load_attempt, load_experiment_record, validate_execution_artifact_consistency, validate_experiment_record, validate_experiment_record_audited, validate_transition, write_experiment_record
 from .outcomes import AcceptanceDecision, AcceptanceResult, VerificationResult, VerificationState, validate_outcome_references
-from .verifier import VerificationErrorKind, VerificationObservation, run_verification_command
+from .verifier import CommandVerifier, VerificationEvidenceStore, VerificationErrorKind, VerificationObservation, run_verification_command
 from .request import (
     ArkxRequest,
     GovernanceDecision,

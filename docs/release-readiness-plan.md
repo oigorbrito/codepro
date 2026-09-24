@@ -317,9 +317,17 @@ O plano foi auditado contra as fontes acima e contra a árvore local.
   executa argv declarado com `shell=False`, workspace existente e timeout;
   captura stdout/stderr, exit code e duração, e classifica timeout, executável
   ausente e erro de invocação como `UNKNOWN` explícito. Testes focados: `5/5`;
-  suíte completa: `380` testes, `OK`. Isso fecha parte do verificador do
-  chassi, mas a persistência da evidência e o vínculo a um executor real ainda
-  pertencem ao M1.
+  suíte completa anterior: `380` testes, `OK`. Isso fecha a execução de
+  comando do verificador, mas o vínculo a um executor real ainda pertence ao
+  M1.
+- persistência do verificador implementada em `VerificationEvidenceStore` e
+  adaptador `CommandVerifier`: stdout/stderr, resultado e erro bruto são
+  armazenados por identidade `run_id`/teste; conteúdo divergente para a mesma
+  identidade bloqueia em vez de sobrescrever. A suíte focada do verificador e
+  da orquestração passou `32/32` em Python 3.11. A suíte completa em Python
+  3.13 continua `INDETERMINATE/ENVIRONMENT_ERROR` neste host por ACL do
+  diretório temporário (56 falhas de permissão, incluindo cleanup); isso não é
+  contado como PASS e exige repetição em um ambiente gravável.
 
 ## Primeiro trabalho autorizado pelo plano
 
