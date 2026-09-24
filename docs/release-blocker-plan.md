@@ -16,10 +16,15 @@ capacidade correspondente.
 
 ## Alvos distintos
 
-### Alvo A — Release do chassi pré-executor
+### Fundação obrigatória — Chassi pré-executor
 
-Distribuição instalável, CLI de saúde/baseline e contratos executor-agnostic.
-Não promete executar tarefas reais.
+O chassi não é um produto alternativo nem um release final. É a fundação
+obrigatória do produto operacional: distribuição instalável, contratos,
+governança, telemetria, persistência, recuperação, verificação e fronteiras
+executor-agnostic. Ele precisa estar validado antes de receber um executor.
+
+Uma versão do chassi pode ser usada internamente como artefato técnico, mas não
+será apresentada como o release do CodePro.
 
 ### Alvo B — Release operacional privado (alvo atual)
 
@@ -28,20 +33,20 @@ persistência de evidência e recuperação. Exige executor qualificado.
 
 O estado atual pode avançar no Alvo A, mas ainda não atende ao Alvo B.
 
-Por decisão de escopo, o Alvo B passou a ser o objetivo: o primeiro release
-operacional será privado, sem promessa de publicação aberta. Privado altera a
-distribuição e o licenciamento público, mas não reduz os requisitos de
-funcionamento, evidência, segurança ou aceitação.
+Por decisão de escopo, o Alvo B é o objetivo: o primeiro release operacional
+será privado, sem promessa de publicação aberta. O chassi é um gate obrigatório
+desse alvo. Privado altera a distribuição e o licenciamento público, mas não
+reduz os requisitos de funcionamento, evidência, segurança ou aceitação.
 
 ## Matriz de bloqueios
 
 | Ordem | Gate | Evidência atual | Classificação | Próxima ação | Alvo |
 |---|---|---|---|---|---|
 | 0 | Escopo e identidade | alvo alterado para release operacional privado | `PASS` | definir contrato operacional e executor autorizado | B |
-| 1 | Empacotamento | wheel/sdist construídos, instalados em venvs limpos, hashes registrados | `PASS_LOCAL` | aceitar independentemente | A/B |
-| 2 | CLI mínimo | `version`, `doctor`, `baseline`; 5 testes focados; `run` rejeitado | `PASS_LOCAL` | confirmação externa no CI | A |
-| 3 | Núcleo determinístico | 372 testes e archive limpo passam | `PASS_LOCAL` | executar CI quando Billing estiver resolvido | A/B |
-| 4 | Artefatos de publicação | `twine check` e `pip check` passam localmente | `PASS_LOCAL` | repetir externamente e arquivar artefatos | A/B |
+| 1 | Empacotamento do chassi | wheel/sdist construídos, instalados em venvs limpos, hashes registrados | `PASS_LOCAL` | aceitar independentemente | B |
+| 2 | CLI mínimo do chassi | `version`, `doctor`, `baseline`; 5 testes focados; `run` rejeitado | `PASS_LOCAL` | confirmação externa no CI | B |
+| 3 | Núcleo determinístico do chassi | 372 testes e archive limpo passam | `PASS_LOCAL` | executar CI quando Billing estiver resolvido | B |
+| 4 | Artefatos de publicação do chassi | `twine check` e `pip check` passam localmente | `PASS_LOCAL` | repetir externamente e arquivar artefatos | B |
 | 5 | CI externo | jobs criados, mas nenhum passo iniciou por falha de Billing/spending limit | `BLOCKED_INFRA` | corrigir Billing ou configurar runner próprio | A/B |
 | 6 | Política privada e notas de release | não há política de distribuição privada nem `CHANGELOG`/release notes identificados | `PENDING_HUMAN_DECISION` | definir acesso, retenção de evidências e notas da versão | B |
 | 7 | Aceitação independente | ainda não existe decisão `ACCEPT` para a revisão candidata | `PENDING` | autoridade independente revisar evidências | A/B |
