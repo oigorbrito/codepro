@@ -228,6 +228,16 @@ class NormativeDocumentationTests(unittest.TestCase):
             "docs/study-spec.md",
             "docs/treatment-configuration.md",
             "docs/validity-plan.md",
+            "src/arkx/__main__.py",
+            "src/arkx/analysis_plan.py",
+            "src/arkx/deviation.py",
+            "src/arkx/environment.py",
+            "src/arkx/measurement.py",
+            "src/arkx/promotion.py",
+            "src/arkx/study.py",
+            "src/arkx/treatment.py",
+            "src/arkx/validity.py",
+            "src/arkx/workload.py",
         )
         for path in current_product_docs:
             with self.subTest(path=path):
