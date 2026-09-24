@@ -75,6 +75,13 @@ MUTATIONS = (
         "if False and len(candidates) > 1:",
         "tests.test_qualification",
     ),
+    Mutation(
+        "governance-ignore-scope-denial",
+        "src/arkx/governance.py",
+        "if not set(request.requested_scope).issubset(grant.authorized_scope):",
+        "if False and not set(request.requested_scope).issubset(grant.authorized_scope):",
+        "tests.test_governance",
+    ),
 )
 
 
