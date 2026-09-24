@@ -1,4 +1,4 @@
-"""Predeclared promotion gates and explicit promotion decisions for Arkx."""
+"""Predeclared promotion gates and explicit promotion decisions for CodePro."""
 
 from __future__ import annotations
 
