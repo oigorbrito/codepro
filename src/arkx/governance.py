@@ -268,6 +268,8 @@ class GovernanceDecision:
                 raise ValueError("AUTHORIZED requires non-empty authorized_scope")
             if self.permissions is None:
                 raise ValueError("AUTHORIZED requires explicit permissions")
+            if self.max_commands is None or self.max_wall_time_seconds is None:
+                raise ValueError("AUTHORIZED requires explicit execution budgets")
             _positive_int("max_commands", self.max_commands)
             _positive_number("max_wall_time_seconds", self.max_wall_time_seconds)
             if not self.evidence_refs:
