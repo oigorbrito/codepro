@@ -1,6 +1,6 @@
 """Minimal, executor-agnostic CodePro chassis exposed through the arkx namespace."""
 
-__version__ = "0.1.0"
+__version__ = "0.2.0"
 
 from .contracts import Event, EventType, ExecutionRecord, ExecutionStatus
 from .characterization import (

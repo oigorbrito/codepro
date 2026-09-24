@@ -33,6 +33,7 @@ jobs:
           codepro --help
           codepro --version
           codepro doctor
+          codepro inspect --json
           python -m arkx --help
       - name: Check foundation contract
         run: python tools/check_foundation.py

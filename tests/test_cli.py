@@ -3,11 +3,13 @@ import subprocess
 import sys
 import tomllib
 import unittest
+from unittest.mock import patch
 from contextlib import redirect_stdout
 from pathlib import Path
 
 from arkx import __version__
 from arkx.cli import main
+from arkx.project import ProjectInspection
 
 
 ROOT = Path(__file__).parents[1]
@@ -25,6 +27,7 @@ class CliFunctionTests(unittest.TestCase):
         self.assertEqual(code, 0)
         self.assertIn("usage: codepro", output)
         self.assertIn("doctor", output)
+        self.assertIn("inspect", output)
 
     def test_help_succeeds(self):
         result = subprocess.run(
@@ -56,6 +59,66 @@ class CliFunctionTests(unittest.TestCase):
         self.assertIn("python: PASS", output)
         self.assertIn("core: PASS (importable)", output)
         self.assertTrue(output.rstrip().endswith("status: PASS"))
+
+    def test_inspect_text_output_is_read_only_and_explicit(self):
+        inspection = ProjectInspection(
+            project_name="fixture",
+            project_root="/tmp/fixture",
+            git_available=True,
+            git_repository=True,
+            branch="main",
+            languages=("Python",),
+            test_surfaces=("tests",),
+            executors=(
+                ("Codex", "codex", True),
+                ("Claude Code", "claude", False),
+                ("Gemini CLI", "gemini", False),
+            ),
+        )
+        with patch("arkx.cli.inspect_project", return_value=inspection):
+            code, output = self.capture(["inspect"])
+        self.assertEqual(code, 0)
+        self.assertIn("Project: fixture", output)
+        self.assertIn("Branch: main", output)
+        self.assertIn("Languages: Python", output)
+        self.assertIn("Codex: available (codex)", output)
+        self.assertIn("Claude Code: unavailable (claude)", output)
+
+    def test_inspect_json_output_is_canonical(self):
+        inspection = ProjectInspection(
+            project_name="fixture",
+            project_root="/tmp/fixture",
+            git_available=False,
+            git_repository=False,
+            branch=None,
+            languages=(),
+            test_surfaces=(),
+            executors=(),
+        )
+        with patch("arkx.cli.inspect_project", return_value=inspection):
+            code, output = self.capture(["inspect", "--json"])
+        self.assertEqual(code, 0)
+        self.assertEqual(output.strip(), inspection.to_json())
+
+    def test_inspect_invalid_path_returns_usage_error_code(self):
+        with patch("arkx.cli.inspect_project", side_effect=ValueError("bad path")):
+            result = subprocess.run(
+                [sys.executable, "-m", "arkx", "inspect", "/definitely/not/here"],
+                cwd=ROOT,
+                text=True,
+                capture_output=True,
+                check=False,
+            )
+        # subprocess uses a separate interpreter, so exercise the function path directly too.
+        with patch("arkx.cli.inspect_project", side_effect=ValueError("bad path")):
+            output = io.StringIO()
+            error = io.StringIO()
+            with redirect_stdout(output), patch("sys.stderr", error):
+                code = main(["inspect", "/missing"])
+        self.assertEqual(code, 2)
+        self.assertEqual(output.getvalue(), "")
+        self.assertIn("codepro: error: bad path", error.getvalue())
+        self.assertEqual(result.returncode, 2)
 
     def test_invalid_command_fails_closed(self):
         result = subprocess.run(
