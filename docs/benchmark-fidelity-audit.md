@@ -113,3 +113,37 @@ Qualification Run v1 remains:
 
 The benchmark-faithful Docker substrate starts a new qualification lineage. It
 does not retroactively repair or reinterpret v1.
+
+
+## Methodology correction — prepared SWE-bench repository state
+
+Qualification v2 discovered that a local check requiring
+`prepared HEAD == instance.base_commit` was stricter than the benchmark
+semantics demonstrated by prepared SWE-bench task images.
+
+The corrected provider-free invariant is:
+
+```text
+instance.base_commit is an ancestor of prepared HEAD
+AND initial working tree is clean
+AND prepared commits are captured as provenance
+```
+
+HEAD equality is recorded but is not itself a qualification requirement.
+
+CodePro now guards this behavior in
+`experiments/integrations/minisweagent/provider_free_task_harness.py` and its
+regression tests. A non-ancestor base commit remains a material provenance
+failure.
+
+The frozen v2 audit is not rewritten. The correction is recorded in
+`docs/benchmark-fidelity-audit-v2-addendum.md` and ADR 0143.
+
+Additional benchmark-engineering rules now applied to this lineage:
+
+- record resolved container image digest/ID when the upstream runner uses a mutable tag;
+- freeze dataset revision or fingerprint where available;
+- use unique official-verifier `run_id` values for distinct predictions and controls;
+- keep the official SWE-bench verifier authoritative for resolution claims;
+- introduce provider/model only after the provider-free task environment and verifier controls pass;
+- evaluate SWE-ReX, Harbor, routing, recovery, compaction and handoff as explicit treatments, not silent reference substitutions.
