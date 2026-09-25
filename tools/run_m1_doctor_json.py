@@ -143,12 +143,12 @@ if old not in text:
     raise SystemExit("doctor function anchor not found")
 text = text.replace(old, new, 1)
 
-old = '''    if args.command == "doctor":
+old = """    if args.command == "doctor":
         return _doctor()
-'''
-new = '''    if args.command == "doctor":
+"""
+new = """    if args.command == "doctor":
         return _doctor(as_json=args.as_json)
-'''
+"""
 if old not in text:
     raise SystemExit("doctor dispatch anchor not found")
 text = text.replace(old, new, 1)
@@ -156,9 +156,9 @@ cli.write_text(text, encoding="utf-8", newline="\n")
 
 tests = Path("tests/test_cli.py")
 text = tests.read_text(encoding="utf-8")
-anchor = '''    def test_inspect_text_output_is_read_only_and_explicit(self):
-'''
-method = '''    def test_doctor_json_output_is_canonical(self):
+anchor = """    def test_inspect_text_output_is_read_only_and_explicit(self):
+"""
+method = """    def test_doctor_json_output_is_canonical(self):
         code, output = self.capture(["doctor", "--json"])
         self.assertEqual(code, 0)
         payload = json.loads(output)
@@ -172,7 +172,7 @@ method = '''    def test_doctor_json_output_is_canonical(self):
             json.dumps(payload, ensure_ascii=False, sort_keys=True, separators=(",", ":")),
         )
 
-'''
+"""
 if anchor not in text:
     raise SystemExit("test insertion anchor not found")
 text = text.replace(anchor, method + anchor, 1)
