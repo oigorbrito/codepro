@@ -278,6 +278,8 @@ def main() -> int:
             "--authority", "authority://m4-private",
             "--acceptance-authority", "acceptance://m4-pending",
             "--scope", "src",
+            "--candidate-file", "src/value.txt",
+            "--affected-component", "src",
             "--max-wall-time", "30",
             "--attempt-id", "m4-attempt-1",
             "--evidence-dir", str(evidence / "m4-run-evidence"),
