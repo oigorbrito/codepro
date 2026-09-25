@@ -4,6 +4,7 @@ import unittest
 from arkx.p82_localization import (
     LocalizationEvidenceBudget,
     TREATMENT,
+    canonicalize_repository_relative_path,
     record_localization_artifact,
 )
 
@@ -85,15 +86,47 @@ class P82LocalizationTests(unittest.TestCase):
             )
 
     def test_absolute_and_traversal_paths_are_rejected(self):
-        for path in ("C:/workspace/src/a.py", "/workspace/src/a.py", "../src/a.py", "src/../a.py"):
-            with self.subTest(path=path), self.assertRaisesRegex(ValueError, "repository-relative"):
-                record_localization_artifact(
-                    task_id="task-1",
-                    repository_revision="rev",
-                    localization_method="method-v1",
-                    candidate_files=(path,),
-                    evidence_budget=self.budget(),
-                )
+        for path in (
+            "C:/workspace/src/a.py",
+            "C:\\workspace\\src\\a.py",
+            "/workspace/src/a.py",
+            "../src/a.py",
+            "src/../a.py",
+            "\\\\server\\share\\a.py",
+            "C:foo",
+            "",
+            ".",
+            "./",
+        ):
+            with self.subTest(path=path), self.assertRaises(ValueError):
+                canonicalize_repository_relative_path(path)
+
+    def test_paths_are_canonicalized_before_deduplication(self):
+        artifact = record_localization_artifact(
+            task_id="task-1",
+            repository_revision="rev",
+            localization_method="method-v2",
+            candidate_files=("pkg\\sub\\module.py", "pkg/sub/module.py", "src/./a.py", "src/a.py"),
+            evidence_budget=self.budget(),
+        )
+        self.assertEqual(artifact.candidate_files, ("pkg/sub/module.py", "src/a.py"))
+
+    def test_canonicalization_is_deterministic_across_input_order(self):
+        left = record_localization_artifact(
+            task_id="task-1",
+            repository_revision="rev",
+            localization_method="method-v2",
+            candidate_files=("src/./a.py", "pkg\\sub\\module.py"),
+            evidence_budget=self.budget(),
+        )
+        right = record_localization_artifact(
+            task_id="task-1",
+            repository_revision="rev",
+            localization_method="method-v2",
+            candidate_files=("pkg/sub/module.py", "src/a.py"),
+            evidence_budget=self.budget(),
+        )
+        self.assertEqual(left.to_json(), right.to_json())
 
     def test_zero_budget_is_a_valid_empty_contract(self):
         artifact = record_localization_artifact(

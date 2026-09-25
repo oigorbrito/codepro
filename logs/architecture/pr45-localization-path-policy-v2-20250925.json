@@ -1,0 +1,46 @@
+{
+  "artifact": "pr45-localization-path-policy-v2",
+  "protocol": "C1_REPOSITORY_RELATIVE_PATH_V2",
+  "pr_topology": "STACKED",
+  "base_revision": "ab86a3cd",
+  "scope": {
+    "included": [
+      "src/arkx/p82_localization.py",
+      "tests/test_p82_localization.py",
+      "docs/decisions/0160-localization-path-policy-v2.md"
+    ],
+    "excluded": [
+      "filesystem_resolution",
+      "repository_search",
+      "execution",
+      "provider",
+      "runtime",
+      "config_digest",
+      "routing",
+      "fallback",
+      "agent_loop"
+    ]
+  },
+  "policy": {
+    "root_sentinel": "REJECT",
+    "drive_relative": "REJECT",
+    "separator": "NORMALIZE_POSIX",
+    "dot_segments": "NORMALIZE",
+    "semantic_duplicates": "DEDUP_AFTER_CANONICALIZATION",
+    "filesystem_access": false
+  },
+  "validation": {
+    "command": "py -3.13 -m pytest -q -p no:cacheprovider --disable-warnings tests/test_p82_localization.py",
+    "tests_passed": 9,
+    "tests_failed": 0,
+    "tests_skipped": 0,
+    "py_compile": "PASS",
+    "json_validation": "PASS",
+    "diff_check": "PASS",
+    "provider_called": false,
+    "model_called": false,
+    "runtime_called": false
+  },
+  "classification": "PATH_POLICY_V2_IMPLEMENTED",
+  "promotion": "NOT_AUTHORIZED"
+}
