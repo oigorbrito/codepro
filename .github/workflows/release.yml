@@ -1,0 +1,152 @@
+name: Release candidate evidence
+
+on:
+  workflow_dispatch:
+    inputs:
+      candidate_sha:
+        description: "Exact 40-character commit SHA to evaluate"
+        required: true
+        type: string
+
+permissions:
+  contents: read
+
+jobs:
+  evidence:
+    name: Build and evidence
+    runs-on: ubuntu-24.04
+    steps:
+      - name: Validate candidate identity
+        shell: bash
+        env:
+          CANDIDATE_SHA: ${{ inputs.candidate_sha }}
+        run: |
+          if [[ ! "$CANDIDATE_SHA" =~ ^[0-9a-fA-F]{40}$ ]]; then
+            echo "candidate_sha must be an exact 40-character commit SHA" >&2
+            exit 2
+          fi
+
+      - uses: actions/checkout@11d5960a326750d5838078e36cf38b85af677262 # checkout v4
+        with:
+          ref: ${{ inputs.candidate_sha }}
+          persist-credentials: false
+
+      - name: Verify checked-out revision
+        shell: bash
+        env:
+          CANDIDATE_SHA: ${{ inputs.candidate_sha }}
+        run: |
+          test "$(git rev-parse HEAD)" = "$CANDIDATE_SHA"
+          git status --porcelain=v1
+          test -z "$(git status --porcelain=v1)"
+
+      - uses: actions/setup-python@a26af69be951a213d495a4c3e4e4022e16d87065 # setup-python v5
+        with:
+          python-version: "3.13"
+
+      - name: Record build environment
+        shell: bash
+        run: |
+          mkdir -p release-evidence
+          python -VV | tee release-evidence/python.txt
+          python -c "import platform; print(platform.platform()); print(platform.machine())" | tee release-evidence/platform.txt
+          git rev-parse HEAD | tee release-evidence/commit.txt
+          printf 'runner_os=%s\nrunner_arch=%s\nimage_os=%s\nimage_version=%s\n'             "$RUNNER_OS" "$RUNNER_ARCH" "${ImageOS:-unknown}" "${ImageVersion:-unknown}"             | tee release-evidence/runner.txt
+
+      - name: Install release tooling
+        run: python -m pip install --disable-pip-version-check --no-input --upgrade build twine pip-audit
+
+      - name: Build distributions
+        run: python -m build
+
+      - name: Validate distribution metadata
+        run: python -m twine check dist/*
+
+      - name: Audit declared project dependencies
+        run: python -m pip_audit . --format json --output release-evidence/pip-audit.json
+
+      - name: Install and smoke-test release wheel
+        shell: bash
+        run: |
+          python -m venv release-venv
+          release-venv/bin/python -m pip install --disable-pip-version-check --no-input --no-deps dist/*.whl
+          release-venv/bin/python -m pip check | tee release-evidence/pip-check.txt
+          release-venv/bin/codepro --version | tee release-evidence/codepro-version.txt
+          release-venv/bin/codepro --help > release-evidence/codepro-help.txt
+          release-venv/bin/codepro doctor --json > release-evidence/doctor.json
+          release-venv/bin/codepro inspect --json > release-evidence/inspect.json
+
+      - name: Run repository verification on exact SHA
+        shell: bash
+        run: |
+          python tools/check_foundation.py | tee release-evidence/foundation.txt
+          PYTHONPATH=src python -m unittest discover -s tests -t . -v 2>&1 | tee release-evidence/unit-tests.txt
+          PYTHONPATH=src python tools/mutation_probe.py | tee release-evidence/mutation-probe.txt
+          PYTHONPATH=src python tools/chassis_fingerprint.py | tee release-evidence/chassis-fingerprint.txt
+
+      - name: Hash release artifacts
+        shell: bash
+        run: |
+          sha256sum dist/* | tee release-evidence/SHA256SUMS
+          python - <<'PY' > release-evidence/package-metadata.json
+          import json
+          import pathlib
+          import zipfile
+
+          wheels = sorted(pathlib.Path("dist").glob("*.whl"))
+          if len(wheels) != 1:
+              raise SystemExit(f"expected exactly one wheel, found {len(wheels)}")
+          with zipfile.ZipFile(wheels[0]) as zf:
+              metadata_name = next(n for n in zf.namelist() if n.endswith(".dist-info/METADATA"))
+              metadata = zf.read(metadata_name).decode("utf-8")
+          fields = {}
+          for line in metadata.splitlines():
+              if line.startswith(("Name: ", "Version: ", "Requires-Python: ")):
+                  key, value = line.split(": ", 1)
+                  fields[key] = value
+          print(json.dumps(fields, sort_keys=True, indent=2))
+          PY
+
+      - name: Upload release evidence
+        uses: actions/upload-artifact@ea165f8d65b6e75b540449e92b4886f43607fa02 # upload-artifact v4
+        with:
+          name: codepro-release-candidate-${{ inputs.candidate_sha }}
+          if-no-files-found: error
+          retention-days: 30
+          path: |
+            dist/*
+            release-evidence/*
+
+  compatibility:
+    name: Installed wheel / Python ${{ matrix.python-version }}
+    needs: evidence
+    runs-on: ubuntu-24.04
+    strategy:
+      fail-fast: false
+      matrix:
+        python-version: ["3.12", "3.13", "3.14"]
+    steps:
+      - uses: actions/checkout@11d5960a326750d5838078e36cf38b85af677262 # checkout v4
+        with:
+          ref: ${{ inputs.candidate_sha }}
+          persist-credentials: false
+
+      - uses: actions/setup-python@a26af69be951a213d495a4c3e4e4022e16d87065 # setup-python v5
+        with:
+          python-version: ${{ matrix.python-version }}
+
+      - name: Build exact candidate
+        run: |
+          python -m pip install --disable-pip-version-check --no-input --upgrade build
+          python -m build --wheel
+
+      - name: Install wheel without checkout import path
+        shell: bash
+        run: |
+          python -m venv installed
+          installed/bin/python -m pip install --disable-pip-version-check --no-input --no-deps dist/*.whl
+          installed/bin/python -m pip check
+          installed/bin/codepro --version
+          installed/bin/codepro doctor --json
+          installed/bin/codepro inspect --json
+          (cd /tmp && "$GITHUB_WORKSPACE/installed/bin/python" -c "import arkx; print(arkx.__version__)")
