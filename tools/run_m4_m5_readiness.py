@@ -280,6 +280,7 @@ def main() -> int:
             "--scope", "src",
             "--candidate-file", "src/value.txt",
             "--affected-component", "src",
+            "--characterization-source-ref", "evidence://m4-private-use-task",
             "--max-wall-time", "30",
             "--attempt-id", "m4-attempt-1",
             "--evidence-dir", str(evidence / "m4-run-evidence"),
