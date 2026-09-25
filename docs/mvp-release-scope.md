@@ -50,8 +50,8 @@ MVP, mas não constituem por si só uma release operacional.
 | M1 | uma execução real ponta a ponta | `ACCEPTED` |
 | M2 | timeout, falha e ambiente indisponível sem falso sucesso | `VALIDATED` |
 | M3 | repetição controlada com identidade e evidência | `VALIDATED` |
-| M4 | instalação privada e uso por um usuário autorizado | `PENDING` |
-| M5 | aceitação independente e release candidate | `PENDING` |
+| M4 | instalação privada e uso por um usuário autorizado | `IMPLEMENTED_NOT_EXECUTED` |
+| M5 | aceitação independente e release candidate | `IMPLEMENTED_NOT_EXECUTED` |
 
 Nenhum executor adicional, benchmark amplo ou camada arquitetural nova deve ser
 adicionada antes de M1–M3 passarem. A implementação deve preferir remover
@@ -142,3 +142,35 @@ M3:
 
 This closes M2 and M3 at local validation scope only. It does not authorize
 executor promotion or release.
+
+
+## M4 + M5 readiness block
+
+Runner: `tools/run_m4_m5_readiness.py`.
+
+The combined block validates:
+
+```text
+M4:
+  exact candidate SHA
+  clean Python virtual environment
+  non-editable private package install
+  installed codepro console script
+  public CLI probes
+  one authorized VERIFIED vertical through installed CLI
+
+M5 readiness:
+  M1 acceptance evidence present and ACCEPTED
+  M2/M3 evidence present and VALIDATED
+  exact candidate clean checkout
+  foundation check
+  baseline
+  full unittest suite
+  mutation probe
+  chassis fingerprint
+  compileall
+```
+
+A successful result is readiness for independent release-candidate review, not
+a release authorization. Tagging, publication, executor promotion, and
+activation remain separate explicit decisions.
