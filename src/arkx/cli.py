@@ -60,6 +60,18 @@ def build_parser() -> argparse.ArgumentParser:
     run_parser.add_argument("--authority", required=True)
     run_parser.add_argument("--acceptance-authority", required=True)
     run_parser.add_argument("--scope", action="append", required=True)
+    run_parser.add_argument(
+        "--candidate-file",
+        action="append",
+        required=True,
+        help="Explicit characterization candidate file; does not expand authorized scope.",
+    )
+    run_parser.add_argument(
+        "--affected-component",
+        action="append",
+        required=True,
+        help="Explicit characterized component; separate from authorization scope.",
+    )
     run_parser.add_argument("--max-wall-time", type=float, default=300.0)
     run_parser.add_argument(
         "--attempt-id",
@@ -160,6 +172,8 @@ def _run(args: argparse.Namespace) -> int:
             executor_argv=tuple(executor_argv),
             verifier_argv=tuple(verifier_argv),
             evidence_dir=args.evidence_dir,
+            candidate_files=tuple(args.candidate_file),
+            affected_components=tuple(args.affected_component),
             max_wall_time_seconds=args.max_wall_time,
             attempt_id=args.attempt_id,
         )
