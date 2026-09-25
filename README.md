@@ -32,7 +32,7 @@ Not implemented:
 - multi-agent runtime;
 - product integrations with Codex, Claude Code, Gemini CLI, mini-SWE-agent, SWE-agent, OpenHands, ReX, or other executors;
 - interactive TUI;
-- CLI task execution.
+- qualified external coding-model executor integration.
 
 Executor-specific mechanisms remain outside the core until an experiment justifies promotion.
 
@@ -52,6 +52,7 @@ codepro --version
 codepro doctor
 codepro inspect
 codepro inspect --json
+codepro run --help
 ```
 
 The equivalent module entrypoint is:
@@ -64,7 +65,9 @@ The public product command is `codepro`. The Python implementation namespace rem
 
 Running `codepro` with no arguments prints help and performs no task execution.
 
-`codepro inspect` is observational only. It may invoke read-only Git queries and inspect filesystem markers/PATH, but it does not modify the repository, select an executor, or execute a task.
+`codepro inspect` is observational only. It may invoke read-only Git queries and inspect filesystem markers/PATH.
+
+`codepro run` is the minimal operational execution surface. It requires an exact clean Git revision, explicit authority/scope/budget, one caller-supplied executor argv, and one declared verifier argv. It uses no shell interpretation, performs no automatic executor selection or fallback, and persists a non-overwriting evidence record.
 
 The internal command primitive is also observational: a process exit code, timeout, or environment error is recorded as raw execution evidence. It does not infer task success/failure, verification, acceptance, or promotion.
 
