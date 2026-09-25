@@ -303,6 +303,58 @@ class VerticalRunTests(unittest.TestCase):
                 {"src/value.txt", "src/value with space.txt"},
             )
 
+    def test_untracked_file_is_in_complete_patch_without_staging_real_index(self):
+        with tempfile.TemporaryDirectory() as tmp:
+            root = Path(tmp) / "repo"
+            root.mkdir()
+            revision = self.init_repo(root)
+            result = run_vertical(
+                workspace=root,
+                revision=revision,
+                request_id="request-untracked-patch",
+                task_id="task-untracked-patch",
+                requester_ref="user://fixture",
+                authority_ref="authority://fixture",
+                acceptance_authority_ref="acceptance://reviewer",
+                scope=("src",),
+                executor_argv=(
+                    sys.executable,
+                    "-c",
+                    "from pathlib import Path; Path('src/new file.txt').write_text('new content\\n', encoding='utf-8')",
+                ),
+                verifier_argv=(
+                    sys.executable,
+                    "-c",
+                    "from pathlib import Path; raise SystemExit(0 if Path('src/new file.txt').read_text(encoding='utf-8') == 'new content\\n' else 1)",
+                ),
+                evidence_dir=Path(tmp) / "evidence",
+            )
+            self.assertEqual(result.status, VerticalRunStatus.VERIFIED)
+            patch_text = (Path(result.evidence_root) / "workspace.patch").read_text(
+                encoding="utf-8"
+            )
+            self.assertIn("new file mode", patch_text)
+            self.assertIn("src/new file.txt", patch_text)
+            self.assertIn("+new content", patch_text)
+
+            cached = subprocess.run(
+                ["git", "diff", "--cached", "--name-only"],
+                cwd=root,
+                check=True,
+                capture_output=True,
+                text=True,
+            )
+            self.assertEqual(cached.stdout.strip(), "")
+
+            status = subprocess.run(
+                ["git", "status", "--porcelain=v1", "--untracked-files=all"],
+                cwd=root,
+                check=True,
+                capture_output=True,
+                text=True,
+            )
+            self.assertIn("?? src/new file.txt", status.stdout)
+
 
 if __name__ == "__main__":
     unittest.main()
