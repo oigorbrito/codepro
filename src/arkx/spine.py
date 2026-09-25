@@ -252,7 +252,10 @@ def execute_governed(
     normalized_signals = signals.normalized()
     if (
         normalized_signals.candidate_files is not None
-        and not set(normalized_signals.candidate_files).issubset(request.requested_scope)
+        and any(
+            not _path_within_requested_scope(path, request.requested_scope)
+            for path in normalized_signals.candidate_files
+        )
     ):
         return _record(
             request,
@@ -481,6 +484,15 @@ def _record(
         capability_requirement=capability_requirement,
         binding=binding,
         command_result=command_result,
+    )
+
+
+def _path_within_requested_scope(path: str, requested_scope: tuple[str, ...]) -> bool:
+    normalized = path.replace("\\", "/").strip("/")
+    return any(
+        normalized == allowed.replace("\\", "/").strip("/")
+        or normalized.startswith(allowed.replace("\\", "/").strip("/").rstrip("/") + "/")
+        for allowed in requested_scope
     )
 
 
