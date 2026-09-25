@@ -72,6 +72,11 @@ def build_parser() -> argparse.ArgumentParser:
         required=True,
         help="Explicit characterized component; separate from authorization scope.",
     )
+    run_parser.add_argument(
+        "--characterization-source-ref",
+        required=True,
+        help="Evidence/provenance reference for the explicit characterization inputs.",
+    )
     run_parser.add_argument("--max-wall-time", type=float, default=300.0)
     run_parser.add_argument(
         "--attempt-id",
@@ -174,6 +179,7 @@ def _run(args: argparse.Namespace) -> int:
             evidence_dir=args.evidence_dir,
             candidate_files=tuple(args.candidate_file),
             affected_components=tuple(args.affected_component),
+            characterization_source_ref=args.characterization_source_ref,
             max_wall_time_seconds=args.max_wall_time,
             attempt_id=args.attempt_id,
         )
