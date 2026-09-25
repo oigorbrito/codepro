@@ -81,14 +81,16 @@ class ProviderFreeTaskHarnessTests(unittest.TestCase):
             "error": None,
         }
 
-        with patch.object(harness, "_container_absent", side_effect=[(False, running), (True, absent)]), patch.object(
+        with patch.object(harness, "_container_absent", return_value=(True, absent)), patch.object(
             harness, "_run", return_value=removed
-        ):
+        ) as run_mock:
             result = harness._cleanup_with_fallback(
                 Env(),
                 grace_seconds=0,
                 poll_seconds=0,
             )
+
+        run_mock.assert_called_once_with(["docker", "rm", "-f", "abc123"], timeout=60)
 
         self.assertEqual(result["status"], "PASS")
         self.assertEqual(result["mode"], "CODEPRO_FORCED_DOCKER_RM")
