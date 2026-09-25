@@ -51,6 +51,24 @@ class P82LocalizationTests(unittest.TestCase):
                 evidence_budget=self.budget(),
             )
 
+    def test_symbol_and_context_overflow_are_rejected(self):
+        with self.assertRaisesRegex(ValueError, "symbol count"):
+            record_localization_artifact(
+                task_id="task-1",
+                repository_revision="rev",
+                localization_method="method-v1",
+                candidate_symbols=("A", "B", "C", "D"),
+                evidence_budget=self.budget(),
+            )
+        with self.assertRaisesRegex(ValueError, "context line count"):
+            record_localization_artifact(
+                task_id="task-1",
+                repository_revision="rev",
+                localization_method="method-v1",
+                context_lines_used=21,
+                evidence_budget=self.budget(),
+            )
+
     def test_authoritative_candidates_are_rejected(self):
         with self.assertRaisesRegex(ValueError, "non-authoritative"):
             from arkx.p82_localization import LocalizationArtifact
