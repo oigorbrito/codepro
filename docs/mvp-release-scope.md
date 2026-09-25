@@ -2,9 +2,7 @@
 
 ## Decisão
 
-O produto está em MVP. O objetivo não é publicar a arquitetura acumulada nem
-preservar uma solução provisória como se fosse produto. O objetivo é provar uma
-única jornada operacional vertical, privada e reproduzível.
+O alvo imediato é um MVP operacional. O repositório ainda não deve ser classificado como MVP somente porque a jornada foi implementada; o objetivo é provar uma única jornada operacional vertical, privada e reproduzível.
 
 ## Regra contra gambiarra
 
@@ -48,8 +46,8 @@ MVP, mas não constituem por si só uma release operacional.
 
 | Gate | Critério | Estado inicial |
 |---|---|---|
-| M0 | contrato de uma tarefa, executor, ambiente e aceitação | `PENDING` |
-| M1 | uma execução real ponta a ponta | `NO-GO` |
+| M0 | contrato de uma tarefa, executor, ambiente e aceitação | `IMPLEMENTED_NOT_EXECUTED` |
+| M1 | uma execução real ponta a ponta | `NOT_EXECUTED` |
 | M2 | timeout, falha e ambiente indisponível sem falso sucesso | `PENDING` |
 | M3 | repetição controlada com identidade e evidência | `PENDING` |
 | M4 | instalação privada e uso por um usuário autorizado | `PENDING` |
@@ -67,3 +65,27 @@ mas ele está `FUNCTIONAL_BUT_UNQUALIFIED`: depende de runtime externo e a
 superfície de sandbox Git Bash está bloqueada. Ele só pode entrar no MVP depois
 de preflight, identidade congelada, execução local reproduzível e aceitação;
 não é um executor adotado por existir no código.
+
+
+## Implementação atual da jornada vertical
+
+A superfície mínima `codepro run` está implementada, mas ainda requer execução
+mecânica e evidência antes de qualquer gate ser promovido.
+
+O caminho atual é deliberadamente estreito:
+
+```text
+request + authority
+-> exact clean Git revision
+-> one explicit local-command executor
+-> bounded shell-free command
+-> changed-file scope check
+-> declared verifier
+-> append-only evidence
+-> explicit terminal result
+```
+
+A implementação não seleciona Codex/Claude/Gemini, não chama provider/model e
+não faz fallback. Um executor externo pode ser colocado explicitamente no
+`argv` somente depois de sua identidade/qualificação ser declarada para o
+experimento correspondente.
