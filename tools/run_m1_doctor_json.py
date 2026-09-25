@@ -202,6 +202,7 @@ def main() -> int:
     parser = argparse.ArgumentParser()
     parser.add_argument("--target-workspace", required=True, type=Path)
     parser.add_argument("--evidence-root", required=True, type=Path)
+    parser.add_argument("--attempt-id", default="attempt-1")
     args = parser.parse_args()
 
     target = args.target_workspace.expanduser().resolve()
@@ -218,6 +219,7 @@ def main() -> int:
         "target_base_sha": TARGET_BASE_SHA,
         "target_workspace": str(target),
         "evidence_root": str(evidence),
+        "attempt_id": args.attempt_id,
         "provider_called": False,
         "model_called": False,
         "executor": {
@@ -299,6 +301,8 @@ def main() -> int:
         "tests/test_cli.py",
         "--max-wall-time",
         "120",
+        "--attempt-id",
+        args.attempt_id,
         "--evidence-dir",
         str(evidence / "run-evidence"),
         "--verifier-argv-json",
