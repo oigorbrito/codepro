@@ -1,4 +1,4 @@
-# Decision 0034 — Neutral verifier command boundary
+# Decision 0115 — Neutral verifier command boundary
 
 ## Status
 

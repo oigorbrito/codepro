@@ -261,7 +261,7 @@ O plano foi auditado contra as fontes acima e contra a árvore local.
   com `TEMP` controlado. A execução sem esse controle teve `49` erros de ACL;
   foi classificada como limitação de ambiente e não como aprovação.
 - implementação inicial do limite G1 nesta linha: contrato registrado em
-  `docs/decisions/0031-package-boundary-and-distribution.md`, distribuição
+  `docs/decisions/0112-package-boundary-and-distribution.md`, distribuição
   `codepro==0.3.0.dev0`, namespace `arkx`, sem dependências de runtime. Em
   Python 3.13, wheel e sdist foram construídos; o wheel foi instalado em venv
   limpo sem `PYTHONPATH`, `arkx` importou, o baseline passou, o foundation

@@ -1,0 +1,20 @@
+{
+  "decision": "0153",
+  "date": "2026-09-25",
+  "root": "logs/",
+  "files": 29101,
+  "bytes": 569137454,
+  "workspace_files": 26488,
+  "workspace_bytes": 452922069,
+  "nested_git_files": 127,
+  "nested_git_bytes": 80155322,
+  "tracked_log_paths": 228,
+  "tracked_log_bytes": 639036,
+  "local_only_bytes": 568498418,
+  "remote_log_bloat": false,
+  "classification": "ARCHIVE_ONLY",
+  "deletion": "NOT_EXECUTED",
+  "provider_called": false,
+  "promotion": "NOT_AUTHORIZED",
+  "next_block": "LOCAL_LOG_RETENTION_SCOPE_DECISION"
+}

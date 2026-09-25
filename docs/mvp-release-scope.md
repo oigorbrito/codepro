@@ -60,7 +60,7 @@ adicionada antes de M1–M3 passarem. A implementação deve preferir remover
 complexidade do caminho do MVP a criar novos pontos de extensão.
 
 O contrato detalhado de M0 está em
-[0033-mvp-vertical-contract.md](decisions/0033-mvp-vertical-contract.md).
+[0114-mvp-vertical-contract.md](decisions/0114-mvp-vertical-contract.md).
 
 O inventário atual contém um candidato experimental (`p82-baseline-mini-swe-agent`),
 mas ele está `FUNCTIONAL_BUT_UNQUALIFIED`: depende de runtime externo e a
