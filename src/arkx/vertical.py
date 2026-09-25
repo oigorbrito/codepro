@@ -280,6 +280,12 @@ def run_vertical(
     _write_new(run_root / "authority-grant.json", grant.to_dict())
     characterization_evidence = signals.to_dict()
     characterization_evidence["source_ref"] = normalized_source_ref
+    characterization_bundle_sha256 = _characterization_bundle_sha256(
+        normalized_candidates,
+        normalized_components,
+        normalized_source_ref,
+    )
+    characterization_evidence["bundle_sha256"] = characterization_bundle_sha256
     _write_new(run_root / "characterization-input.json", characterization_evidence)
 
     started_at = time.monotonic()
@@ -292,7 +298,9 @@ def run_vertical(
         qualifications=(qualification,),
         executor=LocalCommandInvoker(root, executor_argv),
     )
-    _write_new(run_root / "execution.json", record.to_dict())
+    execution_evidence = record.to_dict()
+    execution_evidence["characterization_bundle_sha256"] = characterization_bundle_sha256
+    _write_new(run_root / "execution.json", execution_evidence)
 
     if record.command_result is None:
         return finish(VerticalRunStatus.BLOCKED, f"EXECUTION_{record.reason.value}")
@@ -382,6 +390,25 @@ def run_vertical(
     if observation.result.status is TestResultStatus.FAILED:
         return finish(VerticalRunStatus.REJECTED, "DECLARED_VERIFIER_FAILED", changed_files)
     return finish(VerticalRunStatus.BLOCKED, "DECLARED_VERIFIER_NOT_EXECUTED_OR_UNKNOWN", changed_files)
+
+
+def _characterization_bundle_sha256(
+    candidate_files: tuple[str, ...],
+    affected_components: tuple[str, ...],
+    source_ref: str,
+) -> str:
+    payload = {
+        "candidate_files": list(candidate_files),
+        "affected_components": list(affected_components),
+        "source_ref": source_ref,
+    }
+    canonical = json.dumps(
+        payload,
+        ensure_ascii=False,
+        sort_keys=True,
+        separators=(",", ":"),
+    )
+    return hashlib.sha256(canonical.encode("utf-8")).hexdigest()
 
 
 def _run_id(
