@@ -527,8 +527,8 @@ class VerticalRunTests(unittest.TestCase):
             "evidence://observer",
         )
         reordered = _characterization_bundle_sha256(
-            tuple(sorted(("src/b.py", "src/a.py"))),
-            tuple(sorted(("core", "cli"))),
+            ("src/b.py", "src/a.py"),
+            ("core", "cli"),
             "evidence://observer",
         )
         changed_source = _characterization_bundle_sha256(
