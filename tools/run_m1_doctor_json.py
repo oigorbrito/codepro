@@ -305,6 +305,8 @@ def main() -> int:
         "tests/test_cli.py",
         "--affected-component",
         "cli",
+        "--characterization-source-ref",
+        "evidence://m1-frozen-task-definition",
         "--max-wall-time",
         "120",
         "--attempt-id",
