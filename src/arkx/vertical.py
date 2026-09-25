@@ -111,33 +111,46 @@ def run_vertical(
     run_id = _run_id(request_id, revision, tuple(executor_argv), tuple(verifier_argv))
     run_root = evidence_base / run_id
 
-    if run_root.exists():
-        raise FileExistsError(f"run evidence already exists: {run_root}")
-    run_root.mkdir(parents=True)
-
     def finish(status: VerticalRunStatus, reason: str, changed_files: tuple[str, ...] = ()) -> VerticalRunResult:
         result = VerticalRunResult(run_id, status, reason, str(run_root), changed_files)
         _write_new(run_root / "result.json", result.to_dict())
         return result
 
     if not root.is_dir():
+        run_root.mkdir(parents=True, exist_ok=False)
         return finish(VerticalRunStatus.BLOCKED, "WORKSPACE_UNAVAILABLE")
+
+    if evidence_base == root or root in evidence_base.parents:
+        raise ValueError("evidence_dir must be outside the target workspace")
+    if run_root.exists():
+        raise FileExistsError(f"run evidence already exists: {run_root}")
 
     head = _git(root, "rev-parse", "HEAD")
     if head["returncode"] != 0:
+        run_root.mkdir(parents=True)
         _write_new(run_root / "git-head.json", head)
         return finish(VerticalRunStatus.BLOCKED, "GIT_REVISION_UNAVAILABLE")
     actual_revision = head["stdout"].strip()
-    _write_new(run_root / "git-head.json", head)
     if actual_revision != revision:
+        run_root.mkdir(parents=True)
+        _write_new(run_root / "git-head.json", head)
         return finish(VerticalRunStatus.BLOCKED, "REVISION_MISMATCH")
 
     initial_status = _git(root, "status", "--porcelain=v1")
-    _write_new(run_root / "git-status-before.json", initial_status)
     if initial_status["returncode"] != 0:
+        run_root.mkdir(parents=True)
+        _write_new(run_root / "git-head.json", head)
+        _write_new(run_root / "git-status-before.json", initial_status)
         return finish(VerticalRunStatus.BLOCKED, "GIT_STATUS_UNAVAILABLE")
     if initial_status["stdout"].strip():
+        run_root.mkdir(parents=True)
+        _write_new(run_root / "git-head.json", head)
+        _write_new(run_root / "git-status-before.json", initial_status)
         return finish(VerticalRunStatus.BLOCKED, "WORKSPACE_NOT_CLEAN")
+
+    run_root.mkdir(parents=True)
+    _write_new(run_root / "git-head.json", head)
+    _write_new(run_root / "git-status-before.json", initial_status)
 
     normalized_scope = tuple(sorted(set(item.replace("\\", "/").strip("/") for item in scope if item.strip())))
     if not normalized_scope:
