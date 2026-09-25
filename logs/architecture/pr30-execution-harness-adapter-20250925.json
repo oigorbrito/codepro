@@ -1,0 +1,24 @@
+{
+  "decision": "0149",
+  "date": "2026-09-25",
+  "classification": "ADAPTER_CONTRACT_UNDEFINED",
+  "authority_disposition": "MAIN_GOVERNED_SPINE",
+  "execution_cluster_disposition": "NOT_INTEGRATED",
+  "provider_called": false,
+  "main_boundary": {
+    "symbol": "arkx.spine.BoundExecutorInvoker.invoke",
+    "result": "arkx.command.CommandResult",
+    "authority": "governed_command_observation"
+  },
+  "pr30_boundary": {
+    "symbol": "arkx.execution.Executor.execute",
+    "result": "arkx.execution.ExecutionResult",
+    "authority": "executor_lifecycle_contract"
+  },
+  "lossy_mapping_detected": [
+    "ExecutionResult_to_CommandResult_would_invent_process_observation",
+    "CommandResult_to_ExecutionResult_would_invent_task_lifecycle_and_artifacts"
+  ],
+  "promotion": "NOT_AUTHORIZED",
+  "next_block": "PR30_NON_CODE_DISPOSITION_AUDIT"
+}
