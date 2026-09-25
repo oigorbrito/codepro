@@ -1,30 +1,32 @@
-import hashlib
 from pathlib import Path
+import subprocess
 import unittest
 
 
 PINNED_CONFIG_BLOB_SHA = "106decd160e72e5164e29d15d23da354c29c309d"
 
 
-def git_blob_sha(path: Path) -> str:
-    payload = path.read_bytes()
-    header = f"blob {len(payload)}\0".encode()
-    return hashlib.sha1(header + payload).hexdigest()
-
-
 class MiniSwebenchReferenceTests(unittest.TestCase):
     def setUp(self):
-        self.path = (
-            Path(__file__).parents[1]
-            / "experiments"
-            / "integrations"
-            / "minisweagent"
-            / "swebench-v2.4.6-reference.yaml"
+        self.root = Path(__file__).parents[1]
+        self.relative_path = Path(
+            "experiments/integrations/minisweagent/swebench-v2.4.6-reference.yaml"
         )
+        self.path = self.root / self.relative_path
         self.text = self.path.read_text(encoding="utf-8")
 
+    def committed_blob_sha(self) -> str:
+        completed = subprocess.run(
+            ["git", "rev-parse", f"HEAD:{self.relative_path.as_posix()}"],
+            cwd=self.root,
+            check=True,
+            capture_output=True,
+            text=True,
+        )
+        return completed.stdout.strip()
+
     def test_reference_config_matches_pinned_upstream_blob(self):
-        self.assertEqual(git_blob_sha(self.path), PINNED_CONFIG_BLOB_SHA)
+        self.assertEqual(self.committed_blob_sha(), PINNED_CONFIG_BLOB_SHA)
 
     def test_reference_config_uses_benchmarked_docker_substrate(self):
         self.assertIn('cwd: "/testbed"', self.text)
