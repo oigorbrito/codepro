@@ -17,7 +17,36 @@ The mirrored `swebench-v2.4.6-reference.yaml` is an exact upstream reference.
 Do not edit it. Any future model/provider change must be a declared treatment
 delta.
 
-## Provider-free preflight
+## One-command local qualification
+
+On a machine with Git, Python 3.12+ and a running Docker daemon:
+
+```bash
+python tools/run_mini_v246_provider_free.py
+```
+
+The runner performs the complete provider-free block in order:
+
+1. verifies Git and Docker availability;
+2. runs the focused CodePro reference-contract tests;
+3. fetches the exact upstream mini-SWE-agent commit;
+4. verifies the exact bundled config Git blob;
+5. creates an isolated temporary Python environment;
+6. installs the pinned upstream mini-SWE-agent;
+7. runs the Docker/Linux preflight;
+8. runs one provider-free SWE-bench task environment probe;
+9. writes evidence under
+   `logs/architecture/mini-v246-provider-free-local/`.
+
+No provider/model is called.
+
+The final `runner-summary.json` is the authoritative local classification for
+this orchestration attempt. A non-zero exit is a blocked/failed gate, not a
+benchmark failure.
+
+## Provider-free preflight only
+
+For manual inspection of an already-pinned mini checkout:
 
 ```bash
 python experiments/integrations/minisweagent/preflight.py \
@@ -43,9 +72,7 @@ Checks:
 5. Docker daemon;
 6. optional Linux container execution.
 
-No provider/model is called.
-
-## Provider-free task environment
+## Provider-free task environment only
 
 After preflight:
 
@@ -55,7 +82,7 @@ python experiments/integrations/minisweagent/provider_free_task_harness.py \
   --subset verified \
   --split test \
   --instance sympy__sympy-14711 \
-  --repeat 3 \
+  --repeat 1 \
   --output logs/architecture/mini-v246-task-env.json
 ```
 
