@@ -1,0 +1,33 @@
+{
+  "artifact": "pr40-localization-budget-tests",
+  "protocol": "contract-hardening-follow-up-v1",
+  "base_revision": "4486181",
+  "scope": {
+    "included": [
+      "tests/test_p82_localization.py",
+      "docs/decisions/0158-pr40-localization-budget-coverage.md"
+    ],
+    "excluded": [
+      "repository_search",
+      "path_application",
+      "execution",
+      "provider",
+      "runtime",
+      "harness",
+      "routing",
+      "fallback",
+      "agent_loop"
+    ]
+  },
+  "validation": {
+    "command": "py -3.13 -m pytest -q -p no:cacheprovider --disable-warnings tests/test_p82_localization.py",
+    "tests_passed": 6,
+    "tests_failed": 0,
+    "tests_skipped": 0,
+    "diff_check": "PENDING_COMMIT_VALIDATION",
+    "provider_called": false
+  },
+  "classification": "LOCALIZATION_BUDGET_COVERAGE_VALIDATED",
+  "promotion": "NOT_AUTHORIZED",
+  "qualification_run_v1": "BLOCKED"
+}
