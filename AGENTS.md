@@ -1,104 +1,96 @@
 # AGENTS.md
 
-## Contrato operacional mínimo
+## Contrato operacional do repositório
 
-Leia este arquivo antes de executar qualquer tarefa no repositório.
+Leia este arquivo antes de executar qualquer tarefa.
 
-Se a tarefa entrar em um diretório com outro `AGENTS.md`, leia também o arquivo mais específico; ele complementa ou restringe estas regras.
+Se o caminho de trabalho contiver outro `AGENTS.md`, leia também o mais específico. A regra mais específica pode restringir este contrato, mas não pode reclassificar evidência histórica nem violar invariantes do projeto.
 
-## 1. Identidade e escopo
+## 1. Identidade e autoridade
 
 - Produto/projeto canônico: **CodePro**.
-- `arkx` é namespace Python legado temporário. Não crie novos nomes públicos, worktrees ou documentação atual usando Arkx, exceto ao documentar histórico.
-- Não renomeie schemas, fixtures, hashes ou identidades congeladas sem decisão explícita de migração.
+- `arkx` é namespace Python legado temporário; não o transforme em nome público novo.
+- Não renomeie schemas, fixtures, hashes, proveniência ou identidades congeladas sem migração explícita.
+- Ordem de autoridade para uma mudança: contrato/invariante vigente -> código/teste executável -> ADR aplicável -> evidência empírica congelada -> documentação explicativa.
+- Evidência histórica é imutável. Correções metodológicas entram como nova decisão/addendum, nunca como reescrita do passado.
 
-## 2. Regras de engenharia
+## 2. Invariantes
 
-- Prefira a menor arquitetura suficiente para o problema observado.
-- Não promova componentes porque já existem.
-- Não faça fallback, troca de executor, expansão de escopo ou mudança de tratamento silenciosamente.
-- Preserve estados distintos: `BLOCKED != PASS`, `NOT_EXECUTED != PASS`, `EXECUTED != ACCEPTED`, `ACCEPTED != PROMOTED`.
-- Uma falha sem evidência de causa permanece não atribuída.
+Preserve:
 
-## 3. Quando houver benchmark, paper ou resultado externo
+```text
+NO_COMPONENT_HAS_TENURE
+SCIENTIFIC_SIGNAL != LOCAL_PASS
+UPSTREAM_EVIDENCE != LOCAL_EVIDENCE
+HYPOTHESIS != IMPLEMENTATION
+IMPLEMENTATION != EXECUTED
+EXECUTED != ACCEPTED
+ACCEPTED != PROMOTED
+DONOR != PRODUCT_DEPENDENCY
+MECHANISM_PASS != EXECUTOR_ADOPTED
+BLOCKED != PASS
+NOT_EXECUTED != PASS
+NO_SILENT_FALLBACK
+NO_SILENT_EXECUTOR_SWITCH
+NO_SILENT_SCOPE_EXPANSION
+```
 
-Antes de implementar ou otimizar:
+Uma falha sem evidência causal permanece não atribuída.
 
-1. identifique repo, commit/versão, config, workload, backend, modelo/provider e verifier usados na referência;
-2. reproduza o caminho de referência antes de adaptar;
-3. não trate backend apenas suportado como backend comprovado;
-4. preserve semântica material: environment, runner, prompt/tools, retry/timeout, patch/submission e verifier;
-5. registre qualquer diferença behavior-changing como tratamento/desvio, não como “equivalência”;
-6. altere uma variável behavior-changing por vez nos primeiros comparativos;
-7. use o verifier oficial como autoridade para claims de benchmark.
+## 3. Roteie a tarefa antes de editar
 
-Smoke test, fixture sintética, import bem-sucedido ou teste local são evidência local, não resultado de benchmark.
+| Trabalho principal | Leia também | Superfície normativa |
+|---|---|---|
+| runtime, contratos, arquitetura, CLI | `docs/project-contract.md`, `docs/architecture.md` | `src/AGENTS.md` quando tocar `src/` |
+| experimento, benchmark, paper, reprodução | `docs/experimental-protocol.md` e decisão/auditoria da linhagem | `experiments/AGENTS.md` |
+| testes, regressão, verificação | contrato/invariante que o teste protege | `tests/AGENTS.md` |
+| integração mini/SWE-bench | somente após regras gerais de experimento | `experiments/integrations/minisweagent/AGENTS.md` |
 
-## 4. Reprodutibilidade obrigatória
+Não leia a árvore inteira de `docs/` por padrão. Abra apenas a fonte normativa/histórica necessária para a tarefa.
 
-Para execuções empíricas, registre quando aplicável:
+## 4. Regra de engenharia
 
-- commit CodePro;
-- commit/versão do executor/agente;
-- hash/blob da config;
-- dataset, subset, split e revision/fingerprint;
-- task/instance e base revision;
-- imagem + digest/ID resolvido;
-- OS/arquitetura;
-- modelo/provider e settings efetivos;
-- harness/verifier e versão;
-- comandos, exit codes e artefatos.
+- Faça a menor mudança que satisfaça o contrato observado.
+- Nova arquitetura exige necessidade observada, boundary explícito, teste e condição de remoção/rollback.
+- Prefira regra executável, schema, teste ou harness quando o requisito puder ser verificado por máquina.
+- Prosa não deve duplicar uma regra que já tem fonte normativa mais próxima do trabalho.
+- Não “conserte” benchmark, teste ou experimento mudando silenciosamente workload, executor, backend, timeout, retry, prompt, verifier ou critério de aceitação.
 
-Tag mutável, como `:latest`, nunca é identidade suficiente sozinha.
+## 5. Evidência externa
 
-## 5. Baseline mini-SWE-agent atual
+Quando uma mudança for motivada por benchmark, paper, donor ou implementação upstream:
 
-Referência congelada:
+1. identifique versão/commit/config/workload/backend/modelo/provider/verifier relevantes;
+2. separe o que foi observado upstream do que foi reproduzido localmente;
+3. reproduza o caminho de referência antes de otimizar ou adaptar;
+4. trate diferença behavior-changing como tratamento/desvio explícito;
+5. não transforme backend suportado em backend comprovado;
+6. não transfira score, qualidade ou validade sem experimento local compatível.
 
-- mini-swe-agent `v2.4.6`;
-- commit `a83fcae82d2a08f0ee0c688f9d137b3566c097f8`;
-- config SWE-bench blob `106decd160e72e5164e29d15d23da354c29c309d`.
+## 6. Validação mínima
 
-No baseline:
+Antes de concluir uma mudança:
 
-- use runner/environment upstream;
-- provider-free deve passar antes de modelo/provider;
-- routing, recovery, compaction, replanning, handoff e fallback CodePro ficam desligados;
-- SWE-ReX, Modal, Harbor e outros substrates são tratamentos/comparadores, salvo evidência de que pertencem à referência histórica;
-- SWE-bench oficial é autoridade de `resolved`.
-
-Para repo preparado SWE-bench:
-
-- não exija `HEAD == base_commit`;
-- exija `base_commit` ancestral do HEAD preparado;
-- exija worktree inicial limpa;
-- registre commits de preparação.
-
-Cada prediction/control do verifier usa `run_id` único.
-
-## 6. Antes de commit
-
-Para mudanças de runtime/benchmark:
-
-- rode testes focados do invariável alterado;
+- execute os testes focados do contrato alterado;
+- execute a verificação de repositório aplicável;
 - rode `git diff --check`;
-- valide JSON alterado;
-- mantenha `provider_called = false` em mudanças somente de infraestrutura;
-- não reescreva evidência histórica; registre correção/addendum.
+- valide formatos estruturados alterados;
+- registre limitações, bloqueios e o que não foi executado;
+- não declare benchmark/performance sem o verifier e o protocolo correspondentes.
 
-## 7. Estado histórico que não pode ser reclassificado
+## 7. Pare em vez de improvisar
+
+Pare e reporte `BLOCKED` ou `NOT_EXECUTED` quando:
+
+- uma identidade congelada não puder ser verificada;
+- o ambiente exigido não estiver disponível e o único caminho seria fallback;
+- uma fonte upstream/material estiver ambígua;
+- a mudança exigiria expandir escopo ou autoridade sem aprovação;
+- a evidência não sustentar a classificação pretendida.
+
+## 8. Estado histórico preservado
 
 - `Qualification Run v1 = BLOCKED`;
 - `promotion = NOT_AUTHORIZED`.
 
-Uma execução posterior não reescreve v1.
-
-## 8. Leitura adicional somente quando necessária
-
-- contrato do projeto: `docs/project-contract.md`;
-- política de fidelidade: `docs/benchmark-fidelity-audit.md`;
-- baseline mini: `docs/decisions/0142-benchmark-faithful-mini-swebench-substrate.md`;
-- estado preparado SWE-bench: `docs/decisions/0143-swebench-prepared-repo-state.md`;
-- regras específicas da integração mini: `experiments/integrations/minisweagent/AGENTS.md`.
-
-Não leia toda a árvore de docs por padrão. Abra apenas o material necessário para a tarefa.
+Execuções posteriores não reclassificam essa linhagem.
