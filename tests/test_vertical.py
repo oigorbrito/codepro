@@ -133,6 +133,94 @@ class VerticalRunTests(unittest.TestCase):
                     evidence_dir=root / ".codepro" / "runs",
                 )
 
+    def test_nonzero_executor_exit_cannot_be_verified(self):
+        with tempfile.TemporaryDirectory() as tmp:
+            root = Path(tmp) / "repo"
+            root.mkdir()
+            revision = self.init_repo(root)
+            result = run_vertical(
+                workspace=root,
+                revision=revision,
+                request_id="request-failed",
+                task_id="task-failed",
+                requester_ref="user://fixture",
+                authority_ref="authority://fixture",
+                acceptance_authority_ref="acceptance://reviewer",
+                scope=("src",),
+                executor_argv=(sys.executable, "-c", "raise SystemExit(7)"),
+                verifier_argv=(sys.executable, "-c", "raise SystemExit(0)"),
+                evidence_dir=Path(tmp) / "evidence",
+                attempt_id="attempt-failed",
+            )
+            self.assertEqual(result.status, VerticalRunStatus.FAILED)
+            self.assertEqual(result.reason, "EXECUTOR_EXIT_NONZERO:7")
+
+    def test_timeout_is_distinct_from_generic_blocked(self):
+        with tempfile.TemporaryDirectory() as tmp:
+            root = Path(tmp) / "repo"
+            root.mkdir()
+            revision = self.init_repo(root)
+            result = run_vertical(
+                workspace=root,
+                revision=revision,
+                request_id="request-timeout",
+                task_id="task-timeout",
+                requester_ref="user://fixture",
+                authority_ref="authority://fixture",
+                acceptance_authority_ref="acceptance://reviewer",
+                scope=("src",),
+                executor_argv=(sys.executable, "-c", "import time; time.sleep(2)"),
+                verifier_argv=(sys.executable, "-c", "raise SystemExit(0)"),
+                evidence_dir=Path(tmp) / "evidence",
+                max_wall_time_seconds=0.1,
+                attempt_id="attempt-timeout",
+            )
+            self.assertEqual(result.status, VerticalRunStatus.TIMED_OUT)
+
+    def test_missing_executor_is_environment_unavailable(self):
+        with tempfile.TemporaryDirectory() as tmp:
+            root = Path(tmp) / "repo"
+            root.mkdir()
+            revision = self.init_repo(root)
+            result = run_vertical(
+                workspace=root,
+                revision=revision,
+                request_id="request-env",
+                task_id="task-env",
+                requester_ref="user://fixture",
+                authority_ref="authority://fixture",
+                acceptance_authority_ref="acceptance://reviewer",
+                scope=("src",),
+                executor_argv=("codepro-definitely-missing-executable-7f4d",),
+                verifier_argv=(sys.executable, "-c", "raise SystemExit(0)"),
+                evidence_dir=Path(tmp) / "evidence",
+                attempt_id="attempt-env",
+            )
+            self.assertEqual(result.status, VerticalRunStatus.ENVIRONMENT_UNAVAILABLE)
+
+    def test_attempt_id_produces_distinct_run_identity(self):
+        with tempfile.TemporaryDirectory() as tmp:
+            root = Path(tmp) / "repo"
+            root.mkdir()
+            revision = self.init_repo(root)
+            common = dict(
+                workspace=root,
+                revision=revision,
+                request_id="request-repeat",
+                task_id="task-repeat",
+                requester_ref="user://fixture",
+                authority_ref="authority://fixture",
+                acceptance_authority_ref="acceptance://reviewer",
+                scope=("src",),
+                executor_argv=(sys.executable, "-c", "raise SystemExit(0)"),
+                verifier_argv=(sys.executable, "-c", "raise SystemExit(0)"),
+            )
+            first = run_vertical(**common, evidence_dir=Path(tmp) / "evidence-a", attempt_id="attempt-1")
+            second = run_vertical(**common, evidence_dir=Path(tmp) / "evidence-b", attempt_id="attempt-2")
+            self.assertNotEqual(first.run_id, second.run_id)
+            self.assertEqual(first.attempt_id, "attempt-1")
+            self.assertEqual(second.attempt_id, "attempt-2")
+
 
 if __name__ == "__main__":
     unittest.main()
