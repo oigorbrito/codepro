@@ -1,84 +1,58 @@
 # AGENTS.md
 
-These instructions apply to `experiments/integrations/minisweagent/` and override broader repository guidance when more specific.
+Aplica-se somente a `experiments/integrations/minisweagent/`.
 
-## Purpose
+Leia primeiro o `AGENTS.md` da raiz. Este arquivo contém apenas regras adicionais da integração.
 
-This directory exists to reproduce and qualify the pinned mini-SWE-agent SWE-bench reference path. It is an experimental integration boundary, not product runtime.
+## Referência congelada
 
-## Pinned reference
+- mini-swe-agent `v2.4.6`;
+- commit `a83fcae82d2a08f0ee0c688f9d137b3566c097f8`;
+- config blob `106decd160e72e5164e29d15d23da354c29c309d`.
 
-- repository: `SWE-agent/mini-swe-agent`
-- version: `v2.4.6`
-- commit: `a83fcae82d2a08f0ee0c688f9d137b3566c097f8`
-- bundled SWE-bench config blob: `106decd160e72e5164e29d15d23da354c29c309d`
+Não atualize essas referências silenciosamente.
 
-Do not silently update these references.
+## Baseline
 
-## Baseline rules
+- Importe/use `get_swebench_docker_image_name()` e `get_sb_environment()` upstream; não replique a lógica no CodePro.
+- Não faça fallback para LocalEnvironment, Git Bash, MSYS2, SWE-ReX, Modal ou outro backend.
+- Não altere task, dataset revision, prompt, retry, timeout, verifier ou mini para “fazer passar”.
+- Não chame modelo/provider antes de provider-free + controles do verifier.
+- Mantenha routing, recovery, compaction, replanning, handoff e executor switching desligados.
 
-- Import and exercise upstream runner/environment functions directly where practical.
-- Do not copy upstream behavior into a custom CodePro implementation merely for convenience.
-- Do not fall back to LocalEnvironment, Git Bash, MSYS2, SWE-ReX, Modal or another backend.
-- Do not enable CodePro routing, recovery, compaction, replanning, handoff or executor switching.
-- Do not call a model/provider until provider-free qualification and verifier controls pass.
-- Do not patch mini-swe-agent to make a baseline pass.
-- Do not change the task, dataset revision, prompt, retry policy, timeout policy or verifier without recording a protocol deviation/new treatment.
+## Estado da task
 
-## Provider-free task state
+Exija:
 
-For SWE-bench task images:
+```text
+/testbed
+Linux
+base_commit ancestral do prepared HEAD
+working tree inicial limpa
+```
 
-- derive the image through upstream mini logic;
-- instantiate through upstream `get_sb_environment()`;
-- require `/testbed`, Linux and the configured shell/environment;
-- require the task `base_commit` to be an ancestor of the prepared HEAD;
-- require the initial worktree to be clean;
-- record the prepared HEAD and commits after the base commit;
-- do not require prepared HEAD equality with the base commit.
+Registre:
 
-A non-ancestor base commit or dirty initial worktree is a material provenance failure.
+- prepared HEAD;
+- commits após base_commit;
+- dataset revision/fingerprint;
+- image name + digest/ID;
+- cleanup/lifecycle.
 
-## Workload and image provenance
-
-Record:
-
-- dataset repository, subset and split;
-- dataset revision when available, otherwise dataset fingerprint;
-- instance ID and base commit;
-- problem statement/content hash when used in a frozen study;
-- image name plus resolved digest/ID;
-- prepared HEAD and preparation commits;
-- architecture and OS.
-
-A mutable image tag alone is insufficient provenance.
+Não exija `HEAD == base_commit`.
 
 ## Verifier
 
-SWE-bench official evaluation is authoritative for benchmark resolution.
+- SWE-bench oficial é autoridade para `resolved`.
+- Use `run_id` único por negative control, gold control, prediction e agent run.
+- Nunca reutilize run_id após mudar o patch.
+- P5/local verification do CodePro não substitui o verifier oficial.
 
-- Negative controls, gold/positive controls and agent predictions use unique `run_id` values.
-- Never reuse a run ID after changing a prediction diff.
-- CodePro local patch checks are not substitutes for SWE-bench `resolved`.
-- Preserve verifier repository/version, dataset identity, instance ID and output artifacts.
+## Antes de alterar esta integração
 
-## Experimental comparisons
+Se uma nova regra for necessária:
 
-After the reference baseline is demonstrated, alternative substrates or mechanisms are treatments.
-
-For each treatment:
-
-- keep workload/model/provider/verifier fixed unless that field is the manipulated variable;
-- change one behavior-affecting variable at a time initially;
-- measure official resolution, tokens, cost, provider calls, wall time, retries, timeouts and failure classes;
-- preserve failures and blocked states as evidence.
-
-## Required validation
-
-When modifying this integration:
-
-- run the focused tests under `tests/test_minisweagent_*.py`;
-- run `git diff --check`;
-- keep `provider_called = false` for infrastructure-only changes;
-- update the relevant ADR/addendum when an invariant changes;
-- preserve the frozen historical audit rather than rewriting past observations.
+1. prove que ela vem da referência upstream ou de evidência empírica;
+2. adicione teste de regressão;
+3. documente apenas a diferença/invariante nova;
+4. não duplique regras já presentes no `AGENTS.md` raiz.
