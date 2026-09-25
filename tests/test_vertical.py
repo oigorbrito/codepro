@@ -44,6 +44,7 @@ class VerticalRunTests(unittest.TestCase):
                 scope=("src",),
                 candidate_files=("src/value.txt",),
                 affected_components=("src",),
+                characterization_source_ref="evidence://fixture-characterization",
                 executor_argv=(
                     sys.executable,
                     "-c",
@@ -86,6 +87,7 @@ class VerticalRunTests(unittest.TestCase):
                 scope=("src",),
                 candidate_files=("src/value.txt",),
                 affected_components=("src",),
+                characterization_source_ref="evidence://fixture-characterization",
                 executor_argv=(sys.executable, "-c", "raise SystemExit(0)"),
                 verifier_argv=(sys.executable, "-c", "raise SystemExit(0)"),
                 evidence_dir=Path(tmp) / "evidence",
@@ -109,6 +111,7 @@ class VerticalRunTests(unittest.TestCase):
                 scope=("src",),
                 candidate_files=("src/value.txt",),
                 affected_components=("src",),
+                characterization_source_ref="evidence://fixture-characterization",
                 executor_argv=(
                     sys.executable,
                     "-c",
@@ -156,6 +159,7 @@ class VerticalRunTests(unittest.TestCase):
                 scope=("src",),
                 candidate_files=("src/value.txt",),
                 affected_components=("src",),
+                characterization_source_ref="evidence://fixture-characterization",
                 executor_argv=(sys.executable, "-c", "raise SystemExit(7)"),
                 verifier_argv=(sys.executable, "-c", "raise SystemExit(0)"),
                 evidence_dir=Path(tmp) / "evidence",
@@ -180,6 +184,7 @@ class VerticalRunTests(unittest.TestCase):
                 scope=("src",),
                 candidate_files=("src/value.txt",),
                 affected_components=("src",),
+                characterization_source_ref="evidence://fixture-characterization",
                 executor_argv=(sys.executable, "-c", "import time; time.sleep(2)"),
                 verifier_argv=(sys.executable, "-c", "raise SystemExit(0)"),
                 evidence_dir=Path(tmp) / "evidence",
@@ -204,6 +209,7 @@ class VerticalRunTests(unittest.TestCase):
                 scope=("src",),
                 candidate_files=("src/value.txt",),
                 affected_components=("src",),
+                characterization_source_ref="evidence://fixture-characterization",
                 executor_argv=("codepro-definitely-missing-executable-7f4d",),
                 verifier_argv=(sys.executable, "-c", "raise SystemExit(0)"),
                 evidence_dir=Path(tmp) / "evidence",
@@ -227,6 +233,7 @@ class VerticalRunTests(unittest.TestCase):
                 scope=("src",),
                 candidate_files=("src/value.txt",),
                 affected_components=("src",),
+                characterization_source_ref="evidence://fixture-characterization",
                 executor_argv=(sys.executable, "-c", "raise SystemExit(0)"),
                 verifier_argv=(sys.executable, "-c", "raise SystemExit(0)"),
             )
@@ -252,6 +259,7 @@ class VerticalRunTests(unittest.TestCase):
                 scope=("src",),
                 candidate_files=("src/value.txt",),
                 affected_components=("src",),
+                characterization_source_ref="evidence://fixture-characterization",
                 executor_argv=(sys.executable, "-c", "raise SystemExit(0)"),
                 verifier_argv=(sys.executable, "-c", "raise SystemExit(0)"),
                 evidence_dir=Path(tmp) / "evidence",
@@ -309,6 +317,7 @@ class VerticalRunTests(unittest.TestCase):
                 scope=("src",),
                 candidate_files=("src/value.txt",),
                 affected_components=("src",),
+                characterization_source_ref="evidence://fixture-characterization",
                 executor_argv=(
                     sys.executable,
                     "-c",
@@ -322,6 +331,68 @@ class VerticalRunTests(unittest.TestCase):
                 set(result.changed_files),
                 {"src/value.txt", "src/value with space.txt"},
             )
+
+    def test_missing_characterization_provenance_blocks_before_execution(self):
+        with tempfile.TemporaryDirectory() as tmp:
+            root = Path(tmp) / "repo"
+            root.mkdir()
+            revision = self.init_repo(root)
+            result = run_vertical(
+                workspace=root,
+                revision=revision,
+                request_id="request-characterization-provenance-missing",
+                task_id="task-characterization-provenance-missing",
+                requester_ref="user://fixture",
+                authority_ref="authority://fixture",
+                acceptance_authority_ref="acceptance://reviewer",
+                scope=("src",),
+                candidate_files=("src/value.txt",),
+                affected_components=("src",),
+                executor_argv=(sys.executable, "-c", "raise SystemExit(0)"),
+                verifier_argv=(sys.executable, "-c", "raise SystemExit(0)"),
+                evidence_dir=Path(tmp) / "evidence",
+            )
+            self.assertEqual(result.status, VerticalRunStatus.BLOCKED)
+            self.assertEqual(result.reason, "CHARACTERIZATION_PROVENANCE_REQUIRED")
+
+    def test_characterization_provenance_is_persisted_separately_from_authority(self):
+        with tempfile.TemporaryDirectory() as tmp:
+            root = Path(tmp) / "repo"
+            root.mkdir()
+            revision = self.init_repo(root)
+            result = run_vertical(
+                workspace=root,
+                revision=revision,
+                request_id="request-characterization-provenance",
+                task_id="task-characterization-provenance",
+                requester_ref="user://fixture",
+                authority_ref="authority://fixture",
+                acceptance_authority_ref="acceptance://reviewer",
+                scope=("src",),
+                candidate_files=("src/value.txt",),
+                affected_components=("src",),
+                characterization_source_ref="evidence://characterization-observer",
+                executor_argv=(
+                    sys.executable,
+                    "-c",
+                    "from pathlib import Path; Path('src/value.txt').write_text('after\\n', encoding='utf-8')",
+                ),
+                verifier_argv=(sys.executable, "-c", "raise SystemExit(0)"),
+                evidence_dir=Path(tmp) / "evidence",
+            )
+            self.assertEqual(result.status, VerticalRunStatus.VERIFIED)
+            root_evidence = Path(result.evidence_root)
+            characterization = json.loads(
+                (root_evidence / "characterization-input.json").read_text(encoding="utf-8")
+            )
+            authority = json.loads(
+                (root_evidence / "authority-grant.json").read_text(encoding="utf-8")
+            )
+            self.assertEqual(
+                characterization["source_ref"],
+                "evidence://characterization-observer",
+            )
+            self.assertEqual(authority["authority_ref"], "authority://fixture")
 
     def test_missing_characterization_blocks_before_execution(self):
         with tempfile.TemporaryDirectory() as tmp:
@@ -368,6 +439,7 @@ class VerticalRunTests(unittest.TestCase):
                 scope=("src", "tests"),
                 candidate_files=("src/value.txt",),
                 affected_components=("src",),
+                characterization_source_ref="evidence://fixture-characterization",
                 executor_argv=(
                     sys.executable,
                     "-c",
@@ -404,6 +476,7 @@ class VerticalRunTests(unittest.TestCase):
                 scope=("src",),
                 candidate_files=("src/value.txt",),
                 affected_components=("src",),
+                characterization_source_ref="evidence://fixture-characterization",
                 executor_argv=(
                     sys.executable,
                     "-c",
