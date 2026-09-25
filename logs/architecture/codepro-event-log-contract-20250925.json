@@ -1,0 +1,65 @@
+{
+  "artifact": "codepro-event-log-contract",
+  "classification": "CONTRACT_V1_NORMATIVE_IMPLEMENTATION_PENDING",
+  "date": "2026-09-25",
+  "product": "CodePro",
+  "contract_version": 1.1,
+  "normative_decision": true,
+  "derived_only_from_precedent": false,
+  "current_main": "23fac637d2ccb80a94dacc1d4e568fdf7fd0ebd3",
+  "pr48_head": "6a02cf230f8b156eb44beeefc62d6ed104ed370f",
+  "current_source_root": "src/arkx",
+  "current_package_namespace": "arkx",
+  "expected_event_log_path": "src/arkx/event_log.py",
+  "implementation_added": true,
+  "runtime_changed": true,
+  "event_schema": {
+    "required_fields": ["sequence", "event_type", "payload", "previous_digest", "digest"],
+    "sequence": "starts at 0, strictly contiguous, and equals physical order",
+    "first_previous_digest": null,
+    "link_rule": "each event after the first references the preceding digest"
+  },
+  "ordering_rule": "physical order must equal contiguous sequence order",
+  "digest_rule": {
+    "algorithm": "SHA-256",
+    "canonical_json": {
+      "encoding": "UTF-8",
+      "sort_keys": true,
+      "separators": [",", ":"],
+      "ensure_ascii": false
+    },
+    "covered_fields": ["sequence", "event_type", "payload", "previous_digest"],
+    "excluded_fields": ["digest"]
+  },
+  "integrity_states": ["COMPLETE", "EMPTY", "INVALID", "TAMPERED"],
+  "empty_history_behavior": "zero events returns EMPTY and never COMPLETE",
+  "failure_classification": {
+    "schema_invalid": "INVALID/fail-closed",
+    "ordering_invalid": "INVALID",
+    "sequence_invalid": "INVALID",
+    "digest_invalid": "TAMPERED",
+    "previous_digest_invalid": "TAMPERED",
+    "file_missing_or_unreadable": "EventLogFormatError"
+  },
+  "exception_taxonomy": ["EventLogError", "EventLogFormatError", "EventLogIntegrityError"],
+  "required_audit_fields": [
+    "replay.run_id", "protocol_version", "schema_version", "configuration_digest",
+    "budget_digest", "treatment", "capability_digest", "integrity", "chain.to_dict()"
+  ],
+  "chain_shape": {
+    "fields": ["events", "event_count", "head_digest", "verification_ref", "acceptance_ref", "promotion_ref"],
+    "reference_fields": {
+      "verification_ref": {"type": "string|null", "origin": "verification stage event payload ref", "semantics": "audited verification evidence reference", "missing": "null; fail closed when required"},
+      "acceptance_ref": {"type": "string|null", "origin": "acceptance stage event payload ref", "semantics": "audited acceptance evidence reference", "missing": "null; fail closed when required"},
+      "promotion_ref": {"type": "string|null", "origin": "promotion stage event payload ref", "semantics": "audited promotion decision reference", "missing": "null; fail closed when required"}
+    },
+    "events": "ordered immutable sequence",
+    "to_dict": "deterministic mapping"
+  },
+  "audit_restored_chain_contract": {
+    "signature": "audit_restored_chain(event_log_path, snapshot, outcomes=None) -> ReplayAudit",
+    "complete_condition": "all checks pass"
+  },
+  "unresolved_contract_points": [],
+  "promotion": "NOT_AUTHORIZED"
+}
