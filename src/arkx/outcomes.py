@@ -37,6 +37,11 @@ class VerificationResult:
     outcomes: tuple[str, ...]
     evidence: tuple[str, ...]
 
+    def __post_init__(self) -> None:
+        _validate_authority(self.authority)
+        if self.state is VerificationState.PASS:
+            _require_evidence(self.evidence, "PASS verification")
+
     def to_dict(self) -> dict[str, Any]:
         return {
             "state": self.state.value,
@@ -58,6 +63,11 @@ class AcceptanceResult:
     authority: str
     raw_outcome: str | None
     evidence: tuple[str, ...]
+
+    def __post_init__(self) -> None:
+        _validate_authority(self.authority)
+        if self.decision is AcceptanceDecision.ACCEPTED:
+            _require_evidence(self.evidence, "ACCEPTED decision")
 
     def to_dict(self) -> dict[str, Any]:
         return {
@@ -84,3 +94,13 @@ def validate_outcome_references(
         raise ValueError("verification reference does not match result")
     if acceptance_ref != acceptance.reference:
         raise ValueError("acceptance reference does not match result")
+
+
+def _validate_authority(authority: str) -> None:
+    if not authority or not authority.strip():
+        raise ValueError("outcome authority must be non-empty")
+
+
+def _require_evidence(evidence: tuple[str, ...], outcome: str) -> None:
+    if not evidence or any(not reference or not reference.strip() for reference in evidence):
+        raise ValueError(f"{outcome} requires non-empty evidence")
