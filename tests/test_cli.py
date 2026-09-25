@@ -167,6 +167,8 @@ class RunCliTests(unittest.TestCase):
             "--authority", "authority://fixture",
             "--acceptance-authority", "acceptance://reviewer",
             "--scope", "src",
+            "--candidate-file", "src/a.py",
+            "--affected-component", "src",
             "--evidence-dir", "../codepro-evidence",
             "--verifier-argv-json", '["python","-m","pytest","-q"]',
             "--",
@@ -184,6 +186,8 @@ class RunCliTests(unittest.TestCase):
         self.assertEqual(kwargs["executor_argv"], ("codex", "exec", "--full-auto"))
         self.assertEqual(kwargs["verifier_argv"], ("python", "-m", "pytest", "-q"))
         self.assertEqual(kwargs["scope"], ("src",))
+        self.assertEqual(kwargs["candidate_files"], ("src/a.py",))
+        self.assertEqual(kwargs["affected_components"], ("src",))
 
     def test_run_rejects_invalid_verifier_json(self):
         error = io.StringIO()
