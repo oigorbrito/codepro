@@ -1,0 +1,7 @@
+{
+  "fixture_type": "EXECUTOR_QUALIFICATION_FIXTURE",
+  "description": "Synthetic external observations for P8.1; not an executor benchmark.",
+  "comparison_axes": ["EXECUTOR", "TREATMENT"],
+  "controlled_dimensions": ["task_revision", "acceptance_definition", "model", "environment", "budget", "treatment"],
+  "observed_outcomes": ["COMPLETED", "EXECUTOR_FAILED", "INFRASTRUCTURE_FAILED", "BUDGET_EXHAUSTED", "BLOCKED", "UNKNOWN"]
+}

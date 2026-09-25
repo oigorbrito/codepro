@@ -1,0 +1,7 @@
+{
+  "fixture_type": "EXPERIMENTAL_COMPOSITION_FIXTURE",
+  "description": "Synthetic treatment arms for P7; not an execution or acceptance benchmark.",
+  "controlled_dimensions": ["task", "executor", "model", "environment", "budget"],
+  "treatments": ["A", "B", "C", "D", "E", "F"],
+  "excluded_future_treatments": ["G"]
+}

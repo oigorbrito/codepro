@@ -1,0 +1,40 @@
+{
+  "artifact": "pr30-contract-tranche",
+  "protocol": "independent-contract-tranche-v1",
+  "validated_revision": "348206be",
+  "base": "origin/main",
+  "scope": {
+    "modules": [
+      "src/arkx/composition.py",
+      "src/arkx/configuration.py",
+      "src/arkx/outcomes.py",
+      "src/arkx/p82_editing.py",
+      "src/arkx/p82_localization.py",
+      "src/arkx/executor_qualification.py"
+    ],
+    "fixtures": [
+      "experiments/composition-harness-fixture.json",
+      "experiments/executor-qualification-fixture.json"
+    ],
+    "excluded": [
+      "execution",
+      "provider",
+      "runtime",
+      "harness",
+      "routing",
+      "fallback",
+      "agent_loop"
+    ]
+  },
+  "validation": {
+    "command": "py -3.13 -m pytest -q -p no:cacheprovider --disable-warnings tests/test_composition.py tests/test_configuration.py tests/test_outcomes.py tests/test_executor_qualification.py tests/test_p82_editing.py tests/test_p82_localization.py",
+    "tests_passed": 43,
+    "tests_failed": 0,
+    "tests_skipped": 0,
+    "diff_check": "PASS",
+    "provider_called": false
+  },
+  "classification": "CONTRACT_TRANCHE_VALIDATED",
+  "promotion": "NOT_AUTHORIZED",
+  "qualification_run_v1": "BLOCKED"
+}
