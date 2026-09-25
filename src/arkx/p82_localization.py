@@ -8,6 +8,7 @@ from __future__ import annotations
 
 from dataclasses import dataclass
 import json
+from pathlib import PurePosixPath, PureWindowsPath
 from typing import Any
 
 
@@ -19,6 +20,16 @@ def _sorted_unique(values: tuple[str, ...]) -> tuple[str, ...]:
     if any(not value or not value.strip() for value in values):
         raise ValueError("localization values must be non-empty")
     return tuple(sorted(set(values)))
+
+
+def _repository_relative_files(values: tuple[str, ...]) -> tuple[str, ...]:
+    files = _sorted_unique(values)
+    for value in files:
+        posix = PurePosixPath(value)
+        windows = PureWindowsPath(value)
+        if posix.is_absolute() or windows.is_absolute() or ".." in posix.parts or ".." in windows.parts:
+            raise ValueError("candidate file paths must be repository-relative")
+    return files
 
 
 @dataclass(frozen=True)
@@ -69,7 +80,7 @@ class LocalizationArtifact:
         if self.context_lines_used < 0:
             raise ValueError("context_lines_used must be non-negative")
 
-        files = _sorted_unique(self.candidate_files)
+        files = _repository_relative_files(self.candidate_files)
         symbols = _sorted_unique(self.candidate_symbols)
         if len(files) > self.evidence_budget.max_files:
             raise ValueError("candidate file count exceeds evidence budget")

@@ -84,6 +84,17 @@ class P82LocalizationTests(unittest.TestCase):
                 candidates_are_non_authoritative=False,
             )
 
+    def test_absolute_and_traversal_paths_are_rejected(self):
+        for path in ("C:/workspace/src/a.py", "/workspace/src/a.py", "../src/a.py", "src/../a.py"):
+            with self.subTest(path=path), self.assertRaisesRegex(ValueError, "repository-relative"):
+                record_localization_artifact(
+                    task_id="task-1",
+                    repository_revision="rev",
+                    localization_method="method-v1",
+                    candidate_files=(path,),
+                    evidence_budget=self.budget(),
+                )
+
     def test_zero_budget_is_a_valid_empty_contract(self):
         artifact = record_localization_artifact(
             task_id="task-1",
