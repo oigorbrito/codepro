@@ -92,15 +92,18 @@ def main() -> int:
     }
 
     head = run(["git", "rev-parse", "HEAD"])
-    status_before = run(["git", "status", "--porcelain=v1", "--untracked-files=all"])
+    status_before = run(["git", "status", "--porcelain=v1", "--untracked-files=no"])
+    untracked_before = run(["git", "ls-files", "--others", "--exclude-standard"])
     report["steps"]["head"] = head
     report["steps"]["status_before"] = status_before
+    report["steps"]["untracked_before"] = untracked_before
     if (
         head["returncode"] != 0
         or status_before["returncode"] != 0
+        or untracked_before["returncode"] != 0
         or status_before["stdout"].strip()
     ):
-        report["classification"] = "BLOCKED_SOURCE_IDENTITY_OR_DIRTY_WORKTREE"
+        report["classification"] = "BLOCKED_SOURCE_IDENTITY_OR_TRACKED_WORKTREE_CHANGE"
         print(json.dumps(report, ensure_ascii=False, indent=2, sort_keys=True))
         return 2
 
@@ -242,10 +245,20 @@ def main() -> int:
             print(json.dumps(report, ensure_ascii=False, indent=2, sort_keys=True))
             return 2
 
-    status_after = run(["git", "status", "--porcelain=v1", "--untracked-files=all"])
+    status_after = run(["git", "status", "--porcelain=v1", "--untracked-files=no"])
+    untracked_after = run(["git", "ls-files", "--others", "--exclude-standard"])
     report["steps"]["status_after"] = status_after
+    report["steps"]["untracked_after"] = untracked_after
     if status_after["returncode"] != 0 or status_after["stdout"].strip():
-        report["classification"] = "BLOCKED_WORKTREE_MUTATED_BY_VALIDATION"
+        report["classification"] = "BLOCKED_TRACKED_WORKTREE_MUTATED_BY_VALIDATION"
+        print(json.dumps(report, ensure_ascii=False, indent=2, sort_keys=True))
+        return 2
+    if untracked_after["returncode"] != 0:
+        report["classification"] = "BLOCKED_UNTRACKED_STATE_UNAVAILABLE_AFTER_VALIDATION"
+        print(json.dumps(report, ensure_ascii=False, indent=2, sort_keys=True))
+        return 2
+    if untracked_after["stdout"] != untracked_before["stdout"]:
+        report["classification"] = "BLOCKED_UNTRACKED_WORKTREE_MUTATED_BY_VALIDATION"
         print(json.dumps(report, ensure_ascii=False, indent=2, sort_keys=True))
         return 2
 
