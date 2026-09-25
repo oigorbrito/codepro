@@ -4,6 +4,7 @@ import subprocess
 import sys
 import tempfile
 import unittest
+from unittest.mock import patch
 
 from arkx.vertical import VerticalRunStatus, run_vertical
 
@@ -220,6 +221,87 @@ class VerticalRunTests(unittest.TestCase):
             self.assertNotEqual(first.run_id, second.run_id)
             self.assertEqual(first.attempt_id, "attempt-1")
             self.assertEqual(second.attempt_id, "attempt-2")
+
+    def test_successful_noop_is_blocked_before_verifier(self):
+        with tempfile.TemporaryDirectory() as tmp:
+            root = Path(tmp) / "repo"
+            root.mkdir()
+            revision = self.init_repo(root)
+            result = run_vertical(
+                workspace=root,
+                revision=revision,
+                request_id="request-noop",
+                task_id="task-noop",
+                requester_ref="user://fixture",
+                authority_ref="authority://fixture",
+                acceptance_authority_ref="acceptance://reviewer",
+                scope=("src",),
+                executor_argv=(sys.executable, "-c", "raise SystemExit(0)"),
+                verifier_argv=(sys.executable, "-c", "raise SystemExit(0)"),
+                evidence_dir=Path(tmp) / "evidence",
+            )
+            self.assertEqual(result.status, VerticalRunStatus.BLOCKED)
+            self.assertEqual(result.reason, "NO_OBSERVABLE_CHANGE")
+            self.assertFalse((Path(result.evidence_root) / "verification-summary.json").exists())
+
+    def test_total_wall_budget_can_expire_before_verifier(self):
+        with tempfile.TemporaryDirectory() as tmp:
+            root = Path(tmp) / "repo"
+            root.mkdir()
+            revision = self.init_repo(root)
+            with patch("arkx.vertical.time.monotonic", side_effect=(100.0, 102.0)):
+                result = run_vertical(
+                    workspace=root,
+                    revision=revision,
+                    request_id="request-budget",
+                    task_id="task-budget",
+                    requester_ref="user://fixture",
+                    authority_ref="authority://fixture",
+                    acceptance_authority_ref="acceptance://reviewer",
+                    scope=("src",),
+                    executor_argv=(
+                        sys.executable,
+                        "-c",
+                        "from pathlib import Path; Path('src/value.txt').write_text('after\\n', encoding='utf-8')",
+                    ),
+                    verifier_argv=(sys.executable, "-c", "raise SystemExit(0)"),
+                    evidence_dir=Path(tmp) / "evidence",
+                    max_wall_time_seconds=1.0,
+                )
+            self.assertEqual(result.status, VerticalRunStatus.TIMED_OUT)
+            self.assertEqual(result.reason, "TOTAL_WALL_TIME_EXHAUSTED_BEFORE_VERIFIER")
+            budget = json.loads(
+                (Path(result.evidence_root) / "wall-time-budget.json").read_text(encoding="utf-8")
+            )
+            self.assertEqual(budget["remaining_before_verifier_seconds"], 0.0)
+
+    def test_rename_with_space_preserves_source_and_destination_paths(self):
+        with tempfile.TemporaryDirectory() as tmp:
+            root = Path(tmp) / "repo"
+            root.mkdir()
+            revision = self.init_repo(root)
+            result = run_vertical(
+                workspace=root,
+                revision=revision,
+                request_id="request-rename",
+                task_id="task-rename",
+                requester_ref="user://fixture",
+                authority_ref="authority://fixture",
+                acceptance_authority_ref="acceptance://reviewer",
+                scope=("src",),
+                executor_argv=(
+                    sys.executable,
+                    "-c",
+                    "from pathlib import Path; Path('src/value.txt').rename('src/value with space.txt')",
+                ),
+                verifier_argv=(sys.executable, "-c", "raise SystemExit(0)"),
+                evidence_dir=Path(tmp) / "evidence",
+            )
+            self.assertEqual(result.status, VerticalRunStatus.VERIFIED)
+            self.assertEqual(
+                set(result.changed_files),
+                {"src/value.txt", "src/value with space.txt"},
+            )
 
 
 if __name__ == "__main__":
