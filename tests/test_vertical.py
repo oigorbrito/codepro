@@ -104,6 +104,8 @@ class VerticalRunTests(unittest.TestCase):
             root = Path(tmp) / "repo"
             root.mkdir()
             revision = self.init_repo(root)
+            verifier_sentinel = Path(tmp) / "verifier-ran.txt"
+            secret_marker = "TOPSECRET-SCOPE-BOUNDARY-7F4D"
             result = run_vertical(
                 workspace=root,
                 revision=revision,
@@ -119,13 +121,43 @@ class VerticalRunTests(unittest.TestCase):
                 executor_argv=(
                     sys.executable,
                     "-c",
-                    "from pathlib import Path; Path('outside.txt').write_text('x', encoding='utf-8')",
+                    (
+                        "from pathlib import Path; "
+                        "secret='TOP'+'SECRET-SCOPE-BOUNDARY-7F4D'; "
+                        "Path('outside-secret.txt').write_text(secret, encoding='utf-8')"
+                    ),
                 ),
-                verifier_argv=(sys.executable, "-c", "raise SystemExit(0)"),
+                verifier_argv=(
+                    sys.executable,
+                    "-c",
+                    (
+                        "from pathlib import Path; "
+                        f"Path({str(verifier_sentinel)!r}).write_text('ran', encoding='utf-8')"
+                    ),
+                ),
                 evidence_dir=Path(tmp) / "evidence",
             )
             self.assertEqual(result.status, VerticalRunStatus.BLOCKED)
             self.assertEqual(result.reason, "CHANGED_FILES_OUTSIDE_AUTHORIZED_SCOPE")
+            evidence_root = Path(result.evidence_root)
+            self.assertFalse((evidence_root / "workspace.patch").exists())
+            self.assertFalse((evidence_root / "workspace-patch-summary.json").exists())
+            self.assertFalse((evidence_root / "verification-summary.json").exists())
+            self.assertFalse(verifier_sentinel.exists())
+
+            scope_violation = json.loads(
+                (evidence_root / "scope-violation.json").read_text(encoding="utf-8")
+            )
+            self.assertEqual(scope_violation["outside_scope"], ["outside-secret.txt"])
+
+            for evidence_file in evidence_root.rglob("*"):
+                if not evidence_file.is_file():
+                    continue
+                try:
+                    evidence_text = evidence_file.read_text(encoding="utf-8")
+                except UnicodeDecodeError:
+                    continue
+                self.assertNotIn(secret_marker, evidence_text)
 
     def test_evidence_inside_workspace_is_rejected(self):
         with tempfile.TemporaryDirectory() as tmp:
