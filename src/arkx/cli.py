@@ -61,7 +61,11 @@ def build_parser() -> argparse.ArgumentParser:
     run_parser.add_argument("--acceptance-authority", required=True)
     run_parser.add_argument("--scope", action="append", required=True)
     run_parser.add_argument("--max-wall-time", type=float, default=300.0)
-    run_parser.add_argument("--evidence-dir", default=".codepro/runs")
+    run_parser.add_argument(
+        "--evidence-dir",
+        required=True,
+        help="Evidence root outside the target workspace; existing run identities are never overwritten.",
+    )
     run_parser.add_argument(
         "--verifier-argv-json",
         required=True,
