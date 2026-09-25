@@ -1,0 +1,34 @@
+{
+  "artifact": "pr40-outcome-evidence-guard",
+  "protocol": "contract-hardening-follow-up-v1",
+  "base_revision": "39b28fcf",
+  "scope": {
+    "included": [
+      "src/arkx/outcomes.py",
+      "tests/test_outcomes.py",
+      "docs/decisions/0157-pr40-outcome-evidence-guard.md"
+    ],
+    "excluded": [
+      "execution",
+      "provider",
+      "runtime",
+      "harness",
+      "routing",
+      "fallback",
+      "agent_loop",
+      "executor_qualification.py",
+      "configuration.py"
+    ]
+  },
+  "validation": {
+    "command": "py -3.13 -m pytest -q -p no:cacheprovider --disable-warnings tests/test_outcomes.py",
+    "tests_passed": 3,
+    "tests_failed": 0,
+    "tests_skipped": 0,
+    "diff_check": "PENDING_COMMIT_VALIDATION",
+    "provider_called": false
+  },
+  "classification": "OUTCOME_EVIDENCE_GUARD_VALIDATED",
+  "promotion": "NOT_AUTHORIZED",
+  "qualification_run_v1": "BLOCKED"
+}

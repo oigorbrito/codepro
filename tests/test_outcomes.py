@@ -10,6 +10,14 @@ from arkx.outcomes import (
 
 
 class OutcomeContractTests(unittest.TestCase):
+    def test_positive_states_require_authority_and_evidence(self):
+        with self.assertRaises(ValueError):
+            VerificationResult(VerificationState.PASS, "verifier-v1", (), (), ())
+        with self.assertRaises(ValueError):
+            AcceptanceResult(AcceptanceDecision.ACCEPTED, "authority-v1", "accepted", ())
+        with self.assertRaises(ValueError):
+            VerificationResult(VerificationState.FAIL, "", (), (), ())
+
     def test_serialization_is_executor_neutral(self):
         verification = VerificationResult(
             VerificationState.PASS,
