@@ -325,6 +325,8 @@ class QualificationSummary:
 
 
 def assess_trial(trial: ExecutorTrial) -> QualificationStatus:
+    if not _identity_is_complete(trial):
+        return QualificationStatus.UNKNOWN
     if not trial.observation.is_consistent():
         return QualificationStatus.BLOCKED
     if trial.outcome is ExecutionOutcome.UNKNOWN:
@@ -334,6 +336,29 @@ def assess_trial(trial: ExecutorTrial) -> QualificationStatus:
     if trial.observation.accepted is None:
         return QualificationStatus.UNKNOWN
     return QualificationStatus.QUALIFIABLE
+
+
+def _identity_is_complete(trial: ExecutorTrial) -> bool:
+    """Require the control identity before treating a trial as qualifiable."""
+
+    executor = trial.executor
+    task = trial.task
+    environment = trial.environment
+    return all(
+        value is not None and value != ""
+        for value in (
+            executor.version,
+            executor.configuration_digest,
+            task.task_revision,
+            task.acceptance_definition,
+            trial.model,
+            environment.repository_revision,
+            environment.runtime,
+            environment.platform,
+            environment.toolchain,
+            environment.environment_digest,
+        )
+    )
 
 
 def compare_trials(left: ExecutorTrial, right: ExecutorTrial, axis: ComparisonAxis) -> QualificationStatus:
@@ -378,6 +403,8 @@ def validate_paired_executor_experiment(experiment: QualificationExperiment) -> 
             if compare_trials(first, other, ComparisonAxis.EXECUTOR) is QualificationStatus.INCOMPARABLE:
                 reasons.append("CONTROL_DIMENSION_MISMATCH")
                 break
+    if any(not _identity_is_complete(trial) for trial in trials):
+        reasons.append("IDENTITY_INCOMPLETE")
     if any(assess_trial(trial) is QualificationStatus.BLOCKED for trial in trials):
         reasons.append("OBSERVED_BLOCKED_TRIAL")
     elif any(assess_trial(trial) is QualificationStatus.UNKNOWN for trial in trials):
