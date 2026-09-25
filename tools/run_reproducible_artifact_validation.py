@@ -92,6 +92,15 @@ def extract_archive(archive_bytes: bytes, destination: Path) -> None:
         bundle.extractall(destination, filter="fully_trusted")
 
 
+def normalize_tree_mtime(root: Path, epoch: int) -> None:
+    for path in sorted(root.rglob("*")):
+        try:
+            os.utime(path, (epoch, epoch))
+        except OSError:
+            pass
+    os.utime(root, (epoch, epoch))
+
+
 def build_once(
     *,
     build_python: Path,
@@ -99,6 +108,7 @@ def build_once(
     root: Path,
     label: str,
     build_env: dict[str, str],
+    source_date_epoch: int,
 ) -> dict[str, Any]:
     source = root / f"source-{label}"
     dist = root / f"dist-{label}"
@@ -106,10 +116,14 @@ def build_once(
     dist.mkdir()
 
     build_code = (
+        "import os;"
         "from pathlib import Path;"
         "from setuptools.build_meta import build_sdist,build_wheel;"
         "d=str(Path(r'" + str(dist).replace("\\", "\\\\") + "'));"
         "build_wheel(d);"
+        "epoch=int(os.environ['SOURCE_DATE_EPOCH']);"
+        "paths=[Path('.')]+sorted(Path('.').rglob('*'));"
+        "[(os.utime(p,(epoch,epoch)) if p.exists() else None) for p in paths];"
         "build_sdist(d)"
     )
     observation = run(
@@ -251,6 +265,7 @@ def main() -> int:
             root=temp_root,
             label="a",
             build_env=build_env,
+            source_date_epoch=int(source_date_epoch),
         )
         second = build_once(
             build_python=build_python,
@@ -258,6 +273,7 @@ def main() -> int:
             root=temp_root,
             label="b",
             build_env=build_env,
+            source_date_epoch=int(source_date_epoch),
         )
         report["steps"]["build_a"] = first
         report["steps"]["build_b"] = second
