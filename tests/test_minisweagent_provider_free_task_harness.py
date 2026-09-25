@@ -1,6 +1,7 @@
 import importlib.util
 from pathlib import Path
 import unittest
+from unittest.mock import patch
 
 
 ROOT = Path(__file__).parents[1]
@@ -45,6 +46,81 @@ class ProviderFreeTaskHarnessTests(unittest.TestCase):
             ),
             "WORKTREE_DIRTY",
         )
+
+    def test_cleanup_falls_back_to_direct_docker_rm_when_upstream_cleanup_does_not_finish(self):
+        harness = load_harness()
+
+        class Env:
+            container_id = "abc123"
+
+            def cleanup(self):
+                return None
+
+        running = {
+            "argv": ["docker", "inspect", "abc123"],
+            "returncode": 0,
+            "stdout": "[]",
+            "stderr": "",
+            "timeout": False,
+            "error": None,
+        }
+        removed = {
+            "argv": ["docker", "rm", "-f", "abc123"],
+            "returncode": 0,
+            "stdout": "abc123\n",
+            "stderr": "",
+            "timeout": False,
+            "error": None,
+        }
+        absent = {
+            "argv": ["docker", "inspect", "abc123"],
+            "returncode": 1,
+            "stdout": "",
+            "stderr": "No such container",
+            "timeout": False,
+            "error": None,
+        }
+
+        with patch.object(harness, "_container_absent", side_effect=[(False, running), (True, absent)]), patch.object(
+            harness, "_run", return_value=removed
+        ):
+            result = harness._cleanup_with_fallback(
+                Env(),
+                grace_seconds=0,
+                poll_seconds=0,
+            )
+
+        self.assertEqual(result["status"], "PASS")
+        self.assertEqual(result["mode"], "CODEPRO_FORCED_DOCKER_RM")
+        self.assertEqual(result["forced_cleanup"]["argv"], ["docker", "rm", "-f", "abc123"])
+
+    def test_cleanup_reports_upstream_mode_when_container_is_already_absent(self):
+        harness = load_harness()
+
+        class Env:
+            container_id = "abc123"
+
+            def cleanup(self):
+                return None
+
+        absent = {
+            "argv": ["docker", "inspect", "abc123"],
+            "returncode": 1,
+            "stdout": "",
+            "stderr": "No such container",
+            "timeout": False,
+            "error": None,
+        }
+
+        with patch.object(harness, "_container_absent", return_value=(True, absent)):
+            result = harness._cleanup_with_fallback(
+                Env(),
+                grace_seconds=1,
+                poll_seconds=0,
+            )
+
+        self.assertEqual(result["status"], "PASS")
+        self.assertEqual(result["mode"], "UPSTREAM")
 
 
 if __name__ == "__main__":
