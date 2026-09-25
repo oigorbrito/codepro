@@ -398,9 +398,9 @@ def _characterization_bundle_sha256(
     source_ref: str,
 ) -> str:
     payload = {
-        "candidate_files": list(candidate_files),
-        "affected_components": list(affected_components),
-        "source_ref": source_ref,
+        "candidate_files": sorted(set(candidate_files)),
+        "affected_components": sorted(set(affected_components)),
+        "source_ref": source_ref.strip(),
     }
     canonical = json.dumps(
         payload,
