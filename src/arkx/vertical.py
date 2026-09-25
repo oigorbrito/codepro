@@ -111,6 +111,8 @@ def run_vertical(
     executor_argv: Sequence[str],
     verifier_argv: Sequence[str],
     evidence_dir: str | Path,
+    candidate_files: Sequence[str] | None = None,
+    affected_components: Sequence[str] | None = None,
     max_wall_time_seconds: float = 300.0,
     attempt_id: str = "attempt-1",
 ) -> VerticalRunResult:
@@ -166,6 +168,51 @@ def run_vertical(
     if not normalized_scope:
         return finish(VerticalRunStatus.BLOCKED, "AUTHORIZED_SCOPE_EMPTY")
 
+    normalized_candidates = (
+        None
+        if candidate_files is None
+        else tuple(
+            sorted(
+                set(
+                    item.replace("\\", "/").strip("/")
+                    for item in candidate_files
+                    if item.strip()
+                )
+            )
+        )
+    )
+    normalized_components = (
+        None
+        if affected_components is None
+        else tuple(sorted(set(item.strip() for item in affected_components if item.strip())))
+    )
+    if not normalized_candidates or not normalized_components:
+        _write_new(
+            run_root / "characterization-input.json",
+            {
+                "candidate_files": None if normalized_candidates is None else list(normalized_candidates),
+                "affected_components": None if normalized_components is None else list(normalized_components),
+            },
+        )
+        return finish(VerticalRunStatus.BLOCKED, "CHARACTERIZATION_REQUIRED")
+
+    outside_candidates = tuple(
+        path for path in normalized_candidates if not _within_scope(path, normalized_scope)
+    )
+    if outside_candidates:
+        _write_new(
+            run_root / "characterization-input.json",
+            {
+                "candidate_files": list(normalized_candidates),
+                "affected_components": list(normalized_components),
+                "outside_authorized_scope": list(outside_candidates),
+            },
+        )
+        return finish(
+            VerticalRunStatus.BLOCKED,
+            "CHARACTERIZATION_OUTSIDE_AUTHORIZED_SCOPE",
+        )
+
     request = TaskRequest(
         request_id=request_id,
         requester_ref=requester_ref,
@@ -187,9 +234,9 @@ def run_vertical(
         evidence_refs=(f"request://{request_id}",),
     )
     signals = TaskSignals(
-        candidate_files=normalized_scope,
+        candidate_files=normalized_candidates,
         dependency_edges=(),
-        affected_components=normalized_scope,
+        affected_components=normalized_components,
         known_tests=("declared-verifier",),
         ambiguity_markers=(),
         risk_markers=(),
@@ -217,6 +264,7 @@ def run_vertical(
 
     _write_new(run_root / "request.json", request.to_dict())
     _write_new(run_root / "authority-grant.json", grant.to_dict())
+    _write_new(run_root / "characterization-input.json", signals.to_dict())
 
     started_at = time.monotonic()
     record = execute_governed(
