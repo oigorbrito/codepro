@@ -1,0 +1,21 @@
+{
+  "decision": "0154",
+  "date": "2026-09-25",
+  "collection": {
+    "tests": 400,
+    "outside_tests_collected": 0,
+    "status": "PASS"
+  },
+  "suite": {
+    "passed": 400,
+    "failed": 0,
+    "warnings": 3,
+    "python": "3.13",
+    "provider_called": false,
+    "command": "py -3.13 -m pytest -q -p no:cacheprovider --disable-warnings"
+  },
+  "classification": "TEST_DISCOVERY_BOUNDARY_PASS",
+  "logs_deleted": false,
+  "promotion": "NOT_AUTHORIZED",
+  "next_block": "LOCAL_LOG_RETENTION_SCOPE_DECISION"
+}

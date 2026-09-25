@@ -1,0 +1,46 @@
+{
+  "decision": "0151",
+  "date": "2026-09-25",
+  "docs_added": 127,
+  "logs_added": 228,
+  "experiment_fixtures_added": 12,
+  "experiment_fixtures_valid_json": 12,
+  "experiment_fixtures_active_references": 9,
+  "experiment_fixtures_unreferenced_candidates": [
+    "experiments/cost-tier-comparison-protocol.json",
+    "experiments/p82-block3-t1-functional-v2.json",
+    "experiments/p82-wave0-comparison-protocol.json"
+  ],
+  "fixture_reference_tests": {
+    "passed": 54,
+    "failed": 0,
+    "provider_called": false
+  },
+  "decision_record_audit": {
+    "files": 153,
+    "broken_local_references": 0,
+    "duplicate_numeric_ids": [],
+    "old_filename_references": 0,
+    "renumbering_map": {
+      "0031-package-boundary-and-distribution": "0112-package-boundary-and-distribution",
+      "0032-minimal-public-chassis-cli": "0113-minimal-public-chassis-cli",
+      "0033-mvp-vertical-contract": "0114-mvp-vertical-contract",
+      "0034-neutral-verifier-command-boundary": "0115-neutral-verifier-command-boundary",
+      "0035-executor-qualification-v1-paired-protocol": "0116-executor-qualification-v1-paired-protocol",
+      "0037-second-executor-enablement": "0152-second-executor-enablement"
+    },
+    "status": "TRACEABILITY_NORMALIZED"
+  },
+  "nested_repository_cache_observed": true,
+  "deletion_performed": false,
+  "test_discovery_isolation_required": true,
+  "classifications": {
+    "decision_and_protocol_docs": "HISTORICAL_NORMATIVE_CANDIDATE",
+    "experiment_fixtures": "EXPERIMENT_INPUT_CANDIDATE",
+    "raw_logs_and_reports": "HISTORICAL_EVIDENCE",
+    "nested_workspaces_and_caches": "ARCHIVE_ONLY"
+  },
+  "provider_called": false,
+  "promotion": "NOT_AUTHORIZED",
+  "next_block": "EXPERIMENT_FIXTURE_REFERENCE_AUDIT"
+}
