@@ -46,10 +46,10 @@ MVP, mas não constituem por si só uma release operacional.
 
 | Gate | Critério | Estado inicial |
 |---|---|---|
-| M0 | contrato de uma tarefa, executor, ambiente e aceitação | `IMPLEMENTED_NOT_EXECUTED` |
-| M1 | uma execução real ponta a ponta | `NOT_EXECUTED` |
-| M2 | timeout, falha e ambiente indisponível sem falso sucesso | `PENDING` |
-| M3 | repetição controlada com identidade e evidência | `PENDING` |
+| M0 | contrato de uma tarefa, executor, ambiente e aceitação | `VALIDATED` |
+| M1 | uma execução real ponta a ponta | `ACCEPTED` |
+| M2 | timeout, falha e ambiente indisponível sem falso sucesso | `IMPLEMENTED_NOT_EXECUTED` |
+| M3 | repetição controlada com identidade e evidência | `IMPLEMENTED_NOT_EXECUTED` |
 | M4 | instalação privada e uso por um usuário autorizado | `PENDING` |
 | M5 | aceitação independente e release candidate | `PENDING` |
 
@@ -89,3 +89,30 @@ A implementação não seleciona Codex/Claude/Gemini, não chama provider/model 
 não faz fallback. Um executor externo pode ser colocado explicitamente no
 `argv` somente depois de sua identidade/qualificação ser declarada para o
 experimento correspondente.
+
+
+## M2 + M3 combined validation
+
+The next qualification block is intentionally combined:
+
+```text
+M2:
+  executor nonzero exit -> FAILED
+  command timeout -> TIMED_OUT
+  executable unavailable -> ENVIRONMENT_UNAVAILABLE
+  none may reach VERIFIED
+
+M3:
+  repeat frozen Issue #57 twice
+  same repository/base/task/executor/verifier
+  explicit distinct attempt_id
+  distinct run_id/evidence
+  identical authorized changed-file set
+  identical workspace.patch sha256
+  both VERIFIED
+```
+
+Runner: `tools/run_m2_m3_validation.py`.
+
+Implementation is not execution evidence. M2/M3 remain
+`IMPLEMENTED_NOT_EXECUTED` until the runner is executed successfully.
