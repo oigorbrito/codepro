@@ -285,6 +285,7 @@ class VerticalRunTests(unittest.TestCase):
                     scope=("src",),
                     candidate_files=("src/value.txt",),
                     affected_components=("src",),
+                    characterization_source_ref="evidence://fixture-characterization",
                     executor_argv=(
                         sys.executable,
                         "-c",
