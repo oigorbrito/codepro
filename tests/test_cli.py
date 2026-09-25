@@ -202,6 +202,8 @@ class RunCliTests(unittest.TestCase):
                 "--authority", "authority://fixture",
                 "--acceptance-authority", "acceptance://reviewer",
                 "--scope", "src",
+                "--candidate-file", "src/a.py",
+                "--affected-component", "src",
                 "--evidence-dir", "../codepro-evidence",
                 "--verifier-argv-json", "not-json",
                 "--",
