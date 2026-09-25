@@ -21,7 +21,7 @@ fallback, and agent-loop behavior.
 ## Evidence and acceptance
 
 The six focused test modules pass together on a clean worktree derived from
-`origin/main` at validated revision `348206be`:
+`origin/main` at validated revision `2a529368dd89596db470c0ca7852f040d301bec9`:
 
 ```text
 43 passed

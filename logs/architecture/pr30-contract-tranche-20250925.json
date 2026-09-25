@@ -1,7 +1,7 @@
 {
   "artifact": "pr30-contract-tranche",
   "protocol": "independent-contract-tranche-v1",
-  "validated_revision": "348206be",
+  "validated_revision": "2a529368dd89596db470c0ca7852f040d301bec9",
   "base": "origin/main",
   "scope": {
     "modules": [
