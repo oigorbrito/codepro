@@ -1,101 +1,104 @@
 # AGENTS.md
 
-## Product identity
+## Contrato operacional mínimo
 
-- The canonical product/project name is **CodePro**.
-- The internal Python namespace `arkx` is legacy and remains temporarily for compatibility. Do not introduce new public/docs/worktree names using Arkx unless documenting history.
-- Do not rename frozen schema/provenance identities without an explicit migration decision.
+Leia este arquivo antes de executar qualquer tarefa no repositório.
 
-## Engineering contract
+Se a tarefa entrar em um diretório com outro `AGENTS.md`, leia também o arquivo mais específico; ele complementa ou restringe estas regras.
 
-- Prefer the minimum sufficient architecture for the observed need.
-- Do not grant tenure to a component merely because it exists.
-- Preserve these invariants:
-  - `SCIENTIFIC_SIGNAL != LOCAL_PASS`
-  - `UPSTREAM_EVIDENCE != LOCAL_EVIDENCE`
-  - `IMPLEMENTATION != EXECUTED`
-  - `EXECUTED != ACCEPTED`
-  - `ACCEPTED != PROMOTED`
-  - `BLOCKED != PASS`
-  - `NOT_EXECUTED != PASS`
-  - `NO_SILENT_FALLBACK`
-  - `NO_SILENT_EXECUTOR_SWITCH`
-  - `NO_SILENT_SCOPE_EXPANSION`
+## 1. Identidade e escopo
 
-## Benchmark and empirical-work rules
+- Produto/projeto canônico: **CodePro**.
+- `arkx` é namespace Python legado temporário. Não crie novos nomes públicos, worktrees ou documentação atual usando Arkx, exceto ao documentar histórico.
+- Não renomeie schemas, fixtures, hashes ou identidades congeladas sem decisão explícita de migração.
 
-When work is motivated by a benchmark, paper, donor implementation, published result, or external experiment:
+## 2. Regras de engenharia
 
-1. Identify the exact upstream repository, commit/version, configuration, workload, model/provider and verifier when available.
-2. Reproduce the reference path before optimizing or adapting it.
-3. Do not substitute a merely supported backend for the backend used by the reference result.
-4. Preserve benchmark-material semantics: environment, runner, prompt/tool contract, retry/timeout policy, patch extraction and verifier.
-5. Record deviations explicitly. A behavior-changing deviation is a treatment, not a baseline repair.
-6. Change one behavior-affecting variable at a time in comparative experiments.
-7. Report quality together with cost/tokens, provider calls, wall time, retries, timeouts and failure classes when relevant.
-8. Treat smoke tests, synthetic fixtures and local passes as local evidence only.
-9. Official benchmark claims must come from the benchmark's authoritative verifier/harness.
-10. Do not promote architecture from a mechanism pass alone.
+- Prefira a menor arquitetura suficiente para o problema observado.
+- Não promova componentes porque já existem.
+- Não faça fallback, troca de executor, expansão de escopo ou mudança de tratamento silenciosamente.
+- Preserve estados distintos: `BLOCKED != PASS`, `NOT_EXECUTED != PASS`, `EXECUTED != ACCEPTED`, `ACCEPTED != PROMOTED`.
+- Uma falha sem evidência de causa permanece não atribuída.
 
-## Reproducibility
+## 3. Quando houver benchmark, paper ou resultado externo
 
-For empirical runs, record immutable identity wherever possible:
+Antes de implementar ou otimizar:
 
-- CodePro commit;
-- executor/agent commit and version;
-- config Git blob/hash;
-- dataset repository/subset/split and revision or fingerprint;
-- instance/task identity and base revision;
-- container image digest/ID, not only a mutable tag;
-- model/provider and effective settings;
-- environment/OS/architecture;
-- verifier/harness version;
-- commands, exit codes and evidence artifacts.
+1. identifique repo, commit/versão, config, workload, backend, modelo/provider e verifier usados na referência;
+2. reproduza o caminho de referência antes de adaptar;
+3. não trate backend apenas suportado como backend comprovado;
+4. preserve semântica material: environment, runner, prompt/tools, retry/timeout, patch/submission e verifier;
+5. registre qualquer diferença behavior-changing como tratamento/desvio, não como “equivalência”;
+6. altere uma variável behavior-changing por vez nos primeiros comparativos;
+7. use o verifier oficial como autoridade para claims de benchmark.
 
-If a mutable reference such as `:latest` is required by an upstream runner, record the resolved immutable digest/ID as evidence.
+Smoke test, fixture sintética, import bem-sucedido ou teste local são evidência local, não resultado de benchmark.
 
-## SWE-bench / mini-SWE-agent baseline
+## 4. Reprodutibilidade obrigatória
 
-For the current mini-SWE-agent qualification lineage:
+Para execuções empíricas, registre quando aplicável:
 
-- reference mini: `v2.4.6` at `a83fcae82d2a08f0ee0c688f9d137b3566c097f8`;
-- reference config blob: `106decd160e72e5164e29d15d23da354c29c309d`;
-- use the upstream SWE-bench runner/environment path rather than a CodePro reimplementation;
-- the provider-free baseline must pass before model/provider execution;
-- CodePro routing, recovery, compaction, replanning, handoff and silent fallback are disabled in the reference baseline;
-- SWE-ReX, Modal, Harbor or other substrates are explicit treatments/comparators unless evidence proves they are the historical reference path;
-- official SWE-bench evaluation is authoritative for `resolved`.
+- commit CodePro;
+- commit/versão do executor/agente;
+- hash/blob da config;
+- dataset, subset, split e revision/fingerprint;
+- task/instance e base revision;
+- imagem + digest/ID resolvido;
+- OS/arquitetura;
+- modelo/provider e settings efetivos;
+- harness/verifier e versão;
+- comandos, exit codes e artefatos.
 
-For a prepared SWE-bench repository, do **not** require `HEAD == instance.base_commit`. Validate that the base commit is an ancestor of the prepared HEAD, the initial worktree is clean, and record any preparation commits as provenance.
+Tag mutável, como `:latest`, nunca é identidade suficiente sozinha.
 
-Use a unique SWE-bench verifier `run_id` for every distinct prediction/control. Result caching is keyed by run ID and instance and can otherwise reuse stale evidence.
+## 5. Baseline mini-SWE-agent atual
 
-## Historical qualification state
+Referência congelada:
 
-Do not rewrite historical evidence:
+- mini-swe-agent `v2.4.6`;
+- commit `a83fcae82d2a08f0ee0c688f9d137b3566c097f8`;
+- config SWE-bench blob `106decd160e72e5164e29d15d23da354c29c309d`.
+
+No baseline:
+
+- use runner/environment upstream;
+- provider-free deve passar antes de modelo/provider;
+- routing, recovery, compaction, replanning, handoff e fallback CodePro ficam desligados;
+- SWE-ReX, Modal, Harbor e outros substrates são tratamentos/comparadores, salvo evidência de que pertencem à referência histórica;
+- SWE-bench oficial é autoridade de `resolved`.
+
+Para repo preparado SWE-bench:
+
+- não exija `HEAD == base_commit`;
+- exija `base_commit` ancestral do HEAD preparado;
+- exija worktree inicial limpa;
+- registre commits de preparação.
+
+Cada prediction/control do verifier usa `run_id` único.
+
+## 6. Antes de commit
+
+Para mudanças de runtime/benchmark:
+
+- rode testes focados do invariável alterado;
+- rode `git diff --check`;
+- valide JSON alterado;
+- mantenha `provider_called = false` em mudanças somente de infraestrutura;
+- não reescreva evidência histórica; registre correção/addendum.
+
+## 7. Estado histórico que não pode ser reclassificado
 
 - `Qualification Run v1 = BLOCKED`;
 - `promotion = NOT_AUTHORIZED`.
 
-A later successful run starts or advances a new qualification lineage; it does not relabel v1.
+Uma execução posterior não reescreve v1.
 
-## Validation before commit
+## 8. Leitura adicional somente quando necessária
 
-For changes affecting benchmark/runtime behavior:
+- contrato do projeto: `docs/project-contract.md`;
+- política de fidelidade: `docs/benchmark-fidelity-audit.md`;
+- baseline mini: `docs/decisions/0142-benchmark-faithful-mini-swebench-substrate.md`;
+- estado preparado SWE-bench: `docs/decisions/0143-swebench-prepared-repo-state.md`;
+- regras específicas da integração mini: `experiments/integrations/minisweagent/AGENTS.md`.
 
-- run focused regression tests for the changed invariant;
-- run `git diff --check`;
-- validate JSON artifacts if modified;
-- preserve provider-free gates when the change is infrastructure-only;
-- do not interpret CI failure without logs as a code regression.
-
-## Relevant documentation
-
-Use these files when the task touches their subject:
-
-- `docs/project-contract.md` for project invariants and product boundaries;
-- `docs/benchmark-fidelity-audit.md` for benchmark-fidelity policy;
-- `docs/benchmark-fidelity-audit-v2-addendum.md` for the prepared-repo-state correction;
-- `docs/decisions/0142-benchmark-faithful-mini-swebench-substrate.md` for the pinned mini Docker baseline;
-- `docs/decisions/0143-swebench-prepared-repo-state.md` for SWE-bench repository-state semantics;
-- `experiments/integrations/minisweagent/AGENTS.md` for mini/SWE-bench-specific execution rules.
+Não leia toda a árvore de docs por padrão. Abra apenas o material necessário para a tarefa.
