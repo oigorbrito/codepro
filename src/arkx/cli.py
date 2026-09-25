@@ -62,6 +62,11 @@ def build_parser() -> argparse.ArgumentParser:
     run_parser.add_argument("--scope", action="append", required=True)
     run_parser.add_argument("--max-wall-time", type=float, default=300.0)
     run_parser.add_argument(
+        "--attempt-id",
+        default="attempt-1",
+        help="Explicit attempt identity used in the persisted run identity.",
+    )
+    run_parser.add_argument(
         "--evidence-dir",
         required=True,
         help="Evidence root outside the target workspace; existing run identities are never overwritten.",
@@ -156,6 +161,7 @@ def _run(args: argparse.Namespace) -> int:
             verifier_argv=tuple(verifier_argv),
             evidence_dir=args.evidence_dir,
             max_wall_time_seconds=args.max_wall_time,
+            attempt_id=args.attempt_id,
         )
     except (ValueError, OSError, FileExistsError) as exc:
         print(f"codepro: error: {exc}", file=sys.stderr)
