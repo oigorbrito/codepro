@@ -17,6 +17,7 @@ import json
 import os
 from pathlib import Path
 import subprocess
+import tempfile
 import time
 from typing import Any, Sequence
 
@@ -240,8 +241,22 @@ def run_vertical(
 
     changed_files = _changed_files(root)
     _write_new(run_root / "changed-files.json", {"changed_files": list(changed_files)})
-    diff = _git(root, "diff", "--binary", "--no-ext-diff", revision)
-    _write_text_new(run_root / "workspace.patch", diff["stdout"])
+    patch = _workspace_patch(root, revision)
+    _write_new(
+        run_root / "workspace-patch-summary.json",
+        {
+            "returncode": patch["returncode"],
+            "stderr": patch["stderr"],
+            "complete": patch["returncode"] == 0,
+        },
+    )
+    if patch["returncode"] != 0:
+        return finish(
+            VerticalRunStatus.BLOCKED,
+            "WORKSPACE_PATCH_EVIDENCE_UNAVAILABLE",
+            changed_files,
+        )
+    _write_text_new(run_root / "workspace.patch", patch["stdout"])
 
     outside = tuple(path for path in changed_files if not _within_scope(path, normalized_scope))
     if outside:
@@ -330,6 +345,61 @@ def _git(root: Path, *args: str) -> dict[str, Any]:
     try:
         completed = subprocess.run(
             ["git", "-C", str(root), *args],
+            capture_output=True,
+            text=True,
+            encoding="utf-8",
+            errors="replace",
+            shell=False,
+            check=False,
+            timeout=30,
+        )
+        return {
+            "argv": ["git", "-C", str(root), *args],
+            "returncode": completed.returncode,
+            "stdout": completed.stdout,
+            "stderr": completed.stderr,
+        }
+    except (OSError, subprocess.TimeoutExpired) as exc:
+        return {
+            "argv": ["git", "-C", str(root), *args],
+            "returncode": None,
+            "stdout": "",
+            "stderr": str(exc),
+        }
+
+
+def _workspace_patch(root: Path, revision: str) -> dict[str, Any]:
+    """Build a complete binary patch without mutating the repository index."""
+
+    with tempfile.TemporaryDirectory(prefix="codepro-index-") as tmp:
+        index_path = Path(tmp) / "index"
+        environment = os.environ.copy()
+        environment["GIT_INDEX_FILE"] = str(index_path)
+
+        read_tree = _git_with_env(root, environment, "read-tree", revision)
+        if read_tree["returncode"] != 0:
+            return read_tree
+
+        add = _git_with_env(root, environment, "add", "-A", "--", ".")
+        if add["returncode"] != 0:
+            return add
+
+        return _git_with_env(
+            root,
+            environment,
+            "diff",
+            "--cached",
+            "--binary",
+            "--no-ext-diff",
+            revision,
+        )
+
+
+def _git_with_env(root: Path, environment: dict[str, str], *args: str) -> dict[str, Any]:
+    try:
+        completed = subprocess.run(
+            ["git", "-C", str(root), *args],
+            env=environment,
             capture_output=True,
             text=True,
             encoding="utf-8",
