@@ -347,13 +347,13 @@ class VerticalRunTests(unittest.TestCase):
             self.assertEqual(cached.stdout.strip(), "")
 
             status = subprocess.run(
-                ["git", "status", "--porcelain=v1", "--untracked-files=all"],
+                ["git", "status", "--porcelain=v1", "-z", "--untracked-files=all"],
                 cwd=root,
                 check=True,
                 capture_output=True,
                 text=True,
             )
-            self.assertIn("?? src/new file.txt", status.stdout)
+            self.assertIn("?? src/new file.txt\0", status.stdout)
 
 
 if __name__ == "__main__":
