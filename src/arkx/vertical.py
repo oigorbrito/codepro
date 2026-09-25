@@ -113,6 +113,7 @@ def run_vertical(
     evidence_dir: str | Path,
     candidate_files: Sequence[str] | None = None,
     affected_components: Sequence[str] | None = None,
+    characterization_source_ref: str | None = None,
     max_wall_time_seconds: float = 300.0,
     attempt_id: str = "attempt-1",
 ) -> VerticalRunResult:
@@ -192,9 +193,22 @@ def run_vertical(
             {
                 "candidate_files": None if normalized_candidates is None else list(normalized_candidates),
                 "affected_components": None if normalized_components is None else list(normalized_components),
+                "source_ref": characterization_source_ref,
             },
         )
         return finish(VerticalRunStatus.BLOCKED, "CHARACTERIZATION_REQUIRED")
+
+    normalized_source_ref = None if characterization_source_ref is None else characterization_source_ref.strip()
+    if not normalized_source_ref:
+        _write_new(
+            run_root / "characterization-input.json",
+            {
+                "candidate_files": list(normalized_candidates),
+                "affected_components": list(normalized_components),
+                "source_ref": normalized_source_ref,
+            },
+        )
+        return finish(VerticalRunStatus.BLOCKED, "CHARACTERIZATION_PROVENANCE_REQUIRED")
 
     outside_candidates = tuple(
         path for path in normalized_candidates if not _within_scope(path, normalized_scope)
@@ -264,7 +278,9 @@ def run_vertical(
 
     _write_new(run_root / "request.json", request.to_dict())
     _write_new(run_root / "authority-grant.json", grant.to_dict())
-    _write_new(run_root / "characterization-input.json", signals.to_dict())
+    characterization_evidence = signals.to_dict()
+    characterization_evidence["source_ref"] = normalized_source_ref
+    _write_new(run_root / "characterization-input.json", characterization_evidence)
 
     started_at = time.monotonic()
     record = execute_governed(
