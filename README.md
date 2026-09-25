@@ -102,3 +102,26 @@ PYTHONPATH=src python tools/chassis_fingerprint.py
 ```
 
 The CI installs the CLI and verifies the suite across Python 3.12, 3.13, and 3.14 while requiring the same canonical chassis fingerprint across supported interpreters.
+
+
+## Vertical implementation validation
+
+The minimal vertical journey has a provider-free implementation validation runner.
+This validates focused contracts plus one disposable Git-repository execution; it
+does **not** count as an MVP M1 real-task pass.
+
+On a supported interpreter:
+
+```text
+py -3.13 tools/run_vertical_implementation_validation.py
+```
+
+Expected classification:
+
+```text
+VERTICAL_IMPLEMENTATION_VALIDATED
+```
+
+The runner always records `m1_real_task = NOT_EXECUTED`. A real M1 observation
+requires a separately authorized target repository/task and must not reuse the
+disposable validation fixture as product evidence.
