@@ -3,6 +3,7 @@
 
 from __future__ import annotations
 
+import gzip
 import hashlib
 import io
 import json
@@ -92,6 +93,68 @@ def extract_archive(archive_bytes: bytes, destination: Path) -> None:
         bundle.extractall(destination, filter="fully_trusted")
 
 
+def sdist_logical_manifest(path: Path) -> list[dict[str, Any]]:
+    records: list[dict[str, Any]] = []
+    with tarfile.open(path, mode="r:gz") as bundle:
+        for member in sorted(bundle.getmembers(), key=lambda item: item.name):
+            record: dict[str, Any] = {
+                "name": member.name,
+                "type": member.type.decode("ascii", errors="replace")
+                if isinstance(member.type, bytes)
+                else str(member.type),
+                "mode": member.mode,
+                "linkname": member.linkname,
+                "size": member.size,
+            }
+            if member.isfile():
+                extracted = bundle.extractfile(member)
+                if extracted is None:
+                    raise RuntimeError(f"unable to read sdist member: {member.name}")
+                record["sha256"] = hashlib.sha256(extracted.read()).hexdigest()
+            records.append(record)
+    return records
+
+
+def canonicalize_sdist(path: Path, epoch: int) -> None:
+    with tarfile.open(path, mode="r:gz") as source:
+        members = sorted(source.getmembers(), key=lambda item: item.name)
+        payloads: dict[str, bytes] = {}
+        for member in members:
+            if member.isfile():
+                extracted = source.extractfile(member)
+                if extracted is None:
+                    raise RuntimeError(f"unable to read sdist member: {member.name}")
+                payloads[member.name] = extracted.read()
+
+        tar_buffer = io.BytesIO()
+        with tarfile.open(fileobj=tar_buffer, mode="w", format=tarfile.PAX_FORMAT) as target:
+            for member in members:
+                normalized = tarfile.TarInfo(member.name)
+                normalized.type = member.type
+                normalized.mode = member.mode
+                normalized.size = member.size
+                normalized.linkname = member.linkname
+                normalized.uid = 0
+                normalized.gid = 0
+                normalized.uname = ""
+                normalized.gname = ""
+                normalized.mtime = epoch
+                normalized.pax_headers = {}
+                data = io.BytesIO(payloads[member.name]) if member.isfile() else None
+                target.addfile(normalized, data)
+
+    gzip_buffer = io.BytesIO()
+    with gzip.GzipFile(
+        filename="",
+        mode="wb",
+        fileobj=gzip_buffer,
+        compresslevel=9,
+        mtime=epoch,
+    ) as compressed:
+        compressed.write(tar_buffer.getvalue())
+    path.write_bytes(gzip_buffer.getvalue())
+
+
 def normalize_tree_mtime(root: Path, epoch: int) -> None:
     for path in sorted(root.rglob("*")):
         try:
@@ -143,6 +206,9 @@ def build_once(
         return result
 
     result["wheel"] = artifact_record(wheels[0])
+    result["raw_sdist"] = artifact_record(sdists[0])
+    result["sdist_logical_manifest"] = sdist_logical_manifest(sdists[0])
+    canonicalize_sdist(sdists[0], source_date_epoch)
     result["sdist"] = artifact_record(sdists[0])
     return result
 
@@ -290,6 +356,9 @@ def main() -> int:
 
         reproducible = {
             "wheel": first["wheel"] == second["wheel"],
+            "sdist_logical_content": (
+                first["sdist_logical_manifest"] == second["sdist_logical_manifest"]
+            ),
             "sdist": first["sdist"] == second["sdist"],
         }
         report["reproducibility"] = reproducible
@@ -315,7 +384,11 @@ def main() -> int:
             manifest_canonical.encode("utf-8")
         ).hexdigest()
 
-        if not reproducible["wheel"] or not reproducible["sdist"]:
+        if (
+            not reproducible["wheel"]
+            or not reproducible["sdist_logical_content"]
+            or not reproducible["sdist"]
+        ):
             report["classification"] = "BLOCKED_ARTIFACTS_NOT_REPRODUCIBLE"
             print(json.dumps(report, ensure_ascii=False, indent=2, sort_keys=True))
             return 2
