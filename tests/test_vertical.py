@@ -113,6 +113,26 @@ class VerticalRunTests(unittest.TestCase):
             self.assertEqual(result.status, VerticalRunStatus.BLOCKED)
             self.assertEqual(result.reason, "CHANGED_FILES_OUTSIDE_AUTHORIZED_SCOPE")
 
+    def test_evidence_inside_workspace_is_rejected(self):
+        with tempfile.TemporaryDirectory() as tmp:
+            root = Path(tmp) / "repo"
+            root.mkdir()
+            revision = self.init_repo(root)
+            with self.assertRaisesRegex(ValueError, "outside the target workspace"):
+                run_vertical(
+                    workspace=root,
+                    revision=revision,
+                    request_id="request-4",
+                    task_id="task-4",
+                    requester_ref="user://fixture",
+                    authority_ref="authority://fixture",
+                    acceptance_authority_ref="acceptance://reviewer",
+                    scope=("src",),
+                    executor_argv=(sys.executable, "-c", "raise SystemExit(0)"),
+                    verifier_argv=(sys.executable, "-c", "raise SystemExit(0)"),
+                    evidence_dir=root / ".codepro" / "runs",
+                )
+
 
 if __name__ == "__main__":
     unittest.main()
