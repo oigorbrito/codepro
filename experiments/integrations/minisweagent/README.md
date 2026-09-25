@@ -16,6 +16,28 @@ configuration at that commit. Do not edit it locally. Model/provider changes for
 an experiment must be layered as a separate config and frozen as treatment
 configuration.
 
+## Engineering rule
+
+The reference baseline must import and exercise upstream behavior rather than
+reimplementing it in CodePro.
+
+CodePro qualification code may:
+
+- pin identity;
+- record provenance;
+- execute controls;
+- classify observed outcomes.
+
+It must not silently change:
+
+- environment/backend;
+- image derivation;
+- task state;
+- prompt/tool contract;
+- retries/timeouts;
+- patch extraction;
+- verifier authority.
+
 ## Provider-free preflight
 
 Run from the CodePro repository with a local checkout of the pinned mini repo:
@@ -29,9 +51,10 @@ python experiments/integrations/minisweagent/preflight.py `
 This checks, without calling a model/provider:
 
 1. exact mini commit;
-2. exact bundled SWE-bench config Git blob;
-3. Docker CLI;
-4. Docker daemon access.
+2. clean mini worktree;
+3. exact bundled SWE-bench config Git blob;
+4. Docker CLI;
+5. Docker daemon access.
 
 If an already-available Linux image can be used for a container execution probe:
 
@@ -44,10 +67,63 @@ python experiments/integrations/minisweagent/preflight.py `
 
 The tool deliberately has no local/Git-Bash/SWE-ReX/Modal fallback.
 
-## Reference run
+## Provider-free task-environment harness
 
-After provider-free preflight passes, use the upstream runner rather than a
-CodePro reimplementation:
+After the infrastructure preflight passes, qualify the real task environment
+through the pinned upstream mini runner:
+
+```powershell
+python experiments/integrations/minisweagent/provider_free_task_harness.py `
+  --mini-repo D:\path\to\mini-swe-agent `
+  --subset verified `
+  --split test `
+  --instance sympy__sympy-14711 `
+  --repeat 3 `
+  --output logs\architecture\qualification-v2-provider-free-task.json
+```
+
+The harness imports these upstream functions directly:
+
+- `DATASET_MAPPING`;
+- `get_swebench_docker_image_name`;
+- `get_sb_environment`.
+
+It does not instantiate a model.
+
+### Prepared repository-state invariant
+
+Do not require:
+
+```text
+prepared HEAD == instance.base_commit
+```
+
+The provider-free task harness instead requires:
+
+```text
+instance.base_commit is an ancestor of prepared HEAD
+AND initial working tree is clean
+```
+
+It records:
+
+- prepared HEAD;
+- whether HEAD equals base commit;
+- ancestry result;
+- number of commits ahead;
+- prepared commit metadata;
+- initial working-tree state.
+
+A non-ancestor base commit is a material provenance failure. A prepared commit
+above the base revision is not automatically a failure.
+
+See `docs/decisions/0143-swebench-prepared-repo-state.md`.
+
+## Reference agent run
+
+Only after the provider-free path is ready should a model/provider be introduced.
+
+Use the upstream runner rather than a CodePro implementation:
 
 ```text
 mini-extra swebench
@@ -55,13 +131,49 @@ mini-extra swebench
   --split <frozen split>
   --filter <frozen task id>
   --workers 1
-  --output <new qualification-v2 output>
+  --output <new qualification output>
 ```
 
 The bundled upstream `swebench.yaml` is the default. If a different
-model/provider is the intended experimental treatment, layer only those fields
-in a second config and freeze the resulting treatment identity. Do not copy and
-edit the reference file.
+model/provider is the intended treatment, layer only those fields in a second
+config and freeze the resulting treatment identity. Do not copy and edit the
+reference file.
+
+## Workload provenance
+
+For every benchmark qualification, record when available:
+
+- dataset repository;
+- subset and split;
+- dataset revision;
+- dataset fingerprint;
+- instance ID;
+- task `base_commit`;
+- task image name;
+- resolved image digest/image ID;
+- prepared HEAD;
+- commits between base and prepared HEAD.
+
+A mutable image tag such as `:latest` is not sufficient as the only provenance
+record.
+
+## Verification
+
+A generated patch/trajectory is not a successful benchmark result. Resolution
+claims require the frozen official SWE-bench evaluation path/verifier.
+
+Verifier controls and agent runs must use distinct `run_id` values. The
+SWE-bench harness may reuse a cached result for the same run ID and instance, so
+reusing an identifier for a different prediction can invalidate the evidence.
+
+Recommended control sequence:
+
+1. provider-free task environment;
+2. negative verifier control;
+3. positive/gold verifier control when available;
+4. model/provider qualification;
+5. bounded agent run;
+6. official verifier outcome.
 
 ## Baseline restrictions
 
@@ -79,12 +191,46 @@ mechanisms:
 CodePro may record provenance and observations only where doing so does not
 change agent behavior.
 
-## Verification
+SWE-ReX and Harbor may be evaluated later as explicit treatments or execution
+substrates. Their support does not make them equivalent to the pinned Docker
+baseline.
 
-A generated patch/trajectory is not a successful benchmark result. Resolution
-claims require the frozen official SWE-bench evaluation path/verifier.
+## Empirical comparison discipline
 
-See:
+After the reference baseline is demonstrated, change one behavior-affecting
+variable at a time on the same frozen workload.
+
+Measure at minimum:
+
+- official verifier resolution;
+- provider calls;
+- tokens;
+- cost;
+- wall time;
+- retries;
+- timeouts;
+- failure classes.
+
+A smoke test, local pass, supported backend, or synthetic fixture is not a
+benchmark result.
+
+## Current references
+
+Historical baseline authority:
+
+- pinned mini-SWE-agent v2.4.6 source/config.
+
+Current corroborating engineering documentation:
+
+- https://www.swebench.com/SWE-bench/reference/harness/
+- https://www.swebench.com/SWE-bench/guides/docker_setup/
+- https://mini-swe-agent.com/latest/advanced/environments/
+- https://mini-swe-agent.com/latest/reference/run/swebench/
+- https://www.harborframework.com/docs/agents
+
+See also:
 
 - `docs/decisions/0142-benchmark-faithful-mini-swebench-substrate.md`
+- `docs/decisions/0143-swebench-prepared-repo-state.md`
 - `docs/benchmark-fidelity-audit.md`
+- `docs/benchmark-fidelity-audit-v2-addendum.md`
