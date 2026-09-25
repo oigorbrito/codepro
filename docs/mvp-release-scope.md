@@ -50,8 +50,8 @@ MVP, mas não constituem por si só uma release operacional.
 | M1 | uma execução real ponta a ponta | `ACCEPTED` |
 | M2 | timeout, falha e ambiente indisponível sem falso sucesso | `VALIDATED` |
 | M3 | repetição controlada com identidade e evidência | `VALIDATED` |
-| M4 | instalação privada e uso por um usuário autorizado | `IMPLEMENTED_NOT_EXECUTED` |
-| M5 | aceitação independente e release candidate | `IMPLEMENTED_NOT_EXECUTED` |
+| M4 | instalação privada e uso por um usuário autorizado | `VALIDATED` |
+| M5 | aceitação independente e release candidate | `READY_FOR_INDEPENDENT_REVIEW` |
 
 Nenhum executor adicional, benchmark amplo ou camada arquitetural nova deve ser
 adicionada antes de M1–M3 passarem. A implementação deve preferir remover
@@ -174,3 +174,23 @@ M5 readiness:
 A successful result is readiness for independent release-candidate review, not
 a release authorization. Tagging, publication, executor promotion, and
 activation remain separate explicit decisions.
+
+
+## M4 + M5 observed result
+
+Observed candidate:
+
+```text
+candidate_sha = eb350cc5c9c7c2430e86a3870a6a40f67038d363
+classification = M4_M5_READINESS_VALIDATED
+M4 = M4_PRIVATE_INSTALL_AND_USE_VALIDATED
+M5 = M5_RELEASE_CANDIDATE_READY_FOR_INDEPENDENT_REVIEW
+```
+
+Observed checks included a clean non-editable private install, installed console
+script probes, one VERIFIED installed vertical, exact clean candidate checkout,
+foundation PASS, baseline PASS, full unittest suite PASS, mutation probe PASS,
+semantic fingerprint PASS, and compileall PASS.
+
+Release, publication, activation, and executor promotion remain explicitly
+`NOT_AUTHORIZED` pending independent release-candidate review.
