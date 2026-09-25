@@ -194,3 +194,24 @@ semantic fingerprint PASS, and compileall PASS.
 
 Release, publication, activation, and executor promotion remain explicitly
 `NOT_AUTHORIZED` pending independent release-candidate review.
+
+
+## Independent release-candidate review result
+
+Observed evidence-only review:
+
+```text
+candidate_sha = eb350cc5c9c7c2430e86a3870a6a40f67038d363
+classification = RELEASE_CANDIDATE_ACCEPTED_FOR_RELEASE_DECISION
+failures = []
+independent_of_executor = true
+
+release = NOT_AUTHORIZED
+publication = NOT_AUTHORIZED
+activation = NOT_AUTHORIZED
+executor_promotion = NOT_AUTHORIZED
+```
+
+The candidate is accepted for an explicit release decision. This state does not
+itself create a tag, GitHub release, package publication, production activation,
+or executor promotion.
