@@ -4,6 +4,7 @@
 from __future__ import annotations
 
 import json
+import os
 from pathlib import Path
 import subprocess
 import sys
@@ -17,7 +18,13 @@ if str(SRC) not in sys.path:
     sys.path.insert(0, str(SRC))
 
 
-def run(argv: list[str], *, cwd: Path | None = None, timeout: int = 120) -> dict[str, Any]:
+def run(
+    argv: list[str],
+    *,
+    cwd: Path | None = None,
+    timeout: int = 120,
+    env: dict[str, str] | None = None,
+) -> dict[str, Any]:
     try:
         completed = subprocess.run(
             argv,
@@ -29,6 +36,7 @@ def run(argv: list[str], *, cwd: Path | None = None, timeout: int = 120) -> dict
             shell=False,
             check=False,
             timeout=timeout,
+            env=env,
         )
         return {
             "argv": argv,
@@ -80,6 +88,13 @@ def main() -> int:
         report["classification"] = "BLOCKED_UNSUPPORTED_PYTHON"
         return finish(report, 2)
 
+    test_env = os.environ.copy()
+    existing_pythonpath = test_env.get("PYTHONPATH")
+    test_env["PYTHONPATH"] = (
+        str(SRC)
+        if not existing_pythonpath
+        else os.pathsep.join((str(SRC), existing_pythonpath))
+    )
     tests = run(
         [
             sys.executable,
@@ -91,6 +106,7 @@ def main() -> int:
         ],
         cwd=ROOT,
         timeout=180,
+        env=test_env,
     )
     report["steps"]["focused_tests"] = tests
     if tests["returncode"] != 0:
