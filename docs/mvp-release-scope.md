@@ -48,8 +48,8 @@ MVP, mas não constituem por si só uma release operacional.
 |---|---|---|
 | M0 | contrato de uma tarefa, executor, ambiente e aceitação | `VALIDATED` |
 | M1 | uma execução real ponta a ponta | `ACCEPTED` |
-| M2 | timeout, falha e ambiente indisponível sem falso sucesso | `IMPLEMENTED_NOT_EXECUTED` |
-| M3 | repetição controlada com identidade e evidência | `IMPLEMENTED_NOT_EXECUTED` |
+| M2 | timeout, falha e ambiente indisponível sem falso sucesso | `VALIDATED` |
+| M3 | repetição controlada com identidade e evidência | `VALIDATED` |
 | M4 | instalação privada e uso por um usuário autorizado | `PENDING` |
 | M5 | aceitação independente e release candidate | `PENDING` |
 
@@ -116,3 +116,29 @@ Runner: `tools/run_m2_m3_validation.py`.
 
 Implementation is not execution evidence. M2/M3 remain
 `IMPLEMENTED_NOT_EXECUTED` until the runner is executed successfully.
+
+
+## M2 + M3 observed result
+
+Observed local evidence on Python 3.13:
+
+```text
+classification = M2_M3_VALIDATED
+
+M2:
+  FAILED
+  TIMED_OUT
+  ENVIRONMENT_UNAVAILABLE
+
+M3:
+  both_verified = true
+  distinct_attempt_id = true
+  distinct_run_id = true
+  same_base_sha = true
+  same_changed_files = true
+  same_patch_sha256 = true
+  same_task_id = true
+```
+
+This closes M2 and M3 at local validation scope only. It does not authorize
+executor promotion or release.
