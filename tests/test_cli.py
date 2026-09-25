@@ -1,4 +1,5 @@
 import io
+import json
 import subprocess
 import sys
 import tomllib
@@ -143,6 +144,65 @@ class PackagingContractTests(unittest.TestCase):
     def test_no_runtime_dependencies_are_declared(self):
         project = tomllib.loads((ROOT / "pyproject.toml").read_text(encoding="utf-8"))
         self.assertEqual(project["project"]["dependencies"], [])
+
+
+class RunCliTests(unittest.TestCase):
+    def test_run_passes_explicit_executor_and_verifier_argv(self):
+        from arkx.vertical import VerticalRunResult, VerticalRunStatus
+
+        result = VerticalRunResult(
+            run_id="request-1-deadbeef0000",
+            status=VerticalRunStatus.VERIFIED,
+            reason="DECLARED_VERIFIER_PASSED",
+            evidence_root="/tmp/evidence",
+            changed_files=("src/a.py",),
+        )
+        argv = [
+            "run",
+            "--workspace", ".",
+            "--revision", "a" * 40,
+            "--request-id", "request-1",
+            "--task-id", "task-1",
+            "--requester", "user://fixture",
+            "--authority", "authority://fixture",
+            "--acceptance-authority", "acceptance://reviewer",
+            "--scope", "src",
+            "--verifier-argv-json", '["python","-m","pytest","-q"]',
+            "--",
+            "codex",
+            "exec",
+            "--full-auto",
+        ]
+        output = io.StringIO()
+        with patch("arkx.cli.run_vertical", return_value=result) as run_mock, redirect_stdout(output):
+            code = main(argv)
+
+        self.assertEqual(code, 0)
+        self.assertEqual(json.loads(output.getvalue())["status"], "VERIFIED")
+        kwargs = run_mock.call_args.kwargs
+        self.assertEqual(kwargs["executor_argv"], ("codex", "exec", "--full-auto"))
+        self.assertEqual(kwargs["verifier_argv"], ("python", "-m", "pytest", "-q"))
+        self.assertEqual(kwargs["scope"], ("src",))
+
+    def test_run_rejects_invalid_verifier_json(self):
+        error = io.StringIO()
+        with patch("sys.stderr", error):
+            code = main([
+                "run",
+                "--workspace", ".",
+                "--revision", "a" * 40,
+                "--request-id", "request-1",
+                "--task-id", "task-1",
+                "--requester", "user://fixture",
+                "--authority", "authority://fixture",
+                "--acceptance-authority", "acceptance://reviewer",
+                "--scope", "src",
+                "--verifier-argv-json", "not-json",
+                "--",
+                "codex",
+            ])
+        self.assertEqual(code, 2)
+        self.assertIn("not valid JSON", error.getvalue())
 
 
 if __name__ == "__main__":
