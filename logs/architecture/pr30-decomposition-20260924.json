@@ -1,0 +1,106 @@
+{
+  "decision": "0148",
+  "classification": "PR30_NOT_MERGEABLE_AS_SINGLE_UNIT",
+  "date": "2026-09-24",
+  "updated_at": "2026-09-25",
+  "main_head": "86b3822499de186a779e9a3887285d92f60fafea",
+  "merge_base": "033b46da93af614fcd65b556eb4a727408a71644",
+  "conflict_count": 31,
+  "merge_worktree": "D:/projetos/arkx/.tmp/pr30-merge",
+  "merge_state": "ABORTED_AFTER_DIAGNOSTIC",
+  "provider_called": false,
+  "focused_tests": {
+    "passed": 109,
+    "failed": 0,
+    "blocked_environment_tests": 1,
+    "environment_blocker": "WINDOWS_TEMP_DIRECTORY_PERMISSION_DENIED"
+  },
+  "full_suite": {
+    "status": "NOT_COMPARABLE",
+    "observed_issues": [
+      "HISTORICAL_LOG_DISCOVERY_CONTAMINATION",
+      "PR30_FOUNDATIONAL_CONTRACT_IMPORT_MISMATCH"
+    ]
+  },
+  "promotion": "NOT_AUTHORIZED",
+  "foundation_gate": {
+    "contracts": "REJECTED_PR30_VALIDATION_REGRESSION",
+    "pure_contract_tranche": {
+      "modules": [
+        "composition.py",
+        "configuration.py",
+        "outcomes.py",
+        "p82_editing.py",
+        "p82_localization.py",
+        "executor_qualification.py"
+      ],
+      "clean_main_worktree": "D:/projetos/arkx/.tmp/pr30-pure-tranche",
+      "fixtures": [
+        "experiments/composition-harness-fixture.json",
+        "experiments/executor-qualification-fixture.json"
+      ],
+      "python": "3.13",
+      "focused_tests_passed": 41,
+      "focused_tests_failed": 0,
+      "status": "COMPATIBLE_WITH_SCOPE"
+    },
+    "core_outcomes_test": "NOT_EXECUTED_LATER_DEPENDENCY_P82_BASELINE"
+  },
+  "telemetry_gate": {
+    "tests_passed": 16,
+    "tests_failed": 4,
+    "status": "REJECTED_VALIDATION_REGRESSION",
+    "failed_invariants": [
+      "blank_evidence_rejection",
+      "duplicate_task_boundary_rejection",
+      "post_terminal_event_rejection",
+      "monotonic_event_timestamp_rejection"
+    ]
+  },
+  "handoff_gate": {
+    "tests_passed": 8,
+    "tests_failed": 6,
+    "status": "REJECTED_CONTRACT_REGRESSION",
+    "failed_invariants": [
+      "identity_and_evidence_validation",
+      "measurement_validation",
+      "schema_version",
+      "duplicate_handoff_id_rejection",
+      "repeated_transition_accounting"
+    ]
+  },
+  "planning_gate": {
+    "status": "REJECTED_API_INCOMPATIBILITY",
+    "tests_passed": 0,
+    "tests_failed": 0,
+    "collection_error": "missing build_replan_result"
+  },
+  "routing_gate": {
+    "status": "DEFERRED_DEPENDENCY_BOUNDARY",
+    "tests_passed": 0,
+    "tests_failed": 0,
+    "collection_error": "missing arkx.integration"
+  },
+  "execution_harness_gate": {
+    "status": "DEFERRED_ADAPTER_REQUIRED",
+    "cluster": [
+      "configuration",
+      "execution",
+      "harness",
+      "integration",
+      "orchestration",
+      "event_log",
+      "verifier",
+      "request",
+      "selection",
+      "p82_baseline"
+    ],
+    "crosses_semantic_conflicts": [
+      "acceptance",
+      "promotion",
+      "recovery",
+      "routing"
+    ]
+  },
+  "next_block": "PR30_EXECUTION_HARNESS_DEPENDENCY_GATE"
+}
