@@ -46,8 +46,10 @@ This repository defines deterministic task characterization, progress assessment
 
 It does not yet define multi-agent execution, concrete executor invocation/orchestration, or product integrations with OpenHands, ReX, mini-SWE-agent, SWE-agent, or other executors. Executor-specific mechanisms remain outside the core until an experiment justifies promotion.
 
-
-
 ## Agent execution guidance
 
-Repository-operational instructions for coding agents are defined in `AGENTS.md`. Benchmark-specific agent instructions may be scoped further by nested `AGENTS.md` files. These instruction files operationalize this contract; they do not supersede frozen empirical evidence or decision records.
+Repository-wide operating rules for coding agents are defined in `/AGENTS.md`.
+
+Directories may define a more specific `AGENTS.md` when the work has distinct invariants, evidence requirements, authority boundaries, or validation gates. The nearest applicable file narrows the root contract; it does not supersede frozen empirical evidence or decision records.
+
+Current scoped surfaces include product/runtime engineering under `src/`, experimental/reproducibility work under `experiments/`, verification work under `tests/`, and integration-specific rules below those boundaries.
