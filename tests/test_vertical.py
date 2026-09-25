@@ -275,6 +275,8 @@ class VerticalRunTests(unittest.TestCase):
                     authority_ref="authority://fixture",
                     acceptance_authority_ref="acceptance://reviewer",
                     scope=("src",),
+                    candidate_files=("src/value.txt",),
+                    affected_components=("src",),
                     executor_argv=(
                         sys.executable,
                         "-c",
