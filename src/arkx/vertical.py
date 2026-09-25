@@ -313,6 +313,16 @@ def run_vertical(
 
     changed_files = _changed_files(root)
     _write_new(run_root / "changed-files.json", {"changed_files": list(changed_files)})
+
+    outside = tuple(path for path in changed_files if not _within_scope(path, normalized_scope))
+    if outside:
+        _write_new(run_root / "scope-violation.json", {"outside_scope": list(outside)})
+        return finish(
+            VerticalRunStatus.BLOCKED,
+            "CHANGED_FILES_OUTSIDE_AUTHORIZED_SCOPE",
+            changed_files,
+        )
+
     patch = _workspace_patch(root, revision)
     _write_new(
         run_root / "workspace-patch-summary.json",
@@ -329,11 +339,6 @@ def run_vertical(
             changed_files,
         )
     _write_text_new(run_root / "workspace.patch", patch["stdout"])
-
-    outside = tuple(path for path in changed_files if not _within_scope(path, normalized_scope))
-    if outside:
-        _write_new(run_root / "scope-violation.json", {"outside_scope": list(outside)})
-        return finish(VerticalRunStatus.BLOCKED, "CHANGED_FILES_OUTSIDE_AUTHORIZED_SCOPE", changed_files)
 
     if record.command_result.exit_code != 0:
         return finish(
