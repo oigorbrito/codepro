@@ -1,0 +1,19 @@
+{
+  "classification": "OFFICIAL_VERIFIER_NEGATIVE_CONTROL_PASS",
+  "provider_called": false,
+  "authority": "swebench.harness.run_evaluation",
+  "harness_version": "5.0.2",
+  "dataset": "princeton-nlp/SWE-Bench",
+  "split": "test",
+  "instance_id": "sympy__sympy-14711",
+  "prediction": "explicit empty patch",
+  "submitted": 1,
+  "empty_patches": 1,
+  "resolved": 0,
+  "errors": 0,
+  "unstopped_containers": 0,
+  "unremoved_images": 0,
+  "result": "COMPLETED",
+  "positive_control": "NOT_AVAILABLE",
+  "note": "The harness loaded the task and completed the empty-patch control without model/provider execution."
+}

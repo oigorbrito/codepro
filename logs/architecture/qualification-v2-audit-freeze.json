@@ -1,0 +1,11 @@
+{
+  "classification": "AUDIT_V2_FROZEN_IN_QV2_LINEAGE",
+  "provider_called": false,
+  "codepro_qv2_commit": "ad63b10f88fec9db9237151cad558f5c9645b2c6",
+  "remote_commit": "ad63b10f88fec9db9237151cad558f5c9645b2c6",
+  "markdown_sha256": "5388A2E5BB8F0C4A8986F8C7F32B26B7FFE21407E080CDF52FD05E25BCB0B109",
+  "json_sha256": "F05C2C5DEE4AC643F512C8AAA012C4CC9A2CF6D98AB71EEE8F5FCEF9BB19946B",
+  "staged_files": 2,
+  "qualification_run_v1": "BLOCKED",
+  "promotion": "PROMOTION_NOT_AUTHORIZED"
+}

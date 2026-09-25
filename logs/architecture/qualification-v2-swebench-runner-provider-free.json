@@ -1,0 +1,9 @@
+{
+  "classification": "BLOCKED_MINI_DOCKER_ENVIRONMENT",
+  "provider_called": false,
+  "runner": "minisweagent.run.benchmarks.swebench",
+  "mini_sha": "a83fcae82d2a08f0ee0c688f9d137b3566c097f8",
+  "task": "sympy__sympy-14711",
+  "status": "NOT_EXECUTED",
+  "reason": "The provider-free runner path was not started because the upstream mini DockerEnvironment task-image boundary failed before the first observation and left residual containers."
+}

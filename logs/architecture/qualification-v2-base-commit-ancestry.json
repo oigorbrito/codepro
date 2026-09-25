@@ -1,0 +1,15 @@
+{
+  "provider_called": false,
+  "instance_id": "sympy__sympy-14711",
+  "base_commit": "c6753448b5c34f95e250105d76709fe4d349ca1f",
+  "published_image": "docker.io/swebench/sweb.eval.x86_64.sympy_1776_sympy-14711:latest",
+  "published_head": "a0bbae0b2e7de1110db52bdc844d0e15fe1458fb",
+  "published_head_parent": "c6753448b5c34f95e250105d76709fe4d349ca1f",
+  "merge_base_is_ancestor": true,
+  "distance_base_to_head": 1,
+  "head_author": "SWE-bench <setup@swebench.com>",
+  "head_subject": "SWE-bench",
+  "head_tree_diff_from_base": false,
+  "working_tree_clean": true,
+  "classification": "BASE_COMMIT_IS_ANCESTOR"
+}

@@ -30,8 +30,27 @@ O CodePro qv2 confirmou identidade, configuração, Docker Linux e probe de
 container, mas ainda não executou uma task SWE-bench completa com provider,
 patch e verifier oficial.
 
+## Correção metodológica da identidade da imagem
+
+A verificação inicial exigia `HEAD == instance.base_commit`. Essa não é uma
+invariante válida para as imagens oficiais SWE-bench: a imagem publicada contém
+`c6753448b5c34f95e250105d76709fe4d349ca1f` como ancestral e um commit vazio de
+setup, `a0bbae0b2e7de1110db52bdc844d0e15fe1458fb`, criado por
+`SWE-bench <setup@swebench.com>`. A working tree está limpa e a árvore de
+arquivos entre base e HEAD não difere.
+
+O bloqueio anterior `OFFICIAL_TASK_IMAGE_BASE_COMMIT_MISMATCH` foi, portanto,
+reclassificado como `FALSE_POSITIVE_BASE_COMMIT_EQUALITY_CHECK`; a invariante
+correta é ancestralidade do base commit + estado preparado oficial + working
+tree limpa. Isso valida o repo state da imagem, mas não qualifica provider,
+modelo, agente ou resolução de task.
+
 ## Evidência local
 
+- Índice canônico da publicação experimental: `logs/architecture/qualification-v2-manifest.json`.
+  Somente os artefatos listados nesse manifesto fazem parte desta linhagem; os
+  demais logs locais permanecem fora da publicação ou são históricos não
+  selecionados.
 - CodePro qv2: `eb8ec36337c0b936d869c2bf49d2e062a5935e4a`.
 - Mini qv2: `a83fcae82d2a08f0ee0c688f9d137b3566c097f8`.
 - Preflight provider-free: `BENCHMARK_SUBSTRATE_READY`.
@@ -74,7 +93,7 @@ patch e verifier oficial.
 |---|---|
 | Identidade do mini/configuração | `REFERENCE_MIRROR` |
 | Docker/Linux preflight | `REFERENCE_DERIVED` / `SUPPORTED_BACKEND_ONLY` |
-| DockerEnvironment real 3/3 | `AUDIT_REQUIRED` |
+| DockerEnvironment real 3/3 | `OFFICIAL_TASK_IMAGE_REPO_STATE_VALID` / `MINI_SWEBENCH_ENVIRONMENT_REFERENCE_STATE_STABLE` |
 | Task SWE-bench real com patch/verifier | `EVIDENCE_NOT_FOUND` |
 | Routing, recovery, handoff e compaction | `SYNTHETIC_ONLY` / `CODEPRO_ORIGINAL` |
 | Qualquer score transferido para CodePro | `PROMOTION_NOT_AUTHORIZED` |
@@ -83,9 +102,9 @@ patch e verifier oficial.
 
 O CodePro preserva a identidade e parte do substrate de referência em qv2,
 mas ainda não preserva demonstradamente todas as condições materiais do
-benchmark. A diferença Windows/Git Bash versus Docker/Linux, o caminho de
-runner não executado, o provider/modelo não qualificado, os tratamentos próprios
-e a ausência de patch/verifier impedem chamar o baseline de fiel.
+benchmark. A diferença Windows/Git Bash versus Docker/Linux, o provider/modelo
+não qualificado, os tratamentos próprios e a ausência de uma execução de agente
+com patch/verifier impedem chamar o baseline de plenamente qualificado.
 
 O próximo experimento deve ser provider-free e usar a imagem SWE-bench exata:
 `get_swebench_docker_image_name(sympy__sympy-14711)` → `get_sb_environment()` →

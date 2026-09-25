@@ -1,0 +1,22 @@
+{
+  "provider_called": false,
+  "instance_id": "sympy__sympy-14711",
+  "published": {
+    "image": "docker.io/swebench/sweb.eval.x86_64.sympy_1776_sympy-14711:latest",
+    "digest": "sha256:c5366c33ed254ded2f8b39f7350deada09fc6ff5b1fe252041d10844fab54997",
+    "head": "a0bbae0b2e7de1110db52bdc844d0e15fe1458fb",
+    "base_commit_ancestor": true,
+    "tree_matches_base": true
+  },
+  "rebuilt": {
+    "image": "codepro-qv2/sweb.eval.x86_64.sympy_1776_sympy-14711:rebuild",
+    "image_id": "sha256:707271b59a3233f6121bd68cbca8c0079c17cedfb0e31369105a8c612aab7cee",
+    "digest": "sha256:707271b59a3233f6121bd68cbca8c0079c17cedfb0e31369105a8c612aab7cee",
+    "head": "fb575794afe52332008cf73252a002864b83f30d",
+    "base_commit_ancestor": true,
+    "tree_matches_base": true,
+    "working_tree_clean": true
+  },
+  "interpretation": "Both images represent the base tree plus the official empty setup commit. Commit SHA differs because the rebuild creates a new empty commit timestamp; repository state is equivalent, not byte-identical Git history.",
+  "classification": "FALSE_POSITIVE_BASE_COMMIT_EQUALITY_CHECK"
+}

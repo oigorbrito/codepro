@@ -1,0 +1,100 @@
+{
+  "checks": {
+    "benchmark_config": {
+      "expected_git_blob_sha": "106decd160e72e5164e29d15d23da354c29c309d",
+      "git_blob_lookup": {
+        "argv": [
+          "git",
+          "rev-parse",
+          "HEAD:src/minisweagent/config/benchmarks/swebench.yaml"
+        ],
+        "error": null,
+        "returncode": 0,
+        "stderr": "",
+        "stdout": "106decd160e72e5164e29d15d23da354c29c309d\n",
+        "timeout": false
+      },
+      "git_blob_sha": "106decd160e72e5164e29d15d23da354c29c309d",
+      "missing_required_fragments": [],
+      "path": "D:\\projetos\\mini-swe-agent-qv2\\src\\minisweagent\\config\\benchmarks\\swebench.yaml",
+      "reason": null,
+      "status": "PASS"
+    },
+    "container_probe": {
+      "argv": [
+        "docker",
+        "run",
+        "--rm",
+        "python:3.11",
+        "/bin/sh",
+        "-lc",
+        "echo codepro-benchmark-substrate-ok"
+      ],
+      "error": null,
+      "image": "python:3.11",
+      "returncode": 0,
+      "status": "PASS",
+      "stderr": "",
+      "stdout": "codepro-benchmark-substrate-ok\n",
+      "timeout": false
+    },
+    "docker_cli": {
+      "argv": [
+        "docker",
+        "--version"
+      ],
+      "error": null,
+      "returncode": 0,
+      "status": "PASS",
+      "stderr": "",
+      "stdout": "Docker version 29.7.2, build a7dcaa6\n",
+      "timeout": false
+    },
+    "docker_daemon": {
+      "argv": [
+        "docker",
+        "info",
+        "--format",
+        "{{json .ServerVersion}}"
+      ],
+      "error": null,
+      "returncode": 0,
+      "status": "PASS",
+      "stderr": "",
+      "stdout": "\"29.7.2\"\n",
+      "timeout": false
+    },
+    "mini_commit": {
+      "actual": "a83fcae82d2a08f0ee0c688f9d137b3566c097f8",
+      "argv": [
+        "git",
+        "rev-parse",
+        "HEAD"
+      ],
+      "error": null,
+      "expected": "a83fcae82d2a08f0ee0c688f9d137b3566c097f8",
+      "returncode": 0,
+      "status": "PASS",
+      "stderr": "",
+      "stdout": "a83fcae82d2a08f0ee0c688f9d137b3566c097f8\n",
+      "timeout": false
+    },
+    "mini_worktree": {
+      "argv": [
+        "git",
+        "status",
+        "--porcelain"
+      ],
+      "error": null,
+      "returncode": 0,
+      "status": "PASS",
+      "stderr": "",
+      "stdout": "",
+      "timeout": false
+    }
+  },
+  "classification": "BENCHMARK_SUBSTRATE_READY",
+  "expected_mini_commit": "a83fcae82d2a08f0ee0c688f9d137b3566c097f8",
+  "provider_called": false,
+  "schema_version": 1
+}

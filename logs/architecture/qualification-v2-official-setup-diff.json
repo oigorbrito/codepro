@@ -1,0 +1,19 @@
+{
+  "provider_called": false,
+  "instance_id": "sympy__sympy-14711",
+  "harness_version": "4.0.4",
+  "base_commit": "c6753448b5c34f95e250105d76709fe4d349ca1f",
+  "image_head": "a0bbae0b2e7de1110db52bdc844d0e15fe1458fb",
+  "setup_commit_author": "SWE-bench <setup@swebench.com>",
+  "setup_commit_subject": "SWE-bench",
+  "repo_script_contains": [
+    "git reset --hard c6753448b5c34f95e250105d76709fe4d349ca1f",
+    "git remote remove origin",
+    "python -m pip install -e .",
+    "git commit --allow-empty -am SWE-bench"
+  ],
+  "observed_diff_stat_base_to_head": "empty",
+  "observed_worktree": "clean",
+  "classification": "OFFICIAL_TASK_IMAGE_REPO_STATE_VALID",
+  "methodology_correction": "HEAD equality is not required when the official setup creates an empty commit above the base commit."
+}

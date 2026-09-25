@@ -5,6 +5,19 @@
   "conclusion": "REFERENCE_BASELINE_PARTIALLY_FAITHFUL",
   "promotion": "PROMOTION_NOT_AUTHORIZED",
   "qualification_run_v1": "BLOCKED",
+  "image_identity_methodology": {
+    "previous_assumption": "HEAD == instance.base_commit",
+    "status": "INVALID_ASSUMPTION",
+    "corrected_invariant": "base_commit ancestry + official prepared repo state + clean working tree",
+    "task": "sympy__sympy-14711",
+    "base_commit": "c6753448b5c34f95e250105d76709fe4d349ca1f",
+    "published_head": "a0bbae0b2e7de1110db52bdc844d0e15fe1458fb",
+    "published_head_parent": "c6753448b5c34f95e250105d76709fe4d349ca1f",
+    "published_head_author": "SWE-bench <setup@swebench.com>",
+    "published_commit_tree_diff_from_base": false,
+    "published_worktree_clean": true,
+    "classification": "FALSE_POSITIVE_BASE_COMMIT_EQUALITY_CHECK"
+  },
   "reference": {
     "repository": "SWE-agent/mini-swe-agent",
     "commit": "a83fcae82d2a08f0ee0c688f9d137b3566c097f8",

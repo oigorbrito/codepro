@@ -1,0 +1,17 @@
+{
+  "provider_called": false,
+  "instance_id": "sympy__sympy-14711",
+  "image": "docker.io/swebench/sweb.eval.x86_64.sympy_1776_sympy-14711:latest",
+  "base_commit": "c6753448b5c34f95e250105d76709fe4d349ca1f",
+  "head": "a0bbae0b2e7de1110db52bdc844d0e15fe1458fb",
+  "head_parent": "c6753448b5c34f95e250105d76709fe4d349ca1f",
+  "working_tree_status": "clean",
+  "repo_root": "/testbed",
+  "remote": "absent_by_official_setup",
+  "setup_commit": {
+    "author": "SWE-bench <setup@swebench.com>",
+    "subject": "SWE-bench",
+    "tree_delta_from_base": false
+  },
+  "classification": "OFFICIAL_TASK_IMAGE_REPO_STATE_VALID"
+}

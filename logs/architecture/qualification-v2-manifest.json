@@ -1,0 +1,124 @@
+{
+  "schema_version": 1,
+  "manifest": "qualification-v2-corrected",
+  "status": "EXPERIMENTAL_EVIDENCE_INDEX",
+  "purpose": "Canonical index for the corrected qv2 benchmark-fidelity audit. Files not listed here are not part of this experiment publication.",
+  "lineage": {
+    "source_commit": "ad63b10f88fec9db9237151cad558f5c9645b2c6",
+    "source_remote": "origin/experiment/benchmark-faithful-mini-docker",
+    "worktree": "D:/projetos/codepro-qv2",
+    "task": "sympy__sympy-14711",
+    "dataset": "princeton-nlp/SWE-bench_Verified",
+    "dataset_split": "test",
+    "dataset_revision": "c104f840cc67f8b6eec6f759ebc8b2693d585d4a",
+    "dataset_fingerprint": "352dcce58dea66f0",
+    "mini_commit": "a83fcae82d2a08f0ee0c688f9d137b3566c097f8",
+    "config_git_blob": "106decd160e72e5164e29d15d23da354c29c309d",
+    "provider_called": false,
+    "qualification_run": "BLOCKED",
+    "promotion": "PROMOTION_NOT_AUTHORIZED"
+  },
+  "selection_policy": {
+    "include": "Only the corrected audit, its canonical machine-readable record, and raw evidence directly needed to substantiate the published conclusion.",
+    "exclude": [
+      "qualification-controls/",
+      ".tmp/",
+      "build/",
+      "workspace directories",
+      "unreferenced historical or superseded logs"
+    ]
+  },
+  "artifacts": [
+    {
+      "path": "docs/benchmark-fidelity-audit-v2.md",
+      "kind": "normative_audit",
+      "role": "Human-readable corrected conclusion and fidelity matrix.",
+      "sha256": "11ddacb9024c338b839115c977c6fd6c359e0b8648bdc865d9a1153dd3dceb1d"
+    },
+    {
+      "path": "logs/architecture/benchmark-fidelity-audit-v2.json",
+      "kind": "canonical_audit_record",
+      "role": "Machine-readable audit conclusion, classifications, and next gate.",
+      "sha256": "fed49e742dc61b87f89d56b8b625ca98d4fff56bd323f530114a09b7531c9b24"
+    },
+    {
+      "path": "logs/architecture/qualification-v2-audit-freeze.json",
+      "kind": "lineage_control",
+      "role": "Frozen qv2 commit, remote identity, provider_called state, and promotion gate.",
+      "sha256": "065b24ed4a2ad5cc91936ba0bf5d4ea3757cae203ef0fbf8dc606f7601755601"
+    },
+    {
+      "path": "logs/architecture/qualification-v2-dataset-instance-provenance.json",
+      "kind": "raw_provenance",
+      "role": "Dataset revision, fingerprint, instance content, and expected base commit.",
+      "sha256": "3516053cd706a19e543b5d6a3a4ae5bf7abe1bfa08d28d6186d9a716cdadd5bd"
+    },
+    {
+      "path": "logs/architecture/qualification-v2-task-repo-state.json",
+      "kind": "raw_provenance",
+      "role": "Official task image repository state, ancestry, setup commit, and clean tree.",
+      "sha256": "36fb632a470206bfd12acab92288c34649217bd38040294e9324d322fdeb6a5d"
+    },
+    {
+      "path": "logs/architecture/qualification-v2-published-vs-rebuilt-image.json",
+      "kind": "raw_provenance",
+      "role": "Published image identity and rebuilt-image comparison.",
+      "sha256": "9b1226fdfd71fa61d1b7e391d9b039c714f9ab2d4787df43dfd10d83b0347024"
+    },
+    {
+      "path": "logs/architecture/qualification-v2-base-commit-ancestry.json",
+      "kind": "raw_verification",
+      "role": "Corrected base-commit ancestry check.",
+      "sha256": "a9823e7b6e31a191fac0a276c3af7d6c89b06e8b0b8aae0da6685030afb406e5"
+    },
+    {
+      "path": "logs/architecture/qualification-v2-official-setup-diff.json",
+      "kind": "raw_verification",
+      "role": "Official setup tree-diff and clean-worktree check.",
+      "sha256": "ac595d22b97bc8a5b13b4e618fcb4e653ff8ee65d4058538bd9456c88e049934"
+    },
+    {
+      "path": "logs/architecture/qualification-v2-official-verifier-control.json",
+      "kind": "raw_control",
+      "role": "Official verifier negative control with explicit empty patch and no provider call.",
+      "sha256": "fcfa007126d0f5da2155e16b327465071ae5709ea8d7c3d694f89f26737de6a1"
+    },
+    {
+      "path": "logs/architecture/qualification-v2-provider-free-corrected-summary.json",
+      "kind": "canonical_summary",
+      "role": "Provider-free corrected qualification summary and blocked next gate.",
+      "sha256": "52352c6121b37a62d86784e913b9fe1c9c665ad87a62dd4f4a28ca23c73e10c0"
+    },
+    {
+      "path": "logs/architecture/qualification-v2-swebench-runner-provider-free.json",
+      "kind": "raw_execution",
+      "role": "Provider-free runner attempt showing the qualification block before a full task.",
+      "sha256": "3e44469ea3dc1ae59f15c3b11573e44751cc90d92a6537eea68b9743cb360c1a"
+    },
+    {
+      "path": "logs/architecture/qualification-v2-linux-container-probe-1.json",
+      "kind": "raw_control",
+      "role": "First Linux container control probe.",
+      "sha256": "005c466daec83fc52b71566dd78e1cbdd06fb43d17c3318e701f148fb0bafbf4"
+    },
+    {
+      "path": "logs/architecture/qualification-v2-linux-container-probe-2.json",
+      "kind": "raw_control",
+      "role": "Second Linux container control probe.",
+      "sha256": "005c466daec83fc52b71566dd78e1cbdd06fb43d17c3318e701f148fb0bafbf4"
+    },
+    {
+      "path": "logs/architecture/qualification-v2-linux-container-probe-3.json",
+      "kind": "raw_control",
+      "role": "Third Linux container control probe.",
+      "sha256": "005c466daec83fc52b71566dd78e1cbdd06fb43d17c3318e701f148fb0bafbf4"
+    }
+  ],
+  "interpretation": {
+    "conclusion": "REFERENCE_BASELINE_PARTIALLY_FAITHFUL",
+    "negative_control": "PASS",
+    "positive_control": "NOT_AVAILABLE",
+    "provider_model_fidelity": "NOT_QUALIFIED",
+    "allowed_use": "Experimental audit lineage only; not a benchmark score, provider qualification, merge approval, or promotion authorization."
+  }
+}

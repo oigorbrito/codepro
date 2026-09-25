@@ -1,0 +1,31 @@
+{
+  "provider_called": false,
+  "classification": "REFERENCE_PROVIDER_FREE_PATH_READY",
+  "secondary": [
+    "FALSE_POSITIVE_BASE_COMMIT_EQUALITY_CHECK",
+    "OFFICIAL_TASK_IMAGE_REPO_STATE_VALID",
+    "MINI_SWEBENCH_ENVIRONMENT_REFERENCE_STATE_STABLE",
+    "OFFICIAL_VERIFIER_NEGATIVE_CONTROL_PASS",
+    "WINDOWS_CONTROL_PLANE_MISMATCH_CONFIRMED",
+    "OFFICIAL_VERIFIER_POSITIVE_CONTROL_NOT_AVAILABLE"
+  ],
+  "mini_sha": "a83fcae82d2a08f0ee0c688f9d137b3566c097f8",
+  "config_blob": "106decd160e72e5164e29d15d23da354c29c309d",
+  "dataset": {
+    "name": "princeton-nlp/SWE-bench_Verified",
+    "split": "test",
+    "revision": "c104f840cc67f8b6eec6f759ebc8b2693d585d4a",
+    "fingerprint": "352dcce58dea66f0",
+    "instance_id": "sympy__sympy-14711",
+    "base_commit": "c6753448b5c34f95e250105d76709fe4d349ca1f",
+    "instance_content_sha256": "64aabb57c6bd717a3432d8b5bb5a2263d750891bce4fcb4caaeddf41e9decc36"
+  },
+  "linux_generic": "5/5 startup, 5/5 execute, 5/5 cleanup, 0 residuals",
+  "published_task_image": "base_commit ancestor PASS, official setup tree PASS, clean worktree",
+  "rebuilt_task_image": "3/3 startup, 3/3 execute, 3/3 repo-state validation, 3/3 cleanup, 0 residuals",
+  "official_verifier_negative_control": "PASS",
+  "official_verifier_positive_control": "NOT_AVAILABLE: swebench 5.0.2 verifier expects image field absent from frozen Verified v1.1 row; no positive result inferred",
+  "promotion": "PROMOTION_NOT_AUTHORIZED",
+  "qualification_run_v1": "BLOCKED",
+  "next_gate": "provider/model fidelity audit with the corrected provider-free substrate"
+}
