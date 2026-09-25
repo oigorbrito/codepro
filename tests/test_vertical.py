@@ -6,7 +6,11 @@ import tempfile
 import unittest
 from unittest.mock import patch
 
-from arkx.vertical import VerticalRunStatus, run_vertical
+from arkx.vertical import (
+    VerticalRunStatus,
+    _characterization_bundle_sha256,
+    run_vertical,
+)
 
 
 class VerticalRunTests(unittest.TestCase):
@@ -515,6 +519,63 @@ class VerticalRunTests(unittest.TestCase):
                 text=True,
             )
             self.assertIn("?? src/new file.txt\0", status.stdout)
+
+    def test_characterization_bundle_digest_is_order_invariant_and_change_sensitive(self):
+        first = _characterization_bundle_sha256(
+            ("src/a.py", "src/b.py"),
+            ("cli", "core"),
+            "evidence://observer",
+        )
+        reordered = _characterization_bundle_sha256(
+            tuple(sorted(("src/b.py", "src/a.py"))),
+            tuple(sorted(("core", "cli"))),
+            "evidence://observer",
+        )
+        changed_source = _characterization_bundle_sha256(
+            ("src/a.py", "src/b.py"),
+            ("cli", "core"),
+            "evidence://observer-v2",
+        )
+        self.assertEqual(first, reordered)
+        self.assertNotEqual(first, changed_source)
+
+    def test_characterization_digest_is_persisted_in_input_and_execution_evidence(self):
+        with tempfile.TemporaryDirectory() as tmp:
+            root = Path(tmp) / "repo"
+            root.mkdir()
+            revision = self.init_repo(root)
+            result = run_vertical(
+                workspace=root,
+                revision=revision,
+                request_id="request-characterization-digest",
+                task_id="task-characterization-digest",
+                requester_ref="user://fixture",
+                authority_ref="authority://fixture",
+                acceptance_authority_ref="acceptance://reviewer",
+                scope=("src",),
+                candidate_files=("src/value.txt",),
+                affected_components=("src",),
+                characterization_source_ref="evidence://digest-fixture",
+                executor_argv=(
+                    sys.executable,
+                    "-c",
+                    "from pathlib import Path; Path('src/value.txt').write_text('after\\n', encoding='utf-8')",
+                ),
+                verifier_argv=(sys.executable, "-c", "raise SystemExit(0)"),
+                evidence_dir=Path(tmp) / "evidence",
+            )
+            self.assertEqual(result.status, VerticalRunStatus.VERIFIED)
+            root_evidence = Path(result.evidence_root)
+            characterization = json.loads(
+                (root_evidence / "characterization-input.json").read_text(encoding="utf-8")
+            )
+            execution = json.loads(
+                (root_evidence / "execution.json").read_text(encoding="utf-8")
+            )
+            self.assertEqual(
+                characterization["bundle_sha256"],
+                execution["characterization_bundle_sha256"],
+            )
 
 
 if __name__ == "__main__":
