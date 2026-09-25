@@ -9,6 +9,7 @@ from typing import Any
 
 
 SCHEMA_VERSION = 2
+P5_AUTHORITY_IDENTITY = "codepro.patch_verification"
 
 
 class _ValueEnum(str, Enum):
@@ -44,12 +45,19 @@ class ReasonCode(_ValueEnum):
     ALL_GATES_SATISFIED = "ALL_GATES_SATISFIED"
 
 
+def _values(items: tuple[str, ...] | None) -> list[str] | None:
+    return None if items is None else sorted(set(items))
+
+
 @dataclass(frozen=True)
 class TestResult:
     test_id: str
     status: TestResultStatus
     required: bool
     evidence_ref: str | None = None
+    command: tuple[str, ...] | None = None
+    exit_code: int | None = None
+    duration_ms: int | None = None
 
     def __post_init__(self) -> None:
         if not self.test_id.strip():
@@ -58,6 +66,12 @@ class TestResult:
             raise ValueError("required must be boolean")
         if self.evidence_ref is not None and not self.evidence_ref.strip():
             raise ValueError("evidence_ref cannot be blank")
+        if self.command is not None:
+            if not self.command or any(not item.strip() for item in self.command):
+                raise ValueError("command must contain non-empty argv items")
+            object.__setattr__(self, "command", tuple(self.command))
+        if self.duration_ms is not None and self.duration_ms < 0:
+            raise ValueError("duration_ms must be non-negative")
 
     def to_dict(self) -> dict[str, Any]:
         return {
@@ -65,6 +79,9 @@ class TestResult:
             "status": self.status.value,
             "required": self.required,
             "evidence_ref": self.evidence_ref,
+            "command": None if self.command is None else list(self.command),
+            "exit_code": self.exit_code,
+            "duration_ms": self.duration_ms,
         }
 
 
@@ -80,6 +97,7 @@ class PatchVerificationInput:
     expected_scope: tuple[str, ...] | None
     evidence_refs: tuple[str, ...] | None
     schema_version: int = SCHEMA_VERSION
+    verifier_run_id: str | None = None
 
 
 @dataclass(frozen=True)
@@ -95,6 +113,7 @@ class PatchVerificationResult:
     reason_codes: tuple[ReasonCode, ...]
     telemetry: dict[str, Any] = field(default_factory=dict)
     schema_version: int = SCHEMA_VERSION
+    verifier_run_id: str | None = None
 
     def to_dict(self) -> dict[str, Any]:
         return {
@@ -109,6 +128,7 @@ class PatchVerificationResult:
             "status": self.status.value,
             "reason_codes": [code.value for code in self.reason_codes],
             "telemetry": self.telemetry,
+            "verifier_run_id": self.verifier_run_id,
         }
 
     def to_json(self) -> str:
@@ -250,7 +270,7 @@ def _result(
     regressions: bool | None,
     scope_changed: bool | None,
     reasons: list[ReasonCode],
-) -> PatchVerificationResult:
+):
     return PatchVerificationResult(
         task_id=value.task_id,
         issue_reproduced_before_patch=value.issue_reproduced_before_patch,
@@ -258,23 +278,27 @@ def _result(
         regression_tests_passed=regressions,
         issue_reproduces_after_patch=value.issue_reproduces_after_patch,
         scope_changed=scope_changed,
-        evidence_sufficient=(bool(value.evidence_refs) and all(item.strip() for item in value.evidence_refs) if value.evidence_refs is not None else None),
+        evidence_sufficient=(
+            bool(value.evidence_refs) and all(item.strip() for item in value.evidence_refs)
+            if value.evidence_refs is not None
+            else None
+        ),
         status=status,
         reason_codes=tuple(reasons),
         telemetry={
             "patch_verification_status": status.value,
-            "required_tests": None
-            if value.regression_results is None
-            else sum(test.required for test in value.regression_results),
-            "passed_tests": None
-            if value.regression_results is None
-            else sum(test.status is TestResultStatus.PASSED for test in value.regression_results),
-            "failed_tests": None
-            if value.regression_results is None
-            else sum(test.status is TestResultStatus.FAILED for test in value.regression_results),
+            "required_tests": None if value.regression_results is None else sum(test.required for test in value.regression_results),
+            "passed_tests": None if value.regression_results is None else sum(test.status is TestResultStatus.PASSED for test in value.regression_results),
+            "failed_tests": None if value.regression_results is None else sum(test.status is TestResultStatus.FAILED for test in value.regression_results),
             "scope_changed": scope_changed,
             "issue_reproduction_required": value.issue_reproduction_required,
             "issue_reproduced_before_patch": value.issue_reproduced_before_patch,
             "issue_reproduces_after_patch": value.issue_reproduces_after_patch,
         },
+        verifier_run_id=value.verifier_run_id,
     )
+
+
+def official_status_from_p5(_: PatchVerificationResult):
+    """P5 is intentionally unable to mint SWE-bench authority outcomes."""
+    raise TypeError("P5 verification is not official SWE-bench evaluation")
