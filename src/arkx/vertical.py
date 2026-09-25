@@ -41,6 +41,9 @@ class VerticalRunStatus(str, Enum):
     EXECUTED = "EXECUTED"
     VERIFIED = "VERIFIED"
     REJECTED = "REJECTED"
+    FAILED = "FAILED"
+    TIMED_OUT = "TIMED_OUT"
+    ENVIRONMENT_UNAVAILABLE = "ENVIRONMENT_UNAVAILABLE"
 
 
 @dataclass(frozen=True)
@@ -50,6 +53,7 @@ class VerticalRunResult:
     reason: str
     evidence_root: str
     changed_files: tuple[str, ...] = ()
+    attempt_id: str = "attempt-1"
 
     def to_dict(self) -> dict[str, Any]:
         return {
@@ -58,6 +62,7 @@ class VerticalRunResult:
             "reason": self.reason,
             "evidence_root": self.evidence_root,
             "changed_files": list(self.changed_files),
+            "attempt_id": self.attempt_id,
         }
 
     def to_json(self) -> str:
@@ -105,14 +110,17 @@ def run_vertical(
     verifier_argv: Sequence[str],
     evidence_dir: str | Path,
     max_wall_time_seconds: float = 300.0,
+    attempt_id: str = "attempt-1",
 ) -> VerticalRunResult:
     root = Path(workspace).expanduser().resolve()
     evidence_base = Path(evidence_dir).expanduser().resolve()
-    run_id = _run_id(request_id, revision, tuple(executor_argv), tuple(verifier_argv))
+    if not attempt_id.strip() or Path(attempt_id).name != attempt_id:
+        raise ValueError("attempt_id must be a single non-empty path component")
+    run_id = _run_id(request_id, attempt_id, revision, tuple(executor_argv), tuple(verifier_argv))
     run_root = evidence_base / run_id
 
     def finish(status: VerticalRunStatus, reason: str, changed_files: tuple[str, ...] = ()) -> VerticalRunResult:
-        result = VerticalRunResult(run_id, status, reason, str(run_root), changed_files)
+        result = VerticalRunResult(run_id, status, reason, str(run_root), changed_files, attempt_id)
         _write_new(run_root / "result.json", result.to_dict())
         return result
 
@@ -219,7 +227,13 @@ def run_vertical(
     )
     _write_new(run_root / "execution.json", record.to_dict())
 
-    if record.status is not SpineStatus.EXECUTED or record.command_result is None:
+    if record.command_result is None:
+        return finish(VerticalRunStatus.BLOCKED, f"EXECUTION_{record.reason.value}")
+    if record.reason.value == "COMMAND_TIMEOUT":
+        return finish(VerticalRunStatus.TIMED_OUT, "EXECUTION_COMMAND_TIMEOUT")
+    if record.reason.value == "ENVIRONMENT_ERROR":
+        return finish(VerticalRunStatus.ENVIRONMENT_UNAVAILABLE, "EXECUTION_ENVIRONMENT_ERROR")
+    if record.status is not SpineStatus.EXECUTED:
         return finish(VerticalRunStatus.BLOCKED, f"EXECUTION_{record.reason.value}")
 
     changed_files = _changed_files(root)
@@ -231,6 +245,13 @@ def run_vertical(
     if outside:
         _write_new(run_root / "scope-violation.json", {"outside_scope": list(outside)})
         return finish(VerticalRunStatus.BLOCKED, "CHANGED_FILES_OUTSIDE_AUTHORIZED_SCOPE", changed_files)
+
+    if record.command_result.exit_code != 0:
+        return finish(
+            VerticalRunStatus.FAILED,
+            f"EXECUTOR_EXIT_NONZERO:{record.command_result.exit_code}",
+            changed_files,
+        )
 
     if not verifier_argv:
         return finish(VerticalRunStatus.EXECUTED, "VERIFIER_NOT_DECLARED", changed_files)
@@ -262,10 +283,17 @@ def run_vertical(
     return finish(VerticalRunStatus.BLOCKED, "DECLARED_VERIFIER_NOT_EXECUTED_OR_UNKNOWN", changed_files)
 
 
-def _run_id(request_id: str, revision: str, executor_argv: tuple[str, ...], verifier_argv: tuple[str, ...]) -> str:
+def _run_id(
+    request_id: str,
+    attempt_id: str,
+    revision: str,
+    executor_argv: tuple[str, ...],
+    verifier_argv: tuple[str, ...],
+) -> str:
     payload = json.dumps(
         {
             "request_id": request_id,
+            "attempt_id": attempt_id,
             "revision": revision,
             "executor_argv": list(executor_argv),
             "verifier_argv": list(verifier_argv),
