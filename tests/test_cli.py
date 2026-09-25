@@ -209,6 +209,7 @@ class RunCliTests(unittest.TestCase):
                 "--scope", "src",
                 "--candidate-file", "src/a.py",
                 "--affected-component", "src",
+                "--characterization-source-ref", "evidence://fixture-characterization",
                 "--evidence-dir", "../codepro-evidence",
                 "--verifier-argv-json", "not-json",
                 "--",
