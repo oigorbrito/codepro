@@ -132,7 +132,42 @@ def main() -> int:
         dist.mkdir()
 
         with tarfile.open(fileobj=io.BytesIO(archive["stdout"]), mode="r:") as bundle:
-            bundle.extractall(source)
+            bundle.extractall(source, filter="fully_trusted")
+
+        build_venv = temp_root / "build-venv"
+        create_build_venv = run(
+            [sys.executable, "-m", "venv", str(build_venv)],
+            cwd=temp_root,
+            timeout=180,
+        )
+        report["steps"]["create_build_venv"] = create_build_venv
+        if create_build_venv["returncode"] != 0:
+            report["classification"] = "BLOCKED_BUILD_ENVIRONMENT_CREATION"
+            print(json.dumps(report, ensure_ascii=False, indent=2, sort_keys=True))
+            return 2
+
+        if os.name == "nt":
+            build_python = build_venv / "Scripts" / "python.exe"
+        else:
+            build_python = build_venv / "bin" / "python"
+
+        install_build_requirements = run(
+            [
+                str(build_python),
+                "-m",
+                "pip",
+                "install",
+                "--disable-pip-version-check",
+                "setuptools>=68",
+            ],
+            cwd=temp_root,
+            timeout=300,
+        )
+        report["steps"]["install_build_requirements"] = install_build_requirements
+        if install_build_requirements["returncode"] != 0:
+            report["classification"] = "BLOCKED_BUILD_REQUIREMENTS_INSTALL"
+            print(json.dumps(report, ensure_ascii=False, indent=2, sort_keys=True))
+            return 2
 
         build_code = (
             "from pathlib import Path;"
@@ -141,7 +176,7 @@ def main() -> int:
             "build_wheel(d);"
             "build_sdist(d)"
         )
-        build = run([sys.executable, "-c", build_code], cwd=source, timeout=300)
+        build = run([str(build_python), "-c", build_code], cwd=source, timeout=300)
         report["steps"]["build"] = build
         if build["returncode"] != 0:
             report["classification"] = "BLOCKED_ARTIFACT_BUILD"
