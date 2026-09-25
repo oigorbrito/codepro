@@ -141,6 +141,67 @@ Operational instructions for agents live in [AGENTS.md](AGENTS.md). Decision
 records explain why a boundary exists; logs and manifests are evidence, not
 policy.
 
+## Install and use
+
+### Requirements
+
+At a high level, using CodePro currently means working from a checked-out
+repository with a supported Python environment. Some experimental qualification
+paths also require their own external runtime, such as Docker, but those are not
+part of the minimal CLI installation.
+
+### Install from the repository
+
+From the repository root:
+
+```text
+python -m pip install .
+```
+
+For development, install the current checkout in editable form:
+
+```text
+python -m pip install -e .
+```
+
+Confirm the installed command:
+
+```text
+codepro --version
+codepro doctor --json
+```
+
+### Use CodePro at the current product boundary
+
+The public CLI currently exposes project health and deterministic baseline
+operations:
+
+```text
+codepro doctor --json
+codepro baseline
+```
+
+At a high level:
+
+1. use `codepro doctor --json` to inspect whether the local installation and
+   basic environment are usable;
+2. use `codepro baseline` to execute the deterministic CodePro baseline;
+3. use the repository's `experiments/`, harnesses, and documented protocols
+   for qualification or benchmark work;
+4. treat produced patches, logs, manifests, verifier output, and other artifacts
+   as evidence governed by the project protocol;
+5. do not infer acceptance or promotion from a local command completing
+   successfully.
+
+CodePro does **not** currently expose a general-purpose command that accepts an
+arbitrary software task and autonomously selects/runs a production executor.
+Executor/provider qualification and benchmark integrations remain explicit
+experimental workflows.
+
+For repository work performed by an agent, follow
+[AGENTS.md](AGENTS.md) and the
+[agent execution workflow](docs/agent-execution-workflow.md).
+
 ## CLI
 
 Install the current checkout:
