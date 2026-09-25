@@ -120,17 +120,67 @@ def _execute(env: Any, command: str) -> dict[str, Any]:
     return {"command": command, "duration_seconds": time.monotonic() - started, **result}
 
 
-def _wait_for_cleanup(container_id: str | None, timeout_seconds: int = 70) -> dict[str, Any]:
+def _container_absent(container_id: str | None) -> tuple[bool, dict[str, Any]]:
+    if not container_id:
+        return False, {"status": "UNKNOWN", "reason": "NO_CONTAINER_ID"}
+    inspect = _run(["docker", "inspect", container_id])
+    return inspect["returncode"] != 0, inspect
+
+
+def _cleanup_with_fallback(
+    env: Any,
+    *,
+    grace_seconds: int = 3,
+    poll_seconds: float = 0.25,
+) -> dict[str, Any]:
+    """Try upstream cleanup first, then fail-closed direct Docker removal.
+
+    mini-SWE-agent v2.4.6 implements cleanup using a POSIX shell command. That
+    command is not portable to a Windows host even when Docker Desktop runs
+    Linux containers. The fallback changes only host-side lifecycle cleanup;
+    it does not alter the task image, agent, prompt, environment commands or
+    verifier behavior.
+    """
+    container_id = getattr(env, "container_id", None)
     if not container_id:
         return {"status": "UNKNOWN", "reason": "NO_CONTAINER_ID"}
-    deadline = time.monotonic() + timeout_seconds
-    last: dict[str, Any] | None = None
+
+    upstream_error = None
+    try:
+        env.cleanup()
+    except Exception as exc:  # defensive: upstream cleanup is best-effort
+        upstream_error = f"{type(exc).__name__}: {exc}"
+
+    deadline = time.monotonic() + grace_seconds
+    last_inspect: dict[str, Any] | None = None
     while time.monotonic() < deadline:
-        last = _run(["docker", "inspect", container_id])
-        if last["returncode"] != 0:
-            return {"status": "PASS", "container_id": container_id, "last_inspect": last}
-        time.sleep(1)
-    return {"status": "FAIL", "container_id": container_id, "last_inspect": last}
+        absent, last_inspect = _container_absent(container_id)
+        if absent:
+            return {
+                "status": "PASS",
+                "mode": "UPSTREAM",
+                "container_id": container_id,
+                "upstream_error": upstream_error,
+                "last_inspect": last_inspect,
+            }
+        time.sleep(poll_seconds)
+
+    forced = _run(["docker", "rm", "-f", container_id], timeout=60)
+    absent, final_inspect = _container_absent(container_id)
+    return {
+        "status": "PASS" if forced["returncode"] == 0 and absent else "FAIL",
+        "mode": "CODEPRO_FORCED_DOCKER_RM",
+        "container_id": container_id,
+        "upstream_error": upstream_error,
+        "upstream_cleanup_observed_complete": False,
+        "forced_cleanup": forced,
+        "last_inspect_before_fallback": last_inspect,
+        "final_inspect": final_inspect,
+        "deviation": (
+            "Host-side cleanup fallback only; upstream task execution semantics "
+            "were not changed."
+        ),
+    }
 
 
 def _probe_once(get_sb_environment: Any, config: dict, instance: dict) -> dict[str, Any]:
@@ -187,8 +237,7 @@ def _probe_once(get_sb_environment: Any, config: dict, instance: dict) -> dict[s
         report["execution_status"] = "PASS" if functional else "FAIL"
     finally:
         if env is not None:
-            env.cleanup()
-            report["cleanup"] = _wait_for_cleanup(getattr(env, "container_id", None))
+            report["cleanup"] = _cleanup_with_fallback(env)
         else:
             report["cleanup"] = {"status": "NOT_EXECUTED"}
 
@@ -254,7 +303,10 @@ def main() -> int:
             report["runs"].append(_probe_once(get_sb_environment, config, instance))
 
         if all(run["status"] == "PASS" for run in report["runs"]):
-            report["classification"] = "REFERENCE_PROVIDER_FREE_TASK_ENV_READY"
+            if any(run["cleanup"].get("mode") == "CODEPRO_FORCED_DOCKER_RM" for run in report["runs"]):
+                report["classification"] = "REFERENCE_PROVIDER_FREE_TASK_ENV_READY_WITH_HOST_CLEANUP_DEVIATION"
+            else:
+                report["classification"] = "REFERENCE_PROVIDER_FREE_TASK_ENV_READY"
         elif any(
             run.get("repo_state", {}).get("classification") == "BASE_COMMIT_NOT_ANCESTOR"
             for run in report["runs"]
@@ -268,7 +320,10 @@ def main() -> int:
         args.output.parent.mkdir(parents=True, exist_ok=True)
         args.output.write_text(rendered, encoding="utf-8")
     sys.stdout.write(rendered)
-    return 0 if report["classification"] == "REFERENCE_PROVIDER_FREE_TASK_ENV_READY" else 2
+    return 0 if report["classification"] in {
+        "REFERENCE_PROVIDER_FREE_TASK_ENV_READY",
+        "REFERENCE_PROVIDER_FREE_TASK_ENV_READY_WITH_HOST_CLEANUP_DEVIATION",
+    } else 2
 
 
 if __name__ == "__main__":
