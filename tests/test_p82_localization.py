@@ -138,6 +138,21 @@ class P82LocalizationTests(unittest.TestCase):
         self.assertEqual(artifact.candidate_files, ())
         self.assertEqual(artifact.context_lines_used, 0)
 
+    def test_trailing_separators_are_rejected_before_empty_segments_are_removed(self):
+        for value in ("src/a.py/", "src/dir/", "src/a.py\\", "src/dir\\"):
+            with self.subTest(value=value):
+                with self.assertRaisesRegex(ValueError, "trailing separator"):
+                    canonicalize_repository_relative_path(value)
+
+    def test_non_drive_colon_is_preserved(self):
+        self.assertEqual(canonicalize_repository_relative_path("foo:bar"), "foo:bar")
+
+    def test_drive_colons_remain_rejected(self):
+        for value in ("C:foo", "C:/foo", "C:\\foo"):
+            with self.subTest(value=value):
+                with self.assertRaises(ValueError):
+                    canonicalize_repository_relative_path(value)
+
 
 if __name__ == "__main__":
     unittest.main()

@@ -30,6 +30,8 @@ def canonicalize_repository_relative_path(value: str) -> str:
 
     windows = PureWindowsPath(value)
     normalized = value.replace("\\", "/")
+    if normalized.endswith("/"):
+        raise ValueError("candidate file paths must not have a trailing separator")
     posix = PurePosixPath(normalized)
     if windows.drive or windows.is_absolute() or posix.is_absolute():
         raise ValueError("candidate file paths must be repository-relative")
