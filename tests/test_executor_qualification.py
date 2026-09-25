@@ -80,6 +80,30 @@ class ExecutorQualificationTests(unittest.TestCase):
         unknown = trial(observation=ExecutorObservation(accepted=None))
         self.assertEqual(assess_trial(unknown), QualificationStatus.UNKNOWN)
 
+    def test_incomplete_executor_or_environment_identity_is_not_qualifiable(self):
+        missing_executor_identity = trial(
+            executor=ExecutorIdentity("executor", None, "external", None),
+        )
+        missing_environment_identity = trial(
+            environment=ExecutionEnvironment("repo-1", "python-3.11", "windows", "toolchain-1", None),
+        )
+        self.assertEqual(assess_trial(missing_executor_identity), QualificationStatus.UNKNOWN)
+        self.assertEqual(assess_trial(missing_environment_identity), QualificationStatus.UNKNOWN)
+
+    def test_paired_report_records_incomplete_identity(self):
+        experiment = QualificationExperiment(
+            (
+                trial(executor=ExecutorIdentity("executor", None, "external", None)),
+                trial(executor=ExecutorIdentity("other", "1.0", "external", "config-b"), replicate_id="rep-1"),
+            ),
+            ComparisonAxis.EXECUTOR,
+            verifier_identity="verifier-v1",
+            instrumentation_identity="telemetry-v1",
+        )
+        report = validate_paired_executor_experiment(experiment)
+        self.assertEqual(report.status, QualificationStatus.UNKNOWN)
+        self.assertIn("IDENTITY_INCOMPLETE", report.reason_codes)
+
     def test_patch_verification_does_not_infer_acceptance(self):
         unknown = trial(observation=ExecutorObservation(accepted=None, patch_verified=True))
         self.assertIsNone(unknown.observation.accepted)
