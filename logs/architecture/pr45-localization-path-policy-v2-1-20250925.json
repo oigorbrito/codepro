@@ -1,0 +1,23 @@
+{
+  "base_revision": "1f7ed0499e9ce683ff071ed58b225e53f6d42346",
+  "policy": "C1_REPOSITORY_RELATIVE_PATH_V2_1",
+  "base_policy": "C1_REPOSITORY_RELATIVE_PATH_V2",
+  "pr_topology": "STACKED",
+  "trailing_separator": "REJECT",
+  "non_drive_colon": "ALLOW",
+  "path_portability": "POSIX_CANONICAL_ONLY",
+  "character_portability": "DEFERRED",
+  "whitespace": "DEFERRED",
+  "filesystem_access": false,
+  "provider_called": false,
+  "model_called": false,
+  "runtime_called": false,
+  "promotion": "NOT_AUTHORIZED",
+  "validation": {
+    "focused_tests": "PASS: 12 passed, 17 subtests passed",
+    "py_compile": "PASS with isolated PYTHONPYCACHEPREFIX",
+    "json_validation": "PASS",
+    "git_diff_check": "PASS",
+    "environment_note": "Default __pycache__ was not writable; isolated cache compilation succeeded"
+  }
+}

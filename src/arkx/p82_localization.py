@@ -22,14 +22,31 @@ def _sorted_unique(values: tuple[str, ...]) -> tuple[str, ...]:
     return tuple(sorted(set(values)))
 
 
+def canonicalize_repository_relative_path(value: str) -> str:
+    """Return one lexical POSIX identity for a repository-relative file path."""
+
+    if not value or not value.strip():
+        raise ValueError("candidate file paths must be non-empty")
+
+    windows = PureWindowsPath(value)
+    normalized = value.replace("\\", "/")
+    if normalized.endswith("/"):
+        raise ValueError("candidate file paths must not have a trailing separator")
+    posix = PurePosixPath(normalized)
+    if windows.drive or windows.is_absolute() or posix.is_absolute():
+        raise ValueError("candidate file paths must be repository-relative")
+
+    parts = normalized.split("/")
+    if any(part == ".." for part in parts):
+        raise ValueError("candidate file paths must not contain traversal")
+    canonical_parts = [part for part in parts if part not in ("", ".")]
+    if not canonical_parts:
+        raise ValueError("candidate file paths must identify a file")
+    return "/".join(canonical_parts)
+
+
 def _repository_relative_files(values: tuple[str, ...]) -> tuple[str, ...]:
-    files = _sorted_unique(values)
-    for value in files:
-        posix = PurePosixPath(value)
-        windows = PureWindowsPath(value)
-        if posix.is_absolute() or windows.is_absolute() or ".." in posix.parts or ".." in windows.parts:
-            raise ValueError("candidate file paths must be repository-relative")
-    return files
+    return tuple(sorted({canonicalize_repository_relative_path(value) for value in values}))
 
 
 @dataclass(frozen=True)
