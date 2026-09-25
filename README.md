@@ -125,3 +125,22 @@ VERTICAL_IMPLEMENTATION_VALIDATED
 The runner always records `m1_real_task = NOT_EXECUTED`. A real M1 observation
 requires a separately authorized target repository/task and must not reuse the
 disposable validation fixture as product evidence.
+
+
+## M1 independent acceptance
+
+After a successful `M1_REAL_VERTICAL_VERIFIED` run, review the persisted
+evidence without re-executing the task:
+
+```text
+py -3.13 tools/accept_m1_doctor_json.py --evidence-root D:\projetos\codepro-m1-evidence
+```
+
+Expected successful classification:
+
+```text
+M1_INDEPENDENT_ACCEPTED
+```
+
+The acceptance review is evidence-only, writes a new non-overwriting
+`acceptance.json`, and keeps promotion/release explicitly unauthorized.
