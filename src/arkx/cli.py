@@ -3,12 +3,14 @@
 from __future__ import annotations
 
 import argparse
+import json
 import platform
 import sys
 from collections.abc import Sequence
 
 from . import __version__
 from .project import inspect_project
+from .vertical import VerticalRunStatus, run_vertical
 
 
 _SUPPORTED_MIN = (3, 12)
@@ -40,6 +42,36 @@ def build_parser() -> argparse.ArgumentParser:
     )
     inspect_parser.add_argument("path", nargs="?", default=".")
     inspect_parser.add_argument("--json", action="store_true", dest="as_json")
+
+    run_parser = subparsers.add_parser(
+        "run",
+        help="Run one authorized, bounded executor command and declared verifier.",
+        description=(
+            "Execute one explicit command against one exact clean Git revision, "
+            "enforce authorized changed-file scope, run one declared verifier, "
+            "and persist run evidence."
+        ),
+    )
+    run_parser.add_argument("--workspace", required=True)
+    run_parser.add_argument("--revision", required=True)
+    run_parser.add_argument("--request-id", required=True)
+    run_parser.add_argument("--task-id", required=True)
+    run_parser.add_argument("--requester", required=True)
+    run_parser.add_argument("--authority", required=True)
+    run_parser.add_argument("--acceptance-authority", required=True)
+    run_parser.add_argument("--scope", action="append", required=True)
+    run_parser.add_argument("--max-wall-time", type=float, default=300.0)
+    run_parser.add_argument("--evidence-dir", default=".codepro/runs")
+    run_parser.add_argument(
+        "--verifier-argv-json",
+        required=True,
+        help='JSON array argv for the verifier, e.g. ["python","-m","pytest","-q"].',
+    )
+    run_parser.add_argument(
+        "executor_argv",
+        nargs=argparse.REMAINDER,
+        help="Executor argv after --. No shell interpretation is used.",
+    )
     return parser
 
 
@@ -87,6 +119,48 @@ def _inspect(path: str, *, as_json: bool) -> int:
     return 0
 
 
+def _run(args: argparse.Namespace) -> int:
+    try:
+        verifier_argv = json.loads(args.verifier_argv_json)
+    except json.JSONDecodeError as exc:
+        print(f"codepro: error: verifier argv is not valid JSON: {exc}", file=sys.stderr)
+        return 2
+    if not isinstance(verifier_argv, list) or not verifier_argv or any(
+        not isinstance(item, str) or not item for item in verifier_argv
+    ):
+        print("codepro: error: verifier argv must be a non-empty JSON string array", file=sys.stderr)
+        return 2
+
+    executor_argv = list(args.executor_argv)
+    if executor_argv and executor_argv[0] == "--":
+        executor_argv = executor_argv[1:]
+    if not executor_argv:
+        print("codepro: error: executor argv must be provided after --", file=sys.stderr)
+        return 2
+
+    try:
+        result = run_vertical(
+            workspace=args.workspace,
+            revision=args.revision,
+            request_id=args.request_id,
+            task_id=args.task_id,
+            requester_ref=args.requester,
+            authority_ref=args.authority,
+            acceptance_authority_ref=args.acceptance_authority,
+            scope=tuple(args.scope),
+            executor_argv=tuple(executor_argv),
+            verifier_argv=tuple(verifier_argv),
+            evidence_dir=args.evidence_dir,
+            max_wall_time_seconds=args.max_wall_time,
+        )
+    except (ValueError, OSError, FileExistsError) as exc:
+        print(f"codepro: error: {exc}", file=sys.stderr)
+        return 2
+
+    print(result.to_json())
+    return 0 if result.status is VerticalRunStatus.VERIFIED else 1
+
+
 def main(argv: Sequence[str] | None = None) -> int:
     parser = build_parser()
     args = parser.parse_args(argv)
@@ -98,6 +172,8 @@ def main(argv: Sequence[str] | None = None) -> int:
         return _doctor()
     if args.command == "inspect":
         return _inspect(args.path, as_json=args.as_json)
+    if args.command == "run":
+        return _run(args)
 
     parser.error(f"unsupported command: {args.command}")
     return 2
