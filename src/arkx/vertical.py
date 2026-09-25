@@ -17,6 +17,7 @@ import json
 import os
 from pathlib import Path
 import subprocess
+import time
 from typing import Any, Sequence
 
 from .characterization import TaskSignals
@@ -216,6 +217,7 @@ def run_vertical(
     _write_new(run_root / "request.json", request.to_dict())
     _write_new(run_root / "authority-grant.json", grant.to_dict())
 
+    started_at = time.monotonic()
     record = execute_governed(
         request,
         grant,
@@ -253,15 +255,35 @@ def run_vertical(
             changed_files,
         )
 
+    if not changed_files:
+        return finish(VerticalRunStatus.BLOCKED, "NO_OBSERVABLE_CHANGE")
+
     if not verifier_argv:
         return finish(VerticalRunStatus.EXECUTED, "VERIFIER_NOT_DECLARED", changed_files)
+
+    elapsed = time.monotonic() - started_at
+    remaining_wall_time = max_wall_time_seconds - elapsed
+    _write_new(
+        run_root / "wall-time-budget.json",
+        {
+            "max_wall_time_seconds": max_wall_time_seconds,
+            "elapsed_before_verifier_seconds": elapsed,
+            "remaining_before_verifier_seconds": max(0.0, remaining_wall_time),
+        },
+    )
+    if remaining_wall_time <= 0:
+        return finish(
+            VerticalRunStatus.TIMED_OUT,
+            "TOTAL_WALL_TIME_EXHAUSTED_BEFORE_VERIFIER",
+            changed_files,
+        )
 
     observation = run_verification_command(
         tuple(verifier_argv),
         workspace=root,
         test_id=f"{task_id}:declared-verifier",
         required=True,
-        timeout_seconds=max_wall_time_seconds,
+        timeout_seconds=remaining_wall_time,
     )
     verification_store = VerificationEvidenceStore(run_root / "verification")
     verification_ref = verification_store.persist(run_id, observation)
@@ -332,17 +354,32 @@ def _git(root: Path, *args: str) -> dict[str, Any]:
 
 
 def _changed_files(root: Path) -> tuple[str, ...]:
-    result = _git(root, "status", "--porcelain=v1", "--untracked-files=all")
+    result = _git(root, "status", "--porcelain=v1", "-z", "--untracked-files=all")
     if result["returncode"] != 0:
         raise RuntimeError("unable to inspect changed files")
+
+    records = result["stdout"].split("\0")
     paths: list[str] = []
-    for line in result["stdout"].splitlines():
-        if len(line) < 4:
+    index = 0
+    while index < len(records):
+        record = records[index]
+        index += 1
+        if not record:
             continue
-        raw = line[3:]
-        if " -> " in raw:
-            raw = raw.split(" -> ", 1)[1]
-        paths.append(raw.strip('"').replace("\\", "/"))
+        if len(record) < 4:
+            raise RuntimeError("invalid porcelain status record")
+
+        status = record[:2]
+        path = record[3:].replace("\\", "/")
+        paths.append(path)
+
+        if "R" in status or "C" in status:
+            if index >= len(records) or not records[index]:
+                raise RuntimeError("rename/copy status missing source path")
+            source = records[index].replace("\\", "/")
+            index += 1
+            paths.append(source)
+
     return tuple(sorted(set(paths)))
 
 
