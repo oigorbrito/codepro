@@ -1,0 +1,87 @@
+name: Mini v2.4.6 provider-free qualification
+
+on:
+  workflow_dispatch:
+  push:
+    paths:
+      - ".github/workflows/mini-v246-provider-free.yml"
+      - "experiments/integrations/minisweagent/**"
+      - "tests/test_minisweagent_*.py"
+      - "docs/decisions/0142-benchmark-faithful-mini-swebench-substrate.md"
+      - "docs/decisions/0143-swebench-prepared-repo-state.md"
+
+permissions:
+  contents: read
+
+jobs:
+  provider-free:
+    runs-on: ubuntu-24.04
+    timeout-minutes: 90
+    env:
+      MINI_SHA: a83fcae82d2a08f0ee0c688f9d137b3566c097f8
+      MINI_REPO: /tmp/mini-swe-agent
+      EVIDENCE_DIR: logs/architecture/mini-v246-provider-free
+    steps:
+      - uses: actions/checkout@11d5960a326750d5838078e36cf38b85af677262 # checkout v4
+        with:
+          persist-credentials: false
+
+      - uses: actions/setup-python@a26af69be951a213d495a4c3e4e4022e16d87065 # setup-python v5
+        with:
+          python-version: "3.13"
+
+      - name: Record CodePro identity
+        shell: bash
+        run: |
+          mkdir -p "$EVIDENCE_DIR"
+          git rev-parse HEAD | tee "$EVIDENCE_DIR/codepro-commit.txt"
+          python -VV | tee "$EVIDENCE_DIR/python.txt"
+          uname -a | tee "$EVIDENCE_DIR/uname.txt"
+
+      - name: Verify focused provider-free contracts
+        shell: bash
+        run: |
+          python -m unittest -v             tests.test_minisweagent_benchmark_reference             tests.test_minisweagent_preflight             tests.test_minisweagent_provider_free_task_harness             2>&1 | tee "$EVIDENCE_DIR/focused-tests.txt"
+
+      - name: Fetch exact upstream mini-SWE-agent revision
+        shell: bash
+        run: |
+          git init "$MINI_REPO"
+          git -C "$MINI_REPO" remote add origin https://github.com/SWE-agent/mini-swe-agent.git
+          git -C "$MINI_REPO" fetch --depth 1 origin "$MINI_SHA"
+          git -C "$MINI_REPO" checkout --detach FETCH_HEAD
+          test "$(git -C "$MINI_REPO" rev-parse HEAD)" = "$MINI_SHA"
+          test -z "$(git -C "$MINI_REPO" status --porcelain)"
+          git -C "$MINI_REPO" rev-parse HEAD | tee "$EVIDENCE_DIR/mini-commit.txt"
+          git -C "$MINI_REPO" rev-parse HEAD:src/minisweagent/config/benchmarks/swebench.yaml             | tee "$EVIDENCE_DIR/mini-config-blob.txt"
+
+      - name: Install pinned upstream mini-SWE-agent
+        shell: bash
+        run: |
+          python -m pip install --disable-pip-version-check --no-input "$MINI_REPO"
+          python -m pip check | tee "$EVIDENCE_DIR/pip-check.txt"
+
+      - name: Record Docker identity
+        shell: bash
+        run: |
+          docker --version | tee "$EVIDENCE_DIR/docker-version.txt"
+          docker info --format '{{json .}}' > "$EVIDENCE_DIR/docker-info.json"
+
+      - name: Run provider-free substrate preflight
+        shell: bash
+        run: |
+          python experiments/integrations/minisweagent/preflight.py             --mini-repo "$MINI_REPO"             --probe-image python:3.11-slim             --output "$EVIDENCE_DIR/preflight.json"
+
+      - name: Run provider-free SWE-bench task environment probe
+        shell: bash
+        run: |
+          python experiments/integrations/minisweagent/provider_free_task_harness.py             --mini-repo "$MINI_REPO"             --subset verified             --split test             --instance sympy__sympy-14711             --repeat 1             --output "$EVIDENCE_DIR/task-environment.json"
+
+      - name: Upload provider-free evidence
+        if: always()
+        uses: actions/upload-artifact@ea165f8d65b6e75b540449e92b4886f43607fa02 # upload-artifact v4
+        with:
+          name: mini-v246-provider-free-${{ github.sha }}
+          if-no-files-found: warn
+          retention-days: 30
+          path: logs/architecture/mini-v246-provider-free/
