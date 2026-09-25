@@ -12,12 +12,52 @@ Each experiment records:
 - `scope`: exact systems, inputs, and exclusions;
 - `implementation`: what changed, if anything;
 - `executor`: the exact executor and version/configuration;
+- `identity`: resolved dataset revision or fingerprint, task IDs and base
+  revisions, environment image/digest and OS/architecture when applicable,
+  verifier identity, provider/model identity, and Codepro/runner revision;
+- `attempts`: explicit `experiment_id`, `trial_id`, `attempt_id`, and verifier
+  `run_id` values. Equivalent frozen trials may share a stable trial identity,
+  but distinct patches, controls, or retries must not reuse a verifier run ID;
 - `procedure`: reproducible steps;
 - `expected_signal`: measurable success and failure criteria;
+- `controls`: declared negative/no-op and positive/gold controls, with their
+  expected states and raw evidence paths;
 - `result`: `PASS`, `FAIL`, `BLOCKED`, or `NOT_EXECUTED`;
 - `evidence`: links or paths to raw evidence and environment facts;
+- `provider_called`: explicit boolean or `UNKNOWN` when it cannot be
+  established;
 - `acceptance`: explicit reviewer decision and rationale;
 - `promotion`: explicit decision to make the change durable, or `NOT_PROMOTED`.
+
+The experiment record is the canonical machine-readable index for these
+facts. It must reference raw logs, diffs, trajectories, verifier output and
+environment captures; it does not replace them. Missing identity or missing
+raw evidence makes the relevant claim `BLOCKED`, `UNKNOWN`, or
+`NOT_EXECUTED`, according to the declared protocol.
+
+## Identity and verifier controls
+
+Use four identity levels:
+
+```text
+experiment_id  = protocol and scope
+trial_id       = frozen comparison cell
+attempt_id     = one execution attempt
+verifier_run_id = one verifier cache namespace for one control/patch attempt
+```
+
+For provider-free verifier qualification, execute the controls serially with
+the same task, base revision, environment and verifier:
+
+```text
+no-op/empty patch  -> expected failure
+gold/oracle patch  -> expected resolution
+candidate patch    -> observed result, if a candidate exists
+```
+
+The gold control qualifies only the stated verifier/environment authority. It
+does not qualify a provider, model, agent, treatment, or general task-solving
+capability.
 
 P7 composition trials use their own comparability namespace: `COMPARABLE`, `INCOMPARABLE`, and `UNKNOWN`. P7 records externally supplied measurements and does not convert them into acceptance results.
 
@@ -65,13 +105,29 @@ id: EXP-YYYY-MM-DD-name
 hypothesis: "..."
 scope: "..."
 implementation: "..."
+identity:
+  codepro_revision: "..."
+  dataset_revision_or_fingerprint: "..."
+  task_ids: []
+  base_revisions: []
+  environment_image_digest: "..."
+  verifier: "..."
+attempts:
+  experiment_id: "..."
+  trial_id: "..."
+  attempt_id: "..."
+  verifier_run_id: "..."
 executor: "..."
 procedure: "..."
 expected_signal: "..."
+controls:
+  negative_noop: {expected: "FAIL", evidence: []}
+  positive_gold: {expected: "RESOLVED", evidence: []}
 result: NOT_EXECUTED
 evidence:
   local: []
   upstream: []
+provider_called: UNKNOWN
 acceptance: "PENDING"
 promotion: NOT_PROMOTED
 ```

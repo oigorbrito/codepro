@@ -75,3 +75,26 @@ provider/model, Treatment A execution, or A/B/C/D mechanism evidence.
 The boundary is explicit: creating a module, fixture, or directory does not by
 itself prove that the corresponding capability exists or is suitable for
 promotion.
+
+## Qualification evidence boundary
+
+Qualification is indexed by one machine-readable experiment manifest and its
+referenced raw artifacts. The manifest must bind, at the declared level of
+authority, the Codepro/runner revision, dataset revision or fingerprint,
+task/base revision, treatment and control role, executor/provider/model and
+configuration, environment image/digest and OS/architecture, verifier
+identity, budget, identity levels (`experiment_id`, `trial_id`, `attempt_id`,
+and verifier `run_id`), `provider_called`, and the independent acceptance
+decision.
+
+The manifest is not a replacement for raw evidence. It is the index that makes
+the evidence discoverable and comparable. A verifier qualification is invalid
+unless the same declared verifier path demonstrates both an expected failure
+for a no-op/empty patch and an expected resolution for an official gold/oracle
+patch. Neither control authorizes promotion of a provider, model, executor,
+treatment, or product capability.
+
+Historical architecture audits and decision records remain valuable, but their
+claims are scoped to the revision and collection date recorded in the file.
+They must not be read as the current repository state without a current
+manifest or acceptance record.

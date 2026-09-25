@@ -35,6 +35,8 @@ Still deferred or unqualified:
 Every capability must be introduced through a falsifiable hypothesis, an explicit implementation, an executed experiment, and recorded evidence. Local success is not scientific or upstream evidence. No fallback, executor switch, or scope expansion may be silent.
 
 See [the project contract](docs/project-contract.md) and [the experimental protocol](docs/experimental-protocol.md).
+Agent workspace, patch, commit, retry and pull-request behavior is governed by
+[the agent execution workflow](docs/agent-execution-workflow.md).
 
 ## P0 baseline and telemetry
 
