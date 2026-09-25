@@ -1,5 +1,9 @@
 # mini-SWE-agent benchmark reference integration
 
+## Agent instructions
+
+Repository-wide agent rules live in `AGENTS.md`. This integration has additional benchmark-specific rules in `experiments/integrations/minisweagent/AGENTS.md`. Agents working in this directory must follow both, with the nested instructions taking precedence where more specific.
+
 This directory preserves the execution substrate used by the pinned
 mini-SWE-agent SWE-bench configuration instead of reimplementing it inside
 CodePro.
