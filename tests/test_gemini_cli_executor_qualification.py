@@ -22,6 +22,17 @@ class GeminiCliExecutorQualificationTests(unittest.TestCase):
         self.assertEqual(runner.DEFAULT_INSTANCE, "sympy__sympy-14711")
         self.assertEqual(runner.SWEBENCH_VERSION, "5.0.2")
 
+    def test_windows_cmd_shim_is_explicitly_invoked_through_comspec(self) -> None:
+        original_name = runner.os.name
+        try:
+            runner.os.name = "nt"
+            argv = runner.tool_argv(r"C:\\Users\\me\\AppData\\Roaming\\npm\\gemini.CMD", "--version")
+        finally:
+            runner.os.name = original_name
+        self.assertIn("/c", [item.lower() for item in argv])
+        self.assertTrue(argv[-2].lower().endswith("gemini.cmd"))
+        self.assertEqual(argv[-1], "--version")
+
     def test_provider_free_gate_requires_both_controls(self) -> None:
         with tempfile.TemporaryDirectory() as tmp:
             path = Path(tmp) / "summary.json"
