@@ -199,9 +199,10 @@ def run(
         }
 
 
-def tool_argv(path: str, *args: str) -> list[str]:
+def tool_argv(path: str, *args: str, platform_name: str | None = None) -> list[str]:
     resolved = str(Path(path))
-    if os.name == "nt" and Path(resolved).suffix.lower() in {".cmd", ".bat"}:
+    effective_platform = os.name if platform_name is None else platform_name
+    if effective_platform == "nt" and Path(resolved).suffix.lower() in {".cmd", ".bat"}:
         return [os.environ.get("COMSPEC", "cmd.exe"), "/d", "/s", "/c", resolved, *args]
     return [resolved, *args]
 
