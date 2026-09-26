@@ -18,7 +18,7 @@ from typing import Any
 
 
 ROOT = Path(__file__).parents[1].resolve()
-EXPECTED_VERSION = "0.3.0.dev0"
+EXPECTED_VERSION = "0.3.0.dev1"
 BUILD_REQUIREMENT = "setuptools>=68"
 
 
