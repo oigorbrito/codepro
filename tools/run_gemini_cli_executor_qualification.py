@@ -476,16 +476,23 @@ def main() -> int:
             print(json.dumps(report, ensure_ascii=False, indent=2))
             return 2
 
+        normalize_filemode = _git(workspace, "config", "core.fileMode", "false")
+        report["steps"]["workspace_core_filemode"] = normalize_filemode
+
         head = _git(workspace, "rev-parse", "HEAD")
         clean = _git(workspace, "status", "--porcelain")
+        content_diff = _git(workspace, "diff", "--quiet", "--ignore-submodules", "--")
         ancestor = _git(workspace, "merge-base", "--is-ancestor", task_meta["base_commit"], "HEAD")
         report["steps"]["workspace_head"] = head
         report["steps"]["workspace_clean"] = clean
+        report["steps"]["workspace_content_diff"] = content_diff
         report["steps"]["base_commit_ancestor"] = ancestor
         if (
-            head["returncode"] != 0
+            normalize_filemode["returncode"] != 0
+            or head["returncode"] != 0
             or clean["returncode"] != 0
             or clean["stdout"].strip()
+            or content_diff["returncode"] != 0
             or ancestor["returncode"] != 0
         ):
             report["reason"] = "TASK_WORKSPACE_IDENTITY_INVALID"
