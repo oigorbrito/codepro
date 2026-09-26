@@ -40,6 +40,14 @@ class GeminiCliExecutorQualificationTests(unittest.TestCase):
         self.assertIn('"diff", "--quiet", "--ignore-submodules"', source)
         self.assertIn("workspace_content_diff", source)
 
+    def test_verifier_image_reuses_block5_builder(self) -> None:
+        import inspect
+
+        source = inspect.getsource(runner.ensure_verifier_image)
+        self.assertIn("_load_verifier_builder", source)
+        self.assertIn("_verifier_image_identity_command", source)
+        self.assertIn("_DOCKERFILE", source)
+
     def test_provider_free_gate_requires_both_controls(self) -> None:
         with tempfile.TemporaryDirectory() as tmp:
             path = Path(tmp) / "summary.json"
