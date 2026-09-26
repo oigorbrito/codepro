@@ -42,10 +42,12 @@ class MiniV246VerifierControlsTests(unittest.TestCase):
         self.assertEqual(result["status"], "RESOLVED")
         self.assertTrue(result["raw_outcome"])
 
-    def test_linux_helper_derives_only_official_image_identity(self) -> None:
-        self.assertIn("from swebench.task.checks import expected_image", runner._LINUX_HELPER)
-        self.assertIn('instance["image"] = derived_image', runner._LINUX_HELPER)
-        self.assertIn("dataset image mismatch", runner._LINUX_HELPER)
+    def test_linux_helper_uses_pinned_official_task_repo(self) -> None:
+        self.assertIn("from swebench.task.repo import load_task_repo", runner._LINUX_HELPER)
+        self.assertIn('load_task_repo("/opt/swe-bench-tasks"', runner._LINUX_HELPER)
+        self.assertIn("task-repo identity mismatch", runner._LINUX_HELPER)
+        self.assertIn("eval_script", runner._LINUX_HELPER)
+        self.assertTrue(runner.TASK_REPO_COMMIT)
 
     def test_subprocess_capture_is_utf8_tolerant(self) -> None:
         import inspect
