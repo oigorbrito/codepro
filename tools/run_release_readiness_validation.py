@@ -21,7 +21,7 @@ SRC = ROOT / "src"
 TOOLS = ROOT / "tools"
 PUBLISHED_BASELINE = "eb350cc5c9c7c2430e86a3870a6a40f67038d363"
 PUBLISHED_TAG = "v0.3.0.dev0"
-CURRENT_VERSION = "0.3.0.dev0"
+CURRENT_VERSION = "0.3.0.dev1"
 
 
 def run(
@@ -254,7 +254,7 @@ def main() -> int:
         "GitHub Actions/official CI PASS is not established by this local gate.",
         "The published v0.3.0.dev0 tag is unsigned.",
         "Current local provenance is unsigned and no hosted attestation is claimed.",
-        "The package version remains 0.3.0.dev0; a future release identifier/version requires a separate release decision.",
+        "The package version is 0.3.0.dev1; publication of this candidate requires a separate release decision.",
         "No release asset upload, package-index publication, production activation, or executor promotion is authorized.",
     ]
 
