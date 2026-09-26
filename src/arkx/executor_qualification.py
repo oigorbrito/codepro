@@ -28,6 +28,7 @@ class ExecutionOutcome(_ValueEnum):
     COMPLETED = "COMPLETED"
     EXECUTOR_FAILED = "EXECUTOR_FAILED"
     INFRASTRUCTURE_FAILED = "INFRASTRUCTURE_FAILED"
+    BILLING_BLOCKED = "BILLING_BLOCKED"
     BUDGET_EXHAUSTED = "BUDGET_EXHAUSTED"
     BLOCKED = "BLOCKED"
     UNKNOWN = "UNKNOWN"
@@ -234,6 +235,8 @@ class ExecutorTrial:
     def __post_init__(self) -> None:
         if not self.replicate_id:
             raise ValueError("replicate_id must be non-empty")
+        if self.outcome is ExecutionOutcome.BILLING_BLOCKED and not self.observation.external_evidence:
+            raise ValueError("BILLING_BLOCKED requires external billing evidence")
 
     def to_dict(self) -> dict[str, Any]:
         return {

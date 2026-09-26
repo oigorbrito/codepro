@@ -76,6 +76,26 @@ class ExecutorQualificationTests(unittest.TestCase):
         self.assertEqual(assess_trial(failed), QualificationStatus.BLOCKED)
         self.assertIsNone(failed.observation.accepted)
 
+    def test_billing_block_is_blocked_not_executor_failure(self):
+        blocked = trial(
+            outcome=ExecutionOutcome.BILLING_BLOCKED,
+            observation=ExecutorObservation(
+                accepted=None,
+                external_evidence=("evidence://github-actions-billing-20260926",),
+            ),
+        )
+        self.assertEqual(assess_trial(blocked), QualificationStatus.BLOCKED)
+        self.assertEqual(blocked.to_dict()["outcome"], "BILLING_BLOCKED")
+        self.assertEqual(
+            blocked.to_dict()["observation"]["external_evidence"],
+            ["evidence://github-actions-billing-20260926"],
+        )
+        self.assertIsNone(blocked.observation.accepted)
+
+    def test_billing_block_without_external_evidence_is_rejected(self):
+        with self.assertRaisesRegex(ValueError, "external billing evidence"):
+            trial(outcome=ExecutionOutcome.BILLING_BLOCKED, observation=ExecutorObservation(accepted=None))
+
     def test_completed_trial_does_not_infer_acceptance(self):
         unknown = trial(observation=ExecutorObservation(accepted=None))
         self.assertEqual(assess_trial(unknown), QualificationStatus.UNKNOWN)
