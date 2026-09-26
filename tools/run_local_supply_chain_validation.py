@@ -18,7 +18,7 @@ import run_reproducible_artifact_validation as repro
 
 
 ROOT = Path(__file__).parents[1].resolve()
-EXPECTED_VERSION = "0.3.0.dev0"
+EXPECTED_VERSION = "0.3.0.dev1"
 REPO_URI = "https://github.com/oigorbrito/codepro"
 
 
