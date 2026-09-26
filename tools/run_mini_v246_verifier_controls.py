@@ -51,17 +51,37 @@ import shutil
 import sys
 
 from swebench.harness.run_evaluation import main
+from swebench.harness.utils import load_swebench_dataset
+from swebench.task.checks import expected_image
 
 dataset, split, instance_id, predictions_path, run_id, work_dir, normalized_report = sys.argv[1:]
 work = Path(work_dir)
 work.mkdir(parents=True, exist_ok=True)
 os.chdir(work)
 
+rows = load_swebench_dataset(dataset, split, [instance_id])
+if len(rows) != 1:
+    raise RuntimeError(f"expected exactly one dataset row for {instance_id}, found {len(rows)}")
+instance = dict(rows[0])
+derived_image = expected_image(instance_id)
+observed_image = instance.get("image")
+if observed_image not in (None, derived_image):
+    raise RuntimeError(
+        f"dataset image mismatch for {instance_id}: observed={observed_image!r} expected={derived_image!r}"
+    )
+instance["image"] = derived_image
+harness_dataset = work / "harness-instance.json"
+harness_dataset.write_text(json.dumps([instance], ensure_ascii=False) + "\n", encoding="utf-8")
+
+effective_predictions = predictions_path
+if predictions_path == "gold":
+    effective_predictions = "gold"
+
 report = main(
-    dataset_name=dataset,
+    dataset_name=str(harness_dataset),
     split=split,
     instance_ids=[instance_id],
-    predictions_path=predictions_path,
+    predictions_path=effective_predictions,
     max_workers=1,
     open_file_limit=4096,
     run_id=run_id,
@@ -94,6 +114,8 @@ def run(argv: list[str], *, cwd: Path | None = None, timeout: int = 3600) -> dic
             cwd=str(cwd) if cwd else None,
             capture_output=True,
             text=True,
+            encoding="utf-8",
+            errors="replace",
             timeout=timeout,
             shell=False,
             check=False,
