@@ -228,7 +228,7 @@ def main() -> int:
                 "install",
                 "--disable-pip-version-check",
                 "--no-input",
-                f"swebench=={SWEBENCH_VERSION}",
+                f"swebench[datasets]=={SWEBENCH_VERSION}",
             ],
             timeout=1800,
         )
