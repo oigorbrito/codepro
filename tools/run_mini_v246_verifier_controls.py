@@ -32,6 +32,7 @@ SPLIT = "test"
 DEFAULT_INSTANCE = "sympy__sympy-14711"
 VERIFIER_BASE_IMAGE = "python:3.11-slim"
 VERIFIER_IMAGE = "codepro/swebench-verifier:5.0.2"
+DOCKER_CLI_VERSION = "29.7.2"
 TASK_REPO_URL = "https://github.com/SWE-bench/swe-bench-tasks.git"
 TASK_REPO_COMMIT = "3d07b464b7b311a0cbfb5ed5b2d8a3b96f84a33d"
 
@@ -120,11 +121,18 @@ print("CODEPRO_RESULT=" + json.dumps({"report": str(report_path), "normalized_re
 
 _DOCKERFILE = f"""FROM {VERIFIER_BASE_IMAGE}
 RUN apt-get update \
- && DEBIAN_FRONTEND=noninteractive apt-get install -y --no-install-recommends docker.io git ca-certificates \
+ && DEBIAN_FRONTEND=noninteractive apt-get install -y --no-install-recommends git ca-certificates curl tar \
  && rm -rf /var/lib/apt/lists/*
+RUN arch="$(dpkg --print-architecture)" \
+ && case "$arch" in amd64) docker_arch="x86_64" ;; arm64) docker_arch="aarch64" ;; *) echo "unsupported arch: $arch" >&2; exit 2 ;; esac \
+ && curl -fsSL "https://download.docker.com/linux/static/stable/$docker_arch/docker-{DOCKER_CLI_VERSION}.tgz" -o /tmp/docker.tgz \
+ && tar -xzf /tmp/docker.tgz -C /tmp \
+ && install -m 0755 /tmp/docker/docker /usr/local/bin/docker \
+ && rm -rf /tmp/docker /tmp/docker.tgz \
+ && command -v docker \
+ && docker --version
 RUN python -m pip install --disable-pip-version-check --no-input "swebench[datasets]=={SWEBENCH_VERSION}"
 RUN python -c "import importlib.metadata as m; assert m.version('swebench') == '{SWEBENCH_VERSION}'; print(m.version('swebench'))"
-RUN command -v docker && docker --version
 RUN git init /opt/swe-bench-tasks \
  && git -C /opt/swe-bench-tasks remote add origin {TASK_REPO_URL} \
  && git -C /opt/swe-bench-tasks fetch --depth 1 origin {TASK_REPO_COMMIT} \
@@ -306,6 +314,7 @@ def main() -> int:
             "version": SWEBENCH_VERSION,
             "execution_platform": "linux-control-container",
             "image": VERIFIER_IMAGE,
+            "docker_cli_version": DOCKER_CLI_VERSION,
             "task_repo": {
                 "url": TASK_REPO_URL,
                 "commit": TASK_REPO_COMMIT,
