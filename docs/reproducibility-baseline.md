@@ -1,5 +1,9 @@
 # Reproducibility baseline — 2026-09-23
 
+> Current baseline: see [`logs/architecture/current-baseline-20260925.json`](../logs/architecture/current-baseline-20260925.json).
+> The historical record below is retained as historical evidence and does not
+> qualify the current revision.
+
 ## Scope
 
 This record describes the local deterministic-test baseline before the next

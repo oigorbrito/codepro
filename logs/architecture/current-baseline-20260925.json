@@ -1,0 +1,47 @@
+{
+  "record_type": "current_local_baseline",
+  "collected_at": "2026-09-25",
+  "repository": {
+    "product": "codepro",
+    "head": "38ca61567367b03d218f3e75d6829acd89cfc90e",
+    "worktree": "C:/Users/igorb/.codex/worktrees/codepro-baseline-repair/codepro",
+    "branch": null,
+    "worktree_status": "PASS",
+    "diff_check": "PASS"
+  },
+  "environment": {
+    "os": "Windows",
+    "python": "3.13.15",
+    "source_import_mode": "installed_wheel",
+    "temporary_directory": ".build-tmp",
+    "runtime_dependencies": []
+  },
+  "commands": [
+    {"command": "python -m build", "status": "PASS", "note": "rerun with controlled TEMP"},
+    {"command": "python -m pip install --force-reinstall --no-deps dist/codepro-0.3.0.dev0-py3-none-any.whl", "status": "PASS"},
+    {"command": "python -m pip check", "status": "PASS"},
+    {"command": "codepro --version", "status": "PASS", "observed": "codepro 0.3.0.dev0"},
+    {"command": "codepro doctor --json", "status": "PASS"},
+    {"command": "codepro baseline", "status": "PASS"},
+    {"command": "python tools/check_foundation.py", "status": "PASS", "observed": "8 files and 14 invariants verified"},
+    {"command": "python -m compileall -q src", "status": "PASS"},
+    {"command": "python -m unittest discover -s tests -t . -v", "status": "PASS", "tests_run": 387}
+  ],
+  "artifacts": {
+    "wheel": {
+      "name": "codepro-0.3.0.dev0-py3-none-any.whl",
+      "sha256": "A5C05FE78E49266E9F5F47D93759F306EC785D372008D2179A273EAA6632E00C"
+    },
+    "sdist": {
+      "name": "codepro-0.3.0.dev0.tar.gz",
+      "sha256": "66B66EBBE500925516F3A8AF76101E438B6E999F62C5F82511E2B84E483864F5"
+    }
+  },
+  "limitations": [
+    {"condition": "global TEMP directory", "status": "BLOCKED", "detail": "WinError 5; controlled temporary directory was required"},
+    {"condition": "external CI", "status": "NOT_VERIFIED"},
+    {"condition": "independent acceptance", "status": "NOT_VERIFIED"},
+    {"condition": "real executor/provider qualification", "status": "NOT_VERIFIED"}
+  ],
+  "acceptance": "LOCAL_BASELINE_PASS_EXTERNAL_ACCEPTANCE_NOT_VERIFIED"
+}

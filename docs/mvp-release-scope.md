@@ -2,9 +2,11 @@
 
 ## Decisão
 
-O produto está em MVP. O objetivo não é publicar a arquitetura acumulada nem
-preservar uma solução provisória como se fosse produto. O objetivo é provar uma
-única jornada operacional vertical, privada e reproduzível.
+O alvo deste ciclo é um MVP operacional. O produto ainda não deve ser tratado
+como MVP aceito enquanto os gates abaixo permanecerem `NO-GO` ou `PENDING`.
+O objetivo não é publicar a arquitetura acumulada nem preservar uma solução
+provisória como se fosse produto. O objetivo é provar uma única jornada
+operacional vertical, privada e reproduzível.
 
 ## Regra contra gambiarra
 

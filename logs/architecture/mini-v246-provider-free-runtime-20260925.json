@@ -1,0 +1,29 @@
+{
+  "record_type": "provider_free_runtime_qualification",
+  "collected_at": "2026-09-25",
+  "repository_head": "38ca61567367b03d218f3e75d6829acd89cfc90e",
+  "executor": {
+    "name": "mini-SWE-agent",
+    "version": "2.4.6",
+    "commit": "a83fcae82d2a08f0ee0c688f9d137b3566c097f8",
+    "identity_status": "FROZEN_NOT_REVERIFIED_IN_THIS_ENVIRONMENT"
+  },
+  "substrate": {
+    "target": "Docker/Linux",
+    "cwd": "/testbed",
+    "shell": "bash -c",
+    "docker_client": "29.7.2",
+    "docker_context": "desktop-linux",
+    "daemon_status": "BLOCKED",
+    "daemon_error": "permission denied while connecting to dockerDesktopLinuxEngine"
+  },
+  "controls": {
+    "no_op": "NOT_EXECUTED",
+    "gold_oracle": "NOT_EXECUTED"
+  },
+  "provider_model": "NOT_EXECUTED",
+  "benchmark_claim": "NOT_MADE",
+  "executor_promotion": "NOT_AUTHORIZED",
+  "raw_evidence": "PERSISTED",
+  "classification": "BLOCKED_RUNTIME_INFRASTRUCTURE"
+}

@@ -1,0 +1,53 @@
+{
+  "record_type": "current_adapter_preflight",
+  "collected_at": "2026-09-25",
+  "repository_head": "38ca61567367b03d218f3e75d6829acd89cfc90e",
+  "python": "3.13.15",
+  "records": [
+    {
+      "kind": "PROVIDER",
+      "name": "openrouter",
+      "status": "UNKNOWN",
+      "dependency": {"name": "minisweagent", "available": true, "version": null},
+      "identity_complete": false,
+      "reason": "provider and configuration identity are not frozen"
+    },
+    {
+      "kind": "SANDBOX",
+      "name": "git-bash",
+      "status": "BLOCKED",
+      "dependency": {"name": "bash", "available": false, "version": null},
+      "reason": "executable unavailable or access denied"
+    },
+    {
+      "kind": "EVALUATOR",
+      "name": "docker-swebench",
+      "status": "BLOCKED",
+      "dependency": {"name": "docker-daemon", "available": false, "version": "Docker version 29.7.2"},
+      "reason": "permission denied while connecting to dockerDesktopLinuxEngine"
+    },
+    {
+      "kind": "PROVIDER",
+      "name": "ollama",
+      "status": "UNKNOWN",
+      "dependency": {"name": "ollama", "available": true, "version": "ollama version is 0.34.4"},
+      "identity_complete": false,
+      "available_models": [
+        "starcoder2:7b",
+        "glm4:9b",
+        "granite3.3:8b",
+        "nemotron-3-nano:4b",
+        "gemma3:4b",
+        "phi4-mini:latest",
+        "deepseek-r1:7b",
+        "qwen3.6:35b",
+        "qwen2.5-coder:14b",
+        "qwen2.5-coder:7b",
+        "qwen2.5-coder:3b"
+      ],
+      "reason": "model, configuration and acceptance authority are not frozen"
+    }
+  ],
+  "execution_performed": false,
+  "acceptance": "PREFLIGHT_ONLY"
+}
