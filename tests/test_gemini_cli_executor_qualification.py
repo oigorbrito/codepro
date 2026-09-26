@@ -32,6 +32,14 @@ class GeminiCliExecutorQualificationTests(unittest.TestCase):
         self.assertTrue(argv[-2].lower().endswith("gemini.cmd"))
         self.assertEqual(argv[-1], "--version")
 
+    def test_workspace_copy_normalizes_filemode_but_still_requires_clean_content(self) -> None:
+        import inspect
+
+        source = inspect.getsource(runner.main)
+        self.assertIn('core.fileMode", "false"', source)
+        self.assertIn('"diff", "--quiet", "--ignore-submodules"', source)
+        self.assertIn("workspace_content_diff", source)
+
     def test_provider_free_gate_requires_both_controls(self) -> None:
         with tempfile.TemporaryDirectory() as tmp:
             path = Path(tmp) / "summary.json"
