@@ -23,12 +23,11 @@ class GeminiCliExecutorQualificationTests(unittest.TestCase):
         self.assertEqual(runner.SWEBENCH_VERSION, "5.0.2")
 
     def test_windows_cmd_shim_is_explicitly_invoked_through_comspec(self) -> None:
-        original_name = runner.os.name
-        try:
-            runner.os.name = "nt"
-            argv = runner.tool_argv(r"C:\\Users\\me\\AppData\\Roaming\\npm\\gemini.CMD", "--version")
-        finally:
-            runner.os.name = original_name
+        argv = runner.tool_argv(
+            r"C:\\Users\\me\\AppData\\Roaming\\npm\\gemini.CMD",
+            "--version",
+            platform_name="nt",
+        )
         self.assertIn("/c", [item.lower() for item in argv])
         self.assertTrue(argv[-2].lower().endswith("gemini.cmd"))
         self.assertEqual(argv[-1], "--version")
