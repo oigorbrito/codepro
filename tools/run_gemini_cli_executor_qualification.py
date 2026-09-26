@@ -22,6 +22,7 @@ from __future__ import annotations
 import argparse
 from datetime import datetime, timezone
 import hashlib
+import importlib.util
 import json
 import os
 from pathlib import Path
@@ -197,6 +198,44 @@ def run(
             "timeout": False,
             "error": f"{type(exc).__name__}: {exc}",
         }
+
+
+def _load_verifier_builder():
+    module_path = ROOT / "tools" / "run_mini_v246_verifier_controls.py"
+    spec = importlib.util.spec_from_file_location("codepro_mini_verifier_controls", module_path)
+    if spec is None or spec.loader is None:
+        raise RuntimeError("unable to load verifier control module")
+    module = importlib.util.module_from_spec(spec)
+    spec.loader.exec_module(module)
+    return module
+
+
+def ensure_verifier_image(report: dict[str, Any]) -> bool:
+    verifier = _load_verifier_builder()
+    identity = run(verifier._verifier_image_identity_command(), timeout=120)
+    report["steps"]["existing_verifier_identity"] = identity
+    if identity["returncode"] == 0 and SWEBENCH_VERSION in identity["stdout"]:
+        report["steps"]["verifier_identity"] = identity
+        return True
+
+    with tempfile.TemporaryDirectory(prefix="codepro-swebench-verifier-image-") as tmp:
+        build_dir = Path(tmp)
+        (build_dir / "Dockerfile").write_text(
+            verifier._DOCKERFILE,
+            encoding="utf-8",
+            newline="\n",
+        )
+        build = run(
+            ["docker", "build", "--pull", "-t", VERIFIER_IMAGE, str(build_dir)],
+            timeout=2400,
+        )
+        report["steps"]["build_linux_verifier"] = build
+        if build["returncode"] != 0:
+            return False
+
+    identity = run(verifier._verifier_image_identity_command(), timeout=120)
+    report["steps"]["verifier_identity"] = identity
+    return identity["returncode"] == 0 and SWEBENCH_VERSION in identity["stdout"]
 
 
 def tool_argv(path: str, *args: str, platform_name: str | None = None) -> list[str]:
@@ -375,26 +414,7 @@ def main() -> int:
         return 2
     report["identity"]["executor_version"] = gemini_version["stdout"].strip()
 
-    verifier_identity = run(
-        [
-            "docker",
-            "run",
-            "--rm",
-            VERIFIER_IMAGE,
-            "sh",
-            "-lc",
-            (
-                "set -eu; command -v docker; "
-                "python -c \"import importlib.metadata as m; "
-                "assert m.version('swebench') == '5.0.2'\"; "
-                "test \"$(git -C /opt/swe-bench-tasks rev-parse HEAD)\" = "
-                f"\"{TASK_REPO_COMMIT}\""
-            ),
-        ],
-        timeout=120,
-    )
-    report["steps"]["verifier_identity"] = verifier_identity
-    if verifier_identity["returncode"] != 0:
+    if not ensure_verifier_image(report):
         report["reason"] = "VERIFIER_IMAGE_NOT_QUALIFIED"
         write_report(output_dir, report)
         print(json.dumps(report, ensure_ascii=False, indent=2))
