@@ -1,0 +1,125 @@
+name: Mini v2.4.6 runtime access
+
+on:
+  workflow_dispatch:
+  push:
+    paths:
+      - ".github/workflows/mini-v246-runtime-access.yml"
+
+permissions:
+  contents: read
+
+jobs:
+  runtime-access:
+    name: 5.1-A runtime access
+    runs-on: ubuntu-24.04
+    timeout-minutes: 30
+    env:
+      MINI_SHA: a83fcae82d2a08f0ee0c688f9d137b3566c097f8
+      MINI_CONFIG: src/minisweagent/config/benchmarks/swebench.yaml
+      MINI_CONFIG_BLOB: 106decd160e72e5164e29d15d23da354c29c309d
+      MINI_REPO: /tmp/mini-swe-agent
+      PROBE_IMAGE: python:3.11-slim
+      EVIDENCE_DIR: logs/architecture/mini-v246-runtime-access
+    steps:
+      - uses: actions/checkout@11d5960a326750d5838078e36cf38b85af677262 # checkout v4
+        with:
+          persist-credentials: false
+
+      - name: Record CodePro and runner identity
+        shell: bash
+        run: |
+          set -euo pipefail
+          mkdir -p "$EVIDENCE_DIR"
+          git rev-parse HEAD | tee "$EVIDENCE_DIR/codepro-commit.txt"
+          python -VV 2>&1 | tee "$EVIDENCE_DIR/python.txt"
+          uname -a | tee "$EVIDENCE_DIR/uname.txt"
+
+      - name: Verify frozen mini-SWE-agent identity
+        shell: bash
+        run: |
+          set -euo pipefail
+          git init "$MINI_REPO"
+          git -C "$MINI_REPO" remote add origin https://github.com/SWE-agent/mini-swe-agent.git
+          git -C "$MINI_REPO" fetch --depth 1 origin "$MINI_SHA"
+          git -C "$MINI_REPO" checkout --detach FETCH_HEAD
+          test "$(git -C "$MINI_REPO" rev-parse HEAD)" = "$MINI_SHA"
+          test -z "$(git -C "$MINI_REPO" status --porcelain)"
+          test "$(git -C "$MINI_REPO" rev-parse "HEAD:$MINI_CONFIG")" = "$MINI_CONFIG_BLOB"
+          git -C "$MINI_REPO" rev-parse HEAD | tee "$EVIDENCE_DIR/mini-commit.txt"
+          git -C "$MINI_REPO" rev-parse "HEAD:$MINI_CONFIG" | tee "$EVIDENCE_DIR/mini-config-blob.txt"
+
+      - name: Verify Docker daemon access
+        shell: bash
+        run: |
+          set -euo pipefail
+          docker --version | tee "$EVIDENCE_DIR/docker-version.txt"
+          docker info --format '{{json .}}' | tee "$EVIDENCE_DIR/docker-info.json"
+
+      - name: Resolve probe image identity
+        shell: bash
+        run: |
+          set -euo pipefail
+          docker pull "$PROBE_IMAGE" | tee "$EVIDENCE_DIR/docker-pull.txt"
+          docker image inspect "$PROBE_IMAGE" --format '{{json .Id}}' | tee "$EVIDENCE_DIR/image-id.json"
+          docker image inspect "$PROBE_IMAGE" --format '{{json .RepoDigests}}' | tee "$EVIDENCE_DIR/image-repo-digests.json"
+          test "$(docker image inspect "$PROBE_IMAGE" --format '{{.Os}}')" = "linux"
+
+      - name: Verify Linux substrate, /testbed and bash
+        shell: bash
+        run: |
+          set -euo pipefail
+          docker run --rm \
+            --workdir /testbed \
+            "$PROBE_IMAGE" \
+            bash -c 'set -e; test "$(uname -s)" = Linux; test -d /testbed; test "$(pwd)" = /testbed; printf "runtime-access-ready\n"' \
+            | tee "$EVIDENCE_DIR/container-probe.txt"
+          grep -qx 'runtime-access-ready' "$EVIDENCE_DIR/container-probe.txt"
+
+      - name: Emit 5.1-A result
+        shell: bash
+        run: |
+          set -euo pipefail
+          python - <<'PY' > "$EVIDENCE_DIR/result.json"
+          import json
+          import os
+          from pathlib import Path
+
+          evidence = Path(os.environ["EVIDENCE_DIR"])
+          result = {
+              "schema_version": 1,
+              "block": "5.1-A",
+              "classification": "RUNTIME_ACCESS_READY",
+              "mini_swe_agent": {
+                  "version": "v2.4.6",
+                  "commit": os.environ["MINI_SHA"],
+                  "config_blob": os.environ["MINI_CONFIG_BLOB"],
+                  "identity_verified": True,
+              },
+              "docker": {
+                  "daemon_access": "PASS",
+                  "linux_substrate": "PASS",
+                  "probe_image": os.environ["PROBE_IMAGE"],
+                  "image_id": json.loads((evidence / "image-id.json").read_text()),
+                  "repo_digests": json.loads((evidence / "image-repo-digests.json").read_text()),
+              },
+              "cwd": "/testbed",
+              "bash_c": "PASS",
+              "no_op": "NOT_EXECUTED",
+              "gold_oracle": "NOT_EXECUTED",
+              "provider_model": "NOT_EXECUTED",
+              "benchmark": "NOT_EXECUTED",
+              "executor_promotion": "NOT_AUTHORIZED",
+          }
+          print(json.dumps(result, indent=2, sort_keys=True))
+          PY
+          cat "$EVIDENCE_DIR/result.json"
+
+      - name: Upload runtime access evidence
+        if: always()
+        uses: actions/upload-artifact@ea165f8d65b6e75b540449e92b4886f43607fa02 # upload-artifact v4
+        with:
+          name: mini-v246-runtime-access-${{ github.sha }}
+          if-no-files-found: warn
+          retention-days: 30
+          path: logs/architecture/mini-v246-runtime-access/
