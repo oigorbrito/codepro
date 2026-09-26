@@ -61,6 +61,11 @@ work = Path(work_dir)
 work.mkdir(parents=True, exist_ok=True)
 os.chdir(work)
 
+os.environ["PATH"] = "/usr/local/sbin:/usr/local/bin:/usr/sbin:/usr/bin:/sbin:/bin"
+docker_cli = shutil.which("docker")
+if docker_cli is None:
+    raise RuntimeError(f"docker CLI unavailable inside verifier container; PATH={os.environ['PATH']}")
+
 rows = load_swebench_dataset(dataset, split, [instance_id])
 if len(rows) != 1:
     raise RuntimeError(f"expected exactly one dataset row for {instance_id}, found {len(rows)}")
@@ -119,6 +124,7 @@ RUN apt-get update \
  && rm -rf /var/lib/apt/lists/*
 RUN python -m pip install --disable-pip-version-check --no-input "swebench[datasets]=={SWEBENCH_VERSION}"
 RUN python -c "import importlib.metadata as m; assert m.version('swebench') == '{SWEBENCH_VERSION}'; print(m.version('swebench'))"
+RUN command -v docker && docker --version
 RUN git init /opt/swe-bench-tasks \
  && git -C /opt/swe-bench-tasks remote add origin {TASK_REPO_URL} \
  && git -C /opt/swe-bench-tasks fetch --depth 1 origin {TASK_REPO_COMMIT} \
@@ -348,14 +354,14 @@ def main() -> int:
             "run",
             "--rm",
             VERIFIER_IMAGE,
-            "python",
-            "-c",
-            "import importlib.metadata as m; print(m.version('swebench'))",
+            "sh",
+            "-lc",
+            "command -v docker && docker --version && python -c \"import importlib.metadata as m; print(m.version('swebench'))\"",
         ],
         timeout=120,
     )
     report["steps"]["verifier_identity"] = identity
-    if identity["returncode"] != 0 or identity["stdout"].strip() != SWEBENCH_VERSION:
+    if identity["returncode"] != 0 or SWEBENCH_VERSION not in identity["stdout"].splitlines()[-1:]:
         report["classification"] = "BLOCKED_VERIFIER_IDENTITY"
         _write_report(output_dir, report)
         print(json.dumps(report, ensure_ascii=False, indent=2))
@@ -390,7 +396,13 @@ def main() -> int:
         "reason": "non-empty inert patch forces official harness execution; empty patches are filtered",
         "outcome": negative_outcome,
     }
-    if negative["returncode"] != 0 or negative_outcome["status"] != "TESTS_FAILED":
+    negative_cleanup_error = (
+        "FileNotFoundError" in (negative.get("stderr") or "")
+        or "Unstopped containers: 0" not in (negative.get("stdout") or "")
+        or "Unremoved images: 0" not in (negative.get("stdout") or "")
+    )
+    report["controls"]["no_op"]["cleanup"] = "FAIL" if negative_cleanup_error else "PASS"
+    if negative["returncode"] != 0 or negative_outcome["status"] != "TESTS_FAILED" or negative_cleanup_error:
         report["classification"] = "BLOCKED_NEGATIVE_VERIFIER_CONTROL"
         _write_report(output_dir, report)
         print(json.dumps(report, ensure_ascii=False, indent=2))
@@ -417,7 +429,13 @@ def main() -> int:
         "run_id": gold_run_id,
         "outcome": gold_outcome,
     }
-    if gold["returncode"] != 0 or gold_outcome["status"] != "RESOLVED":
+    gold_cleanup_error = (
+        "FileNotFoundError" in (gold.get("stderr") or "")
+        or "Unstopped containers: 0" not in (gold.get("stdout") or "")
+        or "Unremoved images: 0" not in (gold.get("stdout") or "")
+    )
+    report["controls"]["gold_oracle"]["cleanup"] = "FAIL" if gold_cleanup_error else "PASS"
+    if gold["returncode"] != 0 or gold_outcome["status"] != "RESOLVED" or gold_cleanup_error:
         report["classification"] = "BLOCKED_GOLD_VERIFIER_CONTROL"
         _write_report(output_dir, report)
         print(json.dumps(report, ensure_ascii=False, indent=2))
