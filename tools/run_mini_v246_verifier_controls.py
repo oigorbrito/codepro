@@ -32,6 +32,8 @@ SPLIT = "test"
 DEFAULT_INSTANCE = "sympy__sympy-14711"
 VERIFIER_BASE_IMAGE = "python:3.11-slim"
 VERIFIER_IMAGE = "codepro/swebench-verifier:5.0.2"
+TASK_REPO_URL = "https://github.com/SWE-bench/swe-bench-tasks.git"
+TASK_REPO_COMMIT = "3d07b464b7b311a0cbfb5ed5b2d8a3b96f84a33d"
 
 NEGATIVE_PATCH = """diff --git a/.codepro-verifier-negative-control.txt b/.codepro-verifier-negative-control.txt
 new file mode 100644
@@ -52,7 +54,7 @@ import sys
 
 from swebench.harness.run_evaluation import main
 from swebench.harness.utils import load_swebench_dataset
-from swebench.task.checks import expected_image
+from swebench.task.repo import load_task_repo
 
 dataset, split, instance_id, predictions_path, run_id, work_dir, normalized_report = sys.argv[1:]
 work = Path(work_dir)
@@ -62,16 +64,30 @@ os.chdir(work)
 rows = load_swebench_dataset(dataset, split, [instance_id])
 if len(rows) != 1:
     raise RuntimeError(f"expected exactly one dataset row for {instance_id}, found {len(rows)}")
-instance = dict(rows[0])
-derived_image = expected_image(instance_id)
-observed_image = instance.get("image")
-if observed_image not in (None, derived_image):
-    raise RuntimeError(
-        f"dataset image mismatch for {instance_id}: observed={observed_image!r} expected={derived_image!r}"
-    )
-instance["image"] = derived_image
+dataset_instance = dict(rows[0])
+
+task_rows = load_task_repo("/opt/swe-bench-tasks", [instance_id])
+if len(task_rows) != 1:
+    raise RuntimeError(f"expected exactly one task-repo row for {instance_id}, found {len(task_rows)}")
+task_instance = dict(task_rows[0])
+
+for key in ("instance_id", "repo", "version", "base_commit"):
+    if dataset_instance.get(key) != task_instance.get(key):
+        raise RuntimeError(
+            f"task-repo identity mismatch for {key}: "
+            f"dataset={dataset_instance.get(key)!r} task_repo={task_instance.get(key)!r}"
+        )
+
+required = ("image", "eval_script", "log_parser", "eval_type", "FAIL_TO_PASS", "PASS_TO_PASS", "patch")
+missing = [key for key in required if task_instance.get(key) is None]
+if missing:
+    raise RuntimeError("task-repo record missing required fields: " + ",".join(missing))
+
 harness_dataset = work / "harness-instance.json"
-harness_dataset.write_text(json.dumps([instance], ensure_ascii=False) + "\n", encoding="utf-8")
+harness_dataset.write_text(
+    json.dumps([task_instance], ensure_ascii=False) + "\n",
+    encoding="utf-8",
+)
 
 effective_predictions = predictions_path
 if predictions_path == "gold":
@@ -103,6 +119,12 @@ RUN apt-get update \
  && rm -rf /var/lib/apt/lists/*
 RUN python -m pip install --disable-pip-version-check --no-input "swebench[datasets]=={SWEBENCH_VERSION}"
 RUN python -c "import importlib.metadata as m; assert m.version('swebench') == '{SWEBENCH_VERSION}'; print(m.version('swebench'))"
+RUN git init /opt/swe-bench-tasks \
+ && git -C /opt/swe-bench-tasks remote add origin {TASK_REPO_URL} \
+ && git -C /opt/swe-bench-tasks fetch --depth 1 origin {TASK_REPO_COMMIT} \
+ && git -C /opt/swe-bench-tasks checkout --detach FETCH_HEAD \
+ && test "$(git -C /opt/swe-bench-tasks rev-parse HEAD)" = "{TASK_REPO_COMMIT}" \
+ && test -z "$(git -C /opt/swe-bench-tasks status --porcelain)"
 """
 
 
@@ -256,6 +278,10 @@ def main() -> int:
             "version": SWEBENCH_VERSION,
             "execution_platform": "linux-control-container",
             "image": VERIFIER_IMAGE,
+            "task_repo": {
+                "url": TASK_REPO_URL,
+                "commit": TASK_REPO_COMMIT,
+            },
         },
         "inputs": {"dataset": DATASET, "split": SPLIT, "instance": args.instance},
         "controls": {
