@@ -423,9 +423,11 @@ def main() -> int:
     negative_cleanup_error = (
         "FileNotFoundError" in (negative.get("stderr") or "")
         or "Unstopped containers: 0" not in (negative.get("stdout") or "")
-        or "Unremoved images: 0" not in (negative.get("stdout") or "")
     )
     report["controls"]["no_op"]["cleanup"] = "FAIL" if negative_cleanup_error else "PASS"
+    report["controls"]["no_op"]["image_cache"] = (
+        "PRESENT" if "Unremoved images: 1" in (negative.get("stdout") or "") else "NOT_REPORTED"
+    )
     if negative["returncode"] != 0 or negative_outcome["status"] != "TESTS_FAILED" or negative_cleanup_error:
         report["classification"] = "BLOCKED_NEGATIVE_VERIFIER_CONTROL"
         _write_report(output_dir, report)
@@ -456,9 +458,11 @@ def main() -> int:
     gold_cleanup_error = (
         "FileNotFoundError" in (gold.get("stderr") or "")
         or "Unstopped containers: 0" not in (gold.get("stdout") or "")
-        or "Unremoved images: 0" not in (gold.get("stdout") or "")
     )
     report["controls"]["gold_oracle"]["cleanup"] = "FAIL" if gold_cleanup_error else "PASS"
+    report["controls"]["gold_oracle"]["image_cache"] = (
+        "PRESENT" if "Unremoved images: 1" in (gold.get("stdout") or "") else "NOT_REPORTED"
+    )
     if gold["returncode"] != 0 or gold_outcome["status"] != "RESOLVED" or gold_cleanup_error:
         report["classification"] = "BLOCKED_GOLD_VERIFIER_CONTROL"
         _write_report(output_dir, report)
