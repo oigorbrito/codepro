@@ -23,6 +23,7 @@ import argparse
 from datetime import datetime, timezone
 import hashlib
 import json
+import os
 from pathlib import Path
 import re
 import shutil
@@ -198,6 +199,13 @@ def run(
         }
 
 
+def tool_argv(path: str, *args: str) -> list[str]:
+    resolved = str(Path(path))
+    if os.name == "nt" and Path(resolved).suffix.lower() in {".cmd", ".bat"}:
+        return [os.environ.get("COMSPEC", "cmd.exe"), "/d", "/s", "/c", resolved, *args]
+    return [resolved, *args]
+
+
 def write_report(output_dir: Path, report: dict[str, Any]) -> None:
     output_dir.mkdir(parents=True, exist_ok=True)
     (output_dir / "runner-summary.json").write_text(
@@ -343,6 +351,7 @@ def main() -> int:
         print(json.dumps(report, ensure_ascii=False, indent=2))
         return 2
 
+    tool_paths: dict[str, str] = {}
     for tool in ("git", "docker", "gemini"):
         path = shutil.which(tool)
         report["steps"][f"tool_{tool}"] = {
@@ -354,8 +363,9 @@ def main() -> int:
             write_report(output_dir, report)
             print(json.dumps(report, ensure_ascii=False, indent=2))
             return 2
+        tool_paths[tool] = path
 
-    gemini_version = run(["gemini", "--version"], timeout=60)
+    gemini_version = run(tool_argv(tool_paths["gemini"], "--version"), timeout=60)
     report["steps"]["gemini_version"] = gemini_version
     if gemini_version["returncode"] != 0:
         report["reason"] = "GEMINI_CLI_UNAVAILABLE"
@@ -487,8 +497,8 @@ def main() -> int:
 
         report["account_usage_attempted"] = True
         execution = run(
-            [
-                "gemini",
+            tool_argv(
+                tool_paths["gemini"],
                 "--model",
                 GEMINI_MODEL,
                 "--approval-mode",
@@ -498,7 +508,7 @@ def main() -> int:
                 "--skip-trust",
                 "--prompt",
                 prompt,
-            ],
+            ),
             cwd=workspace,
             timeout=args.timeout_seconds,
         )
