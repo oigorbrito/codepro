@@ -1,156 +1,120 @@
-# CodePro agent policy
+# Codepro agent operating rules
 
-This file defines repository-wide instructions for coding agents.
+The product identity is Codepro. `arkx` is the current Python namespace and
+must not be treated as a separate product identity.
 
-## Evidence-backed engineering decisions
+## Scope
 
-CodePro does not require every line of code to originate in a benchmark or
-external study. It requires non-trivial engineering decisions to have an
-explicit, reviewable basis.
+Treat this repository as an evidence-oriented software-engineering project.
+The presence of a module, adapter, test, or document does not prove that the
+corresponding capability is qualified for adoption.
 
-Before implementing a structural, behavioral, operational, or architectural
-decision, the agent must be able to answer:
+## Required implementation standard
 
-```text
-WHAT is changing?
-WHY is this the appropriate mechanism?
-WHAT is the basis for that choice?
-WHY does that basis apply here?
-```
+Every material capability change must have:
 
-The basis should be the most authoritative source appropriate to the problem,
-not a generic citation added after the fact.
+1. an explicit contract or decision record;
+2. a falsifiable hypothesis and empirical acceptance criteria;
+3. executable tests for deterministic behavior and failure boundaries;
+4. recorded raw evidence, including environment and identity where relevant;
+5. an independent acceptance decision before promotion.
 
-Examples:
+Local unit-test success is local evidence only. It must not be reported as
+upstream, scientific, benchmark, or provider evidence.
 
-- Git history / stacked-branch mechanics -> Git documentation;
-- Python packaging -> PyPA specifications/guides;
-- security controls -> NIST / OWASP / applicable standards;
-- external executor behavior -> upstream implementation/docs and benchmark
-  evidence when performance claims matter;
-- repository-specific invariants -> CodePro ADR/spec/contract;
-- removal of a class/module -> dependency/use evidence plus the design rule or
-  upstream practice that makes removal preferable;
-- algorithm/performance choice -> paper, benchmark, implementation evidence, or
-  explicit measured local constraint.
+## Harness rules
 
-A benchmark is one possible basis. It is not the universal basis.
+- Preserve provider, model, version, configuration, budget, runtime, and
+  treatment identity in every execution record.
+- Distinguish identity levels: `experiment_id` identifies the protocol,
+  `trial_id` identifies a frozen comparison cell, and `attempt_id` identifies
+  one execution attempt. A verifier `run_id` must be unique for every
+  control, patch, and retry that can produce a distinct result; it must never
+  be reused merely because the task is the same.
+- Use stable identity for equivalent frozen protocol inputs, but include the
+  control role, patch/diff identity, and attempt semantics wherever a provider
+  or verifier can cache results.
+- Execute serially when the experiment requires controlled comparison.
+- Never silently overwrite an attempt directory or select a fallback executor.
+- Persist execution artifacts atomically and keep execution, verification,
+  acceptance, and promotion as separate states.
+- A qualification record must identify the dataset revision or fingerprint,
+  task/base revision, environment image and digest when applicable,
+  OS/architecture, executor/provider/model/configuration, verifier identity,
+  budget, treatment, control role, and whether the provider was called.
+- A provider-free verifier qualification requires both controls: an empty or
+  no-op patch must fail as expected and an official gold/oracle patch must
+  resolve as expected. A missing control is `NOT_EXECUTED` or `BLOCKED`, never
+  a successful qualification.
+- Represent missing identity, missing evidence, blocked infrastructure, and
+  indeterminate outcomes explicitly; none may become success by inference.
+- A failure must retain enough raw output and environment facts to support
+  diagnosis and reproducibility.
 
-## Decision Basis record
+## Routing and promotion
 
-For non-trivial changes, keep a compact Decision Basis in the task reasoning,
-change description, or associated decision record:
+Route the request before selecting an executor. Simple, localized, and
+repository-wide paths are treatment regimes, not implicit executor cascades.
+Fallbacks, executor switches, scope expansion, acceptance, and promotion must
+be explicit and evidence-backed.
 
-```text
-problem_class = <what kind of engineering problem this is>
-decision = <mechanism chosen>
-basis_type = <STANDARD | OFFICIAL_DOC | UPSTREAM_IMPL | BENCHMARK |
-              PROJECT_INVARIANT | LOCAL_EVIDENCE | LOCAL_DESIGN_HYPOTHESIS>
-basis_ref = <specific source, file, ADR, commit, URL, or evidence record>
-supported_claim = <what the source actually supports>
-applicability = <why it applies to this CodePro change>
-deviation = <none, or explicit difference from the reference>
-```
+Do not promote a provider, model, executor, or treatment until the declared
+authority has accepted the required evidence. A Gold or infrastructure
+qualification validates its stated authority and does not by itself prove
+mechanism effectiveness or general model quality.
 
-Do not cite a source for a claim it does not support.
+## Agent execution in local repositories
 
-```text
-REFERENCE_FIT > REFERENCE_COUNT
-```
+The execution agent is a task worker, not an implicit release manager.
 
-## Local hypotheses are allowed
+- Start each task by recording the workspace, branch/worktree, base revision,
+  and pre-existing working-tree changes.
+- Treat one task, one workspace, and one attempt as the default unit. Retries
+  receive new attempt identity and preserve the previous artifacts.
+- Preserve unrelated local changes. Never use broad `git add -A`, reset, clean,
+  checkout, stash, or file deletion to make a workspace look clean unless the
+  user explicitly authorizes that exact operation.
+- The default deliverable is a verified patch plus evidence. Do not create a
+  commit, branch, tag, merge, or pull request unless the request explicitly
+  authorizes it.
+- When a commit is authorized, make at most the task-scoped commit after the
+  declared checks pass. Do not create checkpoint or speculative commits.
+- When a pull request is authorized, first locate the task's existing branch
+  or open PR and update it when appropriate. Do not create duplicate PRs for
+  retries, blocked attempts, or the same task. A blocked, failed, or
+  indeterminate attempt is not PR-ready.
+- Never infer completion from a clean diff, a created commit, or an open PR.
+  Completion requires the declared verification and acceptance evidence.
 
-If no suitable external or project reference exists, implementation is not
-automatically forbidden.
+The complete workspace/patch/commit/PR protocol is in
+[`docs/agent-execution-workflow.md`](docs/agent-execution-workflow.md).
 
-The executor must instead classify the choice explicitly:
+## Change discipline
 
-```text
-basis_type = LOCAL_DESIGN_HYPOTHESIS
-```
+- Preserve unrelated working-tree changes.
+- Prefer the smallest change that satisfies the contract.
+- Add or update tests with behavioral changes.
+- Update the relevant architecture, protocol, or decision documentation when
+  the boundary changes.
+- Run the focused tests first, then the complete test suite when practical.
+- Do not claim merge readiness or a green local baseline while required
+  evidence or acceptance records are missing, or while the declared local
+  suite is not green. Historical passing runs must retain their revision,
+  command, environment, and limitations.
 
-and state the assumptions, expected consequence, and rollback/removal
-condition. It must not present the choice as an established best practice,
-benchmark-proven design, or upstream requirement.
+## Documentation status
 
-Routine mechanical edits, direct bug fixes with an already-established cause,
-formatting, and changes whose mechanism is fully determined by an existing
-CodePro contract do not require external research.
+- Normative rules live in this file and in the current experimental protocol.
+- Decision records explain why a boundary exists; they do not silently replace
+  the current protocol.
+- Logs and manifests are evidence, not policy. A historical log must not be
+  presented as the current state without its revision and collection date.
+- When a protocol boundary changes, update the protocol, the relevant
+  architecture page, and one decision record together. Avoid adding a new
+  document when an existing normative contract can be updated.
 
-## Research-before-workaround rule
+## Current baseline
 
-Repeated workaround is a stop condition.
-
-If the same underlying problem:
-
-- survives two implementation attempts;
-- is displaced into another module, layer, branch, or pull request;
-- causes successive corrective PRs without resolving the root condition; or
-- requires increasingly special-case behavior,
-
-then the next step is not another workaround.
-
-```text
-REPEATED_WORKAROUND -> ROOT_CAUSE_REFRAME -> AUTHORITATIVE_RESEARCH
-```
-
-Before a third materially similar attempt, the agent must:
-
-1. restate the root problem independently of the current patch;
-2. classify the problem domain;
-3. consult the authoritative source for that domain;
-4. compare the documented mechanism with the current approach;
-5. change the implementation strategy if the reference contradicts it.
-
-Example: for stacked Git branches, consult Git's rebase/--onto semantics rather
-than creating successive corrective branches that preserve the same ancestry
-problem.
-
-## Structural changes need a basis
-
-Adding or deleting a module, class, abstraction, adapter, fallback, routing
-layer, cache, retry controller, dependency, public command, or persistence
-boundary is a design decision.
-
-The executor must identify the basis before making the structural change.
-"Cleaner", "more flexible", "future-proof", and "best practice" are not
-sufficient by themselves.
-
-Prefer removal or reuse when the reference and current code show that a new
-abstraction is unnecessary.
-
-## Execution-profile adoption
-
-For the first operational release, prefer a frozen, externally documented
-coding-agent execution profile over inventing a new CodePro-specific reasoning,
-planning, tool-selection, or multi-agent loop.
-
-CodePro owns request/authority, scope/budget, exact profile binding,
-environment/revision identity, trajectory/artifact capture, verification,
-event log/replay, independent acceptance, and explicit promotion.
-
-The adopted executor owns task-solving behavior inside the frozen profile.
-Do not reimplement its reasoning loop unless a separate decision explicitly
-justifies that work.
-
-## Existing state separation remains normative
-
-```text
-SAME_NAME != SAME_TREATMENT
-LOCAL_PASS != UPSTREAM_EVIDENCE
-REFERENCE_PRESENT != QUALIFIED
-QUALIFIED != EXECUTED
-EXECUTED != VERIFIED
-VERIFIED != ACCEPTED
-ACCEPTED != PROMOTED
-NO_SILENT_FALLBACK
-NO_SILENT_EXECUTOR_SWITCH
-NO_SILENT_SCOPE_EXPANSION
-```
-
-Detailed rationale and external-methodology mapping:
-`docs/decisions/0155-evidence-backed-engineering-decisions.md`.
-
-This policy does not authorize an executor, P8.2 publication, release, or
-promotion. Those remain separate decisions with their own evidence and
-acceptance records.
+The recorded external authority result is `resolved: true` for the official
+SWE-bench Docker Gold path on the frozen tasks under `logs/evaluation/`. This
+does not qualify a real provider/model or the A/B/C/D mechanism trial.
