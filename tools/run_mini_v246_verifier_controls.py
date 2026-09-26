@@ -218,6 +218,28 @@ def _classify_report(path: Path | None, instance_id: str) -> dict[str, Any]:
     return {"status": "AMBIGUOUS", "report_path": str(path), "raw_outcome": None}
 
 
+def _verifier_image_identity_command() -> list[str]:
+    return [
+        "docker",
+        "run",
+        "--rm",
+        VERIFIER_IMAGE,
+        "sh",
+        "-lc",
+        (
+            "set -eu; "
+            "command -v docker; "
+            "docker --version; "
+            "python -c \"import importlib.metadata as m; "
+            "assert m.version('swebench') == '" + SWEBENCH_VERSION + "'; "
+            "print(m.version('swebench'))\"; "
+            "test \"$(git -C /opt/swe-bench-tasks rev-parse HEAD)\" = "
+            "\"" + TASK_REPO_COMMIT + "\"; "
+            "test -z \"$(git -C /opt/swe-bench-tasks status --porcelain)\""
+        ),
+    ]
+
+
 def _write_report(output_dir: Path, report: dict[str, Any]) -> None:
     output_dir.mkdir(parents=True, exist_ok=True)
     (output_dir / "runner-summary.json").write_text(
@@ -334,34 +356,27 @@ def main() -> int:
         newline="\n",
     )
 
-    with tempfile.TemporaryDirectory(prefix="codepro-swebench-verifier-image-") as tmp:
-        build_dir = Path(tmp)
-        (build_dir / "Dockerfile").write_text(_DOCKERFILE, encoding="utf-8", newline="\n")
-        build = run(
-            ["docker", "build", "--pull", "-t", VERIFIER_IMAGE, str(build_dir)],
-            timeout=2400,
-        )
-        report["steps"]["build_linux_verifier"] = build
-        if build["returncode"] != 0:
-            report["classification"] = "BLOCKED_VERIFIER_INSTALL"
-            _write_report(output_dir, report)
-            print(json.dumps(report, ensure_ascii=False, indent=2))
-            return 2
+    identity = run(_verifier_image_identity_command(), timeout=120)
+    report["steps"]["existing_verifier_identity"] = identity
 
-    identity = run(
-        [
-            "docker",
-            "run",
-            "--rm",
-            VERIFIER_IMAGE,
-            "sh",
-            "-lc",
-            "command -v docker && docker --version && python -c \"import importlib.metadata as m; print(m.version('swebench'))\"",
-        ],
-        timeout=120,
-    )
+    if identity["returncode"] != 0:
+        with tempfile.TemporaryDirectory(prefix="codepro-swebench-verifier-image-") as tmp:
+            build_dir = Path(tmp)
+            (build_dir / "Dockerfile").write_text(_DOCKERFILE, encoding="utf-8", newline="\n")
+            build = run(
+                ["docker", "build", "--pull", "-t", VERIFIER_IMAGE, str(build_dir)],
+                timeout=2400,
+            )
+            report["steps"]["build_linux_verifier"] = build
+            if build["returncode"] != 0:
+                report["classification"] = "BLOCKED_VERIFIER_INSTALL"
+                _write_report(output_dir, report)
+                print(json.dumps(report, ensure_ascii=False, indent=2))
+                return 2
+        identity = run(_verifier_image_identity_command(), timeout=120)
+
     report["steps"]["verifier_identity"] = identity
-    if identity["returncode"] != 0 or SWEBENCH_VERSION not in identity["stdout"].splitlines()[-1:]:
+    if identity["returncode"] != 0 or SWEBENCH_VERSION not in identity["stdout"]:
         report["classification"] = "BLOCKED_VERIFIER_IDENTITY"
         _write_report(output_dir, report)
         print(json.dumps(report, ensure_ascii=False, indent=2))
