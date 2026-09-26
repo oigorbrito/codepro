@@ -42,6 +42,18 @@ class MiniV246VerifierControlsTests(unittest.TestCase):
         self.assertEqual(result["status"], "RESOLVED")
         self.assertTrue(result["raw_outcome"])
 
+    def test_linux_helper_derives_only_official_image_identity(self) -> None:
+        self.assertIn("from swebench.task.checks import expected_image", runner._LINUX_HELPER)
+        self.assertIn('instance["image"] = derived_image', runner._LINUX_HELPER)
+        self.assertIn("dataset image mismatch", runner._LINUX_HELPER)
+
+    def test_subprocess_capture_is_utf8_tolerant(self) -> None:
+        import inspect
+
+        source = inspect.getsource(runner.run)
+        self.assertIn('encoding="utf-8"', source)
+        self.assertIn('errors="replace"', source)
+
     def test_empty_patch_filter_does_not_count_as_negative_control(self) -> None:
         with tempfile.TemporaryDirectory() as tmp:
             path = Path(tmp) / "report.json"
