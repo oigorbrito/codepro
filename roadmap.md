@@ -64,6 +64,41 @@ QUALIFY
 -> PROMOTE ONLY WHAT SURVIVES
 ```
 
+
+## Active reconciliation override
+
+Repository reconciliation is currently the highest-priority execution path.
+
+Canonical correction plan:
+
+```text
+docs/reconciliation-roadmap.md
+```
+
+```text
+RECONCILIATION = ACTIVE
+CURRENT_BLOCK = R1
+NORMAL_PHASE_3_PLUS = PAUSED_BY_RECONCILIATION
+```
+
+Phase 0-2 completed evidence remains recorded. Do not continue normal Phase 3+
+implementation until the reconciliation plan reaches `DONE` or an explicit
+superseding decision changes this control.
+
+The correction is selective:
+
+```text
+PREVIOUSLY_PROVEN_CAPABILITY
++ CURRENT_USEFUL_WORK
+- REGRESSIONS
+- DUPLICATION
+= RECONCILED_MAIN
+```
+
+Do not use a blind revert, force-push, or silent replacement to satisfy this
+override.
+
+
 ---
 
 ## Phase 0 — Strategy / candidate freeze
@@ -493,7 +528,7 @@ Deferred until local frontier is measured.
 PHASE 0   Strategy freeze               COMPLETE
 PHASE 1   Windows hardware              COMPLETE
 PHASE 2   Runtime qualification         COMPLETE
-PHASE 3   Telemetry baseline            IN_PROGRESS
+PHASE 3   Telemetry baseline            PAUSED_BY_RECONCILIATION
 PHASE 4   Model compatibility           NOT_STARTED
 PHASE 5   CodePro local plumbing        NOT_STARTED
 PHASE 6   Execution/verifier plumbing   NOT_STARTED
@@ -515,10 +550,13 @@ PHASE 19  Cloud tier                    DEFERRED
 Current task:
 
 ```text
-PHASE 3 — Telemetry baseline
+RECONCILIATION ROADMAP — docs/reconciliation-roadmap.md
 
-[~] Normalized execution record schema implemented
-[~] JSON persistence + raw evidence references implemented
-[~] Real CPU/GPU qualification fixture added
-[!] Verification blocked by infrastructure on both attempted paths: GitHub Actions job did not start (`runner_id=0`, no steps), and local `D:\\projetos\\codepro` checkout has a broken `.git` worktree reference pointing into `D:\\projetos\\arkx\\...\\.git\\worktrees\\workspace`. Local npm typecheck/build results are therefore not implementation evidence.
+R1 = IN_PROGRESS
+R2 = NOT_STARTED
+R3 = NOT_STARTED
+R4 = NOT_STARTED
+R5 = NOT_STARTED
+
+NORMAL PHASE 3+ = PAUSED_BY_RECONCILIATION
 ```

@@ -173,6 +173,62 @@ Deleting or bypassing `roadmap.md`, or removing this rule from `AGENTS.md`,
 requires an explicit superseding decision. Incidental scaffolding, cleanup, or
 refactoring must not remove either control.
 
+
+## Active reconciliation control
+
+When `docs/reconciliation-roadmap.md` exists with `Status: ACTIVE`, it is a
+mandatory execution control for repository-recovery work.
+
+Before making any reconciliation, restoration, migration, executor-boundary,
+telemetry-boundary, or architecture-repair change, the agent must read:
+
+```text
+docs/reconciliation-roadmap.md
+```
+
+The reconciliation roadmap temporarily controls the execution order for the
+repair while `roadmap.md` remains the canonical project roadmap.
+
+The agent must:
+
+1. identify the active reconciliation block before editing;
+2. work the block as one coherent tranche rather than fragmenting it into
+   unnecessary micro-patches;
+3. remain inside that block's declared scope;
+4. capture the block's required evidence;
+5. mark the block `DONE` only after its gate passes;
+6. update the block's evidence/decision record when status changes;
+7. update `roadmap.md` when the reconciliation pointer or normal project
+   pointer changes;
+8. stop and mark `BLOCKED` rather than inventing a workaround when the gate
+   cannot be established;
+9. not begin the next implementation block until the current block is
+   `DONE`, except for read-only evidence collection needed to remove a block;
+10. not use blind whole-tree revert, force-push, published-history rewrite, or
+    silent architectural replacement.
+
+The required repair decision vocabulary is:
+
+```text
+KEEP     = useful current capability remains
+RESTORE  = previously proven capability returns
+MERGE    = old and new useful behavior are reconciled
+DROP     = duplication/regression removed with explicit evidence
+```
+
+A newer implementation has no automatic priority over a previously validated
+one, and historical validation does not automatically validate restored code.
+
+```text
+NEWER != BETTER
+OLD_PASS != RECONCILED_PASS
+RESTORE != BLIND_REVERT
+```
+
+When all reconciliation blocks are `DONE`, the agent must mark the
+reconciliation roadmap inactive/complete and resume the normal execution
+pointer in `roadmap.md`.
+
 ## Existing state separation remains normative
 
 ```text
