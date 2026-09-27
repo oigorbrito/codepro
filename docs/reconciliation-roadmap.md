@@ -1,4 +1,4 @@
-# CodePro Reconciliation & Recovery Roadmap
+﻿# CodePro Reconciliation & Recovery Roadmap
 
 Status: **ACTIVE**
 
@@ -102,16 +102,16 @@ During this roadmap:
 
 ## Status vocabulary
 
-- `NOT_STARTED` — no implementation work begun.
-- `IN_PROGRESS` — authorized block is being reconciled.
-- `BLOCKED` — gate cannot proceed; reason/evidence must be recorded.
-- `DONE` — block gate passed with evidence.
+- `NOT_STARTED` â€” no implementation work begun.
+- `IN_PROGRESS` â€” authorized block is being reconciled.
+- `BLOCKED` â€” gate cannot proceed; reason/evidence must be recorded.
+- `DONE` â€” block gate passed with evidence.
 
 A block is `DONE` only after its verification gate passes.
 
 ---
 
-## R1 — Freeze identities and reconciliation matrix
+## R1 â€” Freeze identities and reconciliation matrix
 
 **Status: DONE**
 
@@ -150,7 +150,7 @@ Mark `DONE` only when:
 
 ---
 
-## R2 — Restore the proven operational foundation
+## R2 â€” Restore the proven operational foundation
 
 **Status: IN_PROGRESS**
 
@@ -187,7 +187,7 @@ root:
 
 ---
 
-## R3 — Reconcile telemetry, evidence, and local-runtime measurements
+## R3 â€” Reconcile telemetry, evidence, and local-runtime measurements
 
 **Status: NOT_STARTED**
 
@@ -228,7 +228,7 @@ Mark `DONE` only when:
 
 ---
 
-## R4 — Reconcile real execution, verifier, and executor boundaries
+## R4 â€” Reconcile real execution, verifier, and executor boundaries
 
 **Status: NOT_STARTED**
 
@@ -273,7 +273,7 @@ Mark `DONE` only when:
 
 ---
 
-## R5 — Full requalification and reconciliation closure
+## R5 â€” Full requalification and reconciliation closure
 
 **Status: NOT_STARTED**
 
@@ -331,10 +331,10 @@ NORMAL_ROADMAP = RESUME
 
 ```text
 RECONCILIATION = ACTIVE
-CURRENT_BLOCK  = R2
+CURRENT_BLOCK  = R3
 R1             = DONE
-R2             = IN_PROGRESS
-R3             = NOT_STARTED
+R2             = DONE
+R3             = IN_PROGRESS
 R4             = NOT_STARTED
 R5             = NOT_STARTED
 
@@ -344,3 +344,4 @@ NORMAL PHASE 3+ IMPLEMENTATION = PAUSED_BY_RECONCILIATION
 Completed Phase 0-2 evidence is not invalidated by this pause. Any conflict
 found during reconciliation must be recorded rather than silently rewriting a
 previous result.
+

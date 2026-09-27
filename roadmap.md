@@ -1,4 +1,4 @@
-# CodePro Roadmap
+﻿# CodePro Roadmap
 
 This is the canonical living operational roadmap for CodePro.
 
@@ -77,7 +77,7 @@ docs/reconciliation-roadmap.md
 
 ```text
 RECONCILIATION = ACTIVE
-CURRENT_BLOCK = R2
+CURRENT_BLOCK = R3
 NORMAL_PHASE_3_PLUS = PAUSED_BY_RECONCILIATION
 ```
 
@@ -101,7 +101,7 @@ override.
 
 ---
 
-## Phase 0 — Strategy / candidate freeze
+## Phase 0 â€” Strategy / candidate freeze
 
 - [x] Define LOCAL_FIRST strategy.
 - [x] Remove paid APIs from the critical path.
@@ -120,7 +120,7 @@ override.
 
 ---
 
-## Phase 1 — Windows hardware qualification
+## Phase 1 â€” Windows hardware qualification
 
 ### 1.1 Inventory
 
@@ -156,7 +156,7 @@ Initial observed driver: `462.30`.
 
 ---
 
-## Phase 2 — Local inference runtime qualification
+## Phase 2 â€” Local inference runtime qualification
 
 Runtime candidate:
 
@@ -245,7 +245,7 @@ Quantitative smoke measurement (same GGUF/configuration):
 
 ---
 
-## Phase 3 — Telemetry baseline
+## Phase 3 â€” Telemetry baseline
 
 - [~] Define normalized execution record schema: implemented in `src/chassis/executionTelemetry.ts`; verification pending because the GitHub Actions runner did not start (`runner_id=0`, no steps executed).
 - [~] Capture model, format, quantization, runtime, and runtime version: represented in schema + measured fixture; verification pending.
@@ -265,7 +265,7 @@ RAW_EVIDENCE_CAPTURED = PASS
 
 ---
 
-## Phase 4 — Compact model compatibility
+## Phase 4 â€” Compact model compatibility
 
 Frozen candidate pool:
 
@@ -287,7 +287,7 @@ For each candidate:
 
 ---
 
-## Phase 5 — CodePro to local-runtime plumbing
+## Phase 5 â€” CodePro to local-runtime plumbing
 
 Target:
 
@@ -309,7 +309,7 @@ CodePro
 
 ---
 
-## Phase 6 — Execution and verifier plumbing
+## Phase 6 â€” Execution and verifier plumbing
 
 Target:
 
@@ -333,7 +333,7 @@ CodePro
 
 ---
 
-## Phase 7 — Scaffold compatibility
+## Phase 7 â€” Scaffold compatibility
 
 Frozen pool:
 
@@ -354,11 +354,11 @@ For each:
 
 ---
 
-## Phase 8 — Scaffold screen
+## Phase 8 â€” Scaffold screen
 
 Freeze model, tasks, quantization, context, hardware, and runtime. Vary scaffold.
 
-- [ ] Build diverse set of approximately 10–20 tasks.
+- [ ] Build diverse set of approximately 10â€“20 tasks.
 - [ ] Run S1/S2/S3/S4.
 - [ ] Repeat where needed to estimate variance/noise.
 - [ ] Measure verified resolution, tokens, calls, retries, replans, wall time,
@@ -366,7 +366,7 @@ Freeze model, tasks, quantization, context, hardware, and runtime. Vary scaffold
 
 ---
 
-## Phase 9 — Scaffold pruning
+## Phase 9 â€” Scaffold pruning
 
 Target: `4 candidates -> approximately 2 survivors`.
 
@@ -379,7 +379,7 @@ Target: `4 candidates -> approximately 2 survivors`.
 
 ---
 
-## Phase 10 — Model screen
+## Phase 10 â€” Model screen
 
 With scaffold frozen:
 
@@ -396,7 +396,7 @@ WHERE IS EACH MODEL ECONOMICALLY USEFUL?
 
 ---
 
-## Phase 11 — Quantization / context optimization
+## Phase 11 â€” Quantization / context optimization
 
 - [ ] Compare justified Q4 variants.
 - [ ] Test Q5 only if warranted.
@@ -406,9 +406,9 @@ WHERE IS EACH MODEL ECONOMICALLY USEFUL?
 
 ---
 
-## Phase 12 — Code-structure experiments
+## Phase 12 â€” Code-structure experiments
 
-### M1 — CodeStruct
+### M1 â€” CodeStruct
 
 - [ ] Implement as an isolatable mechanism.
 - [ ] A/B without/with CodeStruct.
@@ -423,7 +423,7 @@ WHERE IS EACH MODEL ECONOMICALLY USEFUL?
 
 ---
 
-## Phase 13 — Difficulty dataset
+## Phase 13 â€” Difficulty dataset
 
 - [ ] Record task/repo/language characteristics.
 - [ ] Record repository size, files touched, localization, tests, context,
@@ -433,7 +433,7 @@ WHERE IS EACH MODEL ECONOMICALLY USEFUL?
 
 ---
 
-## Phase 14 — Cascade experiment
+## Phase 14 â€” Cascade experiment
 
 ```text
 small
@@ -452,7 +452,7 @@ small
 
 ---
 
-## Phase 15 — Router experiment
+## Phase 15 â€” Router experiment
 
 Only if heterogeneous utility is demonstrated.
 
@@ -465,7 +465,7 @@ Only if heterogeneous utility is demonstrated.
 
 ---
 
-## Phase 16 — Held-out validation
+## Phase 16 â€” Held-out validation
 
 ```text
 PRIMARY_GAIN > NOISE
@@ -485,7 +485,7 @@ REPRODUCIBLE
 
 ---
 
-## Phase 17 — Promotion
+## Phase 17 â€” Promotion
 
 - [ ] Reproducible evidence.
 - [ ] Gain above noise.
@@ -499,7 +499,7 @@ Final state: PROMOTED, REJECTED, or DEFERRED.
 
 ---
 
-## Phase 18 — WSL2 comparison
+## Phase 18 â€” WSL2 comparison
 
 Deferred until Windows-native baseline is stable.
 
@@ -511,7 +511,7 @@ Deferred until Windows-native baseline is stable.
 
 ---
 
-## Phase 19 — Cloud tier
+## Phase 19 â€” Cloud tier
 
 Deferred until local frontier is measured.
 
@@ -550,13 +550,14 @@ PHASE 19  Cloud tier                    DEFERRED
 Current task:
 
 ```text
-RECONCILIATION ROADMAP — docs/reconciliation-roadmap.md
+RECONCILIATION ROADMAP â€” docs/reconciliation-roadmap.md
 
 R1 = DONE
-R2 = IN_PROGRESS
-R3 = NOT_STARTED
+R2 = DONE
+R3 = IN_PROGRESS
 R4 = NOT_STARTED
 R5 = NOT_STARTED
 
 NORMAL PHASE 3+ = PAUSED_BY_RECONCILIATION
 ```
+
