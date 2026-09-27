@@ -133,6 +133,46 @@ The adopted executor owns task-solving behavior inside the frozen profile.
 Do not reimplement its reasoning loop unless a separate decision explicitly
 justifies that work.
 
+## Roadmap synchronization is mandatory
+
+`roadmap.md` is the canonical living execution plan for CodePro.
+
+Whenever an implementation or qualification item is completed and verified,
+the executor must update `roadmap.md` in the same change or immediately
+afterward and mark the corresponding item complete.
+
+```text
+IMPLEMENT
+-> TEST
+-> CAPTURE EVIDENCE
+-> VERIFY
+-> MARK COMPLETE IN roadmap.md
+```
+
+Writing code alone does not satisfy this rule.
+
+```text
+IMPLEMENTED != COMPLETE
+EXECUTED != VERIFIED
+```
+
+The executor must:
+
+1. identify the roadmap item that authorizes or tracks the work;
+2. implement or execute the qualification step;
+3. capture the evidence required by that roadmap gate;
+4. change the item to `[x]` only after verification succeeds;
+5. update phase status and the current execution pointer when applicable;
+6. add or revise roadmap items when scope legitimately changes instead of
+   silently expanding scope.
+
+If verification fails, leave the item incomplete and record `[!]` BLOCKED or
+`[~]` IN_PROGRESS as applicable.
+
+Deleting or bypassing `roadmap.md`, or removing this rule from `AGENTS.md`,
+requires an explicit superseding decision. Incidental scaffolding, cleanup, or
+refactoring must not remove either control.
+
 ## Existing state separation remains normative
 
 ```text
