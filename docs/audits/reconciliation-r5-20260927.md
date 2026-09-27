@@ -251,6 +251,61 @@ ACCOUNT_OR_REPO_CAUSE_CONFIRMED = FALSE
 EXECUTION_ENVIRONMENT_AVAILABLE = FALSE
 ```
 
+## Minimal runner scheduling probe
+
+To isolate repository code and action dependencies from runner provisioning, R5
+temporarily added a one-job diagnostic workflow with:
+
+```text
+runner = ubuntu-slim
+checkout = NONE
+setup-python = NONE
+setup-node = NONE
+command = echo + uname
+```
+
+Observed run:
+
+```text
+Actions runner diagnostic
+run 36347693088
+
+schedule-probe = failure
+steps executed = 0
+```
+
+In the same synchronization event:
+
+```text
+Reconciliation R5 run 36347693076
+  python-foundation                failure / 0 steps
+  typescript-and-real-vertical     failure / 0 steps
+  provider-safety                  failure / 0 steps
+
+Foundation run 36347693102
+  foundation                       failure / 0 steps
+  compatibility                    skipped
+```
+
+This materially narrows the blocker:
+
+```text
+CODEPRO_SOURCE_FAILURE             = NOT_OBSERVED
+CHECKOUT_ACTION_FAILURE            = NOT_REQUIRED_TO_REPRODUCE
+PYTHON_SETUP_FAILURE               = NOT_REQUIRED_TO_REPRODUCE
+NODE_SETUP_FAILURE                 = NOT_REQUIRED_TO_REPRODUCE
+UBUNTU_24_04_SPECIFIC_FAILURE      = NOT_REQUIRED_TO_REPRODUCE
+RUNNER_PROVISIONING_NON_EXECUTION  = OBSERVED
+```
+
+The public GitHub Status API reports Actions operational, so no global incident
+is established. Account/repository-specific Actions provisioning remains the
+bounded blocker classification; billing/quota/budget/policy remain possible but
+unconfirmed subcauses.
+
+The temporary scheduling workflow is not part of the reconciled product and is
+removed after capturing this evidence.
+
 ## Gate state
 
 ```text
