@@ -152,7 +152,7 @@ Mark `DONE` only when:
 
 ## R2 â€” Restore the proven operational foundation
 
-**Status: IN_PROGRESS**
+**Status: DONE**
 
 Purpose: recover the minimum previously validated operational substrate without
 removing useful current work.
@@ -183,13 +183,13 @@ root:
 - current useful frontend/TS work has not been accidentally removed;
 - no whole-tree revert or history rewrite was used.
 
-**Evidence / decision record:** `docs/audits/reconciliation-r2-restore-20260927.md` (verification pending).
+**Evidence / decision record:** `docs/audits/reconciliation-r2-restore-20260927.md`.
 
 ---
 
 ## R3 â€” Reconcile telemetry, evidence, and local-runtime measurements
 
-**Status: NOT_STARTED**
+**Status: DONE**
 
 Purpose: use one canonical telemetry/evidence model rather than parallel old
 and new systems.
@@ -224,13 +224,13 @@ Mark `DONE` only when:
 - telemetry/provenance/event-log focused tests pass;
 - the Phase 2 measurements can be represented without fabricated values.
 
-**Evidence / decision record:** pending.
+**Evidence / decision record:** `docs/audits/reconciliation-r3-20260927.md`.
 
 ---
 
 ## R4 â€” Reconcile real execution, verifier, and executor boundaries
 
-**Status: NOT_STARTED**
+**Status: DONE**
 
 Purpose: restore real operational behavior while retaining useful modern
 interfaces.
@@ -269,13 +269,13 @@ Mark `DONE` only when:
 - `AVAILABLE != QUALIFIED` is enforced;
 - no silent fallback or executor switch is possible.
 
-**Evidence / decision record:** pending.
+**Evidence / decision record:** `docs/audits/reconciliation-r4-20260927.md`.
 
 ---
 
 ## R5 â€” Full requalification and reconciliation closure
 
-**Status: NOT_STARTED**
+**Status: IN_PROGRESS**
 
 Purpose: prove the composed repository, then resume the normal CodePro roadmap.
 
@@ -331,12 +331,12 @@ NORMAL_ROADMAP = RESUME
 
 ```text
 RECONCILIATION = ACTIVE
-CURRENT_BLOCK  = R4
+CURRENT_BLOCK  = R5
 R1             = DONE
 R2             = DONE
 R3             = DONE
-R4             = IN_PROGRESS
-R5             = NOT_STARTED
+R4             = DONE
+R5             = IN_PROGRESS
 
 NORMAL PHASE 3+ IMPLEMENTATION = PAUSED_BY_RECONCILIATION
 ```
