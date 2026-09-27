@@ -229,6 +229,64 @@ When all reconciliation blocks are `DONE`, the agent must mark the
 reconciliation roadmap inactive/complete and resume the normal execution
 pointer in `roadmap.md`.
 
+
+## Preservation-first rule
+
+Reconciliation exists to correct the architectural deviation, not to erase
+useful work produced after it.
+
+The default posture for post-deviation work is preservation until evidence
+shows that it is unsafe, duplicate, incompatible, or superseded.
+
+This applies especially to difficult integration work already completed or
+partially completed around:
+
+- executor integrations;
+- provider/API bindings;
+- authentication/configuration plumbing;
+- model/runtime connection code;
+- adapter/preflight work;
+- CLI or server integration surfaces;
+- frontend/operator surfaces;
+- evidence captured while making those integrations work.
+
+```text
+CORRECT_THE_DEVIATION != DELETE_NEW_WORK
+
+USEFUL_IMPLEMENTED_WORK
+    -> KEEP or MERGE by default
+
+DROP
+    -> requires explicit evidence of regression, duplication,
+       incompatibility, or supersession
+```
+
+Recovery of an older proven capability must be performed around useful current
+work whenever technically possible. If old and new work collide, the agent
+must first attempt a `MERGE` disposition that preserves the useful behavior
+of both sides.
+
+Executor/API work must not be removed merely because the older architecture
+did not contain it. Availability, successful API connectivity, authentication,
+provider-specific setup, or executor integration evidence must be inventoried
+and preserved during reconciliation. Qualification/promotion state remains a
+separate question.
+
+```text
+PRESERVE_IMPLEMENTATION != PROMOTE_EXECUTOR
+KEEP_API_WORK != QUALIFIED_EXECUTOR
+```
+
+A `DROP` decision affecting executor/API integration requires the decision
+record to identify:
+
+1. the exact component being removed;
+2. the evidence that it is defective, redundant, or superseded;
+3. the replacement path, if the capability is still required;
+4. confirmation that working credentials/configuration semantics and useful
+   integration knowledge are not being discarded.
+
+
 ## Existing state separation remains normative
 
 ```text

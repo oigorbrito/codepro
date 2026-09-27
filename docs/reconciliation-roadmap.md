@@ -22,6 +22,53 @@ PREVIOUSLY PROVEN CAPABILITY
 = RECONCILED MAIN
 ```
 
+
+## Non-destructive preservation mandate
+
+This roadmap corrects the deviation introduced by the repository replacement;
+it does not authorize deleting useful post-deviation implementation.
+
+All current executor/API/provider integration work must be explicitly
+inventoried in R1 and preserved through R2-R4 unless a specific `DROP`
+decision is supported by evidence.
+
+Default disposition for useful current implementation:
+
+```text
+KEEP
+or
+MERGE
+```
+
+`DROP` is exceptional and requires evidence of one of:
+
+```text
+REGRESSION
+DUPLICATION
+INCOMPATIBILITY
+SUPERSESSION_WITH_EQUIVALENT_OR_STRONGER_CAPABILITY
+```
+
+Difficulty or effort already invested is not itself proof of correctness, but
+working integration behavior, successful provider/API connectivity,
+authentication/configuration knowledge, adapter code, preflight logic, and
+captured evidence are assets that must not be discarded casually.
+
+For executor/API reconciliation:
+
+```text
+PRESERVE USEFUL INTEGRATION
+    +
+RESTORE LOST GOVERNANCE / QUALIFICATION / VERIFICATION
+    =
+TARGET
+```
+
+The recovery target is therefore not the historical repository and not the
+current repository in isolation. It is the smallest reconciled composition
+that retains useful new integrations while restoring lost proven controls.
+
+
 ## Operating rules
 
 The correction follows a branch-and-PR workflow. Published `main` history is
@@ -80,7 +127,8 @@ Work as one audit block:
   `DROP`;
 - explicitly include package/CLI, telemetry, measurement, provenance,
   event-log, governance, qualification, execution, verifier/evidence,
-  tests/tools, TypeScript chassis, frontend/server, and executor work;
+  tests/tools, TypeScript chassis, frontend/server, executor work, provider/API
+  bindings, authentication/configuration plumbing, and adapter/preflight work;
 - identify which historical evidence remains provenance only versus which
   checks must be rerun after reconciliation;
 - preserve the completed Windows/llama.cpp qualification as new independent
@@ -201,8 +249,10 @@ Perform as one execution tranche:
 - retain executor PATH detection only as `AVAILABLE`;
 - require explicit qualification evidence before an external executor becomes
   `QUALIFIED`;
-- audit mini-SWE-agent and any newer executor work against the reconciled
-  qualification/preflight boundary;
+- audit mini-SWE-agent and any newer executor/API work against the reconciled
+  qualification/preflight boundary while preserving useful working integration;
+- do not remove working provider/API/authentication plumbing merely because it
+  was introduced after the deviation;
 - do not introduce routing, fallback, or executor selection as part of this
   repair.
 
