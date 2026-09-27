@@ -1,9 +1,29 @@
 /**
- * Operational vertical journey runner for CodePro.
+ * Fail-closed TypeScript adapter for the authoritative Python vertical.
+ *
+ * React / Express
+ *      ->
+ * this adapter
+ *      ->
+ * explicit CODEPRO_PYTHON
+ *      ->
+ * python -m arkx run
+ *      ->
+ * arkx.vertical
+ *
+ * This module does not simulate executor output, changed files, verifier
+ * results, qualification, acceptance, routing, fallback, or promotion.
  */
 
-import { EventType, TelemetryEvent } from "./contracts";
-import { TaskSignals, characterizeTask } from "./characterization";
+import { spawnSync } from "node:child_process";
+import {
+  existsSync,
+  readdirSync,
+  readFileSync,
+  statSync,
+} from "node:fs";
+import path from "node:path";
+import { fileURLToPath } from "node:url";
 
 export interface VerticalRunInput {
   workspace: string;
@@ -23,140 +43,443 @@ export interface VerticalRunInput {
   verifier_argv: string[];
 }
 
+export type VerticalRunStatus =
+  | "BLOCKED"
+  | "EXECUTED"
+  | "VERIFIED"
+  | "REJECTED"
+  | "FAILED"
+  | "TIMED_OUT"
+  | "ENVIRONMENT_UNAVAILABLE";
+
 export interface VerticalRunResult {
   run_id: string;
-  status: "VERIFIED" | "FAILED" | "BLOCKED" | "REJECTED" | "TIMED_OUT";
+  status: VerticalRunStatus;
   reason: string;
   evidence_root: string;
   changed_files: string[];
   attempt_id: string;
-  events: TelemetryEvent[];
-  started_at: string;
-  finished_at: string;
-  duration_ms: number;
+
+  /**
+   * Adapter-observation metadata only.
+   * Authoritative run evidence lives under evidence_root.
+   */
+  events: [];
+  started_at: string | null;
+  finished_at: string | null;
+  duration_ms: number | null;
 }
 
-// In-memory persistent evidence store
-const RUN_STORE = new Map<string, VerticalRunResult>();
+const MODULE_DIR = path.dirname(fileURLToPath(import.meta.url));
+const CODEPRO_SRC_DIR = path.resolve(MODULE_DIR, "..");
 
-export function getRunEvidence(runId: string): VerticalRunResult | undefined {
-  return RUN_STORE.get(runId);
+const VALID_STATUSES = new Set<VerticalRunStatus>([
+  "BLOCKED",
+  "EXECUTED",
+  "VERIFIED",
+  "REJECTED",
+  "FAILED",
+  "TIMED_OUT",
+  "ENVIRONMENT_UNAVAILABLE",
+]);
+
+const MAX_CAPTURE_BYTES = 16 * 1024 * 1024;
+
+function requireBinding(name: "CODEPRO_PYTHON" | "CODEPRO_EVIDENCE_DIR"): string {
+  const value = process.env[name]?.trim();
+
+  if (!value) {
+    throw new Error(
+      `${name} is required for the real vertical adapter; implicit fallback is disabled`,
+    );
+  }
+
+  return value;
+}
+
+function requireString(value: unknown, field: string): string {
+  if (typeof value !== "string" || value.trim() === "") {
+    throw new Error(`${field} must be a non-empty string`);
+  }
+
+  return value;
+}
+
+function requireStringArray(
+  value: unknown,
+  field: string,
+  options: { allowEmpty?: boolean } = {},
+): string[] {
+  if (!Array.isArray(value)) {
+    throw new Error(`${field} must be a string array`);
+  }
+
+  if (!options.allowEmpty && value.length === 0) {
+    throw new Error(`${field} must not be empty`);
+  }
+
+  if (value.some((item) => typeof item !== "string" || item.length === 0)) {
+    throw new Error(`${field} must contain only non-empty strings`);
+  }
+
+  return [...value];
+}
+
+function parseCoreResult(
+  raw: string,
+  adapterObservation: {
+    started_at: string | null;
+    finished_at: string | null;
+    duration_ms: number | null;
+  },
+): VerticalRunResult {
+  let value: unknown;
+
+  try {
+    value = JSON.parse(raw);
+  } catch (error) {
+    const detail = error instanceof Error ? error.message : String(error);
+    throw new Error(`Python core returned invalid JSON: ${detail}`);
+  }
+
+  if (typeof value !== "object" || value === null || Array.isArray(value)) {
+    throw new Error("Python core result must be a JSON object");
+  }
+
+  const record = value as Record<string, unknown>;
+
+  const runId = requireString(record.run_id, "run_id");
+  const statusRaw = requireString(record.status, "status");
+
+  if (!VALID_STATUSES.has(statusRaw as VerticalRunStatus)) {
+    throw new Error(`Python core returned unsupported status: ${statusRaw}`);
+  }
+
+  const reason = requireString(record.reason, "reason");
+  const evidenceRoot = requireString(record.evidence_root, "evidence_root");
+  const changedFiles = requireStringArray(
+    record.changed_files,
+    "changed_files",
+    { allowEmpty: true },
+  );
+  const attemptId = requireString(record.attempt_id, "attempt_id");
+
+  return {
+    run_id: runId,
+    status: statusRaw as VerticalRunStatus,
+    reason,
+    evidence_root: evidenceRoot,
+    changed_files: changedFiles,
+    attempt_id: attemptId,
+
+    // No synthetic execution telemetry is generated here.
+    events: [],
+    started_at: adapterObservation.started_at,
+    finished_at: adapterObservation.finished_at,
+    duration_ms: adapterObservation.duration_ms,
+  };
+}
+
+function pythonEnvironment(): NodeJS.ProcessEnv {
+  const inherited = process.env.PYTHONPATH?.trim();
+
+  return {
+    ...process.env,
+
+    /*
+     * Deterministically bind python -m arkx to this CodePro source tree.
+     * This is module binding, not executor/provider fallback.
+     */
+    PYTHONPATH: inherited
+      ? `${CODEPRO_SRC_DIR}${path.delimiter}${inherited}`
+      : CODEPRO_SRC_DIR,
+  };
+}
+
+function appendRepeated(
+  args: string[],
+  flag: string,
+  values: string[],
+): void {
+  for (const value of values) {
+    args.push(flag, value);
+  }
+}
+
+function evidenceDirectory(): string {
+  return path.resolve(requireBinding("CODEPRO_EVIDENCE_DIR"));
+}
+
+function assertPersistedEvidence(
+  result: VerticalRunResult,
+  configuredEvidenceDir: string,
+): void {
+  const evidenceRoot = path.resolve(result.evidence_root);
+  const relative = path.relative(configuredEvidenceDir, evidenceRoot);
+
+  if (
+    relative === "" ||
+    relative.startsWith(`..${path.sep}`) ||
+    relative === ".." ||
+    path.isAbsolute(relative)
+  ) {
+    throw new Error(
+      "Python core returned an evidence_root outside CODEPRO_EVIDENCE_DIR",
+    );
+  }
+
+  const persistedResult = path.join(evidenceRoot, "result.json");
+
+  if (!existsSync(persistedResult)) {
+    throw new Error(
+      `Python core did not persist expected evidence: ${persistedResult}`,
+    );
+  }
+}
+
+export function executeVertical(
+  input: VerticalRunInput,
+): VerticalRunResult {
+  const python = requireBinding("CODEPRO_PYTHON");
+  const evidenceDir = evidenceDirectory();
+
+  const workspace = requireString(input.workspace, "workspace");
+  const revision = requireString(input.revision, "revision");
+  const requestId = requireString(input.request_id, "request_id");
+  const taskId = requireString(input.task_id, "task_id");
+  const requester = requireString(input.requester_ref, "requester_ref");
+  const authority = requireString(input.authority_ref, "authority_ref");
+  const acceptanceAuthority = requireString(
+    input.acceptance_authority_ref,
+    "acceptance_authority_ref",
+  );
+
+  const scope = requireStringArray(input.scope, "scope");
+  const candidateFiles = requireStringArray(
+    input.candidate_files,
+    "candidate_files",
+  );
+  const affectedComponents = requireStringArray(
+    input.affected_components,
+    "affected_components",
+  );
+  const executorArgv = requireStringArray(
+    input.executor_argv,
+    "executor_argv",
+  );
+  const verifierArgv = requireStringArray(
+    input.verifier_argv,
+    "verifier_argv",
+  );
+
+  const characterizationSourceRef = requireString(
+    input.characterization_source_ref,
+    "characterization_source_ref",
+  );
+
+  const attemptId = requireString(input.attempt_id, "attempt_id");
+
+  if (
+    typeof input.max_wall_time_seconds !== "number" ||
+    !Number.isFinite(input.max_wall_time_seconds) ||
+    input.max_wall_time_seconds <= 0
+  ) {
+    throw new Error(
+      "max_wall_time_seconds must be a finite positive number",
+    );
+  }
+
+  const args: string[] = [
+    "-m",
+    "arkx",
+    "run",
+    "--workspace",
+    workspace,
+    "--revision",
+    revision,
+    "--request-id",
+    requestId,
+    "--task-id",
+    taskId,
+    "--requester",
+    requester,
+    "--authority",
+    authority,
+    "--acceptance-authority",
+    acceptanceAuthority,
+  ];
+
+  appendRepeated(args, "--scope", scope);
+  appendRepeated(args, "--candidate-file", candidateFiles);
+  appendRepeated(args, "--affected-component", affectedComponents);
+
+  args.push(
+    "--characterization-source-ref",
+    characterizationSourceRef,
+    "--max-wall-time",
+    String(input.max_wall_time_seconds),
+    "--attempt-id",
+    attemptId,
+    "--evidence-dir",
+    evidenceDir,
+    "--verifier-argv-json",
+    JSON.stringify(verifierArgv),
+    "--",
+    ...executorArgv,
+  );
+
+  const startedAt = new Date().toISOString();
+  const startedMs = Date.now();
+
+  const processResult = spawnSync(
+    python,
+    args,
+    {
+      encoding: "utf8",
+      shell: false,
+      env: pythonEnvironment(),
+      maxBuffer: MAX_CAPTURE_BYTES,
+
+      /*
+       * The Python core owns executor/verifier wall-time semantics.
+       * This outer bound only prevents an adapter process from hanging
+       * indefinitely if the core itself becomes unavailable.
+       */
+      timeout: Math.ceil(
+        (input.max_wall_time_seconds + 30) * 1000,
+      ),
+    },
+  );
+
+  const finishedMs = Date.now();
+  const finishedAt = new Date().toISOString();
+
+  if (processResult.error) {
+    throw new Error(
+      `Python vertical adapter failed: ${processResult.error.message}`,
+    );
+  }
+
+  if (processResult.signal) {
+    throw new Error(
+      `Python vertical adapter terminated by signal ${processResult.signal}`,
+    );
+  }
+
+  const stdout = processResult.stdout?.trim() ?? "";
+  const stderr = processResult.stderr?.trim() ?? "";
+
+  if (!stdout) {
+    throw new Error(
+      [
+        "Python vertical produced no result JSON",
+        `exit=${processResult.status ?? "unknown"}`,
+        stderr ? `stderr=${stderr}` : "",
+      ]
+        .filter(Boolean)
+        .join("; "),
+    );
+  }
+
+  const result = parseCoreResult(stdout, {
+    started_at: startedAt,
+    finished_at: finishedAt,
+    duration_ms: finishedMs - startedMs,
+  });
+
+  /*
+   * codepro run exits:
+   *   0 -> VERIFIED
+   *   1 -> real non-VERIFIED run result
+   *   2 -> invocation/configuration failure
+   *
+   * A status outside 0/1 is not converted into a fabricated run state.
+   */
+  if (processResult.status !== 0 && processResult.status !== 1) {
+    throw new Error(
+      [
+        "Python core invocation failed before a valid run boundary completed",
+        `exit=${processResult.status ?? "unknown"}`,
+        stderr ? `stderr=${stderr}` : "",
+      ]
+        .filter(Boolean)
+        .join("; "),
+    );
+  }
+
+  assertPersistedEvidence(result, evidenceDir);
+
+  return result;
+}
+
+function readPersistedResult(
+  resultPath: string,
+): VerticalRunResult {
+  const raw = readFileSync(resultPath, "utf8");
+  const parsed = parseCoreResult(raw, {
+    started_at: null,
+    finished_at: null,
+    duration_ms: null,
+  });
+
+  return parsed;
+}
+
+export function getRunEvidence(
+  runId: string,
+): VerticalRunResult | undefined {
+  if (!runId || path.basename(runId) !== runId) {
+    return undefined;
+  }
+
+  const root = evidenceDirectory();
+  const resultPath = path.join(root, runId, "result.json");
+
+  if (!existsSync(resultPath)) {
+    return undefined;
+  }
+
+  return readPersistedResult(resultPath);
 }
 
 export function listRunEvidence(): VerticalRunResult[] {
-  return Array.from(RUN_STORE.values()).sort(
-    (a, b) => new Date(b.started_at).getTime() - new Date(a.started_at).getTime()
-  );
-}
+  const root = evidenceDirectory();
 
-export function executeVertical(input: VerticalRunInput): VerticalRunResult {
-  const startedAt = new Date().toISOString();
-  const startTime = Date.now();
-  const runId = `run-${input.request_id}-${input.task_id}-${Date.now()}`;
-  const events: TelemetryEvent[] = [];
-
-  const addEvent = (type: EventType, data: Record<string, unknown>) => {
-    const evt: TelemetryEvent = {
-      timestamp: new Date().toISOString(),
-      type,
-      run_id: runId,
-      data,
-    };
-    events.push(evt);
-  };
-
-  // 1. Task Started
-  addEvent(EventType.TASK_STARTED, {
-    request_id: input.request_id,
-    task_id: input.task_id,
-    revision: input.revision,
-    scope: input.scope,
-    authority: input.authority_ref,
-  });
-
-  // 2. Characterization verification
-  const signals: TaskSignals = {
-    candidate_files: input.candidate_files,
-    affected_components: input.affected_components,
-    known_tests: input.verifier_argv,
-    ambiguity_markers: [],
-    risk_markers: [],
-  };
-  const charResult = characterizeTask(signals);
-
-  addEvent(EventType.EVIDENCE_ADDED, {
-    evidence_type: "CHARACTERIZATION",
-    scope: charResult.scope,
-    recommended_path: charResult.recommended_path,
-    confidence: charResult.confidence,
-    reasons: charResult.reasons,
-  });
-
-  // 3. Executor Started
-  addEvent(EventType.EXECUTOR_STARTED, {
-    executor_id: "local-command",
-    argv: input.executor_argv,
-    scope_boundary: input.scope,
-  });
-
-  // Scope check: Ensure candidate files are within declared scope
-  const outOfScope = input.candidate_files.filter((f) => !input.scope.includes(f));
-  if (outOfScope.length > 0) {
-    addEvent(EventType.TASK_FINISHED, {
-      status: "REJECTED",
-      reason: `Scope violation: candidate files [${outOfScope.join(", ")}] exceed authorized scope`,
-    });
-
-    const failedResult: VerticalRunResult = {
-      run_id: runId,
-      status: "REJECTED",
-      reason: `Scope boundary violated: [${outOfScope.join(", ")}] not in authorized scope`,
-      evidence_root: `evidence://${runId}`,
-      changed_files: [],
-      attempt_id: input.attempt_id,
-      events,
-      started_at: startedAt,
-      finished_at: new Date().toISOString(),
-      duration_ms: Date.now() - startTime,
-    };
-    RUN_STORE.set(runId, failedResult);
-    return failedResult;
+  if (!existsSync(root)) {
+    return [];
   }
 
-  // 4. Executor Finished
-  const simulatedChangedFiles = [...input.candidate_files];
-  addEvent(EventType.EXECUTOR_FINISHED, {
-    returncode: 0,
-    changed_files: simulatedChangedFiles,
-    executor_id: "local-command",
-  });
+  const results: Array<{
+    result: VerticalRunResult;
+    mtimeMs: number;
+  }> = [];
 
-  // 5. Verifier Execution
-  addEvent(EventType.EVIDENCE_ADDED, {
-    evidence_type: "VERIFIER_INVOCATION",
-    verifier_argv: input.verifier_argv,
-    status: "PASS",
-  });
+  for (const entry of readdirSync(root, { withFileTypes: true })) {
+    if (!entry.isDirectory()) {
+      continue;
+    }
 
-  // 6. Task Finished
-  addEvent(EventType.TASK_FINISHED, {
-    status: "VERIFIED",
-    reason: "Declared scope respected and verifier passed.",
-  });
+    const resultPath = path.join(root, entry.name, "result.json");
 
-  const successResult: VerticalRunResult = {
-    run_id: runId,
-    status: "VERIFIED",
-    reason: "Executor satisfied authorized scope and verifier passed with clean audit trail.",
-    evidence_root: `evidence://${runId}`,
-    changed_files: simulatedChangedFiles,
-    attempt_id: input.attempt_id,
-    events,
-    started_at: startedAt,
-    finished_at: new Date().toISOString(),
-    duration_ms: Date.now() - startTime,
-  };
+    if (!existsSync(resultPath)) {
+      continue;
+    }
 
-  RUN_STORE.set(runId, successResult);
-  return successResult;
+    try {
+      results.push({
+        result: readPersistedResult(resultPath),
+        mtimeMs: statSync(resultPath).mtimeMs,
+      });
+    } catch {
+      /*
+       * An invalid evidence directory is not promoted into valid evidence.
+       * It is simply absent from the list endpoint; direct run execution
+       * remains fail-closed.
+       */
+    }
+  }
+
+  return results
+    .sort((a, b) => b.mtimeMs - a.mtimeMs)
+    .map((item) => item.result);
 }
