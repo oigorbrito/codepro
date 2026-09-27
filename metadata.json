@@ -1,0 +1,8 @@
+{
+  "name": "CodePro Chassis",
+  "description": "Executor-agnostic software-engineering chassis with verifiable contracts, experiment provenance, and audit telemetry.",
+  "permissions": [],
+  "capabilities": [
+    "MAJOR_CAPABILITY_SERVER_SIDE_GEMINI_API"
+  ]
+}
