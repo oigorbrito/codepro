@@ -85,8 +85,13 @@ MUTATIONS = (
     Mutation(
         "spine-ignore-request-scope",
         "src/arkx/spine.py",
-        "and not set(normalized_signals.candidate_files).issubset(request.requested_scope)",
-        "and False",
+        "normalized_signals.candidate_files is not None\n"
+        "        and any(\n"
+        "            not _path_within_requested_scope(path, request.requested_scope)\n"
+        "            for path in normalized_signals.candidate_files\n"
+        "        )",
+        "normalized_signals.candidate_files is not None\n"
+        "        and False",
         "tests.test_spine",
     ),
 )

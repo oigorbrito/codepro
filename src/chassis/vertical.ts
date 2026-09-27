@@ -1,4 +1,4 @@
-﻿/**
+/**
  * Fail-closed TypeScript adapter for the authoritative Python vertical.
  *
  * React / Express

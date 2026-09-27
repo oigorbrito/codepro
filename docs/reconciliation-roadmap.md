@@ -152,7 +152,7 @@ Mark `DONE` only when:
 
 ## R2 â€” Restore the proven operational foundation
 
-**Status: IN_PROGRESS**
+**Status: DONE**
 
 Purpose: recover the minimum previously validated operational substrate without
 removing useful current work.
@@ -183,13 +183,13 @@ root:
 - current useful frontend/TS work has not been accidentally removed;
 - no whole-tree revert or history rewrite was used.
 
-**Evidence / decision record:** `docs/audits/reconciliation-r2-restore-20260927.md` (verification pending).
+**Evidence / decision record:** `docs/audits/reconciliation-r2-restore-20260927.md`.
 
 ---
 
 ## R3 â€” Reconcile telemetry, evidence, and local-runtime measurements
 
-**Status: NOT_STARTED**
+**Status: DONE**
 
 Purpose: use one canonical telemetry/evidence model rather than parallel old
 and new systems.
@@ -224,7 +224,7 @@ Mark `DONE` only when:
 - telemetry/provenance/event-log focused tests pass;
 - the Phase 2 measurements can be represented without fabricated values.
 
-**Evidence / decision record:** pending.
+**Evidence / decision record:** `docs/audits/reconciliation-r3-20260927.md`.
 
 ---
 
@@ -269,13 +269,13 @@ Mark `DONE` only when:
 - `AVAILABLE != QUALIFIED` is enforced;
 - no silent fallback or executor switch is possible.
 
-**Evidence / decision record:** pending.
+**Evidence / decision record:** `docs/audits/reconciliation-r4-20260927.md`.
 
 ---
 
 ## R5 â€” Full requalification and reconciliation closure
 
-**Status: NOT_STARTED**
+**Status: IN_PROGRESS**
 
 Purpose: prove the composed repository, then resume the normal CodePro roadmap.
 
@@ -292,6 +292,15 @@ Perform as one closure tranche:
 - verify that useful current work is preserved and previously proven critical
   capability is not silently lost;
 - reconcile documentation and CI with the actual final architecture;
+- resolve the remaining product-surface duplication discovered during R5 closure:
+  standalone TypeScript characterization/progress/routing endpoints must either
+  bind to the authoritative Python semantics or be explicitly demoted to
+  non-authoritative compatibility/preview surfaces;
+- reconcile the TypeScript M1 review surface with the independent Python
+  acceptance boundary so it cannot create a parallel authoritative ACCEPTED;
+- align the Express doctor result with the mandatory `CODEPRO_PYTHON` binding
+  used by the real vertical; Python cannot remain reported as Optional/Legacy
+  while authoritative execution requires it;
 - merge through a reviewed PR; do not force-push or rewrite published
   `main` history;
 - update the canonical `roadmap.md` execution pointer only after this gate.
@@ -323,7 +332,7 @@ RECONCILIATION = DONE
 NORMAL_ROADMAP = RESUME
 ```
 
-**Evidence / decision record:** pending.
+**Evidence / decision record:** `docs/audits/reconciliation-r5-20260927.md` (in progress).
 
 ---
 
