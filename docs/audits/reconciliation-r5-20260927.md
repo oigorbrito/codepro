@@ -1,0 +1,148 @@
+# Reconciliation R5 — composed repository requalification — 2026-09-27
+
+**Status:** IN_PROGRESS / LOCAL_REQUALIFICATION_REQUIRED
+
+## Candidate identity
+
+```text
+main_at_precheck = 075b6f944ff7c4245139f6f0845ac2db45f31d42
+reconciliation_head_after_r4 = dc021094dbd0a59641b50b86bd261a6d02f97b43
+r5_validation_maintenance = 32a7447a90157923546639252c88d370e8bc09eb
+branch = reconcile/04a-capability-recovery
+```
+
+At the R5 precheck, the reconciliation branch was six commits ahead of
+`main` and zero commits behind. Published `main` history has not been
+rewritten.
+
+## Preservation precheck
+
+Useful post-deviation assets remain byte-identical to `main`:
+
+```text
+server.ts                              2f9e5e403fc11d300bdfbf38274675c0c6b1e0ee
+src/App.tsx                            69dc0b53a28888c4e7a50470017282f2b2b697e7
+package.json                           d807bc73c9522d5af12080b2a9bfb84944f6a688
+tsconfig.json                          c27c5496b1ec3809b95fd885a0a7b0a6f4bee19f
+src/chassis/inspection.ts              288bc820c1536d5c8306950d6e89249cb419561d
+experiments/runtime-telemetry-fixture.json
+                                      6001658e143807b41a1a7a4a86a021a34406382a
+AGENTS.md                              ca1df9ce6474f08f90d51e793f48a549c82bba73
+```
+
+Representative restored operational assets remain byte-identical to the exact
+recovery predecessor `cc44d80a06f2967d3d6e7030409a692921dd6b0a`:
+
+```text
+pyproject.toml                         b2d816bc2f6ccf0cdedf247a4ca03fa922739485
+src/arkx/spine.py                      27c0e1b506030fc0b9d16b2e64222be9ec327eeb
+src/arkx/vertical.py                   ba9e7cfca51ccb2c49fce794d00309cb35d0c378
+tests/test_vertical.py                 1801436e6b302f68cef472fb8cb4b4fb01c7dcfc
+```
+
+Intentional reconciled changes remain localized to the boundaries already
+authorized by R3/R4, including telemetry naming/compatibility and the
+TypeScript-to-Python real execution adapter.
+
+## CI / validation consistency maintenance
+
+R2 identified the final `spine-ignore-request-scope` mutation anchor as stale:
+the probe expected a predecessor expression that no longer matched the restored
+`spine.py` shape. The mutation was never observed to survive; the validator
+aborted before applying it.
+
+R5 repaired only the validator anchor in:
+
+```text
+32a7447a90157923546639252c88d370e8bc09eb
+test: repair stale spine mutation anchor for reconciliation
+```
+
+The mutation still tests the same invariant: removing the
+characterization-candidate-files / requested-scope rejection must be killed by
+`tests.test_spine`. The production `src/arkx/spine.py` blob remains unchanged
+from the recovery predecessor.
+
+This repair is necessary because `.github/workflows/foundation.yml` executes
+`tools/mutation_probe.py`; carrying the known-stale anchor into the final
+reconciled state would make a healthy CI runner fail for validator maintenance
+rather than product behavior.
+
+## Existing R4 execution evidence retained
+
+The real TypeScript adapter was locally validated before R4 closure with:
+
+```text
+Python vertical focused tests = PASS (18)
+Typecheck                     = PASS
+Frontend build                = PASS
+Real adapter positive control = VERIFIED
+Observed changed_files        = [target.txt]
+Persisted result.json         = PRESENT
+Negative scope control        = BLOCKED
+Negative changed_files        = [other.txt]
+simulatedChangedFiles         = ABSENT
+hardcoded verifier PASS       = ABSENT
+```
+
+R5 must rerun the composed state after R4-B and the mutation-probe maintenance;
+historical R4 evidence is not substituted for the R5 gate.
+
+## GitHub Actions availability
+
+Recent pull-request Foundation execution observed a job-level failure with no
+step payload and a skipped compatibility job. No executed test step produced a
+failure. This remains classified as runner/infrastructure non-execution:
+
+```text
+INFRA_FAILURE != IMPLEMENTATION_FAILURE
+NOT_EXECUTED  != PASS
+```
+
+Therefore R5 requires a fresh clean local requalification while hosted runner
+execution is unavailable.
+
+## Required R5 local gate
+
+From a clean worktree at the exact reconciliation head:
+
+```text
+SUPPORTED_PYTHON_3_12_PLUS
+PACKAGE_INSTALL
+CLI_VERSION
+CLI_DOCTOR
+CLI_INSPECT
+FOUNDATION_CHECK
+BASELINE
+FULL_PYTHON_TEST_SUITE
+MUTATION_PROBE
+CHASSIS_FINGERPRINT
+PYTHON_COMPILE
+R4B_QUALIFICATION_CONTRACT_TESTS
+NODE_INSTALL
+TYPESCRIPT_TYPECHECK
+LOCAL_INFERENCE_TELEMETRY_CHECK
+FRONTEND_BUILD
+REAL_TS_TO_PYTHON_VERTICAL_POSITIVE
+REAL_TS_TO_PYTHON_VERTICAL_NEGATIVE_SCOPE
+```
+
+No provider-backed qualification runner is to be invoked during this gate.
+No credential is required. No external executor is selected or promoted.
+
+## Gate state
+
+```text
+NO_LOST_PROVEN_CAPABILITY          = PRECHECK_PASS
+NO_UNJUSTIFIED_DUPLICATE_BOUNDARY  = PRECHECK_PASS
+NEW_USEFUL_WORK_PRESERVED          = PRECHECK_PASS
+OLD_CRITICAL_TESTS_REQUALIFIED     = PENDING_LOCAL_GATE
+CURRENT_TESTS_PASS                 = PENDING_LOCAL_GATE
+REAL_EXECUTION_PATH_VERIFIED       = PENDING_R5_RERUN
+MAIN_HISTORY_PRESERVED             = PASS
+
+R5 = IN_PROGRESS
+```
+
+Do not merge to `main` or mark reconciliation complete until the pending local
+gate is captured and verified.
