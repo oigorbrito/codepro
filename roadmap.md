@@ -80,6 +80,8 @@ RAM/VRAM, compute, complexity, failure surface, and maintenance burden.
 - [x] Establish benchmark-driven / evidence-driven evaluation.
 - [x] Keep router implementation deferred until local evidence exists.
 - [x] Choose Windows native as the first qualification platform.
+- [x] Create canonical living roadmap at `roadmap.md`.
+- [x] Add mandatory roadmap-synchronization rule to `AGENTS.md`.
 - [-] WSL2 qualification.
 - [-] Docker GPU qualification.
 
