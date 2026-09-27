@@ -1,0 +1,48 @@
+name: TypeScript telemetry contract
+
+on:
+  push:
+    paths:
+      - ".github/workflows/telemetry-ts.yml"
+      - "src/chassis/executionTelemetry.ts"
+      - "experiments/runtime-telemetry-fixture.json"
+      - "tools/check-telemetry.ts"
+      - "tsconfig.json"
+      - "package.json"
+  pull_request:
+    paths:
+      - ".github/workflows/telemetry-ts.yml"
+      - "src/chassis/executionTelemetry.ts"
+      - "experiments/runtime-telemetry-fixture.json"
+      - "tools/check-telemetry.ts"
+      - "tsconfig.json"
+      - "package.json"
+
+permissions:
+  contents: read
+
+jobs:
+  telemetry-contract:
+    runs-on: ubuntu-24.04
+    steps:
+      - uses: actions/checkout@11d5960a326750d5838078e36cf38b85af677262
+        with:
+          persist-credentials: false
+
+      - name: Record environment
+        run: |
+          node --version
+          npm --version
+          git rev-parse HEAD
+
+      - name: Install TypeScript chassis dependencies
+        run: npm install --ignore-scripts
+
+      - name: Typecheck
+        run: npm run lint
+
+      - name: Verify telemetry contract
+        run: npx tsx tools/check-telemetry.ts
+
+      - name: Build frontend
+        run: npm run build
