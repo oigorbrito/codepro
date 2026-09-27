@@ -102,7 +102,7 @@ NOT_EXECUTED  != PASS
 Therefore R5 requires a fresh clean local requalification while hosted runner
 execution is unavailable.
 
-## Required R5 local gate
+## Required R5 execution gate
 
 From a clean worktree at the exact reconciliation head:
 
@@ -227,15 +227,39 @@ ZERO_STEPS_EXECUTED != PASS
 The R5 execution gates remain pending. The reconciliation PR stays draft and
 `main` remains unchanged.
 
+## External service status cross-check
+
+At the time of this audit, the public GitHub Status API reported:
+
+```text
+GitHub overall = All Systems Operational
+Actions        = operational
+```
+
+Therefore the observed zero-step failures are not attributed to a confirmed
+global GitHub Actions incident. The remaining blocker is classified only as
+repository/account execution provisioning unavailable from the evidence
+currently exposed to this project.
+
+Possible account/repository causes such as private-repository Actions quota,
+budget/billing, or Actions policy/settings remain hypotheses until directly
+observed. They are not recorded as established cause.
+
+```text
+GLOBAL_ACTIONS_OUTAGE_CONFIRMED = FALSE
+ACCOUNT_OR_REPO_CAUSE_CONFIRMED = FALSE
+EXECUTION_ENVIRONMENT_AVAILABLE = FALSE
+```
+
 ## Gate state
 
 ```text
 NO_LOST_PROVEN_CAPABILITY          = PRECHECK_PASS
 NO_UNJUSTIFIED_DUPLICATE_BOUNDARY  = PRECHECK_PASS
 NEW_USEFUL_WORK_PRESERVED          = PRECHECK_PASS
-OLD_CRITICAL_TESTS_REQUALIFIED     = PENDING_LOCAL_GATE
-CURRENT_TESTS_PASS                 = PENDING_LOCAL_GATE
-REAL_EXECUTION_PATH_VERIFIED       = PENDING_R5_RERUN
+OLD_CRITICAL_TESTS_REQUALIFIED     = PENDING_EXECUTION_ENVIRONMENT
+CURRENT_TESTS_PASS                 = PENDING_EXECUTION_ENVIRONMENT
+REAL_EXECUTION_PATH_VERIFIED       = PENDING_EXECUTION_ENVIRONMENT
 MAIN_HISTORY_PRESERVED             = PASS
 
 R5 = IN_PROGRESS
