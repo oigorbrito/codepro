@@ -152,6 +152,8 @@ backend_target = Windows x64 CUDA 13.4
 
 ### 2.2 CPU smoke test
 
+Previous smoke attempt with `ggml-org/Qwen3.5-0.8B-GGUF:Q4_K_M` failed before model load with `no GGUF files found`; classified as `MODEL_ARTIFACT_RESOLUTION_FAILURE`, not runtime failure. Replacement smoke artifact: `ggml-org/gemma-3-1b-it-GGUF:Q4_K_M`.
+
 - [ ] Load a minimal test model.
 - [ ] Generate from a trivial prompt.
 - [ ] Record RAM.
