@@ -2,20 +2,20 @@ import fs from "fs";
 import path from "path";
 import assert from "node:assert/strict";
 import {
-  ExecutionRecordV1,
-  persistExecutionRecord,
-  validateExecutionRecord,
+  LocalInferenceMeasurementRecordV1,
+  persistLocalInferenceMeasurementRecord,
+  validateLocalInferenceMeasurementRecord,
 } from "../src/chassis/executionTelemetry";
 
 const fixturePath = path.resolve("experiments/runtime-telemetry-fixture.json");
 const fixture = JSON.parse(fs.readFileSync(fixturePath, "utf8")) as {
-  records: ExecutionRecordV1[];
+  records: LocalInferenceMeasurementRecordV1[];
 };
 
 assert.equal(fixture.records.length, 2);
 
 for (const record of fixture.records) {
-  validateExecutionRecord(record);
+  validateLocalInferenceMeasurementRecord(record);
 }
 
 const cpu = fixture.records.find((record) => record.execution.device === "CPU");
@@ -31,9 +31,9 @@ assert.equal(gpu.metrics.vram_delta_mib, 906);
 assert.equal(gpu.cost.provider_api_cost_usd, 0);
 
 const tempPath = path.resolve(".telemetry-check", "record.json");
-persistExecutionRecord(gpu, tempPath);
-const roundTrip = JSON.parse(fs.readFileSync(tempPath, "utf8")) as ExecutionRecordV1;
-validateExecutionRecord(roundTrip);
+persistLocalInferenceMeasurementRecord(gpu, tempPath);
+const roundTrip = JSON.parse(fs.readFileSync(tempPath, "utf8")) as LocalInferenceMeasurementRecordV1;
+validateLocalInferenceMeasurementRecord(roundTrip);
 assert.deepEqual(roundTrip, gpu);
 fs.rmSync(path.dirname(tempPath), { recursive: true, force: true });
 

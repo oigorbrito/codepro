@@ -1,21 +1,22 @@
 /**
  * Normalized local-inference execution telemetry.
  *
- * This record is measurement evidence only. It does not imply verification,
+ * This is specialized local-inference measurement evidence. It is not CodePro's canonical generic execution record.
+ * Correlate it with arkx.contracts.ExecutionRecord by run_id. It does not imply verification,
  * acceptance, promotion, or executor qualification.
  */
 
 import fs from "fs";
 import path from "path";
 
-export const EXECUTION_RECORD_SCHEMA_VERSION = 1 as const;
-export const EXECUTION_RECORD_TYPE = "LOCAL_INFERENCE_EXECUTION" as const;
+export const LOCAL_INFERENCE_MEASUREMENT_SCHEMA_VERSION = 1 as const;
+export const LOCAL_INFERENCE_MEASUREMENT_RECORD_TYPE = "LOCAL_INFERENCE_EXECUTION" as const;
 
 export type InferenceDevice = "CPU" | "CUDA";
 
-export interface ExecutionRecordV1 {
-  schema_version: typeof EXECUTION_RECORD_SCHEMA_VERSION;
-  record_type: typeof EXECUTION_RECORD_TYPE;
+export interface LocalInferenceMeasurementRecordV1 {
+  schema_version: typeof LOCAL_INFERENCE_MEASUREMENT_SCHEMA_VERSION;
+  record_type: typeof LOCAL_INFERENCE_MEASUREMENT_RECORD_TYPE;
   run_id: string;
   captured_at: string;
 
@@ -102,11 +103,11 @@ function requireNullableFiniteNonNegative(
   }
 }
 
-export function validateExecutionRecord(record: ExecutionRecordV1): void {
-  if (record.schema_version !== EXECUTION_RECORD_SCHEMA_VERSION) {
+export function validateLocalInferenceMeasurementRecord(record: LocalInferenceMeasurementRecordV1): void {
+  if (record.schema_version !== LOCAL_INFERENCE_MEASUREMENT_SCHEMA_VERSION) {
     throw new Error("unsupported execution telemetry schema_version");
   }
-  if (record.record_type !== EXECUTION_RECORD_TYPE) {
+  if (record.record_type !== LOCAL_INFERENCE_MEASUREMENT_RECORD_TYPE) {
     throw new Error("invalid execution telemetry record_type");
   }
 
@@ -208,17 +209,48 @@ export function validateExecutionRecord(record: ExecutionRecordV1): void {
   requireNonBlank(record.evidence.metrics_path, "evidence.metrics_path");
 }
 
-export function serializeExecutionRecord(record: ExecutionRecordV1): string {
-  validateExecutionRecord(record);
+export function serializeLocalInferenceMeasurementRecord(record: LocalInferenceMeasurementRecordV1): string {
+  validateLocalInferenceMeasurementRecord(record);
   return JSON.stringify(record, null, 2) + "\n";
 }
 
-export function persistExecutionRecord(
-  record: ExecutionRecordV1,
+export function persistLocalInferenceMeasurementRecord(
+  record: LocalInferenceMeasurementRecordV1,
   outputPath: string,
 ): void {
-  validateExecutionRecord(record);
+  validateLocalInferenceMeasurementRecord(record);
   const resolved = path.resolve(outputPath);
   fs.mkdirSync(path.dirname(resolved), { recursive: true });
-  fs.writeFileSync(resolved, serializeExecutionRecord(record), "utf8");
+  fs.writeFileSync(resolved, serializeLocalInferenceMeasurementRecord(record), "utf8");
 }
+
+/**
+ * Backward-compatible names retained during reconciliation.
+ *
+ * Canonical generic execution telemetry:
+ *   arkx.contracts.ExecutionRecord
+ *
+ * Specialized local-inference measurements:
+ *   LocalInferenceMeasurementRecordV1
+ *
+ * These aliases preserve existing consumers; they do not establish a second
+ * canonical generic ExecutionRecord boundary.
+ */
+export const EXECUTION_RECORD_SCHEMA_VERSION =
+  LOCAL_INFERENCE_MEASUREMENT_SCHEMA_VERSION;
+
+export const EXECUTION_RECORD_TYPE =
+  LOCAL_INFERENCE_MEASUREMENT_RECORD_TYPE;
+
+export type ExecutionRecordV1 =
+  LocalInferenceMeasurementRecordV1;
+
+export const validateExecutionRecord =
+  validateLocalInferenceMeasurementRecord;
+
+export const serializeExecutionRecord =
+  serializeLocalInferenceMeasurementRecord;
+
+export const persistExecutionRecord =
+  persistLocalInferenceMeasurementRecord;
+

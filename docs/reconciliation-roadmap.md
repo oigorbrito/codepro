@@ -331,11 +331,11 @@ NORMAL_ROADMAP = RESUME
 
 ```text
 RECONCILIATION = ACTIVE
-CURRENT_BLOCK  = R3
+CURRENT_BLOCK  = R4
 R1             = DONE
 R2             = DONE
-R3             = IN_PROGRESS
-R4             = NOT_STARTED
+R3             = DONE
+R4             = IN_PROGRESS
 R5             = NOT_STARTED
 
 NORMAL PHASE 3+ IMPLEMENTATION = PAUSED_BY_RECONCILIATION
@@ -344,4 +344,5 @@ NORMAL PHASE 3+ IMPLEMENTATION = PAUSED_BY_RECONCILIATION
 Completed Phase 0-2 evidence is not invalidated by this pause. Any conflict
 found during reconciliation must be recorded rather than silently rewriting a
 previous result.
+
 
