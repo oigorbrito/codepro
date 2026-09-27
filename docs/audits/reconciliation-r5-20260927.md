@@ -306,6 +306,36 @@ unconfirmed subcauses.
 The temporary scheduling workflow is not part of the reconciled product and is
 removed after capturing this evidence.
 
+## Billing / quota observation
+
+The repository owner reports that billing is currently zero.
+
+For this private repository, GitHub-hosted Actions usage is subject to the
+account's included Actions allowance. GitHub documents that usage is blocked
+after the included quota is exhausted when no valid payment method is available;
+a budget configured to stop usage at its limit can also stop metered usage.
+
+The user-reported zero billing state is therefore consistent with the observed
+zero-step runner provisioning failures, but it does not by itself distinguish
+among:
+
+```text
+INCLUDED_ACTIONS_QUOTA_EXHAUSTED
+NO_VALID_PAYMENT_METHOD_FOR_OVERAGE
+ZERO_OR_REACHED_ACTIONS_BUDGET_WITH_STOP_USAGE
+OTHER_ACCOUNT_OR_REPOSITORY_ACTIONS_POLICY
+```
+
+No connector-visible billing/quota endpoint is available in this project, so
+the precise subcause remains unverified.
+
+```text
+BILLING_ZERO_REPORTED                = TRUE
+BILLING_ZERO_EXPLAINS_PATTERN        = PLAUSIBLE
+EXACT_BILLING_OR_QUOTA_SUBCAUSE      = UNVERIFIED
+RUNNER_PROVISIONING_NON_EXECUTION    = OBSERVED
+```
+
 ## Gate state
 
 ```text
