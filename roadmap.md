@@ -146,7 +146,7 @@ backend_target = Windows x64 CUDA 13.4
 - [x] Select Windows x64 CUDA 13.4 binary + matching CUDA 13.4 runtime DLL package.
 - [x] Install/extract the frozen runtime locally under `D:\\projetos\\codepro-mini-runtime\\downloads\\llama-b11205-bin-win-cuda-13.4-x64`.
 - [x] Confirm `llama-cli` executes: `0.5.0-dev`, build `11205`, commit `95887577a`, Windows x86_64.
-- [ ] Confirm CPU backend with an actual model load/generation.
+- [x] Confirm CPU backend with actual model load/generation using `ggml-org/gemma-3-1b-it-GGUF:Q4_K_M`: response `CPU_OK`, prompt throughput `52.2 t/s`, generation throughput `16.5 t/s`.
 - [x] Confirm CUDA backend: `--list-devices` detects `CUDA0: NVIDIA GeForce GTX 1650 (4095 MiB, 3296 MiB free)`.
 - [ ] Record local runtime path and file hashes/checksums where practical.
 
@@ -154,12 +154,12 @@ backend_target = Windows x64 CUDA 13.4
 
 Previous smoke attempt with `ggml-org/Qwen3.5-0.8B-GGUF:Q4_K_M` failed before model load with `no GGUF files found`; classified as `MODEL_ARTIFACT_RESOLUTION_FAILURE`, not runtime failure. Replacement smoke artifact: `ggml-org/gemma-3-1b-it-GGUF:Q4_K_M`.
 
-- [ ] Load a minimal test model.
-- [ ] Generate from a trivial prompt.
+- [x] Load a minimal test model: `ggml-org/gemma-3-1b-it-GGUF:Q4_K_M`.
+- [x] Generate from a trivial prompt: `CPU_OK`.
 - [ ] Record RAM.
 - [ ] Record load time.
-- [ ] Record prompt tokens/s.
-- [ ] Record generation tokens/s.
+- [x] Record prompt tokens/s: `52.2 t/s`.
+- [x] Record generation tokens/s: `16.5 t/s`.
 
 ### 2.3 GPU-offload smoke test
 
@@ -496,6 +496,6 @@ PHASE 2.1 — llama.cpp Windows runtime
 [x] Select Windows x64 CUDA 13.4 packages
 [x] Install/extract runtime
 [x] Confirm llama-cli
-[ ] Confirm CPU backend with model load/generation
+[x] Confirm CPU backend with model load/generation
 [x] Confirm CUDA backend
 ```
