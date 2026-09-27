@@ -165,27 +165,30 @@ Previous smoke attempt with `ggml-org/Qwen3.5-0.8B-GGUF:Q4_K_M` failed before mo
 
 ### 2.3 GPU-offload smoke test
 
-- [~] Run the same model with GPU offload: first single-turn attempt ended with exit code `-1` after `61901 ms`; root cause pending log classification.
-- [ ] Confirm actual GTX 1650 usage.
+- [x] Run the same model with GPU offload. Final single-turn run exited `0`, returned `GPU_OK`, and offloaded `27/27` layers to `CUDA0`.
+- [x] Confirm actual GTX 1650 usage: `CUDA0 = NVIDIA GeForce GTX 1650`.
 - [ ] Record VRAM.
 - [ ] Record RAM.
-- [ ] Record GPU layers.
-- [ ] Record prompt tokens/s.
-- [ ] Record generation tokens/s.
+- [x] Record GPU layers: `27/27` offloaded.
+- [x] Record prompt tokens/s: observed `0.2 t/s` on final GPU smoke (recorded as observed, not yet treated as representative).
+- [x] Record generation tokens/s: `36.0 t/s`.
 - [ ] Compare CPU vs GPU-offload behavior.
 
-GPU smoke attempt 1 evidence:
+GPU smoke history:
 
-- exit code: `-1`
-- wall time: `61901 ms`
-- post-run GPU snapshot: GTX 1650, `269 MiB` used, `3667 MiB` free, `32%` utilization
-- classification: `IN_PROGRESS`; do not treat as model or CUDA failure until stderr is classified.
+- attempt 1: exit code `-1`, retained as failed diagnostic attempt.
+- final single-turn run: exit code `0`, response `GPU_OK`.
+- CUDA backend: `CUDA0 = NVIDIA GeForce GTX 1650`.
+- model layers: `27/27` offloaded to GPU.
+- observed throughput: prompt `0.2 t/s`, generation `36.0 t/s`.
+- post-run GPU snapshot: GTX 1650, `284 MiB` used, `3652 MiB` free.
+- classification: GPU load/generation/offload PASS; remaining runtime qualification items stay open until RAM/load-time/metrics completeness is captured.
 
 ### 2.4 Runtime gate
 
-- [ ] LOAD = PASS.
-- [ ] GENERATION = PASS.
-- [ ] CUDA_OFFLOAD = PASS.
+- [x] LOAD = PASS.
+- [x] GENERATION = PASS.
+- [x] CUDA_OFFLOAD = PASS.
 - [ ] METRICS_CAPTURE = PASS.
 - [ ] NO_UNEXPLAINED_CRASH = PASS.
 - [ ] Classify runtime as COMPATIBLE, PARTIALLY_COMPATIBLE, or BLOCKED.
