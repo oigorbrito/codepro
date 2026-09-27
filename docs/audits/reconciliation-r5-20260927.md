@@ -336,11 +336,83 @@ EXACT_BILLING_OR_QUOTA_SUBCAUSE      = UNVERIFIED
 RUNNER_PROVISIONING_NON_EXECUTION    = OBSERVED
 ```
 
+## Product-surface reconciliation gap found during closure review
+
+A full R1-to-R5 matrix review found one remaining reconciliation gap that is
+independent of the hosted-runner blocker.
+
+The real vertical endpoint is already bound to the authoritative Python core,
+but the Express/API product surface still exposes separate TypeScript semantic
+implementations for:
+
+```text
+/api/characterize       -> src/chassis/characterization.ts
+/api/assess-progress    -> src/chassis/progress.ts
+/api/routing            -> src/chassis/routing.ts
+/api/m1/review          -> src/chassis/m1Acceptance.ts
+```
+
+The React UI calls the routing and M1 review endpoints, so these are not merely
+dead compatibility files.
+
+The Python package contains the proven characterization, progress, routing, and
+independent-acceptance contracts, but the current Python CLI exposes only
+`doctor`, `inspect`, and `run`. Therefore the standalone TypeScript
+endpoints have not been rebound to the proven Python semantics.
+
+The TypeScript P1/P2/P3 contracts are also not schema-identical to the Python
+contracts (for example, progress/routing states and outputs differ). The M1
+TypeScript review can independently emit `ACCEPTED` from a submitted summary,
+rather than consuming the authoritative Python acceptance record/evidence
+boundary.
+
+The Express doctor surface is also stale relative to R4:
+
+```text
+server.ts:
+  Python Interpreter (Optional/Legacy)
+  python check excluded from overall doctor status
+
+src/chassis/vertical.ts:
+  CODEPRO_PYTHON is mandatory
+  implicit fallback is disabled
+```
+
+This is a product-surface consistency issue, not a missing-file restoration
+issue.
+
+Required disposition before R5 closure:
+
+```text
+P1/P2/P3 TypeScript surfaces:
+  REBIND to authoritative Python semantics
+  OR explicitly DEMOTE to non-authoritative preview/compatibility surfaces
+
+M1 TypeScript acceptance:
+  REBIND to independent Python acceptance evidence
+  OR DEMOTE so it cannot issue authoritative ACCEPTED
+
+Express doctor:
+  report the explicit CODEPRO_PYTHON execution dependency accurately
+  and fail/limit health semantics consistently with the real vertical
+```
+
+No executor/provider change, fallback, routing promotion, or paid API call is
+authorized by this corrective item.
+
+```text
+MISSING_HISTORICAL_FILES                    = FALSE
+POST_DEVIATION_FILES_DELETED               = FALSE
+TS_P1_P2_P3_CANONICALITY_RESOLVED           = FALSE
+TS_M1_ACCEPTANCE_CANONICALITY_RESOLVED      = FALSE
+EXPRESS_DOCTOR_REAL_CORE_ALIGNMENT          = FALSE
+```
+
 ## Gate state
 
 ```text
 NO_LOST_PROVEN_CAPABILITY          = PRECHECK_PASS
-NO_UNJUSTIFIED_DUPLICATE_BOUNDARY  = PRECHECK_PASS
+NO_UNJUSTIFIED_DUPLICATE_BOUNDARY  = PENDING_PRODUCT_SURFACE_RECONCILIATION
 NEW_USEFUL_WORK_PRESERVED          = PRECHECK_PASS
 OLD_CRITICAL_TESTS_REQUALIFIED     = PENDING_EXECUTION_ENVIRONMENT
 CURRENT_TESTS_PASS                 = PENDING_EXECUTION_ENVIRONMENT
