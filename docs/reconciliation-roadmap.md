@@ -1,4 +1,4 @@
-﻿# CodePro Reconciliation & Recovery Roadmap
+# CodePro Reconciliation & Recovery Roadmap
 
 Status: **ACTIVE**
 
@@ -230,7 +230,7 @@ Mark `DONE` only when:
 
 ## R4 â€” Reconcile real execution, verifier, and executor boundaries
 
-**Status: NOT_STARTED**
+**Status: DONE**
 
 Purpose: restore real operational behavior while retaining useful modern
 interfaces.
@@ -331,12 +331,12 @@ NORMAL_ROADMAP = RESUME
 
 ```text
 RECONCILIATION = ACTIVE
-CURRENT_BLOCK  = R4
+CURRENT_BLOCK  = R5
 R1             = DONE
 R2             = DONE
 R3             = DONE
-R4             = IN_PROGRESS
-R5             = NOT_STARTED
+R4             = DONE
+R5             = IN_PROGRESS
 
 NORMAL PHASE 3+ IMPLEMENTATION = PAUSED_BY_RECONCILIATION
 ```

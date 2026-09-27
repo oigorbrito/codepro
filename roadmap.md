@@ -1,4 +1,4 @@
-﻿# CodePro Roadmap
+# CodePro Roadmap
 
 This is the canonical living operational roadmap for CodePro.
 
@@ -77,7 +77,7 @@ docs/reconciliation-roadmap.md
 
 ```text
 RECONCILIATION = ACTIVE
-CURRENT_BLOCK = R4
+CURRENT_BLOCK = R5
 NORMAL_PHASE_3_PLUS = PAUSED_BY_RECONCILIATION
 ```
 
@@ -555,8 +555,8 @@ RECONCILIATION ROADMAP â€” docs/reconciliation-roadmap.md
 R1 = DONE
 R2 = DONE
 R3 = DONE
-R4 = IN_PROGRESS
-R5 = NOT_STARTED
+R4 = DONE
+R5 = IN_PROGRESS
 
 NORMAL PHASE 3+ = PAUSED_BY_RECONCILIATION
 ```
