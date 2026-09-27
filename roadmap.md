@@ -148,7 +148,9 @@ backend_target = Windows x64 CUDA 13.4
 - [x] Confirm `llama-cli` executes: `0.5.0-dev`, build `11205`, commit `95887577a`, Windows x86_64.
 - [x] Confirm CPU backend with actual model load/generation using `ggml-org/gemma-3-1b-it-GGUF:Q4_K_M`: response `CPU_OK`, prompt throughput `52.2 t/s`, generation throughput `16.5 t/s`.
 - [x] Confirm CUDA backend: `--list-devices` detects `CUDA0: NVIDIA GeForce GTX 1650 (4095 MiB, 3296 MiB free)`.
-- [ ] Record local runtime path and file hashes/checksums where practical.
+- [x] Record local runtime path and SHA256 checksums:
+  - `cudart-llama-bin-win-cuda-13.4-x64.zip` = `738F8C251AC22B70C3AE6F83A10CF222725DF0395246A2CF58F32BDB85FBE668`
+  - `llama-b11205-bin-win-cuda-13.4-x64.zip` = `D91178299D1007E162ACAD2776A24D5EF8C834A73F3DB282139ADDC12123BD80`.
 
 ### 2.2 CPU smoke test
 
@@ -163,7 +165,7 @@ Previous smoke attempt with `ggml-org/Qwen3.5-0.8B-GGUF:Q4_K_M` failed before mo
 
 ### 2.3 GPU-offload smoke test
 
-- [ ] Run the same model with GPU offload.
+- [~] Run the same model with GPU offload: first single-turn attempt ended with exit code `-1` after `61901 ms`; root cause pending log classification.
 - [ ] Confirm actual GTX 1650 usage.
 - [ ] Record VRAM.
 - [ ] Record RAM.
@@ -171,6 +173,13 @@ Previous smoke attempt with `ggml-org/Qwen3.5-0.8B-GGUF:Q4_K_M` failed before mo
 - [ ] Record prompt tokens/s.
 - [ ] Record generation tokens/s.
 - [ ] Compare CPU vs GPU-offload behavior.
+
+GPU smoke attempt 1 evidence:
+
+- exit code: `-1`
+- wall time: `61901 ms`
+- post-run GPU snapshot: GTX 1650, `269 MiB` used, `3667 MiB` free, `32%` utilization
+- classification: `IN_PROGRESS`; do not treat as model or CUDA failure until stderr is classified.
 
 ### 2.4 Runtime gate
 
