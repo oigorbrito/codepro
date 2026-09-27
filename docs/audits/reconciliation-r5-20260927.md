@@ -130,6 +130,55 @@ REAL_TS_TO_PYTHON_VERTICAL_NEGATIVE_SCOPE
 No provider-backed qualification runner is to be invoked during this gate.
 No credential is required. No external executor is selected or promoted.
 
+
+## Hosted R5 gate
+
+Because the user-local PowerShell environment is temporarily unavailable, the
+repository now carries a provider-free hosted requalification gate:
+
+```text
+tools/check-r5-composed-vertical.ts
+.github/workflows/reconciliation-r5.yml
+```
+
+The workflow covers:
+
+```text
+Python 3.13 package install
+CLI version / doctor / inspect
+foundation check
+baseline
+full Python unittest suite
+mutation sensitivity probe
+chassis fingerprint
+Python compile
+Node 22 dependency install
+TypeScript typecheck
+local-inference telemetry validation
+frontend build
+authoritative adapter static checks
+real TS -> Python positive control
+real TS -> Python negative scope control
+provider-safety check
+```
+
+The workflow contains no provider credential binding and does not invoke the
+Gemini CLI, Gemini API qualification runner, or Anthropic-backed qualification
+runner.
+
+A validation-only draft pull request was opened:
+
+```text
+PR #80
+reconcile/04a-capability-recovery -> main
+state = DRAFT
+merge = NOT_AUTHORIZED_PENDING_R5
+```
+
+The Windows llama.cpp smoke remains the only environment-specific check that
+cannot be reproduced by the hosted Linux gate. Its prior Phase 2 qualification
+remains preserved; R5 will not fabricate a fresh Windows observation.
+
 ## Gate state
 
 ```text
