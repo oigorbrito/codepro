@@ -520,5 +520,5 @@ PHASE 3 — Telemetry baseline
 [~] Normalized execution record schema implemented
 [~] JSON persistence + raw evidence references implemented
 [~] Real CPU/GPU qualification fixture added
-[!] GitHub Actions verification blocked before runner start; local or restored CI verification required before marking COMPLETE
+[!] Verification blocked by infrastructure on both attempted paths: GitHub Actions job did not start (`runner_id=0`, no steps), and local `D:\\projetos\\codepro` checkout has a broken `.git` worktree reference pointing into `D:\\projetos\\arkx\\...\\.git\\worktrees\\workspace`. Local npm typecheck/build results are therefore not implementation evidence.
 ```
