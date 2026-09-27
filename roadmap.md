@@ -158,8 +158,8 @@ Previous smoke attempt with `ggml-org/Qwen3.5-0.8B-GGUF:Q4_K_M` failed before mo
 
 - [x] Load a minimal test model: `ggml-org/gemma-3-1b-it-GGUF:Q4_K_M`.
 - [x] Generate from a trivial prompt: `CPU_OK`.
-- [ ] Record RAM.
-- [ ] Record load time.
+- [x] Record peak process RAM: CPU `1135.6 MiB`; GPU `1214.9 MiB`.
+- [~] Record load time: current instrumentation did not capture `LoadTimeMs`; wall time captured instead (CPU `4335 ms`, GPU `3982 ms`).
 - [x] Record prompt tokens/s: `52.2 t/s`.
 - [x] Record generation tokens/s: `16.5 t/s`.
 
@@ -183,6 +183,15 @@ GPU smoke history:
 - observed throughput: prompt `0.2 t/s`, generation `36.0 t/s`.
 - post-run GPU snapshot: GTX 1650, `284 MiB` used, `3652 MiB` free.
 - classification: GPU load/generation/offload PASS; remaining runtime qualification items stay open until RAM/load-time/metrics completeness is captured.
+
+Quantitative smoke measurement (same GGUF/configuration):
+
+- CPU wall time: `4335 ms`
+- GPU wall time: `3982 ms`
+- CPU peak process RAM: `1135.6 MiB`
+- GPU peak process RAM: `1214.9 MiB`
+- response validation: `True` for CPU and GPU
+- instrumentation caveat: `ExitCode` and `LoadTimeMs` were blank in the emitted table; do not infer values. Peak VRAM extraction still pending.
 
 ### 2.4 Runtime gate
 
