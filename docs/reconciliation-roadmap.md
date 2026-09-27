@@ -113,7 +113,7 @@ A block is `DONE` only after its verification gate passes.
 
 ## R1 — Freeze identities and reconciliation matrix
 
-**Status: IN_PROGRESS**
+**Status: DONE**
 
 Purpose: establish the exact recovery boundary before restoring code.
 
@@ -146,13 +146,13 @@ Mark `DONE` only when:
 - each collision has a proposed `KEEP / RESTORE / MERGE / DROP` disposition;
 - the next restore tranche is explicitly bounded.
 
-**Evidence / decision record:** pending.
+**Evidence / decision record:** `docs/audits/reconciliation-r1-20260927.md`.
 
 ---
 
 ## R2 — Restore the proven operational foundation
 
-**Status: NOT_STARTED**
+**Status: IN_PROGRESS**
 
 Purpose: recover the minimum previously validated operational substrate without
 removing useful current work.
@@ -331,9 +331,9 @@ NORMAL_ROADMAP = RESUME
 
 ```text
 RECONCILIATION = ACTIVE
-CURRENT_BLOCK  = R1
-R1             = IN_PROGRESS
-R2             = NOT_STARTED
+CURRENT_BLOCK  = R2
+R1             = DONE
+R2             = IN_PROGRESS
 R3             = NOT_STARTED
 R4             = NOT_STARTED
 R5             = NOT_STARTED

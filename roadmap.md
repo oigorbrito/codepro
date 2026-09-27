@@ -77,7 +77,7 @@ docs/reconciliation-roadmap.md
 
 ```text
 RECONCILIATION = ACTIVE
-CURRENT_BLOCK = R1
+CURRENT_BLOCK = R2
 NORMAL_PHASE_3_PLUS = PAUSED_BY_RECONCILIATION
 ```
 
@@ -552,8 +552,8 @@ Current task:
 ```text
 RECONCILIATION ROADMAP — docs/reconciliation-roadmap.md
 
-R1 = IN_PROGRESS
-R2 = NOT_STARTED
+R1 = DONE
+R2 = IN_PROGRESS
 R3 = NOT_STARTED
 R4 = NOT_STARTED
 R5 = NOT_STARTED
