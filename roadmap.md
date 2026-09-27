@@ -144,10 +144,10 @@ backend_target = Windows x64 CUDA 13.4
 - [x] Select a reproducible upstream llama.cpp Windows build: `b11205`.
 - [x] Record upstream commit: `9588757`.
 - [x] Select Windows x64 CUDA 13.4 binary + matching CUDA 13.4 runtime DLL package.
-- [~] Install/extract the frozen runtime locally.
-- [ ] Confirm `llama-cli` executes.
+- [~] Install/extract the frozen runtime locally; executable extracted, CUDA redistributable colocation still being corrected.
+- [x] Confirm `llama-cli` executes: `0.5.0-dev`, build `11205`, commit `95887577a`, Windows x86_64.
 - [ ] Confirm CPU backend.
-- [ ] Confirm CUDA backend.
+- [!] Confirm CUDA backend: `--list-devices` currently returns `(none)`; diagnosing CUDA runtime DLL placement.
 - [ ] Record local runtime path and file hashes/checksums where practical.
 
 ### 2.2 CPU smoke test
