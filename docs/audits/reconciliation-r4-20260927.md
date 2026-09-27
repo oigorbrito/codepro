@@ -207,6 +207,27 @@ NO_FALLBACK
 
 No provider/API call was executed as part of R4-B preservation.
 
+## GitHub Actions observation
+
+The R4-B pull-request head triggered Foundation run `36345118321`.
+
+```text
+foundation     = failure
+foundation steps = NOT_EXECUTED (no step payload)
+compatibility  = skipped
+```
+
+No executed test step produced a failing result. This is retained as an
+infrastructure/non-execution observation and is not converted into an
+implementation failure or PASS.
+
+```text
+INFRA_FAILURE != IMPLEMENTATION_FAILURE
+NOT_EXECUTED  != PASS
+```
+
+Full composed-repository requalification remains an R5 responsibility.
+
 ## Gate
 
 ```text
