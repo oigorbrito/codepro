@@ -1,6 +1,6 @@
 # Reconciliation R5 — composed repository requalification — 2026-09-27
 
-**Status:** IN_PROGRESS / LOCAL_REQUALIFICATION_REQUIRED
+**Status:** IN_PROGRESS / BLOCKED_EXECUTION_ENVIRONMENT
 
 ## Candidate identity
 
@@ -178,6 +178,54 @@ merge = NOT_AUTHORIZED_PENDING_R5
 The Windows llama.cpp smoke remains the only environment-specific check that
 cannot be reproduced by the hosted Linux gate. Its prior Phase 2 qualification
 remains preserved; R5 will not fabricate a fresh Windows observation.
+
+## Hosted execution observation
+
+The first hosted R5 workflow definition contained a self-check defect in the
+`provider-safety` job: literal forbidden tokens appeared in the grep commands
+that searched the workflow itself. That validator defect was corrected in:
+
+```text
+09c2ff300c2b02b72fc5e1f106dd7f37cdda61e6
+ci: make R5 provider-safety check non-self-matching
+```
+
+The corrected workflow contains no literal provider credential variable and no
+literal provider qualification runner command. Its safety check constructs the
+forbidden tokens dynamically and inspects the workflow text.
+
+Pull-request checks on the corrected head produced:
+
+```text
+Reconciliation R5        run 36346515666
+  python-foundation                failure / 0 steps executed
+  typescript-and-real-vertical     failure / 0 steps executed
+  provider-safety                  failure / 0 steps executed
+
+Foundation               run 36346515633
+  foundation                       failure / 0 steps executed
+  compatibility                    skipped
+
+TypeScript telemetry     run 36346515608
+  telemetry-contract               failure / 0 steps executed
+```
+
+An earlier failed Foundation run was explicitly rerun and again produced a
+job-level failure with no steps. Job-log retrieval had no log blob because no
+step execution occurred.
+
+Because three independent workflows, including a trivial provider-safety job,
+all fail before their first step, these results are classified as hosted runner
+non-execution rather than implementation-test failures.
+
+```text
+INFRA_FAILURE != IMPLEMENTATION_FAILURE
+ZERO_STEPS_EXECUTED != TEST_FAILURE
+ZERO_STEPS_EXECUTED != PASS
+```
+
+The R5 execution gates remain pending. The reconciliation PR stays draft and
+`main` remains unchanged.
 
 ## Gate state
 
