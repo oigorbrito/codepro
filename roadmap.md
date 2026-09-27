@@ -104,7 +104,9 @@ RAM/VRAM, compute, complexity, failure surface, and maintenance burden.
 
 Current observed driver during initial inventory: `462.30`.
 
-- [ ] Update NVIDIA Windows driver.
+Qualification target (2026-09-27): NVIDIA GeForce Game Ready Driver `617.14` WHQL, released 2026-09-22 and listed by NVIDIA for GeForce GTX 1650 notebook GPUs.
+
+- [~] Update NVIDIA Windows driver to the qualified current target (`617.14` WHQL).
 - [ ] Reboot host.
 - [ ] Run `nvidia-smi`.
 - [ ] Record driver version, reported CUDA compatibility, VRAM, and idle VRAM.
