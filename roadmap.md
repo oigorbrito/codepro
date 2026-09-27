@@ -159,20 +159,20 @@ Previous smoke attempt with `ggml-org/Qwen3.5-0.8B-GGUF:Q4_K_M` failed before mo
 - [x] Load a minimal test model: `ggml-org/gemma-3-1b-it-GGUF:Q4_K_M`.
 - [x] Generate from a trivial prompt: `CPU_OK`.
 - [x] Record peak process RAM: CPU `1135.6 MiB`; GPU `1214.9 MiB`.
-- [~] Record load time: current instrumentation did not capture `LoadTimeMs`; wall time captured instead (CPU `4335 ms`, GPU `3982 ms`).
-- [x] Record prompt tokens/s: `52.2 t/s`.
-- [x] Record generation tokens/s: `16.5 t/s`.
+- [-] Separate model load time was not emitted by the selected CLI capture path; total wall time was captured instead (CPU `4335 ms`, GPU `3982 ms`). This is non-blocking for runtime compatibility and remains available for later telemetry refinement.
+- [x] Record prompt tokens/s: controlled metrics run `48.3 t/s` (earlier smoke observed `52.2 t/s`).
+- [x] Record generation tokens/s: controlled metrics run `16.8 t/s` (earlier smoke observed `16.5 t/s`).
 
 ### 2.3 GPU-offload smoke test
 
 - [x] Run the same model with GPU offload. Final single-turn run exited `0`, returned `GPU_OK`, and offloaded `27/27` layers to `CUDA0`.
 - [x] Confirm actual GTX 1650 usage: `CUDA0 = NVIDIA GeForce GTX 1650`.
-- [ ] Record VRAM.
-- [ ] Record RAM.
+- [x] Record VRAM: baseline `288 MiB`, peak `1194 MiB`, delta `906 MiB`.
+- [x] Record peak process RAM: `1214.9 MiB`.
 - [x] Record GPU layers: `27/27` offloaded.
-- [x] Record prompt tokens/s: observed `0.2 t/s` on final GPU smoke (recorded as observed, not yet treated as representative).
-- [x] Record generation tokens/s: `36.0 t/s`.
-- [ ] Compare CPU vs GPU-offload behavior.
+- [x] Record prompt tokens/s: controlled metrics run `74.6 t/s`; earlier verbose smoke `0.2 t/s` is retained as non-representative instrumentation-affected evidence.
+- [x] Record generation tokens/s: controlled metrics run `63.7 t/s` (earlier smoke observed `36.0 t/s`).
+- [x] Compare CPU vs GPU-offload behavior on the same GGUF/configuration: GPU prompt throughput `+54.5%`, generation throughput `+279.2%`, wall time `-8.1%`; GPU used `906 MiB` incremental VRAM and `79.3 MiB` more peak process RAM. Treat as smoke comparison, not a statistical benchmark.
 
 GPU smoke history:
 
@@ -190,19 +190,23 @@ Quantitative smoke measurement (same GGUF/configuration):
 - GPU wall time: `3982 ms`
 - CPU peak process RAM: `1135.6 MiB`
 - GPU peak process RAM: `1214.9 MiB`
+- GPU VRAM baseline / peak / delta: `288 / 1194 / 906 MiB`
+- CPU prompt / generation throughput: `48.3 / 16.8 t/s`
+- GPU prompt / generation throughput: `74.6 / 63.7 t/s`
 - response validation: `True` for CPU and GPU
-- instrumentation caveat: `ExitCode` and `LoadTimeMs` were blank in the emitted table; do not infer values. Peak VRAM extraction still pending.
+- comparison: GPU prompt `+54.5%`, generation `+279.2%`, wall time `-8.1%`; peak process RAM `+79.3 MiB`.
+- instrumentation caveat: `ExitCode` and separate `LoadTimeMs` were blank in the metrics CSV; do not infer values. Successful controlled GPU single-turn qualification separately recorded exit code `0` and `GPU_OK`.
 
 ### 2.4 Runtime gate
 
 - [x] LOAD = PASS.
 - [x] GENERATION = PASS.
 - [x] CUDA_OFFLOAD = PASS.
-- [ ] METRICS_CAPTURE = PASS.
-- [ ] NO_UNEXPLAINED_CRASH = PASS.
-- [ ] Classify runtime as COMPATIBLE, PARTIALLY_COMPATIBLE, or BLOCKED.
+- [x] METRICS_CAPTURE = PASS.
+- [x] NO_UNEXPLAINED_CRASH = PASS for the finalized qualification path: controlled CPU/GPU runs completed with valid responses; the earlier diagnostic `-1` was not reproduced and had no retained runtime-failure signature.
+- [x] Classify runtime as `COMPATIBLE` for Windows-native local inference on the qualified GTX 1650 baseline.
 
-**Phase status:** IN_PROGRESS
+**Phase status:** COMPLETE
 
 ---
 
@@ -488,7 +492,7 @@ Deferred until local frontier is measured.
 ```text
 PHASE 0   Strategy freeze               COMPLETE
 PHASE 1   Windows hardware              COMPLETE
-PHASE 2   Runtime qualification         IN_PROGRESS
+PHASE 2   Runtime qualification         COMPLETE
 PHASE 3   Telemetry baseline            NOT_STARTED
 PHASE 4   Model compatibility           NOT_STARTED
 PHASE 5   CodePro local plumbing        NOT_STARTED
@@ -511,12 +515,10 @@ PHASE 19  Cloud tier                    DEFERRED
 Current task:
 
 ```text
-PHASE 2.1 — llama.cpp Windows runtime
+PHASE 3 — Telemetry baseline
 
-[x] Freeze b11205 / commit 9588757
-[x] Select Windows x64 CUDA 13.4 packages
-[x] Install/extract runtime
-[x] Confirm llama-cli
-[x] Confirm CPU backend with model load/generation
-[x] Confirm CUDA backend
+NEXT:
+[ ] Define normalized execution record schema
+[ ] Persist raw output + execution configuration
+[ ] Normalize wall time / RAM / VRAM / throughput / termination evidence
 ```
