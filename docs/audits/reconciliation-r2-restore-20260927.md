@@ -1,6 +1,6 @@
 # Reconciliation R2 restore evidence — 2026-09-27
 
-**Status:** IN_PROGRESS / VERIFICATION_BLOCKED_INFRA
+**Status:** DONE
 
 ## Branch
 
