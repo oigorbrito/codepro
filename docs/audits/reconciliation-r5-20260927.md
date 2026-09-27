@@ -408,6 +408,34 @@ TS_M1_ACCEPTANCE_CANONICALITY_RESOLVED      = FALSE
 EXPRESS_DOCTOR_REAL_CORE_ALIGNMENT          = FALSE
 ```
 
+## Historical ops-branch evidence retention
+
+The active qualification/control source files needed for the reconciled code
+line are already present in the reconciliation branch. Historical raw evidence
+from the split branches remains branch-bound by design, including runtime-access
+and verifier-control logs.
+
+The exact preservation heads remain:
+
+```text
+ops/mini-v246-runtime-access-split
+  6e354cc02a722e5665bd640e24d1834a4dbd8bfd
+
+ops/mini-v246-verifier-controls-split
+  0bde4a2125809ad914a9bb3a178ff468261be6b5
+```
+
+This is not a missing-file restoration gap because the evidence remains
+reachable at its recorded immutable commit identity. However, these branches
+must not be deleted as cleanup unless their raw evidence is first retained by an
+explicit durable mechanism such as a preserved tag/branch or an intentional
+evidence import.
+
+```text
+HISTORICAL_EVIDENCE_LOST = FALSE
+SPLIT_BRANCH_DELETION_AUTHORIZED = FALSE
+```
+
 ## Gate state
 
 ```text
@@ -422,5 +450,6 @@ MAIN_HISTORY_PRESERVED             = PASS
 R5 = IN_PROGRESS
 ```
 
-Do not merge to `main` or mark reconciliation complete until the pending local
-gate is captured and verified.
+Do not merge to `main` or mark reconciliation complete until the pending
+product-surface reconciliation is resolved and the execution gate is captured
+and verified.
