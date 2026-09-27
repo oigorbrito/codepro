@@ -212,14 +212,14 @@ Quantitative smoke measurement (same GGUF/configuration):
 
 ## Phase 3 — Telemetry baseline
 
-- [ ] Define normalized execution record schema.
-- [ ] Capture model, format, quantization, runtime, and runtime version.
-- [ ] Capture context length, prompt/generated tokens, and throughput.
-- [ ] Capture wall time, peak RAM, peak VRAM, and offload configuration.
-- [ ] Capture termination reason and exit code.
-- [ ] Record `provider_api_cost = 0`.
-- [ ] Keep local compute cost UNKNOWN until measured.
-- [ ] Persist raw output and execution configuration.
+- [~] Define normalized execution record schema: implemented in `src/chassis/executionTelemetry.ts`; verification pending because the GitHub Actions runner did not start (`runner_id=0`, no steps executed).
+- [~] Capture model, format, quantization, runtime, and runtime version: represented in schema + measured fixture; verification pending.
+- [~] Capture context length, generation limit, and prompt/generation throughput: represented in schema + measured fixture; verification pending.
+- [~] Capture wall time, peak RAM, peak VRAM, and offload configuration: represented in schema + measured fixture; verification pending.
+- [~] Capture termination reason and exit code: represented explicitly; nullable exit code preserves instrumentation uncertainty instead of inventing evidence.
+- [~] Record `provider_api_cost = 0`: enforced by schema validation for local inference.
+- [~] Keep local compute cost UNKNOWN until measured: represented as `null` and validated as nullable.
+- [~] Persist raw output and execution configuration: JSON persistence implemented; stdout/stderr/metrics evidence paths are mandatory. Verification pending.
 
 **Gate:**
 
@@ -493,7 +493,7 @@ Deferred until local frontier is measured.
 PHASE 0   Strategy freeze               COMPLETE
 PHASE 1   Windows hardware              COMPLETE
 PHASE 2   Runtime qualification         COMPLETE
-PHASE 3   Telemetry baseline            NOT_STARTED
+PHASE 3   Telemetry baseline            IN_PROGRESS
 PHASE 4   Model compatibility           NOT_STARTED
 PHASE 5   CodePro local plumbing        NOT_STARTED
 PHASE 6   Execution/verifier plumbing   NOT_STARTED
@@ -517,8 +517,8 @@ Current task:
 ```text
 PHASE 3 — Telemetry baseline
 
-NEXT:
-[ ] Define normalized execution record schema
-[ ] Persist raw output + execution configuration
-[ ] Normalize wall time / RAM / VRAM / throughput / termination evidence
+[~] Normalized execution record schema implemented
+[~] JSON persistence + raw evidence references implemented
+[~] Real CPU/GPU qualification fixture added
+[!] GitHub Actions verification blocked before runner start; local or restored CI verification required before marking COMPLETE
 ```
