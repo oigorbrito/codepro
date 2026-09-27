@@ -118,10 +118,22 @@ jobs:
       - name: Prove R5 workflow has no provider credentials or provider runners
         shell: bash
         run: |
-          ! grep -q "GEMINI_API_KEY" .github/workflows/reconciliation-r5.yml
-          ! grep -q "ANTHROPIC_API_KEY" .github/workflows/reconciliation-r5.yml
-          ! grep -q "run_mini_v246_gemini_api_qualification.py" .github/workflows/reconciliation-r5.yml
-          ! grep -q "run_mini_v246_executor_qualification.py" .github/workflows/reconciliation-r5.yml
-          ! grep -q "run_gemini_cli_executor_qualification.py" .github/workflows/reconciliation-r5.yml
-          echo "PROVIDER_CALL=NOT_EXECUTED"
-          echo "EXECUTOR_PROMOTION=NOT_AUTHORIZED"
+          python - <<'PY'
+          from pathlib import Path
+
+          workflow = Path(".github/workflows/reconciliation-r5.yml").read_text(
+              encoding="utf-8"
+          )
+          forbidden = (
+              "GEMINI" + "_API_KEY",
+              "ANTHROPIC" + "_API_KEY",
+              "run_mini_v246_" + "gemini_api_qualification.py",
+              "run_mini_v246_" + "executor_qualification.py",
+              "run_gemini_cli_" + "executor_qualification.py",
+          )
+          found = [item for item in forbidden if item in workflow]
+          if found:
+              raise SystemExit(f"forbidden provider coupling in R5 workflow: {found}")
+          print("PROVIDER_CALL=NOT_EXECUTED")
+          print("EXECUTOR_PROMOTION=NOT_AUTHORIZED")
+          PY
