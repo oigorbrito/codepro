@@ -323,7 +323,7 @@ RECONCILIATION = DONE
 NORMAL_ROADMAP = RESUME
 ```
 
-**Evidence / decision record:** pending.
+**Evidence / decision record:** `docs/audits/reconciliation-r5-20260927.md` (in progress).
 
 ---
 
