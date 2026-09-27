@@ -292,6 +292,15 @@ Perform as one closure tranche:
 - verify that useful current work is preserved and previously proven critical
   capability is not silently lost;
 - reconcile documentation and CI with the actual final architecture;
+- resolve the remaining product-surface duplication discovered during R5 closure:
+  standalone TypeScript characterization/progress/routing endpoints must either
+  bind to the authoritative Python semantics or be explicitly demoted to
+  non-authoritative compatibility/preview surfaces;
+- reconcile the TypeScript M1 review surface with the independent Python
+  acceptance boundary so it cannot create a parallel authoritative ACCEPTED;
+- align the Express doctor result with the mandatory `CODEPRO_PYTHON` binding
+  used by the real vertical; Python cannot remain reported as Optional/Legacy
+  while authoritative execution requires it;
 - merge through a reviewed PR; do not force-push or rewrite published
   `main` history;
 - update the canonical `roadmap.md` execution pointer only after this gate.
