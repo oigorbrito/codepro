@@ -183,7 +183,7 @@ root:
 - current useful frontend/TS work has not been accidentally removed;
 - no whole-tree revert or history rewrite was used.
 
-**Evidence / decision record:** pending.
+**Evidence / decision record:** `docs/audits/reconciliation-r2-restore-20260927.md` (verification pending).
 
 ---
 
