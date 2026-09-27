@@ -144,10 +144,10 @@ backend_target = Windows x64 CUDA 13.4
 - [x] Select a reproducible upstream llama.cpp Windows build: `b11205`.
 - [x] Record upstream commit: `9588757`.
 - [x] Select Windows x64 CUDA 13.4 binary + matching CUDA 13.4 runtime DLL package.
-- [~] Install/extract the frozen runtime locally; executable extracted, CUDA redistributable colocation still being corrected.
+- [x] Install/extract the frozen runtime locally under `D:\\projetos\\codepro-mini-runtime\\downloads\\llama-b11205-bin-win-cuda-13.4-x64`.
 - [x] Confirm `llama-cli` executes: `0.5.0-dev`, build `11205`, commit `95887577a`, Windows x86_64.
-- [ ] Confirm CPU backend.
-- [!] Confirm CUDA backend: `--list-devices` currently returns `(none)`; diagnosing CUDA runtime DLL placement.
+- [ ] Confirm CPU backend with an actual model load/generation.
+- [x] Confirm CUDA backend: `--list-devices` detects `CUDA0: NVIDIA GeForce GTX 1650 (4095 MiB, 3296 MiB free)`.
 - [ ] Record local runtime path and file hashes/checksums where practical.
 
 ### 2.2 CPU smoke test
@@ -492,8 +492,8 @@ PHASE 2.1 — llama.cpp Windows runtime
 
 [x] Freeze b11205 / commit 9588757
 [x] Select Windows x64 CUDA 13.4 packages
-[~] Install/extract runtime
-[ ] Confirm llama-cli
-[ ] Confirm CPU backend
-[ ] Confirm CUDA backend
+[x] Install/extract runtime
+[x] Confirm llama-cli
+[ ] Confirm CPU backend with model load/generation
+[x] Confirm CUDA backend
 ```
