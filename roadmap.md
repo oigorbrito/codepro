@@ -421,6 +421,25 @@ Candidate compatibility cells:
 
 ---
 
+## Phase 7R — Post-Phase-7 recovery gate
+
+Phase 7 is closed and remains historical. Phase 8 is blocked because the frozen pool produced zero compatible survivors.
+
+Controlled recovery cell:
+
+- [x] Attribute the final S4 timeout to observed runtime context/KV pressure rather than silently treating missing telemetry as no model call.
+- [x] Freeze a one-variable S4 requalification: llama.cpp server parallelism `auto -> 1`.
+- [x] Preserve OpenHands/model/runtime build/context/task/platform/fallback identity.
+- [ ] Execute `S4-R1` with `--parallel 1`.
+- [ ] Capture requalification evidence and independent verifier result.
+- [ ] Review the result before changing the Phase 8 gate.
+
+Decision: `docs/decisions/0168-phase7r-s4-runtime-requalification.md`.
+
+**Phase status:** IN_PROGRESS — S4-R1 execution next; Phase 8 remains BLOCKED_BY_NO_COMPATIBLE_SCAFFOLD.
+
+---
+
 
 ## Phase 8 â€” Scaffold screen
 
@@ -601,6 +620,7 @@ PHASE 4   Model compatibility           COMPLETE
 PHASE 5   CodePro local plumbing        COMPLETE
 PHASE 6   Execution/verifier plumbing   COMPLETE
 PHASE 7   Scaffold compatibility        COMPLETE
+PHASE 7R  S4 runtime requalification    IN_PROGRESS
 PHASE 8   Scaffold screen               NOT_STARTED
 PHASE 9   Scaffold pruning              NOT_STARTED
 PHASE 10  Model screen                  NOT_STARTED
@@ -618,6 +638,7 @@ PHASE 19  Cloud tier                    DEFERRED
 Current task:
 
 ```text
-PHASE 7 = SCAFFOLD COMPATIBILITY
-STATUS = COMPLETE / PR90_ACCEPTANCE_BEFORE_PHASE8
+PHASE 7R = S4 RUNTIME REQUALIFICATION
+STATUS = IN_PROGRESS / S4-R1_NEXT
+PHASE 8 = BLOCKED_BY_NO_COMPATIBLE_SCAFFOLD
 ```
