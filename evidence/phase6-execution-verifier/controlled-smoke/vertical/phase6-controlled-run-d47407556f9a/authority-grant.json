@@ -1,0 +1,20 @@
+{
+  "acceptance_authority_ref": "acceptance://phase6-independent-review",
+  "authority_ref": "authority://phase6-validation",
+  "authorized_scope": [
+    "src"
+  ],
+  "environment_ref": "workspace://C:/Users/igorb/AppData/Local/Temp/codepro-phase6-ocrmdr5c/workspaces/phase6-task-1@dc741e8f224a1c079a08d477fe40629e17fd06aa",
+  "evidence_refs": [
+    "request://phase6-controlled-run"
+  ],
+  "grant_id": "phase6-controlled-run:grant",
+  "max_commands": 1,
+  "max_wall_time_seconds": 60.0,
+  "permissions": [
+    "edit",
+    "test"
+  ],
+  "request_id": "phase6-controlled-run",
+  "schema_version": 1
+}

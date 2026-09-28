@@ -1,0 +1,22 @@
+{
+  "acceptance_checks": [
+    "declared verifier exits zero"
+  ],
+  "affected_components": [
+    "src"
+  ],
+  "ambiguity_markers": [],
+  "architectural_change": false,
+  "bundle_sha256": "e183f24ac75ded4fc5b9b124e967f1a07d956d2348028200d18c9458b2be0d9b",
+  "candidate_files": [
+    "src/value.txt"
+  ],
+  "declared_scope": null,
+  "dependency_edges": [],
+  "known_tests": [
+    "declared-verifier"
+  ],
+  "risk_markers": [],
+  "source_ref": "evidence://phase6-controlled-fixture",
+  "state_shared": false
+}

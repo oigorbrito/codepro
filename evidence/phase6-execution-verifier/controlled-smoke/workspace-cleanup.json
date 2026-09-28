@@ -1,0 +1,34 @@
+{
+  "prune": {
+    "argv": [
+      "git",
+      "-C",
+      "C:\\Users\\igorb\\AppData\\Local\\Temp\\codepro-phase6-ocrmdr5c\\source",
+      "worktree",
+      "prune"
+    ],
+    "returncode": 0,
+    "stderr": "",
+    "stdout": ""
+  },
+  "remove": {
+    "argv": [
+      "git",
+      "-C",
+      "C:\\Users\\igorb\\AppData\\Local\\Temp\\codepro-phase6-ocrmdr5c\\source",
+      "worktree",
+      "remove",
+      "--force",
+      "C:\\Users\\igorb\\AppData\\Local\\Temp\\codepro-phase6-ocrmdr5c\\workspaces\\phase6-task-1"
+    ],
+    "returncode": 0,
+    "stderr": "",
+    "stdout": ""
+  },
+  "removed": true,
+  "source_state_after": {
+    "clean": true,
+    "revision": "dc741e8f224a1c079a08d477fe40629e17fd06aa",
+    "status_porcelain": ""
+  }
+}

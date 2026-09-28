@@ -1,0 +1,10 @@
+{
+  "attempt_id": "attempt-1",
+  "changed_files": [
+    "src/value.txt"
+  ],
+  "evidence_root": "D:\\projetos\\codepro-r2-validation\\evidence\\phase6-execution-verifier\\controlled-smoke\\vertical\\phase6-controlled-run-d47407556f9a",
+  "reason": "DECLARED_VERIFIER_PASSED",
+  "run_id": "phase6-controlled-run-d47407556f9a",
+  "status": "VERIFIED"
+}

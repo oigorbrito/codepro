@@ -1,0 +1,49 @@
+{
+  "fixture": "PHASE6_CONTROLLED_SCAFFOLD",
+  "operations": [
+    {
+      "argv": [],
+      "bytes_observed": 7,
+      "content_sha256": "9160d4be34c8695bd172a76c7c7966587ea5a4d991ad22c87b2b91af54aa9ebb",
+      "duration_ms": 0,
+      "environment_error": null,
+      "exit_code": 0,
+      "kind": "INSPECT",
+      "stderr": "",
+      "stdout": "before\n",
+      "target_file": "src/value.txt",
+      "timed_out": false
+    },
+    {
+      "argv": [],
+      "bytes_observed": 6,
+      "content_sha256": "7b9a72466d3960eb2aacccfc848939453490db0678bd4725def3f789b891c919",
+      "duration_ms": 0,
+      "environment_error": null,
+      "exit_code": 0,
+      "kind": "EDIT",
+      "stderr": "",
+      "stdout": "",
+      "target_file": "src/value.txt",
+      "timed_out": false
+    },
+    {
+      "argv": [
+        "C:\\Users\\igorb\\AppData\\Local\\Programs\\Python\\Python313\\python.exe",
+        "-c",
+        "from pathlib import Path; value=Path('src/value.txt').read_text(encoding='utf-8'); print('COMMAND_OK' if value == 'after\\n' else 'COMMAND_BAD'); raise SystemExit(0 if value == 'after\\n' else 7)"
+      ],
+      "bytes_observed": null,
+      "content_sha256": null,
+      "duration_ms": 53,
+      "environment_error": null,
+      "exit_code": 0,
+      "kind": "COMMAND",
+      "stderr": "",
+      "stdout": "COMMAND_OK\n",
+      "target_file": null,
+      "timed_out": false
+    }
+  ],
+  "success": true
+}

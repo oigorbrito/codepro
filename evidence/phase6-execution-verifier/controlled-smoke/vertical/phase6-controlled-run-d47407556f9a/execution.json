@@ -1,0 +1,162 @@
+{
+  "acceptance_authority_ref": "acceptance://phase6-independent-review",
+  "binding": {
+    "adapter_id": "codepro-local-command",
+    "adapter_version": "1",
+    "availability_evidence_ref": "runtime://local-command/1",
+    "capability_id": "repository-edit",
+    "executor_id": "local-command",
+    "executor_version": "1",
+    "qualification_evidence_refs": [
+      "local-evidence://command-contract-tests"
+    ],
+    "reason": "SINGLE_QUALIFIED_EXECUTOR",
+    "requirement_id": "phase6-controlled-run:capability",
+    "schema_version": 1,
+    "status": "BOUND"
+  },
+  "capability_requirement": {
+    "capability_id": "repository-edit",
+    "requirement_id": "phase6-controlled-run:capability",
+    "schema_version": 1,
+    "source_ref": "routing:sha256:42c78228e1d69af7d0135c77c3b766c34781a4d1e8f3d5d35a8b84a18b0c68e5"
+  },
+  "characterization": {
+    "acceptance_complexity": "MEDIUM",
+    "ambiguity": "LOW",
+    "confidence": "HIGH",
+    "dependency_fanout": 0,
+    "derived_signals": {
+      "acceptance_check_count": 1,
+      "ambiguity_marker_count": 0,
+      "component_count": 1,
+      "has_architectural_change": false,
+      "has_shared_state": false,
+      "risk_marker_count": 0
+    },
+    "estimated_files": 1,
+    "input_signals": {
+      "acceptance_checks": [
+        "declared verifier exits zero"
+      ],
+      "affected_components": [
+        "src"
+      ],
+      "ambiguity_markers": [],
+      "architectural_change": false,
+      "candidate_files": [
+        "src/value.txt"
+      ],
+      "declared_scope": null,
+      "dependency_edges": [],
+      "known_tests": [
+        "declared-verifier"
+      ],
+      "risk_markers": [],
+      "state_shared": false
+    },
+    "recommended_path": "SIMPLE_PATH",
+    "risk": "LOW",
+    "schema_version": 1,
+    "scope": "SIMPLE",
+    "signals": [
+      "SINGLE_FILE",
+      "SINGLE_COMPONENT",
+      "LOW_DEPENDENCY_FANOUT"
+    ],
+    "telemetry": {
+      "characterization_confidence": "HIGH",
+      "characterization_duration_ms": null,
+      "characterization_scope": "SIMPLE",
+      "recommended_path": "SIMPLE_PATH",
+      "signal_count": 7
+    },
+    "test_surface": "LIMITED"
+  },
+  "characterization_bundle_sha256": "e183f24ac75ded4fc5b9b124e967f1a07d956d2348028200d18c9458b2be0d9b",
+  "characterization_ref": "characterization:sha256:89ca65c9a48cc4d22b0af75c06670babc574ad9322da1381ec34369f924b147a",
+  "command_result": {
+    "argv": [
+      "C:\\Users\\igorb\\AppData\\Local\\Programs\\Python\\Python313\\python.exe",
+      "D:\\projetos\\codepro-r2-validation\\tools\\phase6_fixture_scaffold.py",
+      "--target",
+      "src/value.txt",
+      "--scope",
+      "src"
+    ],
+    "cwd": "C:\\Users\\igorb\\AppData\\Local\\Temp\\codepro-phase6-ocrmdr5c\\workspaces\\phase6-task-1",
+    "duration_ms": 190,
+    "environment_error": null,
+    "exit_code": 0,
+    "schema_version": 1,
+    "stderr": "",
+    "stdout": "{\"fixture\":\"PHASE6_CONTROLLED_SCAFFOLD\",\"operations\":[{\"argv\":[],\"bytes_observed\":7,\"content_sha256\":\"9160d4be34c8695bd172a76c7c7966587ea5a4d991ad22c87b2b91af54aa9ebb\",\"duration_ms\":0,\"environment_error\":null,\"exit_code\":0,\"kind\":\"INSPECT\",\"stderr\":\"\",\"stdout\":\"before\\n\",\"target_file\":\"src/value.txt\",\"timed_out\":false},{\"argv\":[],\"bytes_observed\":6,\"content_sha256\":\"7b9a72466d3960eb2aacccfc848939453490db0678bd4725def3f789b891c919\",\"duration_ms\":0,\"environment_error\":null,\"exit_code\":0,\"kind\":\"EDIT\",\"stderr\":\"\",\"stdout\":\"\",\"target_file\":\"src/value.txt\",\"timed_out\":false},{\"argv\":[\"C:\\\\Users\\\\igorb\\\\AppData\\\\Local\\\\Programs\\\\Python\\\\Python313\\\\python.exe\",\"-c\",\"from pathlib import Path; value=Path('src/value.txt').read_text(encoding='utf-8'); print('COMMAND_OK' if value == 'after\\\\n' else 'COMMAND_BAD'); raise SystemExit(0 if value == 'after\\\\n' else 7)\"],\"bytes_observed\":null,\"content_sha256\":null,\"duration_ms\":53,\"environment_error\":null,\"exit_code\":0,\"kind\":\"COMMAND\",\"stderr\":\"\",\"stdout\":\"COMMAND_OK\\n\",\"target_file\":null,\"timed_out\":false}],\"success\":true}\n",
+    "timed_out": false
+  },
+  "governance": {
+    "acceptance_authority_ref": "acceptance://phase6-independent-review",
+    "authority_ref": "authority://phase6-validation",
+    "authorized_scope": [
+      "src"
+    ],
+    "environment_ref": "workspace://C:/Users/igorb/AppData/Local/Temp/codepro-phase6-ocrmdr5c/workspaces/phase6-task-1@dc741e8f224a1c079a08d477fe40629e17fd06aa",
+    "evidence_refs": [
+      "request://phase6-controlled-run"
+    ],
+    "grant_id": "phase6-controlled-run:grant",
+    "max_commands": 1,
+    "max_wall_time_seconds": 60.0,
+    "permissions": [
+      "edit",
+      "test"
+    ],
+    "reasons": [
+      "AUTHORIZED"
+    ],
+    "request_id": "phase6-controlled-run",
+    "schema_version": 1,
+    "status": "AUTHORIZED"
+  },
+  "invocation_state": "OBSERVED",
+  "progress": null,
+  "reason": "EXECUTION_OBSERVED",
+  "request_id": "phase6-controlled-run",
+  "requested_scope": [
+    "src"
+  ],
+  "routing": {
+    "budget": {
+      "attempts_used": 0,
+      "max_attempts": 3,
+      "max_path_escalations": 2,
+      "path_escalations_used": 0
+    },
+    "characterization_ref": "characterization:sha256:89ca65c9a48cc4d22b0af75c06670babc574ad9322da1381ec34369f924b147a",
+    "confidence": "HIGH",
+    "decision": "ROUTE",
+    "initial_path": "SIMPLE_PATH",
+    "policy_version": "p3.rule-based.v1",
+    "reason_codes": [
+      "CHARACTERIZED_SIMPLE"
+    ],
+    "schema_version": 1,
+    "selected_path": "SIMPLE_PATH",
+    "task_id": "phase6-edit-verify",
+    "telemetry": {
+      "attempt_count": 0,
+      "escalation_action": null,
+      "escalation_count": 0,
+      "initial_path": "SIMPLE_PATH",
+      "routing_decision": "ROUTE",
+      "routing_reason_codes": [
+        "CHARACTERIZED_SIMPLE"
+      ],
+      "selected_path": "SIMPLE_PATH"
+    }
+  },
+  "routing_ref": "routing:sha256:42c78228e1d69af7d0135c77c3b766c34781a4d1e8f3d5d35a8b84a18b0c68e5",
+  "schema_version": 1,
+  "status": "EXECUTED",
+  "task_ref": "phase6-edit-verify",
+  "verification": null
+}

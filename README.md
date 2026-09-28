@@ -26,7 +26,7 @@ R5 = DONE
 
 RECONCILIATION = DONE
 NORMAL ROADMAP = RESUMED
-CURRENT PHASE = PHASE 6 / EXECUTION AND VERIFIER PLUMBING
+CURRENT PHASE = PHASE 7 / SCAFFOLD COMPATIBILITY
 ```
 
 The reconciled main preserves:
@@ -243,6 +243,16 @@ CodePro -> loopback llama-server -> exact model alias -> response -> persisted t
 Fallback remains disabled and HTTP, runtime, model, timeout, and protocol failures remain distinct.
 Granite 4.2 3B is a Phase 5 plumbing fixture, not a selected or promoted product model.
 Evidence: docs/audits/phase5-local-runtime-plumbing-20260928.md.
+
+### Phase 6 execution/verifier closure
+
+The generic execution/verifier plumbing passed a controlled isolated-worktree validation:
+
+`CodePro -> controlled scaffold fixture -> isolated repository -> patch -> command/test -> independent verifier -> persisted final state/telemetry`.
+
+The fixture is not a qualified scaffold and no model was invoked; Phase 7 owns real scaffold compatibility against the Phase 5 local runtime.
+
+Evidence: [Phase 6 execution/verifier audit](docs/audits/phase6-execution-verifier-plumbing-20260928.md).
 
 See [roadmap.md](roadmap.md).
 

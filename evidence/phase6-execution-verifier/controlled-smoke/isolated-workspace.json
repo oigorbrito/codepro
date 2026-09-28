@@ -1,0 +1,25 @@
+{
+  "creation": {
+    "argv": [
+      "git",
+      "-C",
+      "C:\\Users\\igorb\\AppData\\Local\\Temp\\codepro-phase6-ocrmdr5c\\source",
+      "worktree",
+      "add",
+      "--detach",
+      "C:\\Users\\igorb\\AppData\\Local\\Temp\\codepro-phase6-ocrmdr5c\\workspaces\\phase6-task-1",
+      "dc741e8f224a1c079a08d477fe40629e17fd06aa"
+    ],
+    "returncode": 0,
+    "stderr": "Preparing worktree (detached HEAD dc741e8)\n",
+    "stdout": "HEAD is now at dc741e8 phase6-base\n"
+  },
+  "initial_state": {
+    "clean": true,
+    "revision": "dc741e8f224a1c079a08d477fe40629e17fd06aa",
+    "status_porcelain": ""
+  },
+  "revision": "dc741e8f224a1c079a08d477fe40629e17fd06aa",
+  "source_repository": "C:\\Users\\igorb\\AppData\\Local\\Temp\\codepro-phase6-ocrmdr5c\\source",
+  "workspace": "C:\\Users\\igorb\\AppData\\Local\\Temp\\codepro-phase6-ocrmdr5c\\workspaces\\phase6-task-1"
+}

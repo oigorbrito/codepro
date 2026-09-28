@@ -1,0 +1,12 @@
+{
+  "argv": [
+    "git",
+    "-C",
+    "C:\\Users\\igorb\\AppData\\Local\\Temp\\codepro-phase6-ocrmdr5c\\workspaces\\phase6-task-1",
+    "status",
+    "--porcelain=v1"
+  ],
+  "returncode": 0,
+  "stderr": "",
+  "stdout": ""
+}

@@ -1,0 +1,84 @@
+{
+  "fixture_type": "PHASE6_CONTROLLED_REPOSITORY",
+  "git": [
+    {
+      "argv": [
+        "git",
+        "-C",
+        "C:\\Users\\igorb\\AppData\\Local\\Temp\\codepro-phase6-ocrmdr5c\\source",
+        "init"
+      ],
+      "returncode": 0,
+      "stderr": "",
+      "stdout": "Initialized empty Git repository in C:/Users/igorb/AppData/Local/Temp/codepro-phase6-ocrmdr5c/source/.git/\n"
+    },
+    {
+      "argv": [
+        "git",
+        "-C",
+        "C:\\Users\\igorb\\AppData\\Local\\Temp\\codepro-phase6-ocrmdr5c\\source",
+        "config",
+        "user.email",
+        "phase6@example.invalid"
+      ],
+      "returncode": 0,
+      "stderr": "",
+      "stdout": ""
+    },
+    {
+      "argv": [
+        "git",
+        "-C",
+        "C:\\Users\\igorb\\AppData\\Local\\Temp\\codepro-phase6-ocrmdr5c\\source",
+        "config",
+        "user.name",
+        "CodePro Phase 6"
+      ],
+      "returncode": 0,
+      "stderr": "",
+      "stdout": ""
+    },
+    {
+      "argv": [
+        "git",
+        "-C",
+        "C:\\Users\\igorb\\AppData\\Local\\Temp\\codepro-phase6-ocrmdr5c\\source",
+        "add",
+        "."
+      ],
+      "returncode": 0,
+      "stderr": "",
+      "stdout": ""
+    },
+    {
+      "argv": [
+        "git",
+        "-C",
+        "C:\\Users\\igorb\\AppData\\Local\\Temp\\codepro-phase6-ocrmdr5c\\source",
+        "commit",
+        "-m",
+        "phase6-base"
+      ],
+      "returncode": 0,
+      "stderr": "",
+      "stdout": "[master (root-commit) dc741e8] phase6-base\n 1 file changed, 1 insertion(+)\n create mode 100644 src/value.txt\n"
+    }
+  ],
+  "revision_observation": {
+    "argv": [
+      "git",
+      "-C",
+      "C:\\Users\\igorb\\AppData\\Local\\Temp\\codepro-phase6-ocrmdr5c\\source",
+      "rev-parse",
+      "HEAD"
+    ],
+    "returncode": 0,
+    "stderr": "",
+    "stdout": "dc741e8f224a1c079a08d477fe40629e17fd06aa\n"
+  },
+  "source_state_before": {
+    "clean": true,
+    "revision": "dc741e8f224a1c079a08d477fe40629e17fd06aa",
+    "status_porcelain": ""
+  }
+}
