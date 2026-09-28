@@ -1,0 +1,36 @@
+{
+  "choices": [
+    {
+      "finish_reason": "stop",
+      "index": 0,
+      "message": {
+        "content": "</think>PHASE5_OK",
+        "role": "assistant"
+      }
+    }
+  ],
+  "created": 1790616606,
+  "id": "chatcmpl-crbwCEgpJ3357UwKQYUARiF7ZCgae0r5",
+  "model": "codepro-phase5-granite42-3b",
+  "object": "chat.completion",
+  "system_fingerprint": "b11205-95887577a",
+  "timings": {
+    "cache_n": 0,
+    "predicted_ms": 152.423,
+    "predicted_n": 7,
+    "predicted_per_second": 39.36413795818217,
+    "predicted_per_token_ms": 25.403833333333335,
+    "prompt_ms": 323.203,
+    "prompt_n": 22,
+    "prompt_per_second": 68.0686751051197,
+    "prompt_per_token_ms": 14.691045454545453
+  },
+  "usage": {
+    "completion_tokens": 7,
+    "prompt_tokens": 22,
+    "prompt_tokens_details": {
+      "cached_tokens": 0
+    },
+    "total_tokens": 29
+  }
+}

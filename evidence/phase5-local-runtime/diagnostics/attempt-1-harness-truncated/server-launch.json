@@ -1,0 +1,23 @@
+{
+    "runtime":  {
+                    "name":  "llama.cpp",
+                    "build":  11205,
+                    "commit":  "95887577ab5fead779581a7030a83c7752ff3234",
+                    "executable":  "D:\\projetos\\codepro-mini-runtime\\downloads\\llama-b11205-bin-win-cuda-13.4-x64\\llama-server.exe"
+                },
+    "model":  {
+                  "phase4_candidate":  "L3",
+                  "name":  "Granite-4.2-3B",
+                  "artifact":  "D:\\projetos\\codepro-mini-runtime\\models\\phase4\\L3-Granite-4.2-3B\\granite-4.2-3b-Q4_K_M.gguf",
+                  "bytes":  2244011552,
+                  "sha256":  "E0406663965846AE22A403456EB826CCCE5F450840491F71952F18A7CB78E7D5"
+              },
+    "binding":  {
+                    "host":  "127.0.0.1",
+                    "port":  18088,
+                    "base_url":  "http://127.0.0.1:18088/v1",
+                    "model_alias":  "codepro-phase5-granite42-3b",
+                    "fallback":  "DISABLED"
+                },
+    "argv":  "-m \"D:\\projetos\\codepro-mini-runtime\\models\\phase4\\L3-Granite-4.2-3B\\granite-4.2-3b-Q4_K_M.gguf\" --device CUDA0 -ngl 99 -c 4096 --host 127.0.0.1 --port 18088 --alias codepro-phase5-granite42-3b"
+}

@@ -1,0 +1,12 @@
+{
+  "max_tokens": 32,
+  "messages": [
+    {
+      "content": "Provide one short acknowledgement.",
+      "role": "user"
+    }
+  ],
+  "model": "codepro-phase5-granite42-3b",
+  "stream": false,
+  "temperature": 0
+}

@@ -1,0 +1,16 @@
+0.00.001.121 I srv  llama_server: initializing ...
+0.11.794.642 I cmn  common_param: common_params_print_info: verbosity = 3 (adjust with the `-lv N` CLI arg)
+0.11.795.240 W srv  llama_server: security: no API key is set and CORS allows all origins (see https://github.com/ggml-org/llama.cpp/pull/25655)
+0.11.805.083 I srv    load_model: loading model 'D:\projetos\codepro-mini-runtime\models\phase4\L3-Granite-4.2-3B\granite-4.2-3b-Q4_K_M.gguf'
+0.12.169.737 W common_fit_params: failed to fit params to free device memory: n_gpu_layers already set by user to 99, abort
+0.14.935.062 I cmn          init: llama threadpool init, n_threads = 4
+0.15.193.546 I srv    load_model: initializing, n_slots = 4, n_ctx_slot = 4096, kv_unified = 'true'
+0.15.215.272 W srv          init: chat template supports preserving reasoning, it is enabled by default (may use more tokens, disable via --no-reasoning-preserve)
+0.15.216.228 I srv  llama_server: model loaded
+0.15.216.238 I srv  llama_server: listening on http://127.0.0.1:18088
+0.15.985.772 I slot get_availabl: id  3 | task -1 | selected slot by LRU, t_last = -1
+0.15.987.973 I slot launch_slot_: id  3 | task 0 | processing task, is_child = 0
+0.16.332.565 E slot      iterate: id  3 | task 0 | got exception: Unexpected empty grammar stack after accepting piece: ? (30)
+0.16.332.574 E srv    send_error: task id = 0, error: got exception: Unexpected empty grammar stack after accepting piece: ? (30)
+0.16.332.580 I slot      release: id  3 | task 0 | stop processing: n_tokens = 21, truncated = 0
+0.16.332.608 W srv          stop: cancel task, id_task = 0

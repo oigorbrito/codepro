@@ -1,0 +1,12 @@
+{
+  "max_tokens": 16,
+  "messages": [
+    {
+      "content": "Reply exactly PHASE5_OK",
+      "role": "user"
+    }
+  ],
+  "model": "codepro-phase5-granite42-3b",
+  "stream": false,
+  "temperature": 0
+}

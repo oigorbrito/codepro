@@ -1,0 +1,23 @@
+{
+  "binding": {
+    "base_url": "http://127.0.0.1:18088/v1",
+    "configuration_digest": "30ac1a1840bb1271",
+    "fallback": "DISABLED",
+    "model_id": "codepro-phase5-granite42-3b",
+    "timeout_seconds": 30.0
+  },
+  "captured_at": "2026-09-28T17:34:56.201423Z",
+  "classification": "HTTP_FAILURE",
+  "expected_response": "PHASE5_OK",
+  "failure": {
+    "code": "HTTP_HTTP_500",
+    "kind": "HTTP",
+    "message": "local runtime HTTP 500 at /chat/completions: {\"error\":{\"code\":500,\"message\":\"got exception: Unexpected empty grammar stack after accepting piece: ? (30)\",\"type\":\"server_error\"}}",
+    "status_code": 500
+  },
+  "provider_api_cost_usd": 0,
+  "response_valid": false,
+  "run_id": "client",
+  "schema_version": 1,
+  "telemetry": null
+}

@@ -1,0 +1,37 @@
+{
+  "choices": [
+    {
+      "finish_reason": "length",
+      "index": 0,
+      "message": {
+        "content": "",
+        "reasoning_content": "The user says: \"Reply exactly PHASE5_OK\". So I should",
+        "role": "assistant"
+      }
+    }
+  ],
+  "created": 1790616235,
+  "id": "chatcmpl-rmirfAzrz9bQoARF9ecspAVbbSOwWzKk",
+  "model": "codepro-phase5-granite42-3b",
+  "object": "chat.completion",
+  "system_fingerprint": "b11205-95887577a",
+  "timings": {
+    "cache_n": 0,
+    "predicted_ms": 542.881,
+    "predicted_n": 16,
+    "predicted_per_second": 27.630364665552857,
+    "predicted_per_token_ms": 36.19206666666666,
+    "prompt_ms": 1284.434,
+    "prompt_n": 22,
+    "prompt_per_second": 17.128166959143094,
+    "prompt_per_token_ms": 58.38336363636363
+  },
+  "usage": {
+    "completion_tokens": 16,
+    "prompt_tokens": 22,
+    "prompt_tokens_details": {
+      "cached_tokens": 0
+    },
+    "total_tokens": 38
+  }
+}
