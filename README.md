@@ -26,7 +26,7 @@ R5 = DONE
 
 RECONCILIATION = DONE
 NORMAL ROADMAP = RESUMED
-CURRENT PHASE = PHASE 5 / CODEPRO LOCAL-RUNTIME PLUMBING
+CURRENT PHASE = PHASE 6 / EXECUTION AND VERIFIER PLUMBING
 ```
 
 The reconciled main preserves:
@@ -235,6 +235,14 @@ L4 SWE-Dev-7B       COMPATIBLE (stretch)
 This establishes compatibility, not model selection, ranking, routing, acceptance, or promotion.
 
 Evidence: [Phase 4 compatibility audit](docs/audits/phase4-model-compatibility-20260928.md).
+
+### Phase 5 local-runtime closure
+
+The explicit local-runtime path passed a real frozen-runtime smoke.
+CodePro -> loopback llama-server -> exact model alias -> response -> persisted telemetry/evidence.
+Fallback remains disabled and HTTP, runtime, model, timeout, and protocol failures remain distinct.
+Granite 4.2 3B is a Phase 5 plumbing fixture, not a selected or promoted product model.
+Evidence: docs/audits/phase5-local-runtime-plumbing-20260928.md.
 
 See [roadmap.md](roadmap.md).
 

@@ -1,0 +1,88 @@
+{
+    "schema_version":  1,
+    "phase":  5,
+    "status":  "COMPLETE",
+    "path":  "CodePro -\u003e local inference server -\u003e model -\u003e response -\u003e telemetry",
+    "runtime":  {
+                    "name":  "llama.cpp",
+                    "build":  11205,
+                    "commit":  "95887577ab5fead779581a7030a83c7752ff3234"
+                },
+    "reference_fixture":  {
+                              "candidate":  "L3",
+                              "model":  "Granite-4.2-3B",
+                              "role":  "PHASE5_PLUMBING_FIXTURE",
+                              "selected_model":  false,
+                              "sha256":  "E0406663965846AE22A403456EB826CCCE5F450840491F71952F18A7CB78E7D5"
+                          },
+    "binding":  {
+                    "base_url":  "http://127.0.0.1:18088/v1",
+                    "configuration_digest":  "30ac1a1840bb1271",
+                    "fallback":  "DISABLED",
+                    "model_id":  "codepro-phase5-granite42-3b",
+                    "timeout_seconds":  30.0
+                },
+    "smoke":  {
+                  "classification":  "LOCAL_RUNTIME_PLUMBING_PASS",
+                  "probe_semantics_graded":  false,
+                  "response_observed":  true,
+                  "response_content_length":  46,
+                  "response_content_sha256":  "215875dda4c6c433cc8c6fbfb7d3fce6b9bf793b0d391c27743c4c21527b2bb4",
+                  "telemetry_complete":  true,
+                  "telemetry":  {
+                                    "completion_tokens":  10,
+                                    "finish_reason":  "stop",
+                                    "model_id":  "codepro-phase5-granite42-3b",
+                                    "preflight":  {
+                                                      "health":  {
+                                                                     "status":  "ok"
+                                                                 },
+                                                      "model_id":  "codepro-phase5-granite42-3b",
+                                                      "model_metadata":  {
+                                                                             "aliases":  [
+                                                                                             "codepro-phase5-granite42-3b"
+                                                                                         ],
+                                                                             "created":  1790618865,
+                                                                             "id":  "codepro-phase5-granite42-3b",
+                                                                             "meta":  {
+                                                                                          "ftype":  "Q4_K - Medium",
+                                                                                          "n_ctx":  4096,
+                                                                                          "n_ctx_train":  131072,
+                                                                                          "n_embd":  2560,
+                                                                                          "n_params":  3659737600,
+                                                                                          "n_vocab":  100352,
+                                                                                          "size":  2240440320,
+                                                                                          "vocab_type":  2
+                                                                                      },
+                                                                             "object":  "model",
+                                                                             "owned_by":  "llamacpp",
+                                                                             "tags":  [
+
+                                                                                      ]
+                                                                         }
+                                                  },
+                                    "prompt_tokens":  20,
+                                    "total_tokens":  30,
+                                    "wall_time_ms":  548
+                                },
+                  "provider_api_cost_usd":  0
+              },
+    "failure_boundaries":  [
+                               "HTTP",
+                               "RUNTIME",
+                               "MODEL",
+                               "TIMEOUT",
+                               "PROTOCOL"
+                           ],
+    "gates":  {
+                  "local_endpoint":  "PASS",
+                  "endpoint_model_binding":  "PASS",
+                  "no_silent_fallback":  "PASS",
+                  "explicit_timeout":  "PASS",
+                  "failure_separation":  "PASS",
+                  "e2e_smoke":  "PASS",
+                  "evidence_bundle":  "PASS",
+                  "server_stop":  "PASS"
+              },
+    "next_phase":  6
+}

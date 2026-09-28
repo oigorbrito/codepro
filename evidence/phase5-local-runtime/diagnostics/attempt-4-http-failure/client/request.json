@@ -1,0 +1,30 @@
+{
+  "max_tokens": 32,
+  "messages": [
+    {
+      "content": "Return the required JSON object.",
+      "role": "user"
+    }
+  ],
+  "model": "codepro-phase5-granite42-3b",
+  "response_format": {
+    "schema": {
+      "additionalProperties": false,
+      "properties": {
+        "status": {
+          "enum": [
+            "PHASE5_OK"
+          ],
+          "type": "string"
+        }
+      },
+      "required": [
+        "status"
+      ],
+      "type": "object"
+    },
+    "type": "json_schema"
+  },
+  "stream": false,
+  "temperature": 0
+}

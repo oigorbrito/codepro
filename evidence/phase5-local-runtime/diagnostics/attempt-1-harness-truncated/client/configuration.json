@@ -1,0 +1,12 @@
+{
+  "component": "local-runtime-openai-http",
+  "public_values": {
+    "base_url": "http://127.0.0.1:18088/v1",
+    "fallback": "DISABLED",
+    "model_id": "codepro-phase5-granite42-3b",
+    "timeout_seconds": 30.0
+  },
+  "schema_version": 1,
+  "secret_digests": {},
+  "version": "1"
+}

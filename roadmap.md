@@ -327,13 +327,24 @@ CodePro
 -> telemetry
 ```
 
-- [ ] Start local OpenAI-compatible inference endpoint.
-- [ ] Add explicit endpoint and model binding.
-- [ ] Enforce NO_SILENT_FALLBACK.
-- [ ] Add explicit timeout behavior.
-- [ ] Separate HTTP, runtime, and model failures.
-- [ ] Run end-to-end smoke test.
-- [ ] Persist evidence bundle.
+- [x] Start local OpenAI-compatible inference endpoint.
+- [x] Add explicit endpoint and model binding.
+- [x] Enforce NO_SILENT_FALLBACK.
+- [x] Add explicit timeout behavior.
+- [x] Separate HTTP, runtime, and model failures.
+- [x] Run end-to-end smoke test.
+- [x] Persist evidence bundle.
+
+Implementation boundary:
+
+- `src/arkx/local_runtime.py` provides an explicit loopback-only OpenAI-compatible HTTP binding.
+- `tools/run_phase5_local_runtime_smoke.py` persists the real local smoke evidence.
+- `docs/decisions/0165-local-runtime-http-adapter.md` records the design basis.
+- L3 Granite 4.2 3B is the Phase 5 reference fixture only; it is not a product model selection.
+
+**Evidence:** docs/audits/phase5-local-runtime-plumbing-20260928.md.
+
+**Phase status:** COMPLETE
 
 ---
 
@@ -558,7 +569,7 @@ PHASE 1   Windows hardware              COMPLETE
 PHASE 2   Runtime qualification         COMPLETE
 PHASE 3   Telemetry baseline            COMPLETE
 PHASE 4   Model compatibility           COMPLETE
-PHASE 5   CodePro local plumbing        NOT_STARTED
+PHASE 5   CodePro local plumbing        COMPLETE
 PHASE 6   Execution/verifier plumbing   NOT_STARTED
 PHASE 7   Scaffold compatibility        NOT_STARTED
 PHASE 8   Scaffold screen               NOT_STARTED
@@ -578,6 +589,6 @@ PHASE 19  Cloud tier                    DEFERRED
 Current task:
 
 ```text
-PHASE 5 = CODEPRO LOCAL-RUNTIME PLUMBING
+PHASE 6 = EXECUTION AND VERIFIER PLUMBING
 STATUS = NEXT
 ```
