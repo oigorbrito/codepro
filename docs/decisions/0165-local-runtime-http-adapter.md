@@ -74,3 +74,28 @@ Remove this adapter if the selected execution profile later supplies an equally
 explicit, evidence-bearing local transport boundary without duplicating
 authority. Extend beyond loopback only under a separate decision with
 authentication and network-boundary evidence.
+
+
+## Phase 5 smoke boundary
+
+The real Phase 5 smoke grades plumbing, not instruction-following quality.
+
+PASS requires:
+- healthy loopback endpoint;
+- exact configured model alias present at preflight;
+- successful chat request;
+- non-empty model response;
+- complete token and wall-time telemetry;
+- fallback disabled.
+
+Response semantics are deliberately not graded in Phase 5. Three diagnostic
+attempts established why this separation matters: a 16-token truncation caused
+a harness-limited result, an unconstrained request returned a healthy but
+non-exact freeform answer, and schema-constrained chat returned HTTP 500 with a
+grammar-stack error on the frozen Granite/chat-template path. These are
+preserved as diagnostic evidence rather than misclassified as local-runtime
+plumbing failures.
+
+Structured-output capability from Phase 4 was proven through the
+llama-completion constrained-decoding path and is not silently generalized to
+llama-server chat.
