@@ -7,40 +7,40 @@
       "local_runtime_surface": "LiteLLM model_kwargs custom_llm_provider=openai + api_base",
       "name": "mini-swe-agent",
       "observed": {
-        "api_calls": null,
-        "completion_tokens": null,
+        "api_calls": 8,
+        "completion_tokens": 798,
         "gates": {
-          "command_observed": false,
+          "command_observed": true,
           "edit_observed": false,
           "exact_upstream_identity": true,
           "independent_verifier": false,
-          "inspect_observed": false,
+          "inspect_observed": true,
           "installed_version": true,
           "local_runtime_ready": true,
-          "model_calls_observed": false,
+          "model_calls_observed": true,
           "patch_captured": false,
           "source_repository_unchanged": true,
           "termination_observed": false,
           "workspace_cleanup": true
         },
-        "mini_exit_status": null,
-        "prompt_tokens": null,
-        "vertical_reason": "EXECUTOR_EXIT_NONZERO:1",
-        "vertical_status": "FAILED"
+        "mini_exit_status": "LimitsExceeded",
+        "prompt_tokens": 13716,
+        "vertical_reason": "NO_OBSERVABLE_CHANGE",
+        "vertical_status": "BLOCKED"
       },
-      "phase7_status": "RETEST_REQUIRED_ENVIRONMENT_HARNESS",
+      "phase7_status": "BLOCKED_CODEPRO_GATE",
       "prior_codepro_state": "provider-free/reference integration preserved; real local-runtime compatibility not yet established",
-      "repository": "SWE-agent/mini-swe-agent",
-      "selection_basis": "existing CodePro frozen reference and upstream release",
-      "version": "v2.4.6",
       "prior_phase7_attempt": {
         "classification": "INVALID_AS_COMPATIBILITY_RESULT",
-        "observed_vertical_status": "FAILED",
-        "observed_reason": "EXECUTOR_EXIT_NONZERO:1",
-        "root_cause": "mini interactive CLI imported prompt_toolkit and failed under captured Windows stdout/stderr with NoConsoleScreenBufferError before first model call",
+        "disposition": "ARCHIVE_AS_DIAGNOSTIC_AND_RETEST_HEADLESS_NATIVE_API",
         "model_calls_observed": false,
-        "disposition": "ARCHIVE_AS_DIAGNOSTIC_AND_RETEST_HEADLESS_NATIVE_API"
-      }
+        "observed_reason": "EXECUTOR_EXIT_NONZERO:1",
+        "observed_vertical_status": "FAILED",
+        "root_cause": "mini interactive CLI imported prompt_toolkit and failed under captured Windows stdout/stderr with NoConsoleScreenBufferError before first model call"
+      },
+      "repository": "SWE-agent/mini-swe-agent",
+      "selection_basis": "existing CodePro frozen reference and upstream release",
+      "version": "v2.4.6"
     },
     {
       "commit": "b150f28465a77a81a7f4776384957a4271f5bd69",

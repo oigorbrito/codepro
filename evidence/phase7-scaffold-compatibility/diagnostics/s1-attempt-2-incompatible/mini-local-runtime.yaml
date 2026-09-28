@@ -4,7 +4,7 @@ agent:
   wall_time_limit_seconds: 120
   max_consecutive_format_errors: 2
 environment:
-  cwd: "D:/projetos/codepro-mini-runtime/phase7/S1-mini-swe-agent/codepro-phase7-s1-8zqn6pbq/workspaces/s1-task"
+  cwd: "D:/projetos/codepro-mini-runtime/phase7/S1-mini-swe-agent/codepro-phase7-s1-lzsl5dzi/workspaces/s1-task"
   timeout: 20
 model:
   model_name: "openai/codepro-phase7-granite42-3b"

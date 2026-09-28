@@ -412,12 +412,12 @@ Execution order: S1 -> S2 -> S3 -> S4. Order is operational, not a quality ranki
 
 Candidate compatibility cells:
 
-- S1 mini-swe-agent v2.4.6: **RETEST_REQUIRED_ENVIRONMENT_HARNESS** - first CLI attempt invalidated before model call; headless native-API retest is NEXT.
-- S2 Agentless: **PENDING_S1_RETEST**.
+- S1 mini-swe-agent v2.4.6: **BLOCKED_CODEPRO_GATE** - docs/audits/phase7-s1-mini-swe-agent-20260928.md.
+- S2 Agentless: **NEXT**.
 - S3 AutoCodeRover: **NOT_STARTED**.
 - S4 OpenHands: **NOT_STARTED**.
 
-**Phase status:** IN_PROGRESS - S1 first attempt invalidated by CLI-console harness; headless native-API retest next.
+**Phase status:** IN_PROGRESS - S1 classified; S2 compatibility block next.
 
 ---
 
@@ -619,5 +619,5 @@ Current task:
 
 ```text
 PHASE 7 = SCAFFOLD COMPATIBILITY
-STATUS = IN_PROGRESS / S1_HEADLESS_RETEST
+STATUS = IN_PROGRESS / S2_NEXT
 ```

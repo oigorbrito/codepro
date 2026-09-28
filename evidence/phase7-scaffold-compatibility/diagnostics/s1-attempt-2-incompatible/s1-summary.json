@@ -1,0 +1,67 @@
+{
+  "candidate": "S1",
+  "classification": "INCOMPATIBLE",
+  "commit": "a83fcae82d2a08f0ee0c688f9d137b3566c097f8",
+  "executor_promotion": "NOT_AUTHORIZED",
+  "gates": {
+    "command_observed": false,
+    "edit_observed": false,
+    "exact_upstream_identity": true,
+    "independent_verifier": false,
+    "inspect_observed": false,
+    "installed_version": true,
+    "local_runtime_ready": true,
+    "model_calls_observed": false,
+    "patch_captured": false,
+    "source_repository_unchanged": true,
+    "termination_observed": false,
+    "workspace_cleanup": true
+  },
+  "local_runtime": {
+    "base_url": "http://127.0.0.1:18089/v1",
+    "fallback": "DISABLED",
+    "model_alias": "codepro-phase7-granite42-3b"
+  },
+  "next_candidate": "S2",
+  "phase": 7,
+  "repository_state": {
+    "final": {
+      "clean": true,
+      "revision": "9b4fc9d935bd619f63560bb769d35a88943b1bb0",
+      "status_porcelain": ""
+    },
+    "initial_revision": "9b4fc9d935bd619f63560bb769d35a88943b1bb0",
+    "source": {
+      "clean": true,
+      "revision": "9b4fc9d935bd619f63560bb769d35a88943b1bb0",
+      "status_porcelain": ""
+    }
+  },
+  "scaffold": "mini-swe-agent",
+  "schema_version": 1,
+  "selected_scaffold": false,
+  "telemetry": {
+    "api_calls": null,
+    "completion_tokens": null,
+    "instance_cost": null,
+    "prompt_tokens": null
+  },
+  "trajectory": {
+    "api_calls": null,
+    "commands": [],
+    "completion_tokens": null,
+    "exit_status": null,
+    "instance_cost": null,
+    "present": false,
+    "prompt_tokens": null
+  },
+  "version": "v2.4.6",
+  "vertical": {
+    "attempt_id": "attempt-1",
+    "changed_files": [],
+    "evidence_root": "D:\\projetos\\codepro-r2-validation\\evidence\\phase7-scaffold-compatibility\\S1-mini-swe-agent\\vertical\\phase7-s1-mini-1f50083a56ab",
+    "reason": "EXECUTOR_EXIT_NONZERO:1",
+    "run_id": "phase7-s1-mini-1f50083a56ab",
+    "status": "FAILED"
+  }
+}

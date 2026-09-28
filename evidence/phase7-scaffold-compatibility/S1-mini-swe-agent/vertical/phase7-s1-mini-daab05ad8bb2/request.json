@@ -1,0 +1,14 @@
+{
+  "project_ref": "git://D:/projetos/codepro-mini-runtime/phase7/S1-mini-swe-agent/codepro-phase7-s1-8zqn6pbq/workspaces/s1-task@10f838764607858057cd32312e3ec0bccc2d4469",
+  "request_id": "phase7-s1-mini",
+  "requested_scope": [
+    "value.txt"
+  ],
+  "requester_ref": "user://phase7-compatibility",
+  "required_permissions": [
+    "edit",
+    "test"
+  ],
+  "schema_version": 1,
+  "task_ref": "phase7-trivial-edit"
+}

@@ -1,0 +1,20 @@
+{
+  "acceptance_authority_ref": "acceptance://phase7-independent-verifier",
+  "authority_ref": "authority://phase7-compatibility",
+  "authorized_scope": [
+    "value.txt"
+  ],
+  "environment_ref": "workspace://D:/projetos/codepro-mini-runtime/phase7/S1-mini-swe-agent/codepro-phase7-s1-8zqn6pbq/workspaces/s1-task@10f838764607858057cd32312e3ec0bccc2d4469",
+  "evidence_refs": [
+    "request://phase7-s1-mini"
+  ],
+  "grant_id": "phase7-s1-mini:grant",
+  "max_commands": 1,
+  "max_wall_time_seconds": 180.0,
+  "permissions": [
+    "edit",
+    "test"
+  ],
+  "request_id": "phase7-s1-mini",
+  "schema_version": 1
+}

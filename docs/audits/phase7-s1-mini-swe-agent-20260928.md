@@ -16,23 +16,23 @@ fallback = DISABLED
 
 ## Result
 
-classification = RETEST_REQUIRED_ENVIRONMENT_HARNESS
-vertical_status = FAILED
-vertical_reason = EXECUTOR_EXIT_NONZERO:1
-mini_exit_status = None
-api_calls = None
-prompt_tokens = None
-completion_tokens = None
-instance_cost = None
+classification = BLOCKED_CODEPRO_GATE
+vertical_status = BLOCKED
+vertical_reason = NO_OBSERVABLE_CHANGE
+mini_exit_status = LimitsExceeded
+api_calls = 8
+prompt_tokens = 13716
+completion_tokens = 798
+instance_cost = 0.0
 
 ## Candidate gates
 
 EXACT_UPSTREAM_IDENTITY = PASS
 INSTALLED_VERSION = PASS
 LOCAL_RUNTIME_READY = PASS
-MODEL_CALLS_OBSERVED = NO
-INSPECT_OBSERVED = NO
-COMMAND_OBSERVED = NO
+MODEL_CALLS_OBSERVED = PASS
+INSPECT_OBSERVED = PASS
+COMMAND_OBSERVED = PASS
 EDIT_OBSERVED = NO
 TERMINATION_OBSERVED = NO
 PATCH_CAPTURED = NO
@@ -54,19 +54,8 @@ NO_SILENT_EXECUTOR_SWITCH
 
 If the classification is BLOCKED_MODEL_TOOL_PROTOCOL, the observed blocker belongs to the frozen model/server tool-call protocol and must not be rewritten as a mini-SWE-agent implementation failure.
 
+Prior diagnostic: the first interactive-CLI attempt was invalidated before the first model call by prompt_toolkit NoConsoleScreenBufferError under captured Windows stdout/stderr. That attempt is preserved under diagnostics and is not a compatibility result.
+
 Evidence: evidence/phase7-scaffold-compatibility/S1-mini-swe-agent/.
 
 Next compatibility cell: S2 Agentless.
-
-## Reconciliation note
-
-The first S1 run is not a valid scaffold compatibility result.
-
-Raw executor evidence shows `prompt_toolkit.output.win32.NoConsoleScreenBufferError` before the first model call because the interactive `mini` CLI was executed under captured Windows stdout/stderr.
-
-Therefore:
-
-INFRA_FAILURE != MODEL_FAILURE
-NO_MODEL_CALL != SCAFFOLD_INCOMPATIBLE
-
-Disposition: archive the first run as diagnostic evidence and retest the same pinned mini-SWE-agent through its native headless DefaultAgent/LocalEnvironment/LitellmModel API.
