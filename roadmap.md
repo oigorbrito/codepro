@@ -363,12 +363,25 @@ CodePro
 -> telemetry
 ```
 
-- [ ] Create isolated task workspace.
-- [ ] Record initial repository revision.
-- [ ] Support inspect/edit/command operations.
-- [ ] Capture diff, stdout, stderr, and tests.
-- [ ] Implement independent verification.
-- [ ] Persist verifier evidence and final repository state.
+- [x] Create isolated task workspace.
+- [x] Record initial repository revision.
+- [x] Support inspect/edit/command operations.
+- [x] Capture diff, stdout, stderr, and tests.
+- [x] Implement independent verification.
+- [x] Persist verifier evidence and final repository state.
+
+Implementation boundary:
+
+- `src/arkx/isolated_workspace.py` owns exact detached Git worktree isolation.
+- `src/arkx/repository_operations.py` owns explicit inspect/edit/command primitives.
+- the existing `run_vertical`, command, patch, and verifier boundaries remain authoritative.
+- the Phase 6 controlled scaffold is a plumbing fixture only; Phase 7 owns real scaffold/model compatibility.
+
+**Decision:** `docs/decisions/0166-phase6-execution-verifier-plumbing.md`.
+
+**Evidence:** `docs/audits/phase6-execution-verifier-plumbing-20260928.md`.
+
+**Phase status:** COMPLETE
 
 ---
 
@@ -570,7 +583,7 @@ PHASE 2   Runtime qualification         COMPLETE
 PHASE 3   Telemetry baseline            COMPLETE
 PHASE 4   Model compatibility           COMPLETE
 PHASE 5   CodePro local plumbing        COMPLETE
-PHASE 6   Execution/verifier plumbing   NOT_STARTED
+PHASE 6   Execution/verifier plumbing   COMPLETE
 PHASE 7   Scaffold compatibility        NOT_STARTED
 PHASE 8   Scaffold screen               NOT_STARTED
 PHASE 9   Scaffold pruning              NOT_STARTED
@@ -589,6 +602,6 @@ PHASE 19  Cloud tier                    DEFERRED
 Current task:
 
 ```text
-PHASE 6 = EXECUTION AND VERIFIER PLUMBING
+PHASE 7 = SCAFFOLD COMPATIBILITY
 STATUS = NEXT
 ```

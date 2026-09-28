@@ -1,0 +1,12 @@
+{
+  "argv": [
+    "git",
+    "-C",
+    "C:\\Users\\igorb\\AppData\\Local\\Temp\\codepro-phase6-ocrmdr5c\\workspaces\\phase6-task-1",
+    "rev-parse",
+    "HEAD"
+  ],
+  "returncode": 0,
+  "stderr": "",
+  "stdout": "dc741e8f224a1c079a08d477fe40629e17fd06aa\n"
+}

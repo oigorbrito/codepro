@@ -1,0 +1,28 @@
+{
+  "changed_files": [
+    "src/value.txt"
+  ],
+  "final": {
+    "clean": false,
+    "revision": "dc741e8f224a1c079a08d477fe40629e17fd06aa",
+    "status_porcelain": " M src/value.txt\n"
+  },
+  "initial": {
+    "clean": true,
+    "revision": "dc741e8f224a1c079a08d477fe40629e17fd06aa",
+    "status_porcelain": ""
+  },
+  "isolated_workspace": true,
+  "requested_revision": "dc741e8f224a1c079a08d477fe40629e17fd06aa",
+  "source_before": {
+    "clean": true,
+    "revision": "dc741e8f224a1c079a08d477fe40629e17fd06aa",
+    "status_porcelain": ""
+  },
+  "source_during": {
+    "clean": true,
+    "revision": "dc741e8f224a1c079a08d477fe40629e17fd06aa",
+    "status_porcelain": ""
+  },
+  "workspace_patch_sha256": "238fa88ddd72bdf0f02a20ac95e8da6948eb3882b014ef10b01abdc9c2ce8fb2"
+}

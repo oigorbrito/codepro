@@ -1,0 +1,14 @@
+{
+  "project_ref": "git://C:/Users/igorb/AppData/Local/Temp/codepro-phase6-ocrmdr5c/workspaces/phase6-task-1@dc741e8f224a1c079a08d477fe40629e17fd06aa",
+  "request_id": "phase6-controlled-run",
+  "requested_scope": [
+    "src"
+  ],
+  "requester_ref": "user://phase6-validation",
+  "required_permissions": [
+    "edit",
+    "test"
+  ],
+  "schema_version": 1,
+  "task_ref": "phase6-edit-verify"
+}

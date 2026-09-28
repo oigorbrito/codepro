@@ -1,0 +1,47 @@
+{
+  "classification": "PHASE6_EXECUTION_VERIFIER_PASS",
+  "evidence_refs": {
+    "patch": "vertical\\phase6-controlled-run-d47407556f9a\\workspace.patch",
+    "repository_state": "vertical\\phase6-controlled-run-d47407556f9a\\repository-state.json",
+    "verifier": "vertical\\phase6-controlled-run-d47407556f9a\\verification\\phase6-controlled-run-d47407556f9a\\verification-54c57e9d6c38ca4d.json",
+    "vertical_root": "vertical\\phase6-controlled-run-d47407556f9a"
+  },
+  "gates": {
+    "final_repository_state": true,
+    "independent_verifier": true,
+    "initial_revision_recorded": true,
+    "inspect_edit_command": true,
+    "isolated_workspace": true,
+    "patch_captured": true,
+    "source_repository_unchanged": true,
+    "source_repository_unchanged_after_cleanup": true,
+    "stdout_stderr_captured": true,
+    "telemetry_observed": true,
+    "tests_commands_captured": true,
+    "verifier_evidence_persisted": true,
+    "workspace_cleanup": true
+  },
+  "model_invoked": false,
+  "next_phase": 7,
+  "operation_kinds": [
+    "INSPECT",
+    "EDIT",
+    "COMMAND"
+  ],
+  "phase": 6,
+  "scaffold_fixture": "PHASE6_CONTROLLED_SCAFFOLD",
+  "scaffold_qualified": false,
+  "schema_version": 1,
+  "telemetry_observed": true,
+  "vertical": {
+    "attempt_id": "attempt-1",
+    "changed_files": [
+      "src/value.txt"
+    ],
+    "evidence_root": "D:\\projetos\\codepro-r2-validation\\evidence\\phase6-execution-verifier\\controlled-smoke\\vertical\\phase6-controlled-run-d47407556f9a",
+    "reason": "DECLARED_VERIFIER_PASSED",
+    "run_id": "phase6-controlled-run-d47407556f9a",
+    "status": "VERIFIED"
+  },
+  "workspace_cleanup": true
+}
