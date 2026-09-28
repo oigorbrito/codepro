@@ -66,34 +66,45 @@ if (Test-Path $evidenceRoot) {
     }
 
     $existingResult = Get-Content $existingResultPath -Raw | ConvertFrom-Json
-    $isAttempt1 = (
-        $existingResult.telemetry.finish_reason -eq "length" -and
-        $existingResult.telemetry.completion_tokens -eq 16
-    )
-    $isAttempt2 = (
-        $existingResult.classification -eq "MODEL_RESPONSE_INVALID" -and
-        $existingResult.telemetry.finish_reason -eq "stop" -and
-        $existingResult.telemetry.completion_tokens -eq 7
+
+    $sameBinding = (
+        $existingResult.binding.base_url -eq $baseUrl -and
+        $existingResult.binding.model_id -eq $alias -and
+        $existingResult.binding.fallback -eq "DISABLED"
     )
 
-    if (-not $isAttempt1 -and -not $isAttempt2) {
-        throw "Existing Phase 5 evidence is not a recognized diagnostic attempt; refusing overwrite."
+    if (-not $sameBinding) {
+        throw "Existing Phase 5 evidence belongs to a different binding; refusing overwrite."
+    }
+
+    if ($existingResult.classification -eq "LOCAL_RUNTIME_PLUMBING_PASS") {
+        throw "Existing Phase 5 evidence is already a PASS; refusing to overwrite successful evidence."
     }
 
     $diagnosticsRoot = "$repoRoot\evidence\phase5-local-runtime\diagnostics"
     New-Item -ItemType Directory -Force -Path $diagnosticsRoot | Out-Null
 
-    if ($isAttempt1) {
-        $archiveName = "attempt-1-harness-truncated"
-    }
-    else {
-        $archiveName = "attempt-2-freeform-response-variance"
-    }
+    $attemptNumber = @(
+        Get-ChildItem $diagnosticsRoot -Directory -ErrorAction SilentlyContinue |
+        Where-Object { $_.Name -match '^attempt-[0-9]+-' }
+    ).Count + 1
 
-    $archive = Join-Path $diagnosticsRoot $archiveName
-    if (Test-Path $archive) {
-        throw "Diagnostic archive already exists: $archive"
+    $classificationLabel = [string]$existingResult.classification
+    if (-not $classificationLabel.Trim()) {
+        $classificationLabel = "UNKNOWN"
     }
+    $classificationLabel = (
+        $classificationLabel.ToLowerInvariant() -replace '[^a-z0-9]+', '-'
+    ).Trim('-')
+
+    do {
+        $archiveName = "attempt-$attemptNumber-$classificationLabel"
+        $archive = Join-Path $diagnosticsRoot $archiveName
+        if (Test-Path $archive) {
+            $attemptNumber++
+        }
+    }
+    while (Test-Path $archive)
 
     Move-Item -LiteralPath $evidenceRoot -Destination $archive
     Write-Host "PREVIOUS_ATTEMPT_ARCHIVED = $archive"
