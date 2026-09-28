@@ -199,14 +199,31 @@ def main(argv:list[str]|None=None)->int:
         llama_proc=subprocess.Popen(llama_argv,cwd=server.parent,stdout=llama_out,stderr=llama_err,text=True,shell=False)
         write_json(evidence/"llama-preflight.json",wait_llama(llama_proc)); summary["gates"]["local_runtime_ready"]=True
         with tempfile.TemporaryDirectory(prefix="codepro-phase7-s4-",dir=S4_ROOT) as tmp:
-            base=Path(tmp); source=base/"source"; workspaces=base/"workspaces"; state=base/"canvas-state"; source.mkdir(); state.mkdir()
+            base=Path(tmp); source=base/"source"; workspaces=base/"workspaces"; state=base/"canvas-state"; profile=base/"profile"; source.mkdir(); state.mkdir(); profile.mkdir()
+            (profile/"AppData"/"Local").mkdir(parents=True); (profile/"AppData"/"Roaming").mkdir(parents=True); (profile/".cache").mkdir(parents=True)
             run(["git","init"],cwd=source); run(["git","config","user.email","phase7@example.invalid"],cwd=source); run(["git","config","user.name","CodePro Phase 7"],cwd=source)
             (source/"value.py").write_text('VALUE = "before"\n',encoding="utf-8",newline="\n"); run(["git","add","."],cwd=source); run(["git","commit","-m","phase7-s4-base"],cwd=source)
             revision=run(["git","rev-parse","HEAD"],cwd=source).stdout.strip(); isolated=IsolatedGitWorkspace.create(source_repository=source,revision=revision,workspace_root=workspaces,workspace_id="s4-task")
             node=shutil.which("node.exe") or shutil.which("node"); assert node
-            canvas_env=os.environ.copy(); canvas_env.update({"LOCAL_BACKEND_API_KEY":SESSION_KEY,"OH_AGENT_SERVER_VERSION":AGENT_SERVER_VERSION,"OH_AUTOMATION_VERSION":AUTOMATION_VERSION,"OH_CANVAS_SAFE_BACKEND_PORT":str(AGENT_PORT),"OH_CANVAS_SAFE_AUTOMATION_PORT":str(AUTOMATION_PORT),"OH_CANVAS_SAFE_STATE_DIR":str(state),"VITE_DO_NOT_TRACK":"1","NO_COLOR":"1"})
+            canvas_env=os.environ.copy(); canvas_env.update({
+                "LOCAL_BACKEND_API_KEY":SESSION_KEY,
+                "OH_AGENT_SERVER_VERSION":AGENT_SERVER_VERSION,
+                "OH_AUTOMATION_VERSION":AUTOMATION_VERSION,
+                "OH_CANVAS_SAFE_BACKEND_PORT":str(AGENT_PORT),
+                "OH_CANVAS_SAFE_AUTOMATION_PORT":str(AUTOMATION_PORT),
+                "OH_CANVAS_SAFE_VSCODE_PORT":str(VSCODE_PORT),
+                "OH_CANVAS_SAFE_STATE_DIR":str(state),
+                "OH_SESSION_API_KEY_PATH":str(state/"session-api-key.txt"),
+                "HOME":str(profile),
+                "USERPROFILE":str(profile),
+                "LOCALAPPDATA":str(profile/"AppData"/"Local"),
+                "APPDATA":str(profile/"AppData"/"Roaming"),
+                "XDG_CACHE_HOME":str(profile/".cache"),
+                "VITE_DO_NOT_TRACK":"1",
+                "NO_COLOR":"1",
+            })
             canvas_argv=[node,str(UPSTREAM/"bin"/"agent-canvas.mjs"),"--backend-only","--port",str(CANVAS_PORT)]
-            write_json(evidence/"canvas-binding.json",{"argv":canvas_argv,"canvas_version":"1.21.0","agent_server_version":AGENT_SERVER_VERSION,"automation_version":AUTOMATION_VERSION,"ingress":CANVAS_BASE,"agent_port":AGENT_PORT,"automation_port":AUTOMATION_PORT,"state_dir":str(state),"session_key":"REDACTED"})
+            write_json(evidence/"canvas-binding.json",{"argv":canvas_argv,"canvas_version":"1.21.0","agent_server_version":AGENT_SERVER_VERSION,"automation_version":AUTOMATION_VERSION,"ingress":CANVAS_BASE,"agent_port":AGENT_PORT,"automation_port":AUTOMATION_PORT,"vscode_port":VSCODE_PORT,"state_dir":str(state),"profile_dir":str(profile),"profile_isolation":"PROCESS_ENVIRONMENT_ONLY","session_key":"REDACTED"})
             canvas_out=(evidence/"agent-canvas-stdout.txt").open("w",encoding="utf-8",newline="\n"); canvas_err=(evidence/"agent-canvas-stderr.txt").open("w",encoding="utf-8",newline="\n")
             canvas_proc=subprocess.Popen(canvas_argv,cwd=UPSTREAM,env=canvas_env,stdout=canvas_out,stderr=canvas_err,text=True,shell=False)
             write_json(evidence/"canvas-preflight.json",wait_canvas(canvas_proc)); summary["gates"]["agent_canvas_ready"]=True
