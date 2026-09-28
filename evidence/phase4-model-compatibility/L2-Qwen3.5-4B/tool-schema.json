@@ -1,0 +1,1 @@
+{"type":"object","properties":{"action":{"type":"string","enum":["inspect"]},"path":{"type":"string","enum":["README.md"]}},"required":["action","path"],"additionalProperties":false}

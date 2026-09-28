@@ -1,0 +1,12 @@
+{
+    "candidate":  "L1",
+    "model":  "Nanbeige4.2-3B",
+    "test":  "constrained-tool-compatible-json",
+    "constraint":  "llama.cpp --json-schema-file",
+    "exit_code":  0,
+    "wall_time_ms":  3424,
+    "json_found":  false,
+    "parsed":  null,
+    "tool_output_pass":  false,
+    "unload_clean":  true
+}

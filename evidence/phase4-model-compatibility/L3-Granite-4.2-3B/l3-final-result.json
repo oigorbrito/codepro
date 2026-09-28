@@ -1,0 +1,64 @@
+{
+    "phase":  4,
+    "candidate":  "L3",
+    "model":  "Granite-4.2-3B",
+    "quantization":  "Q4_K_M",
+    "artifact":  {
+                     "repository":  "ibm-granite/granite-4.2-3b-GGUF",
+                     "source_revision":  "c40945d71cd90f249a56985e8155551a9188dc30",
+                     "source_transport":  "main",
+                     "filename":  "granite-4.2-3b-Q4_K_M.gguf",
+                     "bytes":  2244011552,
+                     "sha256":  "E0406663965846AE22A403456EB826CCCE5F450840491F71952F18A7CB78E7D5",
+                     "identity_locked_by":  "size+sha256",
+                     "pass":  true
+                 },
+    "runtime":  {
+                    "build":  11205,
+                    "commit":  "95887577ab5fead779581a7030a83c7752ff3234"
+                },
+    "cpu_2048":  {
+                     "exit_code":  0,
+                     "response_valid":  true,
+                     "wall_ms":  4215,
+                     "peak_ram_mib":  3861,
+                     "prompt_tps":  42.5,
+                     "generation_tps":  9.8,
+                     "pass":  true
+                 },
+    "gpu_2048":  {
+                     "exit_code":  0,
+                     "response_valid":  true,
+                     "wall_ms":  3069,
+                     "peak_ram_mib":  2427.6,
+                     "vram_base_mib":  315,
+                     "vram_peak_mib":  2603,
+                     "vram_delta_mib":  2288,
+                     "layers_offloaded":  null,
+                     "layers_total":  null,
+                     "prompt_tps":  100.3,
+                     "generation_tps":  47.2,
+                     "pass":  true
+                 },
+    "context_4096":  {
+                         "exit_code":  0,
+                         "response_valid":  true,
+                         "wall_ms":  2765,
+                         "peak_ram_mib":  2436.3,
+                         "prompt_tps":  91.3,
+                         "generation_tps":  47.2,
+                         "pass":  true
+                     },
+    "structured_output":  {
+                              "exit_code":  0,
+                              "wall_ms":  2729,
+                              "json_found":  true,
+                              "json":  "{\"action\":\"inspect\",\"path\":\"README.md\"}",
+                              "action":  "inspect",
+                              "path":  "README.md",
+                              "pass":  true
+                          },
+    "unload_clean":  true,
+    "classification":  "COMPATIBLE",
+    "failure_class":  null
+}

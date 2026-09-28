@@ -1,0 +1,80 @@
+{
+    "phase":  4,
+    "candidate":  "L2",
+    "model":  "Qwen3.5-4B",
+    "quantization":  "Q4_K_M",
+    "artifact":  {
+                     "repository":  "lmstudio-community/Qwen3.5-4B-GGUF",
+                     "source_branch":  "main",
+                     "origin_commit":  "e52a809eba94f740f51bdd80a73f189d06ac9347",
+                     "filename":  "Qwen3.5-4B-Q4_K_M.gguf",
+                     "bytes":  2707513696,
+                     "sha256":  "25082A7DD3776CC3C741C6347D3BD04523F05796607B3FBC32FA3A25DFA1418C",
+                     "identity_locked_by":  "exact_size_and_sha256",
+                     "pass":  true
+                 },
+    "runtime":  {
+                    "build":  11205,
+                    "commit":  "95887577ab5fead779581a7030a83c7752ff3234"
+                },
+    "cpu_2048":  {
+                     "exit_code":  0,
+                     "response_valid":  true,
+                     "wall_ms":  21044,
+                     "peak_ram_mib":  3502.7,
+                     "prompt_tps":  24,
+                     "generation_tps":  7.2,
+                     "timing_found":  true,
+                     "vram_base_mib":  null,
+                     "vram_peak_mib":  null,
+                     "vram_delta_mib":  null,
+                     "layers_offloaded":  null,
+                     "layers_total":  null,
+                     "model_load_failure":  false,
+                     "raw":  "\r\n\r\nLoading model... \r\n\r\nÔûäÔûä ÔûäÔûä\r\nÔûêÔûê ÔûêÔûê\r\nÔûêÔûê ÔûêÔûê  ÔûÇÔûÇÔûêÔûä ÔûêÔûêÔûêÔûäÔûêÔûêÔûêÔûä  ÔûÇÔûÇÔûêÔûä    ÔûäÔûêÔûêÔûêÔûê ÔûêÔûêÔûêÔûêÔûä ÔûêÔûêÔûêÔûêÔûä\r\nÔûêÔûê ÔûêÔûê ÔûäÔûêÔûÇÔûêÔûê ÔûêÔûê ÔûêÔûê ÔûêÔûê ÔûäÔûêÔûÇÔûêÔûê    ÔûêÔûê    ÔûêÔûê ÔûêÔûê ÔûêÔûê ÔûêÔûê\r\nÔûêÔûê ÔûêÔûê ÔûÇÔûêÔûäÔûêÔûê ÔûêÔûê ÔûêÔûê ÔûêÔûê ÔûÇÔûêÔûäÔûêÔûê ÔûêÔûê ÔûÇÔûêÔûêÔûêÔûê ÔûêÔûêÔûêÔûêÔûÇ ÔûêÔûêÔûêÔûêÔûÇ\r\n                                    ÔûêÔûê    ÔûêÔûê\r\n                                    ÔûÇÔûÇ    ÔûÇÔûÇ\r\n\r\nbuild      : b11205-95887577a\r\nmodel      : D:\\projetos\\codepro-mini-runtime\\models\\phase4\\L2-Qwen3.5-4B\\Qwen3.5-4B-Q4_K_M.gguf\r\nftype      : Q4_K - Medium\r\nmodalities : text\r\n\r\navailable commands:\r\n  /exit or Ctrl+C     stop or exit\r\n  /regen              regenerate the last response\r\n  /clear              clear the chat history\r\n  /read \u003cfile\u003e        add a text file\r\n  /glob \u003cpattern\u003e     add text files using globbing pattern\r\n\r\n\r\n\r\n\u003e Reply exactly L2_CPU_OK\r\nL2_CPU_OK\r\n\r\n[ Prompt: 24.0 t/s | Generation: 7.2 t/s ]\r\n\r\n\r\nExiting...\r\n\n"
+                 },
+    "gpu_2048":  {
+                     "exit_code":  0,
+                     "response_valid":  true,
+                     "wall_ms":  15841,
+                     "peak_ram_mib":  3277.9,
+                     "prompt_tps":  2,
+                     "generation_tps":  34.7,
+                     "timing_found":  true,
+                     "vram_base_mib":  315,
+                     "vram_peak_mib":  3133,
+                     "vram_delta_mib":  2818,
+                     "layers_offloaded":  null,
+                     "layers_total":  null,
+                     "model_load_failure":  false,
+                     "raw":  "\r\n\r\nLoading model... \r\n\r\nÔûäÔûä ÔûäÔûä\r\nÔûêÔûê ÔûêÔûê\r\nÔûêÔûê ÔûêÔûê  ÔûÇÔûÇÔûêÔûä ÔûêÔûêÔûêÔûäÔûêÔûêÔûêÔûä  ÔûÇÔûÇÔûêÔûä    ÔûäÔûêÔûêÔûêÔûê ÔûêÔûêÔûêÔûêÔûä ÔûêÔûêÔûêÔûêÔûä\r\nÔûêÔûê ÔûêÔûê ÔûäÔûêÔûÇÔûêÔûê ÔûêÔûê ÔûêÔûê ÔûêÔûê ÔûäÔûêÔûÇÔûêÔûê    ÔûêÔûê    ÔûêÔûê ÔûêÔûê ÔûêÔûê ÔûêÔûê\r\nÔûêÔûê ÔûêÔûê ÔûÇÔûêÔûäÔûêÔûê ÔûêÔûê ÔûêÔûê ÔûêÔûê ÔûÇÔûêÔûäÔûêÔûê ÔûêÔûê ÔûÇÔûêÔûêÔûêÔûê ÔûêÔûêÔûêÔûêÔûÇ ÔûêÔûêÔûêÔûêÔûÇ\r\n                                    ÔûêÔûê    ÔûêÔûê\r\n                                    ÔûÇÔûÇ    ÔûÇÔûÇ\r\n\r\nbuild      : b11205-95887577a\r\nmodel      : D:\\projetos\\codepro-mini-runtime\\models\\phase4\\L2-Qwen3.5-4B\\Qwen3.5-4B-Q4_K_M.gguf\r\nftype      : Q4_K - Medium\r\nmodalities : text\r\n\r\navailable commands:\r\n  /exit or Ctrl+C     stop or exit\r\n  /regen              regenerate the last response\r\n  /clear              clear the chat history\r\n  /read \u003cfile\u003e        add a text file\r\n  /glob \u003cpattern\u003e     add text files using globbing pattern\r\n\r\n\r\n\r\n\u003e Reply exactly L2_GPU_OK\r\nL2_GPU_OK\r\n\r\n[ Prompt: 2.0 t/s | Generation: 34.7 t/s ]\r\n\r\n\r\nExiting...\r\n\n"
+                 },
+    "context_4096":  {
+                         "exit_code":  0,
+                         "response_valid":  true,
+                         "wall_ms":  4065,
+                         "peak_ram_mib":  3146.1,
+                         "prompt_tps":  61.8,
+                         "generation_tps":  36.4,
+                         "timing_found":  true,
+                         "vram_base_mib":  null,
+                         "vram_peak_mib":  null,
+                         "vram_delta_mib":  null,
+                         "layers_offloaded":  null,
+                         "layers_total":  null,
+                         "model_load_failure":  false,
+                         "raw":  "\r\n\r\nLoading model... \r\n\r\nÔûäÔûä ÔûäÔûä\r\nÔûêÔûê ÔûêÔûê\r\nÔûêÔûê ÔûêÔûê  ÔûÇÔûÇÔûêÔûä ÔûêÔûêÔûêÔûäÔûêÔûêÔûêÔûä  ÔûÇÔûÇÔûêÔûä    ÔûäÔûêÔûêÔûêÔûê ÔûêÔûêÔûêÔûêÔûä ÔûêÔûêÔûêÔûêÔûä\r\nÔûêÔûê ÔûêÔûê ÔûäÔûêÔûÇÔûêÔûê ÔûêÔûê ÔûêÔûê ÔûêÔûê ÔûäÔûêÔûÇÔûêÔûê    ÔûêÔûê    ÔûêÔûê ÔûêÔûê ÔûêÔûê ÔûêÔûê\r\nÔûêÔûê ÔûêÔûê ÔûÇÔûêÔûäÔûêÔûê ÔûêÔûê ÔûêÔûê ÔûêÔûê ÔûÇÔûêÔûäÔûêÔûê ÔûêÔûê ÔûÇÔûêÔûêÔûêÔûê ÔûêÔûêÔûêÔûêÔûÇ ÔûêÔûêÔûêÔûêÔûÇ\r\n                                    ÔûêÔûê    ÔûêÔûê\r\n                                    ÔûÇÔûÇ    ÔûÇÔûÇ\r\n\r\nbuild      : b11205-95887577a\r\nmodel      : D:\\projetos\\codepro-mini-runtime\\models\\phase4\\L2-Qwen3.5-4B\\Qwen3.5-4B-Q4_K_M.gguf\r\nftype      : Q4_K - Medium\r\nmodalities : text\r\n\r\navailable commands:\r\n  /exit or Ctrl+C     stop or exit\r\n  /regen              regenerate the last response\r\n  /clear              clear the chat history\r\n  /read \u003cfile\u003e        add a text file\r\n  /glob \u003cpattern\u003e     add text files using globbing pattern\r\n\r\n\r\n\r\n\u003e Reply exactly L2_CTX_OK\r\nL2_CTX_OK\r\n\r\n[ Prompt: 61.8 t/s | Generation: 36.4 t/s ]\r\n\r\n\r\nExiting...\r\n\n"
+                     },
+    "structured_output":  {
+                              "exit_code":  0,
+                              "wall_ms":  4004,
+                              "json_found":  true,
+                              "json":  "{\"action\":\"inspect\",\"path\":\"README.md\"}",
+                              "action":  "inspect",
+                              "path":  "README.md",
+                              "pass":  true
+                          },
+    "unload_clean":  true,
+    "classification":  "COMPATIBLE",
+    "failure_class":  null
+}

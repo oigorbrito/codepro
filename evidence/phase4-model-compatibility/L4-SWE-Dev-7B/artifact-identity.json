@@ -1,0 +1,8 @@
+{
+    "repository":  "mradermacher/SWE-Dev-7B-GGUF",
+    "commit":  "caf88960ca325d9d981cce3aac7dba01fef3dae2",
+    "filename":  "SWE-Dev-7B.Q4_K_M.gguf",
+    "bytes":  4683073856,
+    "sha256":  "C8EAA713EF68432254702DB864C08B759376C206569997411D164B84901E4192",
+    "captured_utc":  "2026-09-28T15:43:33.4873664Z"
+}

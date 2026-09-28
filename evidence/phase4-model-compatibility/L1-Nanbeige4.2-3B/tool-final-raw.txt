@@ -1,0 +1,28 @@
+ Generate JSON for action inspect on README.md.{"action": "inspect", "path": "README.md"} [end of text]
+
+
+
+0.00.186.981 I llama_completion: llama backend init
+0.00.186.988 I llama_completion: load the model and apply lora adapter, if any
+0.00.544.823 W common_fit_params: failed to fit params to free device memory: n_gpu_layers already set by user to 99, abort
+0.03.769.707 I cmn          init: llama threadpool init, n_threads = 4
+0.04.075.855 I 
+0.04.075.927 I system_info: n_threads = 4 (n_threads_batch = 4) / 8 | CUDA : ARCHS = 750,800,860,890,900,1200,1210 | USE_GRAPHS = 1 | FA_QUANTS = q4_0-q4_0,q8_0-q8_0,f16-f16,bf16-bf16 | CPU : SSE3 = 1 | SSSE3 = 1 | AVX = 1 | AVX2 = 1 | F16C = 1 | FMA = 1 | BMI2 = 1 | LLAMAFILE = 1 | OPENMP = 1 | REPACK = 1 | 
+0.04.075.932 I 
+0.04.078.352 I sampler seed: 190598317
+0.04.078.370 I sampler params: 
+	repeat_last_n = 64, repeat_penalty = 1.000, frequency_penalty = 0.000, presence_penalty = 0.000
+	dry_multiplier = 0.000, dry_base = 1.750, dry_allowed_length = 2, dry_penalty_last_n = 64
+	top_k = 20, top_p = 0.950, min_p = 0.050, xtc_probability = 0.000, xtc_threshold = 0.100, typical_p = 1.000, top_n_sigma = -1.000, temp = 0.000
+	mirostat = 0, mirostat_lr = 0.100, mirostat_ent = 5.000, adaptive_target = -1.000, adaptive_decay = 0.900
+0.04.078.380 I sampler chain: logits -> ?penalties -> ?dry -> ?top-n-sigma -> top-k -> ?typical -> top-p -> min-p -> ?xtc -> temp-ext -> dist 
+0.04.078.381 I generate: n_ctx = 4096, n_batch = 2048, n_predict = 32, n_keep = 1
+0.04.078.381 I 
+0.05.255.403 I common_perf_print:    sampling time =     332.08 ms
+0.05.255.407 I common_perf_print:    samplers time =       3.62 ms /    26 tokens
+0.05.255.408 I common_perf_print:        load time =    3371.79 ms
+0.05.255.431 I common_perf_print: prompt eval time =     352.95 ms /    11 tokens (   32.09 ms per token,    31.17 tokens per second)
+0.05.255.437 I common_perf_print:        eval time =     491.06 ms /    14 runs   (   35.08 ms per token,    28.51 tokens per second)
+0.05.255.438 I common_perf_print:       total time =    1179.56 ms /    25 tokens
+0.05.255.439 I common_perf_print: unaccounted time =       3.46 ms /   0.3 %      (total - sampling - prompt eval - eval) / (total)
+0.05.255.440 I common_perf_print:    graphs reused =         13
