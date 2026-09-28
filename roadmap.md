@@ -410,7 +410,14 @@ Decision: `docs/decisions/0167-phase7-scaffold-pool.md`.
 
 Execution order: S1 -> S2 -> S3 -> S4. Order is operational, not a quality ranking.
 
-**Phase status:** IN_PROGRESS — pool frozen; S1 compatibility block next.
+Candidate compatibility cells:
+
+- S1 mini-swe-agent v2.4.6: **INCOMPATIBLE** - docs/audits/phase7-s1-mini-swe-agent-20260928.md.
+- S2 Agentless: **NEXT**.
+- S3 AutoCodeRover: **NOT_STARTED**.
+- S4 OpenHands: **NOT_STARTED**.
+
+**Phase status:** IN_PROGRESS - S1 classified; S2 compatibility block next.
 
 ---
 
@@ -612,5 +619,5 @@ Current task:
 
 ```text
 PHASE 7 = SCAFFOLD COMPATIBILITY
-STATUS = IN_PROGRESS / S1_NEXT
+STATUS = IN_PROGRESS / S2_NEXT
 ```

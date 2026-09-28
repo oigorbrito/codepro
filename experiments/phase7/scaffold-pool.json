@@ -1,75 +1,86 @@
 {
-  "schema_version": 1,
-  "phase": 7,
-  "pool_frozen_at": "2026-09-28",
-  "local_runtime": {
-    "inherited_from_phase": 5,
-    "endpoint_contract": "OpenAI-compatible /v1",
-    "model_fixture": {
-      "phase4_candidate": "L3",
-      "model": "Granite 4.2 3B",
-      "alias": "codepro-phase7-granite42-3b"
-    },
-    "fallback": "DISABLED"
-  },
-  "task_contract": {
-    "source": "Phase 6 controlled compatibility task",
-    "task_kind": "trivial repository edit",
-    "required_operations": [
-      "inspect",
-      "edit",
-      "command",
-      "termination"
-    ],
-    "verifier": "CodePro independent verifier",
-    "note": "Identical task/runtime/model/verifier conditions are to be reused across S1-S4 where scaffold mechanics permit."
-  },
   "candidates": [
     {
-      "id": "S1",
-      "name": "mini-swe-agent",
-      "repository": "SWE-agent/mini-swe-agent",
-      "version": "v2.4.6",
       "commit": "a83fcae82d2a08f0ee0c688f9d137b3566c097f8",
-      "selection_basis": "existing CodePro frozen reference and upstream release",
+      "evidence": "evidence/phase7-scaffold-compatibility/S1-mini-swe-agent/s1-summary.json",
+      "id": "S1",
       "local_runtime_surface": "LiteLLM model_kwargs custom_llm_provider=openai + api_base",
+      "name": "mini-swe-agent",
+      "observed": {
+        "api_calls": null,
+        "completion_tokens": null,
+        "gates": {
+          "command_observed": false,
+          "edit_observed": false,
+          "exact_upstream_identity": true,
+          "independent_verifier": false,
+          "inspect_observed": false,
+          "installed_version": true,
+          "local_runtime_ready": true,
+          "model_calls_observed": false,
+          "patch_captured": false,
+          "source_repository_unchanged": true,
+          "termination_observed": false,
+          "workspace_cleanup": true
+        },
+        "mini_exit_status": null,
+        "prompt_tokens": null,
+        "vertical_reason": "EXECUTOR_EXIT_NONZERO:1",
+        "vertical_status": "FAILED"
+      },
+      "phase7_status": "INCOMPATIBLE",
       "prior_codepro_state": "provider-free/reference integration preserved; real local-runtime compatibility not yet established",
-      "phase7_status": "NOT_TESTED"
+      "repository": "SWE-agent/mini-swe-agent",
+      "selection_basis": "existing CodePro frozen reference and upstream release",
+      "version": "v2.4.6"
     },
     {
-      "id": "S2",
-      "name": "Agentless",
-      "repository": "OpenAutoCoder/Agentless",
-      "version": "v1.5.0",
       "commit": "b150f28465a77a81a7f4776384957a4271f5bd69",
-      "selection_basis": "upstream stable release",
+      "id": "S2",
       "local_runtime_surface": "OpenAI Python client supports base_url; exact pinned workflow requires local endpoint binding validation",
+      "name": "Agentless",
+      "phase7_status": "NOT_TESTED",
       "prior_codepro_state": "no prior Phase 7 execution evidence",
-      "phase7_status": "NOT_TESTED"
-    },
-    {
-      "id": "S3",
-      "name": "AutoCodeRover",
-      "repository": "AutoCodeRoverSG/auto-code-rover",
-      "version": "v1.1.0",
-      "commit": "1aafff1be4549fff4db9d61bf54bfa8b0669ea57",
+      "repository": "OpenAutoCoder/Agentless",
       "selection_basis": "upstream stable release",
-      "local_runtime_surface": "LiteLLM/OpenAI-compatible paths exist; exact generic local-model binding requires validation",
-      "prior_codepro_state": "no prior Phase 7 execution evidence",
-      "phase7_status": "NOT_TESTED"
+      "version": "v1.5.0"
     },
     {
-      "id": "S4",
-      "name": "OpenHands",
-      "repository": "OpenHands/OpenHands",
-      "version": "v1.21.0",
+      "commit": "1aafff1be4549fff4db9d61bf54bfa8b0669ea57",
+      "id": "S3",
+      "local_runtime_surface": "LiteLLM/OpenAI-compatible paths exist; exact generic local-model binding requires validation",
+      "name": "AutoCodeRover",
+      "phase7_status": "NOT_TESTED",
+      "prior_codepro_state": "no prior Phase 7 execution evidence",
+      "repository": "AutoCodeRoverSG/auto-code-rover",
+      "selection_basis": "upstream stable release",
+      "version": "v1.1.0"
+    },
+    {
       "commit": "fc6d890f7b21c71a17de60d50597c00355e235ea",
-      "selection_basis": "existing CodePro local audit continuity",
+      "id": "S4",
       "local_runtime_surface": "headless mode with LLM_BASE_URL / LLM_MODEL overrides",
+      "name": "OpenHands",
+      "phase7_status": "NOT_TESTED",
       "prior_codepro_state": "previous local audit BLOCKED_RUNTIME before first task cycle due protected profile/Jinja cache",
-      "phase7_status": "NOT_TESTED"
+      "repository": "OpenHands/OpenHands",
+      "selection_basis": "existing CodePro local audit continuity",
+      "version": "v1.21.0"
     }
   ],
+  "local_runtime": {
+    "endpoint_contract": "OpenAI-compatible /v1",
+    "fallback": "DISABLED",
+    "inherited_from_phase": 5,
+    "model_fixture": {
+      "alias": "codepro-phase7-granite42-3b",
+      "model": "Granite 4.2 3B",
+      "phase4_candidate": "L3"
+    }
+  },
+  "phase": 7,
+  "pool_frozen_at": "2026-09-28",
+  "schema_version": 1,
   "semantics": [
     "AVAILABLE != QUALIFIED",
     "COMPATIBLE != SELECTED",
@@ -77,5 +88,17 @@
     "VERIFIED != ACCEPTED",
     "NO_SILENT_FALLBACK",
     "NO_SILENT_EXECUTOR_SWITCH"
-  ]
+  ],
+  "task_contract": {
+    "note": "Identical task/runtime/model/verifier conditions are to be reused across S1-S4 where scaffold mechanics permit.",
+    "required_operations": [
+      "inspect",
+      "edit",
+      "command",
+      "termination"
+    ],
+    "source": "Phase 6 controlled compatibility task",
+    "task_kind": "trivial repository edit",
+    "verifier": "CodePro independent verifier"
+  }
 }

@@ -1,0 +1,8 @@
+{
+  "attempt_id": "attempt-1",
+  "changed_files": [],
+  "evidence_root": "D:\\projetos\\codepro-r2-validation\\evidence\\phase7-scaffold-compatibility\\S1-mini-swe-agent\\vertical\\phase7-s1-mini-1f50083a56ab",
+  "reason": "EXECUTOR_EXIT_NONZERO:1",
+  "run_id": "phase7-s1-mini-1f50083a56ab",
+  "status": "FAILED"
+}

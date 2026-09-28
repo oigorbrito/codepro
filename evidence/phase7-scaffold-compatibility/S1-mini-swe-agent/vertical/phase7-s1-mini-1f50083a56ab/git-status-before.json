@@ -1,0 +1,12 @@
+{
+  "argv": [
+    "git",
+    "-C",
+    "D:\\projetos\\codepro-mini-runtime\\phase7\\S1-mini-swe-agent\\codepro-phase7-s1-lzsl5dzi\\workspaces\\s1-task",
+    "status",
+    "--porcelain=v1"
+  ],
+  "returncode": 0,
+  "stderr": "",
+  "stdout": ""
+}
