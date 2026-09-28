@@ -1,0 +1,27 @@
+[
+    {
+        "path":  "evidence/phase3-perf-recapture/cpu-stdout.txt",
+        "bytes":  1355,
+        "sha256":  "E384A4DFFD21138CE49FCD1939764F91D5907BDA522486924B27B235CD2F230A"
+    },
+    {
+        "path":  "evidence/phase3-perf-recapture/cpu-stderr.txt",
+        "bytes":  0,
+        "sha256":  "E3B0C44298FC1C149AFBF4C8996FB92427AE41E4649B934CA495991B7852B855"
+    },
+    {
+        "path":  "evidence/phase3-perf-recapture/gpu-stdout.txt",
+        "bytes":  1355,
+        "sha256":  "0583DE5B6115173ACF676AFC9DB3C11329619A400D10A3266121C222CA54A348"
+    },
+    {
+        "path":  "evidence/phase3-perf-recapture/gpu-stderr.txt",
+        "bytes":  0,
+        "sha256":  "E3B0C44298FC1C149AFBF4C8996FB92427AE41E4649B934CA495991B7852B855"
+    },
+    {
+        "path":  "evidence/phase3-perf-recapture/recapture.json",
+        "bytes":  878,
+        "sha256":  "284770E40166A3DC4BBE789C486CBAF56E2CE1AA91A1439B0E5F2A65B338941E"
+    }
+]
