@@ -29,7 +29,7 @@ Server termination: PASS
 Diagnostic attempts are preserved under evidence/phase5-local-runtime/diagnostics/.
 Attempt 1 exposed a 16-token harness truncation.
 Attempt 2 showed freeform response variance with a healthy transport.
-Attempt 3 showed HTTP 500 grammar incompatibility for constrained chat on this frozen model/template path.
+Attempts 3 and 4 independently reproduced the same HTTP 500 grammar incompatibility for constrained chat on this frozen model/template path.
 None of those semantic/grammar behaviors is promoted into the Phase 5 plumbing gate.
 
 PHASE_5 = COMPLETE
