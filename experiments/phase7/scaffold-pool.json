@@ -110,7 +110,9 @@
         "native_tool_call_count": null,
         "prompt_tokens": null,
         "vertical_reason": null,
-        "vertical_status": null
+        "vertical_status": null,
+        "root_cause": "exact upstream requirements installation failed on Windows/Python 3.11 because pinned litellm==1.41.24 had no matching distribution",
+        "blocker_code": "PINNED_LITELLM_DISTRIBUTION_UNAVAILABLE"
       },
       "phase7_status": "BLOCKED_INSTALLATION_WINDOWS_NATIVE",
       "prior_codepro_state": "no prior Phase 7 execution evidence",
