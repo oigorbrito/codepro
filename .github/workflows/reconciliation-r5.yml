@@ -42,7 +42,7 @@ jobs:
       - name: Probe CLI
         run: |
           codepro --version
-          codepro doctor --json
+          codepro doctor
           codepro inspect --json
           python -m arkx --help
       - name: Check foundation and baseline
