@@ -221,7 +221,7 @@ export function persistLocalInferenceMeasurementRecord(
   validateLocalInferenceMeasurementRecord(record);
   const resolved = path.resolve(outputPath);
   fs.mkdirSync(path.dirname(resolved), { recursive: true });
-  fs.writeFileSync(resolved, serializeLocalInferenceMeasurementRecord(record), "utf8");
+  fs.writeFileSync(resolved, serializeLocalInferenceMeasurementRecord(record), {\n    encoding: "utf8",\n    flag: "wx",\n  });
 }
 
 /**
