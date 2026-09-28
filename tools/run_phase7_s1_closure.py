@@ -166,6 +166,8 @@ def write_audit(summary: dict) -> None:
         "",
         "If the classification is BLOCKED_MODEL_TOOL_PROTOCOL, the observed blocker belongs to the frozen model/server tool-call protocol and must not be rewritten as a mini-SWE-agent implementation failure.",
         "",
+        "Prior diagnostic: the first interactive-CLI attempt was invalidated before the first model call by prompt_toolkit NoConsoleScreenBufferError under captured Windows stdout/stderr. That attempt is preserved under diagnostics and is not a compatibility result.",
+        "",
         "Evidence: evidence/phase7-scaffold-compatibility/S1-mini-swe-agent/.",
         "",
         "Next compatibility cell: S2 Agentless.",
@@ -210,6 +212,10 @@ def update_roadmap(summary: dict) -> None:
     text = text[:p7] + block + text[p8:]
     text = text.replace(
         "PHASE 7 = SCAFFOLD COMPATIBILITY\nSTATUS = IN_PROGRESS / S1_NEXT",
+        "PHASE 7 = SCAFFOLD COMPATIBILITY\nSTATUS = IN_PROGRESS / S2_NEXT",
+    )
+    text = text.replace(
+        "PHASE 7 = SCAFFOLD COMPATIBILITY\nSTATUS = IN_PROGRESS / S1_HEADLESS_RETEST",
         "PHASE 7 = SCAFFOLD COMPATIBILITY\nSTATUS = IN_PROGRESS / S2_NEXT",
     )
     path.write_text(text, encoding="utf-8", newline="\n")
