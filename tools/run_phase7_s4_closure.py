@@ -53,8 +53,9 @@ def write_audit(summary:dict,survivors:int,statuses:list[str])->None:
 
 def update_roadmap(summary:dict,survivors:int)->None:
     p=ROOT/"roadmap.md"; text=p.read_text(encoding="utf-8"); a=text.index("## Phase 7"); b=text.index("## Phase 8"); block=text[a:b]
-    if "- S4 OpenHands: **NEXT**." not in block: raise RuntimeError("S4 roadmap NEXT cell missing")
-    block=block.replace("- S4 OpenHands: **NEXT**.",f"- S4 OpenHands: **{summary['classification']}** — docs/audits/phase7-s4-openhands-20260928.md.")
+    s4_pattern=r"- S4 OpenHands: \*\*[^*]+\*\*(?: — docs/audits/phase7-s4-openhands-20260928\.md)?\."
+    if not re.search(s4_pattern,block): raise RuntimeError("S4 roadmap cell missing")
+    block=re.sub(s4_pattern,f"- S4 OpenHands: **{summary['classification']}** — docs/audits/phase7-s4-openhands-20260928.md.",block,count=1)
     old="""For each:
 
 - [ ] Install and record version/commit.
@@ -75,10 +76,11 @@ def update_roadmap(summary:dict,survivors:int)->None:
 - [x] Classify all four frozen candidates."""
     if old in block: block=block.replace(old,new)
     phase8_state="NEXT" if survivors>=1 else "BLOCKED_BY_NO_COMPATIBLE_SCAFFOLD"
-    block=re.sub(r"\*\*Phase status:\*\* IN_PROGRESS[^\r\n]*",f"**Phase status:** COMPLETE — all four frozen scaffold cells classified; compatible survivors = {survivors}; Phase 8 = {phase8_state}.",block,count=1)
+    block=re.sub(r"\*\*Phase status:\*\* (?:IN_PROGRESS|COMPLETE)[^\r\n]*",f"**Phase status:** COMPLETE — all four frozen scaffold cells classified; compatible survivors = {survivors}; Phase 8 = {phase8_state}.",block,count=1)
     text=text[:a]+block+text[b:]
     text=text.replace("PHASE 7   Scaffold compatibility        IN_PROGRESS","PHASE 7   Scaffold compatibility        COMPLETE")
     text=text.replace("STATUS = IN_PROGRESS / S4_NEXT","STATUS = COMPLETE / PR90_ACCEPTANCE_BEFORE_PHASE8")
+    text=text.replace("STATUS = COMPLETE / PR90_ACCEPTANCE_BEFORE_PHASE8","STATUS = COMPLETE / PR90_ACCEPTANCE_BEFORE_PHASE8")
     p.write_text(text,encoding="utf-8",newline="\n")
 
 def repo_gates()->None:
