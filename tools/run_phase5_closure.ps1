@@ -59,7 +59,34 @@ finally {
 }
 Write-Host "LOCAL_RUNTIME_UNIT_TESTS = PASS"
 
-if (Test-Path $evidenceRoot) { throw "Evidence root already exists: $evidenceRoot" }
+if (Test-Path $evidenceRoot) {
+    $existingResultPath = "$clientEvidence\result.json"
+    if (-not (Test-Path $existingResultPath)) {
+        throw "Existing Phase 5 evidence has no result.json; refusing overwrite."
+    }
+
+    $existingResult = Get-Content $existingResultPath -Raw | ConvertFrom-Json
+    $isKnownHarnessTruncation = (
+        $existingResult.classification -eq "MODEL_RESPONSE_INVALID" -and
+        $existingResult.telemetry.finish_reason -eq "length" -and
+        $existingResult.telemetry.completion_tokens -eq 16
+    )
+
+    if (-not $isKnownHarnessTruncation) {
+        throw "Existing Phase 5 evidence is not the known 16-token harness truncation; refusing overwrite."
+    }
+
+    $diagnosticsRoot = "$repoRoot\evidence\phase5-local-runtime\diagnostics"
+    New-Item -ItemType Directory -Force -Path $diagnosticsRoot | Out-Null
+    $archive = Join-Path $diagnosticsRoot "attempt-1-harness-truncated"
+    if (Test-Path $archive) {
+        throw "Diagnostic archive already exists: $archive"
+    }
+
+    Move-Item -LiteralPath $evidenceRoot -Destination $archive
+    Write-Host "PREVIOUS_ATTEMPT_ARCHIVED = $archive"
+}
+
 New-Item -ItemType Directory -Force -Path $clientEvidence | Out-Null
 
 $dq = [char]34
@@ -72,6 +99,10 @@ $serverArgs = @(
     "99",
     "-c",
     "4096",
+    "--reasoning",
+    "off",
+    "--reasoning-budget",
+    "0",
     "--host",
     "127.0.0.1",
     "--port",
