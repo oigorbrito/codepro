@@ -26,7 +26,7 @@ R5 = DONE
 
 RECONCILIATION = DONE
 NORMAL ROADMAP = RESUMED
-CURRENT PHASE = PHASE 4 / COMPACT MODEL COMPATIBILITY
+CURRENT PHASE = PHASE 5 / CODEPRO LOCAL-RUNTIME PLUMBING
 ```
 
 The reconciled main preserves:
@@ -220,6 +220,21 @@ execution + verifier plumbing
       ↓
 scaffold comparison
 ```
+
+### Phase 4 compatibility closure
+
+The frozen compact-model pool completed local compatibility qualification:
+
+```text
+L1 Nanbeige4.2-3B   COMPATIBLE
+L2 Qwen3.5-4B       COMPATIBLE
+L3 Granite 4.2 3B   COMPATIBLE
+L4 SWE-Dev-7B       COMPATIBLE (stretch)
+```
+
+This establishes compatibility, not model selection, ranking, routing, acceptance, or promotion.
+
+Evidence: [Phase 4 compatibility audit](docs/audits/phase4-model-compatibility-20260928.md).
 
 See [roadmap.md](roadmap.md).
 

@@ -1,0 +1,22 @@
+{
+    "candidate":  "L1",
+    "model":  "Nanbeige4.2-3B",
+    "artifact_repository":  "iamimmanuelraj/Nanbeige4.2-3B-GGUF",
+    "artifact_revision":  "e31e82d062703bd7374575860e610ccd77dc6530",
+    "artifact":  "Nanbeige4.2-3B-Q4_K_M-mainline-e31e82d.gguf",
+    "sha256":  "FBCE43B8977DD73A86126E85AE0BFE219EF3131498AE7C37571DEA58F3C6AA34",
+    "runtime":  {
+                    "build":  11205,
+                    "commit":  "95887577a"
+                },
+    "cpu":  {
+                "exit_code":  0,
+                "response_valid":  true,
+                "wall_time_ms":  36480,
+                "peak_ram_mib":  4290.3,
+                "prompt_tps":  16.5,
+                "generation_tps":  3.3
+            },
+    "pass":  true,
+    "failure_class":  null
+}

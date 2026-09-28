@@ -1,0 +1,15 @@
+0.02.883.914 E common_sampler_init: error initializing grammar sampler for grammar:
+action ::= ("\"inspect\"")
+action-kv ::= "\"action\"" space ":" space action
+path ::= ("\"README.md\"")
+path-kv ::= "\"path\"" space ":" space path
+root ::= "{" space action-kv "," space path-kv space "}"
+space ::= | " " | "\n"{1,2} [ \t]{0,20}
+
+
+Generation prompt:
+'<|im_start|>assistant
+<think>
+'
+0.02.886.327 E srv    send_error: task id = 0, error: Failed to initialize samplers: Unexpected empty grammar stack after accepting piece: <|im_start|> (166100)
+0.02.886.353 E srv  process_sing: failed to launch slot with task, id_task = 0

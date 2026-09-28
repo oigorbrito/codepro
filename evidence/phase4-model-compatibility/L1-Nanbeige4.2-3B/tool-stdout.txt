@@ -1,0 +1,40 @@
+
+
+Loading model... 
+
+ÔûäÔûä ÔûäÔûä
+ÔûêÔûê ÔûêÔûê
+ÔûêÔûê ÔûêÔûê  ÔûÇÔûÇÔûêÔûä ÔûêÔûêÔûêÔûäÔûêÔûêÔûêÔûä  ÔûÇÔûÇÔûêÔûä    ÔûäÔûêÔûêÔûêÔûê ÔûêÔûêÔûêÔûêÔûä ÔûêÔûêÔûêÔûêÔûä
+ÔûêÔûê ÔûêÔûê ÔûäÔûêÔûÇÔûêÔûê ÔûêÔûê ÔûêÔûê ÔûêÔûê ÔûäÔûêÔûÇÔûêÔûê    ÔûêÔûê    ÔûêÔûê ÔûêÔûê ÔûêÔûê ÔûêÔûê
+ÔûêÔûê ÔûêÔûê ÔûÇÔûêÔûäÔûêÔûê ÔûêÔûê ÔûêÔûê ÔûêÔûê ÔûÇÔûêÔûäÔûêÔûê ÔûêÔûê ÔûÇÔûêÔûêÔûêÔûê ÔûêÔûêÔûêÔûêÔûÇ ÔûêÔûêÔûêÔûêÔûÇ
+                                    ÔûêÔûê    ÔûêÔûê
+                                    ÔûÇÔûÇ    ÔûÇÔûÇ
+
+build      : b11205-95887577a
+model      : D:\projetos\codepro-mini-runtime\models\phase4\L1-Nanbeige4.2-3B\Nanbeige4.2-3B-Q4_K_M-mainline-e31e82d.gguf
+ftype      : Q4_K - Medium
+modalities : text
+
+available commands:
+  /exit or Ctrl+C     stop or exit
+  /regen              regenerate the last response
+  /clear              clear the chat history
+  /read <file>        add a text file
+  /glob <pattern>     add text files using globbing pattern
+
+
+
+> Return one JSON object only. It must contain two string fields. The action field must contain the word inspect. The path field must identify the repository file README.md. Do not use markdown.
+
+[Start thinking]
+
+We are asked to return one JSON object only, with two string fields:
+ - "action": must contain the word "inspect"
+ - "path": must identify the repository file "README.md"
+
+ Additionally, we are told not to use markdown. Since the output must be a JSON object, and
+
+[ Prompt: 70.9 t/s | Generation: 29.2 t/s ]
+
+
+Exiting...

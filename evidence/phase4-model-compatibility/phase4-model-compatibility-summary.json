@@ -1,0 +1,86 @@
+{
+    "schema_version":  1,
+    "phase":  4,
+    "phase_name":  "compact-model-compatibility",
+    "status":  "COMPLETE",
+    "runtime":  {
+                    "implementation":  "llama.cpp",
+                    "build":  11205,
+                    "commit":  "95887577ab5fead779581a7030a83c7752ff3234",
+                    "platform":  "Windows x64 CUDA 13.4"
+                },
+    "candidates":  [
+                       {
+                           "id":  "L1",
+                           "model":  "Nanbeige4.2-3B",
+                           "classification":  "COMPATIBLE",
+                           "artifact_bytes":  2574807872,
+                           "sha256":  "FBCE43B8977DD73A86126E85AE0BFE219EF3131498AE7C37571DEA58F3C6AA34",
+                           "cpu_generation_tps":  3.3,
+                           "gpu_generation_tps":  1.7,
+                           "gpu_vram_delta_mib":  2698,
+                           "context4096_generation_tps":  28.1,
+                           "structured_output":  "PASS_WITH_CONSTRAINED_DECODING",
+                           "gpu_layers_offloaded":  null
+                       },
+                       {
+                           "id":  "L2",
+                           "model":  "Qwen3.5-4B",
+                           "classification":  "COMPATIBLE",
+                           "artifact_bytes":  2707513696,
+                           "sha256":  "25082A7DD3776CC3C741C6347D3BD04523F05796607B3FBC32FA3A25DFA1418C",
+                           "cpu_generation_tps":  7.2,
+                           "gpu_generation_tps":  34.7,
+                           "gpu_vram_delta_mib":  2818,
+                           "context4096_generation_tps":  36.4,
+                           "structured_output":  "PASS_WITH_CONSTRAINED_DECODING",
+                           "gpu_layers_offloaded":  null
+                       },
+                       {
+                           "id":  "L3",
+                           "model":  "Granite-4.2-3B",
+                           "classification":  "COMPATIBLE",
+                           "artifact_bytes":  2244011552,
+                           "sha256":  "E0406663965846AE22A403456EB826CCCE5F450840491F71952F18A7CB78E7D5",
+                           "cpu_generation_tps":  9.8,
+                           "gpu_generation_tps":  47.2,
+                           "gpu_vram_delta_mib":  2288,
+                           "context4096_generation_tps":  47.2,
+                           "structured_output":  "PASS_WITH_CONSTRAINED_DECODING",
+                           "gpu_layers_offloaded":  null
+                       },
+                       {
+                           "id":  "L4",
+                           "model":  "SWE-Dev-7B",
+                           "role":  "stretch",
+                           "classification":  "COMPATIBLE",
+                           "source_commit":  "caf88960ca325d9d981cce3aac7dba01fef3dae2",
+                           "artifact_bytes":  4683073856,
+                           "sha256":  "C8EAA713EF68432254702DB864C08B759376C206569997411D164B84901E4192",
+                           "cpu_generation_tps":  5.2,
+                           "gpu_generation_tps":  10.1,
+                           "gpu_vram_delta_mib":  3534,
+                           "context4096_generation_tps":  10.6,
+                           "structured_output":  "PASS_WITH_CONSTRAINED_DECODING",
+                           "gpu_layers_offloaded":  null,
+                           "gpu_oom_signal":  false
+                       }
+                   ],
+    "gate":  {
+                 "artifact_identity":  "PASS",
+                 "cpu_load_generation":  "PASS",
+                 "gpu_execution":  "PASS",
+                 "context_4096":  "PASS",
+                 "structured_output":  "PASS",
+                 "clean_unload":  "PASS",
+                 "compatible_candidates":  4,
+                 "candidate_count":  4
+             },
+    "caveats":  [
+                    "Compatibility observations are not statistical benchmark rankings.",
+                    "Exact same-run GPU layer counts remain UNKNOWN.",
+                    "L1 freeform JSON failed; constrained structured output passed.",
+                    "COMPATIBLE does not mean SELECTED, ACCEPTED, ROUTED, or PROMOTED."
+                ],
+    "next_phase":  5
+}

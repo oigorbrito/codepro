@@ -1,0 +1,67 @@
+{
+    "phase":  4,
+    "candidate":  "L4",
+    "model":  "SWE-Dev-7B",
+    "role":  "stretch",
+    "quantization":  "Q4_K_M",
+    "artifact":  {
+                     "repository":  "mradermacher/SWE-Dev-7B-GGUF",
+                     "commit":  "caf88960ca325d9d981cce3aac7dba01fef3dae2",
+                     "filename":  "SWE-Dev-7B.Q4_K_M.gguf",
+                     "bytes":  4683073856,
+                     "sha256":  "C8EAA713EF68432254702DB864C08B759376C206569997411D164B84901E4192",
+                     "identity_source":  "HF x-repo-commit + x-linked-size + x-linked-etag",
+                     "pass":  true
+                 },
+    "runtime":  {
+                    "build":  11205,
+                    "commit":  "95887577ab5fead779581a7030a83c7752ff3234"
+                },
+    "cpu_2048":  {
+                     "exit_code":  0,
+                     "response_valid":  true,
+                     "wall_ms":  17729,
+                     "peak_ram_mib":  5474.7,
+                     "prompt_tps":  16.3,
+                     "generation_tps":  5.2,
+                     "pass":  true
+                 },
+    "gpu_2048":  {
+                     "exit_code":  0,
+                     "response_valid":  true,
+                     "wall_ms":  7740,
+                     "peak_ram_mib":  5565.8,
+                     "vram_base_mib":  333,
+                     "vram_peak_mib":  3867,
+                     "vram_delta_mib":  3534,
+                     "layers_offloaded":  null,
+                     "layers_total":  null,
+                     "prompt_tps":  54.3,
+                     "generation_tps":  10.1,
+                     "oom_signal":  false,
+                     "pass":  true
+                 },
+    "context_4096":  {
+                         "device":  "CUDA",
+                         "exit_code":  0,
+                         "response_valid":  true,
+                         "wall_ms":  6110,
+                         "peak_ram_mib":  5668.2,
+                         "prompt_tps":  61.4,
+                         "generation_tps":  10.6,
+                         "pass":  true
+                     },
+    "structured_output":  {
+                              "device":  "CUDA",
+                              "exit_code":  0,
+                              "wall_ms":  6316,
+                              "json_found":  true,
+                              "json":  "{\"action\":\"inspect\",\"path\":\"README.md\"}",
+                              "action":  "inspect",
+                              "path":  "README.md",
+                              "pass":  true
+                          },
+    "unload_clean":  true,
+    "classification":  "COMPATIBLE",
+    "failure_class":  null
+}

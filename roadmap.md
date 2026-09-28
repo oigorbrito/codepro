@@ -281,17 +281,40 @@ Frozen candidate pool:
 
 For each candidate:
 
-- [ ] Identify compatible format and quantization.
-- [ ] Record exact artifact/version/checksum where practical.
-- [ ] Load and generate.
-- [ ] Test GPU offload.
-- [ ] Measure RAM, VRAM, throughput, and context behavior.
-- [ ] Test tool-compatible output.
-- [ ] Unload cleanly.
-- [ ] Classify COMPATIBLE, PARTIALLY_COMPATIBLE, or BLOCKED.
+- [x] Identify compatible format and quantization.
+- [x] Record exact artifact/version/checksum where practical.
+- [x] Load and generate.
+- [x] Test GPU offload.
+- [x] Measure RAM, VRAM, throughput, and context behavior.
+- [x] Test tool-compatible output.
+- [x] Unload cleanly.
+- [x] Classify COMPATIBLE, PARTIALLY_COMPATIBLE, or BLOCKED.
+
+
+Candidate classifications:
+
+- [x] L1 Nanbeige4.2-3B: `COMPATIBLE`.
+- [x] L2 Qwen3.5-4B: `COMPATIBLE`.
+- [x] L3 Granite 4.2 3B: `COMPATIBLE`.
+- [x] L4 SWE-Dev-7B stretch: `COMPATIBLE`.
+
+**Gate:**
+
+```text
+ARTIFACT_IDENTITY     = PASS
+CPU_LOAD_GENERATION   = PASS
+GPU_EXECUTION         = PASS
+CONTEXT_4096          = PASS
+STRUCTURED_OUTPUT     = PASS
+CLEAN_UNLOAD          = PASS
+COMPATIBLE            = 4/4
+```
+
+**Evidence:** `docs/audits/phase4-model-compatibility-20260928.md`.
+
+**Phase status:** COMPLETE
 
 ---
-
 ## Phase 5 â€” CodePro to local-runtime plumbing
 
 Target:
@@ -534,7 +557,7 @@ PHASE 0   Strategy freeze               COMPLETE
 PHASE 1   Windows hardware              COMPLETE
 PHASE 2   Runtime qualification         COMPLETE
 PHASE 3   Telemetry baseline            COMPLETE
-PHASE 4   Model compatibility           NOT_STARTED
+PHASE 4   Model compatibility           COMPLETE
 PHASE 5   CodePro local plumbing        NOT_STARTED
 PHASE 6   Execution/verifier plumbing   NOT_STARTED
 PHASE 7   Scaffold compatibility        NOT_STARTED
@@ -555,6 +578,6 @@ PHASE 19  Cloud tier                    DEFERRED
 Current task:
 
 ```text
-PHASE 4 = COMPACT MODEL COMPATIBILITY
+PHASE 5 = CODEPRO LOCAL-RUNTIME PLUMBING
 STATUS = NEXT
 ```

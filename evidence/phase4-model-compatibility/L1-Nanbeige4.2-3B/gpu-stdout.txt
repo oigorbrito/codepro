@@ -1,0 +1,36 @@
+
+
+Loading model... 
+
+ÔûäÔûä ÔûäÔûä
+ÔûêÔûê ÔûêÔûê
+ÔûêÔûê ÔûêÔûê  ÔûÇÔûÇÔûêÔûä ÔûêÔûêÔûêÔûäÔûêÔûêÔûêÔûä  ÔûÇÔûÇÔûêÔûä    ÔûäÔûêÔûêÔûêÔûê ÔûêÔûêÔûêÔûêÔûä ÔûêÔûêÔûêÔûêÔûä
+ÔûêÔûê ÔûêÔûê ÔûäÔûêÔûÇÔûêÔûê ÔûêÔûê ÔûêÔûê ÔûêÔûê ÔûäÔûêÔûÇÔûêÔûê    ÔûêÔûê    ÔûêÔûê ÔûêÔûê ÔûêÔûê ÔûêÔûê
+ÔûêÔûê ÔûêÔûê ÔûÇÔûêÔûäÔûêÔûê ÔûêÔûê ÔûêÔûê ÔûêÔûê ÔûÇÔûêÔûäÔûêÔûê ÔûêÔûê ÔûÇÔûêÔûêÔûêÔûê ÔûêÔûêÔûêÔûêÔûÇ ÔûêÔûêÔûêÔûêÔûÇ
+                                    ÔûêÔûê    ÔûêÔûê
+                                    ÔûÇÔûÇ    ÔûÇÔûÇ
+
+build      : b11205-95887577a
+model      : D:\projetos\codepro-mini-runtime\models\phase4\L1-Nanbeige4.2-3B\Nanbeige4.2-3B-Q4_K_M-mainline-e31e82d.gguf
+ftype      : Q4_K - Medium
+modalities : text
+
+available commands:
+  /exit or Ctrl+C     stop or exit
+  /regen              regenerate the last response
+  /clear              clear the chat history
+  /read <file>        add a text file
+  /glob <pattern>     add text files using globbing pattern
+
+
+
+> Reply exactly L1_GPU_OK
+
+[Start thinking]
+
+We are given a query from the user: "Reply exactly L1_GPU_OK". The user is instructing the assistant to reply exactly with the string "
+
+[ Prompt: 2.3 t/s | Generation: 1.7 t/s ]
+
+
+Exiting...
