@@ -1,0 +1,14 @@
+{
+  "project_ref": "git://D:/projetos/codepro-mini-runtime/phase7/S4-OpenHands/codepro-phase7-s4-n0t4z_8v/workspaces/s4-task@f49af1d5d3c4f4150b695093f899a74b077cc24b",
+  "request_id": "phase7-s4-openhands",
+  "requested_scope": [
+    "value.py"
+  ],
+  "requester_ref": "user://phase7-compatibility",
+  "required_permissions": [
+    "edit",
+    "test"
+  ],
+  "schema_version": 1,
+  "task_ref": "phase7-trivial-edit"
+}

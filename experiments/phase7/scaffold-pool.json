@@ -100,6 +100,7 @@
           },
           "stage": "installation"
         },
+        "blocker_code": "PINNED_LITELLM_DISTRIBUTION_UNAVAILABLE",
         "completion_tokens": null,
         "gates": {
           "exact_upstream_identity": true,
@@ -109,10 +110,9 @@
         "native_contract": "PlainTask -> ProjectApiManager structural search tools -> upstream OpenaiModel tool calls -> write_patch -> extracted patch -> CodePro verifier",
         "native_tool_call_count": null,
         "prompt_tokens": null,
-        "vertical_reason": null,
-        "vertical_status": null,
         "root_cause": "exact upstream requirements installation failed on Windows/Python 3.11 because pinned litellm==1.41.24 had no matching distribution",
-        "blocker_code": "PINNED_LITELLM_DISTRIBUTION_UNAVAILABLE"
+        "vertical_reason": null,
+        "vertical_status": null
       },
       "phase7_status": "BLOCKED_INSTALLATION_WINDOWS_NATIVE",
       "prior_codepro_state": "no prior Phase 7 execution evidence",
@@ -122,10 +122,39 @@
     },
     {
       "commit": "fc6d890f7b21c71a17de60d50597c00355e235ea",
+      "evidence": "evidence/phase7-scaffold-compatibility/S4-OpenHands/s4-summary.json",
       "id": "S4",
       "local_runtime_surface": "Agent Canvas v1.21.0 request builder -> pinned Agent Server 1.49.3 REST API; explicit OpenAI-compatible model/base_url binding in conversation settings",
       "name": "OpenHands",
-      "phase7_status": "NOT_TESTED",
+      "observed": {
+        "agent_server_version": "1.49.3",
+        "blocker": null,
+        "completion_tokens": null,
+        "gates": {
+          "agent_canvas_ready": true,
+          "command_observed": false,
+          "edit_observed": false,
+          "event_edit_signal": false,
+          "exact_npm_ci": true,
+          "exact_upstream_identity": true,
+          "explicit_local_binding": true,
+          "generated_i18n": true,
+          "independent_verifier": false,
+          "inspect_observed": false,
+          "local_runtime_ready": true,
+          "model_calls_observed": null,
+          "patch_captured": false,
+          "source_repository_unchanged": true,
+          "termination_observed": false,
+          "vite_node_available": true,
+          "workspace_cleanup": true
+        },
+        "native_contract": "Agent Canvas request builder -> Agent Server 1.49.3 -> OpenHands agent tools -> isolated repository -> CodePro verifier",
+        "prompt_tokens": null,
+        "vertical_reason": "NO_OBSERVABLE_CHANGE",
+        "vertical_status": "BLOCKED"
+      },
+      "phase7_status": "BLOCKED_TIMEOUT",
       "prior_codepro_state": "previous local audit BLOCKED_RUNTIME before first task cycle due protected profile/Jinja cache",
       "repository": "OpenHands/OpenHands",
       "selection_basis": "existing CodePro local audit continuity",

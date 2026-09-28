@@ -1,0 +1,20 @@
+{
+  "agent_port": 18401,
+  "agent_server_version": "1.49.3",
+  "argv": [
+    "C:\\Program Files\\nodejs\\node.exe",
+    "D:\\projetos\\codepro-mini-runtime\\phase7\\S4-OpenHands\\upstream\\bin\\agent-canvas.mjs",
+    "--backend-only",
+    "--port",
+    "18400"
+  ],
+  "automation_port": 18402,
+  "automation_version": "1.13.3",
+  "canvas_version": "1.21.0",
+  "ingress": "http://127.0.0.1:18400",
+  "profile_dir": "D:\\projetos\\codepro-mini-runtime\\phase7\\S4-OpenHands\\codepro-phase7-s4-6qy4w6nv\\profile",
+  "profile_isolation": "PROCESS_ENVIRONMENT_ONLY",
+  "session_key": "REDACTED",
+  "state_dir": "D:\\projetos\\codepro-mini-runtime\\phase7\\S4-OpenHands\\codepro-phase7-s4-6qy4w6nv\\canvas-state",
+  "vscode_port": 19401
+}

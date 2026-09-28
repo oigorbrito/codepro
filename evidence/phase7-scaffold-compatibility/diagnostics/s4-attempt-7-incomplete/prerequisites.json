@@ -1,0 +1,20 @@
+{
+  "node": {
+    "path": "C:\\Program Files\\nodejs\\node.exe",
+    "returncode": 0,
+    "stderr": "",
+    "stdout": "v26.10.0"
+  },
+  "npm": {
+    "path": "C:\\Program Files\\nodejs\\npm.cmd",
+    "returncode": 0,
+    "stderr": "",
+    "stdout": "11.19.1"
+  },
+  "uvx": {
+    "path": "C:\\Users\\igorb\\AppData\\Local\\hermes\\bin\\uvx.exe",
+    "returncode": 0,
+    "stderr": "",
+    "stdout": "uvx 0.12.18 (01cb90c1a 2026-09-22 x86_64-pc-windows-msvc)"
+  }
+}

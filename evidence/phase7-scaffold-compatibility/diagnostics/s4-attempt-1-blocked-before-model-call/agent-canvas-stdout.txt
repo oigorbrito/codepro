@@ -1,0 +1,127 @@
+
+[36m[1mAgent Canvas[0m
+
+[36m[1/2][0m Checking prerequisites...
+[32m✓[0m uvx found
+[36m[ports][0m Checking ports...
+[36m[2/2][0m Starting services...
+[2m22:08:13[0m [34m[agent-server][0m Starting on port 18401...
+[2m22:08:13[0m [2m[agent-server][0m Using PyPI (1.49.3)
+[2m22:08:18[0m [33m[agent-server][0m Downloading cpython-3.12.14-windows-x86_64-none (download) (21.0MiB)
+[2m22:08:19[0m [33m[agent-server][0m Downloaded cpython-3.12.14-windows-x86_64-none (download)
+[2m22:08:30[0m [33m[agent-server][0m Downloading beartype (1.3MiB)
+[2m22:08:30[0m [33m[agent-server][0m Downloading botocore (15.2MiB)
+[2m22:08:30[0m [33m[agent-server][0m Downloading lxml (3.8MiB)
+[2m22:08:30[0m [33m[agent-server][0m Downloading cryptography (3.7MiB)
+[2m22:08:30[0m [33m[agent-server][0m Downloading openai (1.6MiB)
+[2m22:08:30[0m [33m[agent-server][0m Downloading pillow (6.9MiB)
+[2m22:08:30[0m [33m[agent-server][0m Downloading pygments
+[2m22:08:30[0m [33m[agent-server][0m (1.2MiB)
+[2m22:08:30[0m [33m[agent-server][0m Downloading lupa (1.9MiB)
+[2m22:08:30[0m [33m[agent-server][0m Downloading anthropic (1.1MiB)
+[2m22:08:30[0m [33m[agent-server][0m Downloading sqlalchemy (2.3MiB)
+[2m22:08:30[0m [33m[agent-server][0m Downloading litellm (26.8MiB)
+[2m22:08:30[0m [33m[agent-server][0m Downloading reportlab (1.9MiB)
+[2m22:08:30[0m [33m[agent-server][0m Downloading google-api-python-client (15.3MiB)
+[2m22:08:30[0m [33m[agent-server][0m Downloading pywin32 (6.6MiB)
+[2m22:08:30[0m [33m[agent-server][0m Downloading lmnr-claude-code-proxy (1.2MiB)
+[2m22:08:30[0m [33m[agent-server][0m Downloading grpcio
+[2m22:08:30[0m [33m[agent-server][0m (5.0MiB)
+[2m22:08:30[0m [33m[agent-server][0m Downloading pydantic-core (1.9MiB)
+[2m22:08:30[0m [33m[agent-server][0m Downloading hf-xet (3.8MiB)
+[2m22:08:30[0m [33m[agent-server][0m Downloading tokenizers (2.7MiB)
+[2m22:08:31[0m [33m[agent-server][0m Downloaded beartype
+[2m22:08:32[0m [33m[agent-server][0m Downloaded lmnr-claude-code-proxy
+[2m22:08:32[0m [33m[agent-server][0m Downloaded anthropic
+[2m22:08:32[0m [33m[agent-server][0m Downloaded pygments
+[2m22:08:32[0m [33m[agent-server][0m Downloaded openai
+[2m22:08:32[0m [33m[agent-server][0m Downloaded pydantic-core
+[2m22:08:32[0m [33m[agent-server][0m Downloaded reportlab
+[2m22:08:32[0m [33m[agent-server][0m 
+[2m22:08:32[0m [33m[agent-server][0m Downloaded lupa
+[2m22:08:32[0m [33m[agent-server][0m Building func-timeout==4.3.5
+[2m22:08:32[0m [33m[agent-server][0m Downloaded sqlalchemy
+[2m22:08:32[0m [33m[agent-server][0m Downloaded tokenizers
+[2m22:08:32[0m [33m[agent-server][0m Downloaded cryptography
+[2m22:08:32[0m [33m[agent-server][0m Downloaded hf-xet
+[2m22:08:32[0m [33m[agent-server][0m Downloaded lxml
+[2m22:08:32[0m [33m[agent-server][0m Downloaded grpcio
+[2m22:08:32[0m [33m[agent-server][0m Downloaded pillow
+[2m22:08:32[0m [33m[agent-server][0m Downloaded pywin32
+[2m22:08:33[0m [33m[agent-server][0m Downloaded google-api-python-client
+[2m22:08:33[0m [33m[agent-server][0m Downloaded botocore
+[2m22:08:33[0m [33m[agent-server][0m Built func-timeout==4.3.5
+[2m22:08:33[0m [33m[agent-server][0m Downloaded litellm
+[2m22:08:36[0m [33m[agent-server][0m Installed 196 packages in 2.24s
+[2m22:09:02[0m [33m[agent-server][0m +----------------------------------------------------------------------+
+[2m22:09:02[0m [33m[agent-server][0m |  OpenHands SDK v1.49.3                                               |
+[2m22:09:02[0m [33m[agent-server][0m |                                                                      |
+[2m22:09:02[0m [33m[agent-server][0m |  Report a bug: github.com/OpenHands/software-agent-sdk/issues        |
+[2m22:09:02[0m [33m[agent-server][0m |  Get help: openhands.dev/joinslack                                   |
+[2m22:09:02[0m [33m[agent-server][0m |  Scale up: openhands.dev/product/sdk                                 |
+[2m22:09:02[0m [33m[agent-server][0m |                                                                      |
+[2m22:09:02[0m [33m[agent-server][0m |  Set OPENHANDS_SUPPRESS_BANNER=1 to hide this message                |
+[2m22:09:02[0m [33m[agent-server][0m +----------------------------------------------------------------------+
+[2m22:09:02[0m [33m[agent-server][0m 
+[2m22:09:02[0m [34m[agent-server][0m INFO     Added to sys.path: D:\projetos\codepro-mini-runtime\phase7\S4-OpenHands\upstream\tools  __main__.py:103
+[2m22:09:02[0m [34m[agent-server][0m INFO     Extended sys.path with 1 directory for custom tool imports  __main__.py:107
+[2m22:09:02[0m [34m[agent-server][0m INFO     Imported module: canvas_ui_tool  __main__.py:128
+[2m22:09:02[0m [33m[agent-server][0m WARNING  Current configuration will not reload as not all conditions are met, please refer to documentation.  config.py:311
+[2m22:09:04[0m [34m[agent-server][0m INFO     Registered file-based agent 'bash-runner' from D:/projetos/codepro-mini-runtime/phase7/S4-OpenHands/codepro-phase7-s4-6qy4w6nv/profile/AppData/Local/uv/cache/archive-v0/raBOf-cBrihg5UmI/Lib/site-packages/openhands/tools/preset/subagents/bash_runner.md  default.py:167
+[2m22:09:04[0m [34m[agent-server][0m INFO     Registered file-based agent 'code-explorer' from D:/projetos/codepro-mini-runtime/phase7/S4-OpenHands/codepro-phase7-s4-6qy4w6nv/profile/AppData/Local/uv/cache/archive-v0/raBOf-cBrihg5UmI/Lib/site-packages/openhands/tools/preset/subagents/code_explorer.md  default.py:167
+[2m22:09:04[0m [34m[agent-server][0m INFO     Registered file-based agent 'general-purpose' from D:/projetos/codepro-mini-runtime/phase7/S4-OpenHands/codepro-phase7-s4-6qy4w6nv/profile/AppData/Local/uv/cache/archive-v0/raBOf-cBrihg5UmI/Lib/site-packages/openhands/tools/preset/subagents/default.md  default.py:167
+[2m22:09:04[0m [34m[agent-server][0m INFO     Registered file-based agent 'web-researcher' from D:/projetos/codepro-mini-runtime/phase7/S4-OpenHands/codepro-phase7-s4-6qy4w6nv/profile/AppData/Local/uv/cache/archive-v0/raBOf-cBrihg5UmI/Lib/site-packages/openhands/tools/preset/subagents/web_researcher.md  default.py:167
+[2m22:09:04[0m [34m[agent-server][0m INFO     Started server process [22152]  server.py:103
+[2m22:09:04[0m [34m[agent-server][0m INFO     Waiting for application startup.  on.py:48
+[2m22:09:09[0m [33m[agent-server][0m WARNING  VSCode server binary not found, VSCode will be disabled  vscode_service.py:48
+[2m22:09:09[0m [33m[agent-server][0m WARNING  VSCode service failed to start, continuing without VSCode  api.py:184
+[2m22:09:09[0m [34m[agent-server][0m INFO     Chromium is available for browser operations at C:\Program Files\Google\Chrome\Application\chrome.exe  impl.py:291
+[2m22:09:09[0m [34m[agent-server][0m INFO     Tool preload service started successfully  api.py:194
+[2m22:09:09[0m [34m[agent-server][0m INFO     Server initialization complete - ready to serve requests  api.py:256
+[2m22:09:09[0m [34m[agent-server][0m INFO     Application startup complete.  on.py:62
+[2m22:09:09[0m [34m[agent-server][0m INFO     Uvicorn running on http://127.0.0.1:18401 (Press CTRL+C to quit)  server.py:234
+[2m22:09:09[0m [34m[agent-server][0m INFO     127.0.0.1:62038 - "GET /server_info HTTP/1.1" 200
+[2m22:09:09[0m [32m[agent-server][0m Ready at http://127.0.0.1:18401/server_info
+[2m22:09:09[0m [2m[secrets][0m Seeding OPENHANDS_AUTOMATION_API_KEY into agent-server...
+[2m22:09:09[0m [34m[agent-server][0m INFO     Secret created/updated  settings_router.py:536
+[2m22:09:09[0m [34m[agent-server][0m INFO     127.0.0.1:62039 - "PUT /api/settings/secrets HTTP/1.1" 200
+[2m22:09:09[0m [32m[secrets][0m OPENHANDS_AUTOMATION_API_KEY seeded successfully
+[2m22:09:09[0m [32m[automation][0m Starting on port 18402...
+[2m22:09:09[0m [2m[automation][0m Using PyPI (1.13.3)
+[2m22:09:11[0m [33m[ingress][0m Starting on port 18400...
+[2m22:09:12[0m [33m[ingress][0m ╔═══════════════════════════════════════════════════════════════╗
+[2m22:09:12[0m [33m[ingress][0m ║  Ingress Proxy                                                ║
+[2m22:09:12[0m [33m[ingress][0m ╠═══════════════════════════════════════════════════════════════╣
+[2m22:09:12[0m [33m[ingress][0m ║  Listening on: http://localhost:18400/                          ║
+[2m22:09:12[0m [33m[ingress][0m ╠═══════════════════════════════════════════════════════════════╣
+[2m22:09:12[0m [33m[ingress][0m ║  Routes:                                                      ║
+[2m22:09:12[0m [33m[ingress][0m ║      /api/automation → http://127.0.0.1:18402                 ║
+[2m22:09:12[0m [33m[ingress][0m ║      /openapi.json → http://127.0.0.1:18401                   ║
+[2m22:09:12[0m [33m[ingress][0m ║      /server_info → http://127.0.0.1:18401                    ║
+[2m22:09:12[0m [33m[ingress][0m ║      /sockets → http://127.0.0.1:18401                        ║
+[2m22:09:12[0m [33m[ingress][0m ║      /health → http://127.0.0.1:18401                         ║
+[2m22:09:12[0m [33m[ingress][0m ║      /vscode → http://127.0.0.1:19401                         ║
+[2m22:09:12[0m [33m[ingress][0m ║      /ready → http://127.0.0.1:18401                          ║
+[2m22:09:12[0m [33m[ingress][0m ║      /alive → http://127.0.0.1:18401                          ║
+[2m22:09:12[0m [33m[ingress][0m ║      /redoc → http://127.0.0.1:18401                          ║
+[2m22:09:12[0m [33m[ingress][0m ║      /docs → http://127.0.0.1:18401                           ║
+[2m22:09:12[0m [33m[ingress][0m ║      /api → http://127.0.0.1:18401                            ║
+[2m22:09:12[0m [33m[ingress][0m ║                                                               ║
+[2m22:09:12[0m [33m[ingress][0m ╚═══════════════════════════════════════════════════════════════╝
+[2m22:09:12[0m [34m[agent-server][0m INFO     ::ffff:127.0.0.1:0 - "GET /health HTTP/1.1" 200
+
+[32m[1m╔══════════════════════════════════════════════════════════════╗[0m
+[32m[1m║[0m  [1mAgent Canvas Backend Stack[0m                                  [32m[1m║[0m
+[32m[1m╠══════════════════════════════════════════════════════════════╣[0m
+[32m[1m║[0m                                                              [32m[1m║[0m
+[32m[1m║[0m  Ingress:      [36mhttp://localhost:18400/[0m                       [32m[1m║[0m
+[32m[1m║[0m  API Docs:     [36mhttp://localhost:18400/api/automation/docs[0m    [32m[1m║[0m
+[32m[1m║[0m                                                              [32m[1m║[0m
+[32m[1m╚══════════════════════════════════════════════════════════════╝[0m
+
+[2mState directory: D:\projetos\codepro-mini-runtime\phase7\S4-OpenHands\codepro-phase7-s4-6qy4w6nv\canvas-state[0m
+[2mPress Ctrl+C to stop[0m
+
+[2m22:09:14[0m [33m[automation][0m Installed 170 packages in 1.75s
+[2m22:09:14[0m [33m[automation][0m warning: An executable named `uvicorn` is not provided by package `openhands-automation` but is available via the dependency `uvicorn`. Consider using `
+[2m22:09:14[0m [33m[automation][0m uvx --from uvicorn uvicorn` instead.

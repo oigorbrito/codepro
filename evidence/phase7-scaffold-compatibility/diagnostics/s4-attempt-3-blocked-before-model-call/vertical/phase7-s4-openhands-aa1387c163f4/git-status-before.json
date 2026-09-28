@@ -1,0 +1,12 @@
+{
+  "argv": [
+    "git",
+    "-C",
+    "D:\\projetos\\codepro-mini-runtime\\phase7\\S4-OpenHands\\codepro-phase7-s4-xgoyhmb0\\workspaces\\s4-task",
+    "status",
+    "--porcelain=v1"
+  ],
+  "returncode": 0,
+  "stderr": "",
+  "stdout": ""
+}

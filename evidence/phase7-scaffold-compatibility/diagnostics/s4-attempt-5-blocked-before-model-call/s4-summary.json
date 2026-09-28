@@ -1,0 +1,86 @@
+{
+  "adapter": {
+    "adapter": "openhands-agent-canvas-native",
+    "backend_url": "http://127.0.0.1:18400",
+    "bash_events": null,
+    "conversation_id": "a1a227a5-746d-4948-a53c-0f80d05ba44f",
+    "conversation_info": null,
+    "error": {
+      "message": "conversation polling timed out after 240 seconds",
+      "type": "Error"
+    },
+    "events": null,
+    "execution_status": null,
+    "final_reply": null,
+    "llm_binding": {
+      "base_url": "http://127.0.0.1:18092/v1",
+      "fallback": "DISABLED",
+      "model": "openai/codepro-phase7-granite42-3b"
+    },
+    "observations": null,
+    "working_dir": "D:\\projetos\\codepro-mini-runtime\\phase7\\S4-OpenHands\\codepro-phase7-s4-n0t4z_8v\\workspaces\\s4-task"
+  },
+  "agent_server_version": "1.49.3",
+  "automation_version": "1.13.3",
+  "candidate": "S4",
+  "classification": "BLOCKED_BEFORE_MODEL_CALL",
+  "commit": "fc6d890f7b21c71a17de60d50597c00355e235ea",
+  "executor_promotion": "NOT_AUTHORIZED",
+  "gates": {
+    "agent_canvas_ready": true,
+    "command_observed": false,
+    "edit_observed": false,
+    "event_edit_signal": false,
+    "exact_npm_ci": true,
+    "exact_upstream_identity": true,
+    "explicit_local_binding": true,
+    "generated_i18n": true,
+    "independent_verifier": false,
+    "inspect_observed": false,
+    "local_runtime_ready": true,
+    "model_calls_observed": false,
+    "patch_captured": false,
+    "source_repository_unchanged": true,
+    "termination_observed": false,
+    "vite_node_available": true,
+    "workspace_cleanup": true
+  },
+  "local_runtime": {
+    "base_url": "http://127.0.0.1:18092/v1",
+    "fallback": "DISABLED",
+    "model_alias": "codepro-phase7-granite42-3b"
+  },
+  "native_contract": "Agent Canvas request builder -> Agent Server 1.49.3 -> OpenHands agent tools -> isolated repository -> CodePro verifier",
+  "phase": 7,
+  "repository_state": {
+    "final": {
+      "clean": true,
+      "revision": "f49af1d5d3c4f4150b695093f899a74b077cc24b",
+      "status_porcelain": ""
+    },
+    "initial_revision": "f49af1d5d3c4f4150b695093f899a74b077cc24b",
+    "source": {
+      "clean": true,
+      "revision": "f49af1d5d3c4f4150b695093f899a74b077cc24b",
+      "status_porcelain": ""
+    }
+  },
+  "scaffold": "OpenHands Agent Canvas",
+  "schema_version": 1,
+  "selected_scaffold": false,
+  "telemetry": {
+    "completion_tokens": null,
+    "context_window": null,
+    "prompt_tokens": null,
+    "provider_api_cost_usd": 0
+  },
+  "version": "v1.21.0",
+  "vertical": {
+    "attempt_id": "attempt-1",
+    "changed_files": [],
+    "evidence_root": "D:\\projetos\\codepro-r2-validation\\evidence\\phase7-scaffold-compatibility\\S4-OpenHands\\vertical\\phase7-s4-openhands-cc21ecc53d80",
+    "reason": "NO_OBSERVABLE_CHANGE",
+    "run_id": "phase7-s4-openhands-cc21ecc53d80",
+    "status": "BLOCKED"
+  }
+}

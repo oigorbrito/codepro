@@ -1,0 +1,69 @@
+{
+  "path": "/server_info",
+  "response": {
+    "build_git_ref": "unknown",
+    "build_git_sha": "unknown",
+    "capabilities": [
+      "conversation_runtime_routes_v1",
+      "profile_secret_scope_v1",
+      "credential_binding_v1",
+      "credential_binding_readiness_probe_v1",
+      "credential_binding_activation_guard_v1"
+    ],
+    "conversation_runtime": "local",
+    "docs": "/docs",
+    "idle_time": 7,
+    "max_foreground_terminal_timeout_seconds": null,
+    "python_version": "3.12.8 (main, Dec  6 2024, 18:10:20) [MSC v.1942 64 bit (AMD64)]",
+    "redoc": "/redoc",
+    "runtime_idle_timeout_seconds": null,
+    "runtime_services": {
+      "agent_host_alias": "localhost",
+      "mode": "agent-canvas",
+      "services": {
+        "agent_server": {
+          "description": "The OpenHands Agent Server this agent is running inside. Tool calls (terminal, file_editor, browser, etc.) execute here.",
+          "url_from_agent": "http://localhost:18401"
+        },
+        "automation": {
+          "api_prefix": "/api/automation",
+          "auth_env_var": "OPENHANDS_AUTOMATION_API_KEY",
+          "description": "OpenHands Automations service. All routes are mounted under '/api/automation'. Authenticate with header 'X-Session-API-Key: $OPENHANDS_AUTOMATION_API_KEY'.",
+          "docs_url": "http://localhost:18402/api/automation/docs",
+          "openapi_url": "http://localhost:18402/api/automation/openapi.json",
+          "url_from_agent": "http://localhost:18402"
+        },
+        "ingress": {
+          "description": "Unified entry point. Routes /api/automation/* to the automation backend, /api/* and /sockets to the agent-server, and /* to the frontend.",
+          "url_from_agent": "http://localhost:18400"
+        }
+      }
+    },
+    "sdk_version": "1.49.3",
+    "title": "OpenHands Agent Server",
+    "tools_version": "1.49.3",
+    "uptime": 7,
+    "usable_tools": [
+      "canvas_ui",
+      "FinishTool",
+      "ask_oracle",
+      "file_editor",
+      "task_tool_set",
+      "task",
+      "task_tracker",
+      "terminal",
+      "workflow_tool_set",
+      "workflow",
+      "browser_tool_set",
+      "edit",
+      "list_directory",
+      "read_file",
+      "write_file",
+      "glob",
+      "grep",
+      "planning_file_editor"
+    ],
+    "version": "1.49.3",
+    "workspace_version": "1.49.3"
+  }
+}
