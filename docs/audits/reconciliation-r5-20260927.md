@@ -1,6 +1,6 @@
 # Reconciliation R5 — composed repository requalification — 2026-09-27
 
-**Status:** IN_PROGRESS / LOCAL_GATE_PASS / REVIEWED_MERGE_PENDING
+**Status:** DONE / MERGED / RECONCILIATION_CLOSED
 
 ## Candidate identity
 
@@ -514,3 +514,55 @@ MAIN_HISTORY_PRESERVED = PASS
 R5_LOCAL = PASS
 R5 = IN_PROGRESS
 REMAINING = REVIEWED_PR_AND_MERGE
+
+
+## Final reconciliation closure
+
+Final candidate:
+ac1eef3fb0b40abebf96f79676b61a1196a38dba
+
+PR:
+#80
+
+PR merge commit:
+bd81500eee5182e21db50c5ece11e131b7d397d2
+
+Hosted final gates at candidate head:
+
+Foundation = PASS
+Python 3.12 compatibility = PASS
+Python 3.13 compatibility = PASS
+Python 3.14 compatibility = PASS
+TypeScript telemetry contract = PASS
+Reconciliation R5 = PASS
+provider-safety = PASS
+TypeScript and real vertical = PASS
+
+Final preservation comparison:
+
+branch ahead of pre-merge main = 28 commits
+branch behind pre-merge main = 0 commits
+file removals versus pre-merge main = 0
+
+Final gate:
+
+NO_LOST_PROVEN_CAPABILITY = PASS
+NO_UNJUSTIFIED_DUPLICATE_BOUNDARY = PASS
+NEW_USEFUL_WORK_PRESERVED = PASS
+OLD_CRITICAL_TESTS_REQUALIFIED = PASS
+CURRENT_TESTS_PASS = PASS
+REAL_EXECUTION_PATH_VERIFIED = PASS
+MAIN_HISTORY_PRESERVED = PASS
+
+R1 = DONE
+R2 = DONE
+R3 = DONE
+R4 = DONE
+R5 = DONE
+
+RECONCILIATION = DONE
+NORMAL_ROADMAP = RESUME
+NEXT = PHASE_3_TELEMETRY_BASELINE
+
+No executor promotion is implied by this closure.
+Historical ops branches remain preserved.
