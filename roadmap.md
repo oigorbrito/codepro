@@ -432,12 +432,13 @@ Controlled recovery cell:
 - [x] Preserve OpenHands/model/runtime build/context/task/platform/fallback identity.
 - [x] Execute `S4-R1` with `--parallel 1`: `BLOCKED_TIMEOUT`.
 - [x] Preserve the observed result: no edit, no patch, no independent verifier, model-call telemetry unknown.
-- [ ] Attribute the timeout from the committed local logs before authorizing any second treatment.
-- [ ] Review the attribution before changing the Phase 8 gate.
+- [x] Attribute S4-R1 logs: no context/KV pressure remained with `parallel=1`; one conversation lease-loss signal was observed.
+- [ ] Repeat S4-R1 unchanged with conversation polling snapshots and post-timeout event capture.
+- [ ] Review the diagnostic repeat before authorizing any second treatment or changing the Phase 8 gate.
 
 Decision: `docs/decisions/0168-phase7r-s4-runtime-requalification.md`.
 
-**Phase status:** IN_PROGRESS — S4-R1 = BLOCKED_TIMEOUT; log attribution next; Phase 8 remains BLOCKED_BY_NO_COMPATIBLE_SCAFFOLD.
+**Phase status:** IN_PROGRESS — S4-R1 = BLOCKED_TIMEOUT; runtime context/KV attribution cleared; Agent Server conversation-state diagnostic next; Phase 8 remains BLOCKED_BY_NO_COMPATIBLE_SCAFFOLD.
 
 ---
 
@@ -640,6 +641,6 @@ Current task:
 
 ```text
 PHASE 7R = S4 RUNTIME REQUALIFICATION
-STATUS = IN_PROGRESS / S4-R1_LOG_ATTRIBUTION_NEXT
+STATUS = IN_PROGRESS / S4-R1_CONVERSATION_DIAGNOSTIC_NEXT
 PHASE 8 = BLOCKED_BY_NO_COMPATIBLE_SCAFFOLD
 ```
