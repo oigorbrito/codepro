@@ -1,0 +1,4 @@
+
+> @openhands/agent-canvas@1.21.0 make-i18n
+> node scripts/make-i18n-translations.cjs
+

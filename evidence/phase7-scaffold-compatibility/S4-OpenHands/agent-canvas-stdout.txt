@@ -1,0 +1,539 @@
+
+[36m[1mAgent Canvas[0m
+
+[36m[1/2][0m Checking prerequisites...
+[32m✓[0m uvx found
+[36m[ports][0m Checking ports...
+[36m[2/2][0m Starting services...
+[2m23:04:33[0m [34m[agent-server][0m Starting on port 18401...
+[2m23:04:33[0m [2m[agent-server][0m Using PyPI (1.49.3)
+[2m23:04:36[0m [33m[agent-server][0m Downloading sqlalchemy (2.3MiB)
+[2m23:04:36[0m [33m[agent-server][0m Downloading hf-xet (3.8MiB)
+[2m23:04:36[0m [33m[agent-server][0m Downloading pydantic-core (1.9MiB)
+[2m23:04:36[0m [33m[agent-server][0m Downloading lmnr-claude-code-proxy (1.2MiB)
+[2m23:04:36[0m [33m[agent-server][0m Downloading lupa (1.9MiB)
+[2m23:04:36[0m [33m[agent-server][0m Downloading tokenizers (2.7MiB)
+[2m23:04:36[0m [33m[agent-server][0m Downloading google-api-python-client (15.3MiB)
+[2m23:04:36[0m [33m[agent-server][0m Downloading pillow (6.9MiB)
+[2m23:04:36[0m [33m[agent-server][0m Downloading anthropic (1.1MiB)
+[2m23:04:36[0m [33m[agent-server][0m Downloading botocore (15.2MiB)
+[2m23:04:36[0m [33m[agent-server][0m Downloading grpcio (5.0MiB)
+[2m23:04:36[0m [33m[agent-server][0m Downloading lxml (3.8MiB)
+[2m23:04:36[0m [33m[agent-server][0m Downloading pygments (1.2MiB)
+[2m23:04:36[0m [33m[agent-server][0m Downloading litellm (26.8MiB)
+[2m23:04:36[0m [33m[agent-server][0m Downloading
+[2m23:04:36[0m [33m[agent-server][0m beartype (1.3MiB)
+[2m23:04:36[0m [33m[agent-server][0m Downloading cryptography (3.7MiB)
+[2m23:04:36[0m [33m[agent-server][0m Downloading pywin32 (6.6MiB)
+[2m23:04:36[0m [33m[agent-server][0m Downloading reportlab (1.9MiB)
+[2m23:04:36[0m [33m[agent-server][0m Downloading openai (1.6MiB)
+[2m23:04:38[0m [33m[agent-server][0m Downloaded lmnr-claude-code-proxy
+[2m23:04:38[0m [33m[agent-server][0m Downloaded pygments
+[2m23:04:38[0m [33m[agent-server][0m Downloaded beartype
+[2m23:04:39[0m [33m[agent-server][0m 
+[2m23:04:39[0m [33m[agent-server][0m Downloaded reportlab
+[2m23:04:39[0m [33m[agent-server][0m Downloaded lupa
+[2m23:04:39[0m [33m[agent-server][0m Building func-timeout==4.3.5
+[2m23:04:39[0m [33m[agent-server][0m Downloaded pydantic-core
+[2m23:04:39[0m [33m[agent-server][0m Downloaded sqlalchemy
+[2m23:04:39[0m [33m[agent-server][0m Downloaded tokenizers
+[2m23:04:39[0m [33m[agent-server][0m 
+[2m23:04:39[0m [33m[agent-server][0m Downloaded
+[2m23:04:39[0m [33m[agent-server][0m anthropic
+[2m23:04:39[0m [33m[agent-server][0m Downloaded hf-xet
+[2m23:04:39[0m [33m[agent-server][0m Downloaded openai
+[2m23:04:39[0m [33m[agent-server][0m Downloaded cryptography
+[2m23:04:39[0m [33m[agent-server][0m Downloaded lxml
+[2m23:04:39[0m [33m[agent-server][0m Downloaded grpcio
+[2m23:04:40[0m [33m[agent-server][0m Downloaded pillow
+[2m23:04:40[0m [33m[agent-server][0m Downloaded pywin32
+[2m23:04:40[0m [33m[agent-server][0m Built func-timeout==4.3.5
+[2m23:04:40[0m [33m[agent-server][0m Downloaded google-api-python-client
+[2m23:04:40[0m [33m[agent-server][0m Downloaded botocore
+[2m23:04:41[0m [33m[agent-server][0m Downloaded litellm
+[2m23:04:43[0m [33m[agent-server][0m Installed 196 packages in 2.04s
+[2m23:04:57[0m [33m[agent-server][0m +----------------------------------------------------------------------+
+[2m23:04:57[0m [33m[agent-server][0m |  OpenHands SDK v1.49.3                                               |
+[2m23:04:57[0m [33m[agent-server][0m |                                                                      |
+[2m23:04:57[0m [33m[agent-server][0m |  Report a bug: github.com/OpenHands/software-agent-sdk/issues        |
+[2m23:04:57[0m [33m[agent-server][0m |  Get help: openhands.dev/joinslack                                   |
+[2m23:04:57[0m [33m[agent-server][0m |  Scale up: openhands.dev/product/sdk                                 |
+[2m23:04:57[0m [33m[agent-server][0m |                                                                      |
+[2m23:04:57[0m [33m[agent-server][0m |  Set OPENHANDS_SUPPRESS_BANNER=1 to hide this message                |
+[2m23:04:57[0m [33m[agent-server][0m +----------------------------------------------------------------------+
+[2m23:04:57[0m [33m[agent-server][0m 
+[2m23:04:57[0m [34m[agent-server][0m INFO     Added to sys.path: D:\projetos\codepro-mini-runtime\phase7\S4-OpenHands\upstream\tools  __main__.py:103
+[2m23:04:57[0m [34m[agent-server][0m INFO     Extended sys.path with 1 directory for custom tool imports  __main__.py:107
+[2m23:04:57[0m [34m[agent-server][0m INFO     Imported module: canvas_ui_tool  __main__.py:128
+[2m23:04:57[0m [33m[agent-server][0m WARNING  Current configuration will not reload as not all conditions are met, please refer to documentation.  config.py:311
+[2m23:04:59[0m [34m[agent-server][0m INFO     Registered file-based agent 'bash-runner' from D:/projetos/codepro-mini-runtime/phase7/S4-OpenHands/codepro-phase7-s4-0im3ulte/profile/AppData/Local/uv/cache/archive-v0/ZJ-fG0dwv9bUUljl/Lib/site-packages/openhands/tools/preset/subagents/bash_runner.md  default.py:167
+[2m23:04:59[0m [34m[agent-server][0m INFO     Registered file-based agent 'code-explorer' from D:/projetos/codepro-mini-runtime/phase7/S4-OpenHands/codepro-phase7-s4-0im3ulte/profile/AppData/Local/uv/cache/archive-v0/ZJ-fG0dwv9bUUljl/Lib/site-packages/openhands/tools/preset/subagents/code_explorer.md  default.py:167
+[2m23:04:59[0m [34m[agent-server][0m INFO     Registered file-based agent 'general-purpose' from D:/projetos/codepro-mini-runtime/phase7/S4-OpenHands/codepro-phase7-s4-0im3ulte/profile/AppData/Local/uv/cache/archive-v0/ZJ-fG0dwv9bUUljl/Lib/site-packages/openhands/tools/preset/subagents/default.md  default.py:167
+[2m23:04:59[0m [34m[agent-server][0m INFO     Registered file-based agent 'web-researcher' from D:/projetos/codepro-mini-runtime/phase7/S4-OpenHands/codepro-phase7-s4-0im3ulte/profile/AppData/Local/uv/cache/archive-v0/ZJ-fG0dwv9bUUljl/Lib/site-packages/openhands/tools/preset/subagents/web_researcher.md  default.py:167
+[2m23:04:59[0m [34m[agent-server][0m INFO     Started server process [28696]  server.py:103
+[2m23:04:59[0m [34m[agent-server][0m INFO     Waiting for application startup.  on.py:48
+[2m23:05:02[0m [33m[agent-server][0m WARNING  VSCode server binary not found, VSCode will be disabled  vscode_service.py:48
+[2m23:05:02[0m [33m[agent-server][0m WARNING  VSCode service failed to start, continuing without VSCode  api.py:184
+[2m23:05:02[0m [34m[agent-server][0m INFO     Chromium is available for browser operations at C:\Program Files\Google\Chrome\Application\chrome.exe  impl.py:291
+[2m23:05:02[0m [34m[agent-server][0m INFO     Tool preload service started successfully  api.py:194
+[2m23:05:02[0m [34m[agent-server][0m INFO     Server initialization complete - ready to serve requests  api.py:256
+[2m23:05:02[0m [34m[agent-server][0m INFO     Application startup complete.  on.py:62
+[2m23:05:02[0m [34m[agent-server][0m INFO     Uvicorn running on http://127.0.0.1:18401 (Press CTRL+C to quit)  server.py:234
+[2m23:05:02[0m [34m[agent-server][0m INFO     127.0.0.1:57200 - "GET /server_info HTTP/1.1" 200
+[2m23:05:02[0m [32m[agent-server][0m Ready at http://127.0.0.1:18401/server_info
+[2m23:05:02[0m [2m[secrets][0m Seeding OPENHANDS_AUTOMATION_API_KEY into agent-server...
+[2m23:05:02[0m [34m[agent-server][0m INFO     Secret created/updated  settings_router.py:536
+[2m23:05:02[0m [34m[agent-server][0m INFO     127.0.0.1:57201 - "PUT /api/settings/secrets HTTP/1.1" 200
+[2m23:05:02[0m [32m[secrets][0m OPENHANDS_AUTOMATION_API_KEY seeded successfully
+[2m23:05:02[0m [32m[automation][0m Starting on port 18402...
+[2m23:05:02[0m [2m[automation][0m Using PyPI (1.13.3)
+[2m23:05:04[0m [33m[ingress][0m Starting on port 18400...
+[2m23:05:05[0m [33m[ingress][0m ╔═══════════════════════════════════════════════════════════════╗
+[2m23:05:05[0m [33m[ingress][0m ║  Ingress Proxy                                                ║
+[2m23:05:05[0m [33m[ingress][0m ╠═══════════════════════════════════════════════════════════════╣
+[2m23:05:05[0m [33m[ingress][0m ║  Listening on: http://localhost:18400/                          ║
+[2m23:05:05[0m [33m[ingress][0m ╠═══════════════════════════════════════════════════════════════╣
+[2m23:05:05[0m [33m[ingress][0m ║  Routes:                                                      ║
+[2m23:05:05[0m [33m[ingress][0m ║      /api/automation → http://127.0.0.1:18402                 ║
+[2m23:05:05[0m [33m[ingress][0m ║      /openapi.json → http://127.0.0.1:18401                   ║
+[2m23:05:05[0m [33m[ingress][0m ║      /server_info → http://127.0.0.1:18401                    ║
+[2m23:05:05[0m [33m[ingress][0m ║      /sockets → http://127.0.0.1:18401                        ║
+[2m23:05:05[0m [33m[ingress][0m ║      /health → http://127.0.0.1:18401                         ║
+[2m23:05:05[0m [33m[ingress][0m ║      /vscode → http://127.0.0.1:19401                         ║
+[2m23:05:05[0m [33m[ingress][0m ║      /ready → http://127.0.0.1:18401                          ║
+[2m23:05:05[0m [33m[ingress][0m ║      /alive → http://127.0.0.1:18401                          ║
+[2m23:05:05[0m [33m[ingress][0m ║      /redoc → http://127.0.0.1:18401                          ║
+[2m23:05:05[0m [33m[ingress][0m ║      /docs → http://127.0.0.1:18401                           ║
+[2m23:05:05[0m [33m[ingress][0m ║      /api → http://127.0.0.1:18401                            ║
+[2m23:05:05[0m [33m[ingress][0m ║                                                               ║
+[2m23:05:05[0m [33m[ingress][0m ╚═══════════════════════════════════════════════════════════════╝
+[2m23:05:05[0m [34m[agent-server][0m INFO     ::ffff:127.0.0.1:0 - "GET /health HTTP/1.1" 200
+
+[32m[1m╔══════════════════════════════════════════════════════════════╗[0m
+[32m[1m║[0m  [1mAgent Canvas Backend Stack[0m                                  [32m[1m║[0m
+[32m[1m╠══════════════════════════════════════════════════════════════╣[0m
+[32m[1m║[0m                                                              [32m[1m║[0m
+[32m[1m║[0m  Ingress:      [36mhttp://localhost:18400/[0m                       [32m[1m║[0m
+[32m[1m║[0m  API Docs:     [36mhttp://localhost:18400/api/automation/docs[0m    [32m[1m║[0m
+[32m[1m║[0m                                                              [32m[1m║[0m
+[32m[1m╚══════════════════════════════════════════════════════════════╝[0m
+
+[2mState directory: D:\projetos\codepro-mini-runtime\phase7\S4-OpenHands\codepro-phase7-s4-0im3ulte\canvas-state[0m
+[2mPress Ctrl+C to stop[0m
+
+[2m23:05:07[0m [33m[automation][0m Installed 170 packages in 2.35s
+[2m23:05:08[0m [33m[automation][0m warning: An executable named `uvicorn` is not provided by package `openhands-automation` but is available via the dependency `uvicorn
+[2m23:05:08[0m [33m[automation][0m `. Consider using `uvx --from uvicorn uvicorn` instead.
+[2m23:05:10[0m [31m[agent-server][0m ERROR    Git command failed: git remote get-url origin. Exit code: 2. Stderr: error: No such remote 'origin'
+  utils.py:102
+[2m23:05:10[0m [31m[agent-server][0m ERROR    Git command failed: git show-ref --verify --quiet refs/heads/main. Exit code: 1. Stderr:   utils.py:102
+[2m23:05:11[0m [34m[agent-server][0m INFO     Created new conversation fce9f0b4-6043-42aa-a8ad-32bf81b5a8a5  state.py:592
+[2m23:05:11[0m [34m[agent-server][0m INFO     Confirmation policy set to: kind='NeverConfirm'  local_conversation.py:2582
+[2m23:05:11[0m [34m[agent-server][0m INFO     TaskTrackerExecutor initialized with save_dir: D:\projetos\codepro-mini-runtime\phase7\S4-OpenHands\codepro-phase7-s4-0im3ulte\canvas-state\dev_conversations\fce9f0b4604342aaa8ad32bf81b5a8a5  definition.py:161
+[2m23:05:11[0m [34m[agent-server][0m INFO     Chromium is available for browser operations at C:\Program Files\Google\Chrome\Application\chrome.exe  impl.py:291
+[2m23:05:11[0m [34m[agent-server][0m INFO     Auto-detected: Using WindowsTerminal (PowerShell backend)  factory.py:156
+[2m23:05:11[0m [34m[agent-server][0m INFO     FileEditor initialized with cwd: D:\tmp\conversation-worktrees\fce9f0b4-6043-42aa-a8ad-32bf81b5a8a5\s4-task  editor.py:105
+[2m23:05:16[0m [34m[agent-server][0m INFO     TerminalExecutor initialized with working_dir: \tmp\conversation-worktrees\fce9f0b4-6043-42aa-a8ad-32bf81b5a8a5\s4-task, username: None, terminal_type: TerminalSession  impl.py:124
+[2m23:05:16[0m [34m[agent-server][0m INFO     Loaded 19 tools from spec  base.py:564
+[2m23:05:16[0m [34m[agent-server][0m INFO     ::ffff:127.0.0.1:0 - "POST /api/conversations HTTP/1.1" 201
+[2m23:05:16[0m [34m[agent-server][0m INFO     ::ffff:127.0.0.1:0 - "GET /api/conversations/fce9f0b4-6043-42aa-a8ad-32bf81b5a8a5 HTTP/1.1" 200
+[2m23:05:18[0m [34m[agent-server][0m INFO     ::ffff:127.0.0.1:0 - "GET /api/conversations/fce9f0b4-6043-42aa-a8ad-32bf81b5a8a5 HTTP/1.1" 200
+[2m23:05:19[0m [34m[agent-server][0m INFO     ::ffff:127.0.0.1:0 - "GET /api/conversations/fce9f0b4-6043-42aa-a8ad-32bf81b5a8a5 HTTP/1.1" 200
+[2m23:05:20[0m [33m[agent-server][0m WARNING  LLM raised context window exceeded error, triggering condensation  agent.py:1014
+[2m23:05:21[0m [34m[agent-server][0m INFO     ::ffff:127.0.0.1:0 - "GET /api/conversations/fce9f0b4-6043-42aa-a8ad-32bf81b5a8a5 HTTP/1.1" 200
+[2m23:05:22[0m [34m[agent-server][0m INFO     ::ffff:127.0.0.1:0 - "GET /api/conversations/fce9f0b4-6043-42aa-a8ad-32bf81b5a8a5 HTTP/1.1" 200
+[2m23:05:24[0m [34m[agent-server][0m INFO     ::ffff:127.0.0.1:0 - "GET /api/conversations/fce9f0b4-6043-42aa-a8ad-32bf81b5a8a5 HTTP/1.1" 200
+[2m23:05:25[0m [34m[agent-server][0m INFO     ::ffff:127.0.0.1:0 - "GET /api/conversations/fce9f0b4-6043-42aa-a8ad-32bf81b5a8a5 HTTP/1.1" 200
+[2m23:05:27[0m [34m[agent-server][0m INFO     ::ffff:127.0.0.1:0 - "GET /api/conversations/fce9f0b4-6043-42aa-a8ad-32bf81b5a8a5 HTTP/1.1" 200
+[2m23:05:28[0m [32m[automation][0m {"message": "Started server process [5024]", "severity": "INFO", "color_message": "Started server process [\u001b[36m5024\u001b[0m]", "litellm_redacted": "<object object at 0x000001B0BADCD870>"}
+[2m23:05:28[0m [32m[automation][0m {"message": "Waiting for application startup.", "severity": "INFO", "litellm_redacted": "<object object at 0x000001B0BADCD870>"}
+[2m23:05:28[0m [32m[automation][0m {"message": "Starting OpenHands Automations Service", "severity": "INFO", "kv_store_configured": true}
+[2m23:05:28[0m [32m[automation][0m {"message": "Created SQLite engine: sqlite+aiosqlite:///D:\\projetos\\codepro-mini-runtime\\phase7\\S4-OpenHands\\codepro-phase7-s4-0im3ulte\\automation\\automations.db", "severity": "INFO"}
+[2m23:05:28[0m [34m[agent-server][0m INFO     ::ffff:127.0.0.1:0 - "GET /api/conversations/fce9f0b4-6043-42aa-a8ad-32bf81b5a8a5 HTTP/1.1" 200
+[2m23:05:29[0m [32m[automation][0m {"message": "setup plugin alembic.autogenerate.schemas", "severity": "INFO"}
+[2m23:05:29[0m [32m[automation][0m {"message": "setup plugin alembic.autogenerate.tables", "severity": "INFO"}
+[2m23:05:29[0m [32m[automation][0m {"message": "setup plugin alembic.autogenerate.types", "severity": "INFO"}
+[2m23:05:29[0m [32m[automation][0m {"message": "setup plugin alembic.autogenerate.constraints", "severity": "INFO"}
+[2m23:05:29[0m [32m[automation][0m {"message": "setup plugin alembic.autogenerate.defaults", "severity": "INFO"}
+[2m23:05:29[0m [32m[automation][0m {"message": "setup plugin alembic.autogenerate.comments", "severity": "INFO"}
+[2m23:05:29[0m [32m[automation][0m {"message": "setup plugin alembic.ext.checkconstraint_byname", "severity": "INFO"}
+[2m23:05:29[0m [32m[automation][0m {"message": "Context impl SQLiteImpl.", "severity": "INFO"}
+[2m23:05:29[0m [32m[automation][0m {"message": "Will assume non-transactional DDL.", "severity": "INFO"}
+[2m23:05:29[0m [32m[automation][0m {"message": "Running upgrade  -> 001, Initial schema: automations and automation_runs tables.", "severity": "INFO"}
+[2m23:05:29[0m [32m[automation][0m {"message": "Running upgrade 001 -> 002, Add tarball_uploads table for storing upload metadata.", "severity": "INFO"}
+[2m23:05:29[0m [32m[automation][0m {"message": "Running upgrade 002 -> 003, Add event-based trigger support.", "severity": "INFO"}
+[2m23:05:29[0m [32m[automation][0m {"message": "Running upgrade 003 -> 004, Add prompt column to automations table.", "severity": "INFO"}
+[2m23:05:29[0m [32m[automation][0m {"message": "Running upgrade 004 -> 005, Add bash_command_id column to automation_runs table.", "severity": "INFO"}
+[2m23:05:29[0m [32m[automation][0m {"message": "Running upgrade 005 -> 006, Add model column to automations table.", "severity": "INFO"}
+[2m23:05:29[0m [32m[automation][0m {"message": "Running upgrade 006 -> 007, Add composite indexes for automation run polling queries.", "severity": "INFO"}
+[2m23:05:29[0m [32m[automation][0m {"message": "Running upgrade 007 -> 008, Add key-value store for automation state persistence.", "severity": "INFO"}
+[2m23:05:29[0m [32m[automation][0m {"message": "Running upgrade 008 -> 009, Move sandbox cleanup configuration to automations.", "severity": "INFO"}
+[2m23:05:29[0m [32m[automation][0m {"message": "Running upgrade 009 -> 010, Add index on automation_runs.automation_id.", "severity": "INFO"}
+[2m23:05:29[0m [32m[automation][0m {"message": "Running upgrade 010 -> 011, Add service metadata table.", "severity": "INFO"}
+[2m23:05:29[0m [32m[automation][0m {"message": "Running upgrade 011 -> 012, Add telemetry attribution to automations and runs.", "severity": "INFO"}
+[2m23:05:29[0m [32m[automation][0m {"message": "Running upgrade 012 -> 013, Add cost column to automation_runs table.", "severity": "INFO"}
+[2m23:05:29[0m [32m[automation][0m {"message": "Running upgrade 013 -> 014, Add preset_metadata column to automations table.", "severity": "INFO"}
+[2m23:05:29[0m [32m[automation][0m {"message": "Running upgrade 014 -> 015, Add automation_git_sync_state table.", "severity": "INFO"}
+[2m23:05:29[0m [32m[automation][0m {"message": "Running upgrade 015 -> 016, Add structured automation run status detail.", "severity": "INFO"}
+[2m23:05:29[0m [32m[automation][0m {"message": "Running upgrade 016 -> 017, Add run_metadata column to automation_runs.", "severity": "INFO"}
+[2m23:05:29[0m [32m[automation][0m {"message": "Running upgrade 017 -> 018, Add signature_scheme to custom_webhooks.", "severity": "INFO"}
+[2m23:05:29[0m [32m[automation][0m {"message": "Running upgrade 018 -> 019, Add integration_events: one row per accepted delivery.", "severity": "INFO"}
+[2m23:05:29[0m [32m[automation][0m {"message": "Running upgrade 019 -> 020, Add automation disabled reason metadata.", "severity": "INFO"}
+[2m23:05:29[0m [32m[automation][0m {"message": "Running upgrade 020 -> 021, Add live run progress phase.", "severity": "INFO"}
+[2m23:05:29[0m [32m[automation][0m {"message": "Running upgrade 021 -> 022, Add the subject a run is about, and when it stopped owning it.", "severity": "INFO"}
+[2m23:05:29[0m [32m[automation][0m {"message": "Running upgrade 022 -> 023, Scope git sync to organizations.", "severity": "INFO"}
+[2m23:05:29[0m [32m[automation][0m {"message": "Running upgrade 023 -> 024, Add when a run's sandbox is due for deferred deletion.", "severity": "INFO"}
+[2m23:05:29[0m [32m[automation][0m {"message": "Running upgrade 024 -> 025, Persist automation profile selection.", "severity": "INFO"}
+[2m23:05:29[0m [32m[automation][0m {"message": "SQLite database migrations applied successfully", "severity": "INFO"}
+[2m23:05:29[0m [32m[automation][0m {"message": "Background scheduler started", "severity": "INFO"}
+[2m23:05:29[0m [32m[automation][0m {"message": "Background dispatcher started", "severity": "INFO"}
+[2m23:05:29[0m [32m[automation][0m {"message": "Background watchdog started", "severity": "INFO"}
+[2m23:05:29[0m [32m[automation][0m {"message": "Background git sync started", "severity": "INFO"}
+[2m23:05:29[0m [32m[automation][0m {"message": "Scheduler started, polling every 60 seconds (batch_size=50)", "severity": "INFO"}
+[2m23:05:29[0m [32m[automation][0m {"message": "Dispatcher started, polling every 10 seconds (batch_size=10)", "severity": "INFO"}
+[2m23:05:29[0m [32m[automation][0m {"message": "(Automation|automations) _post_configure_properties() started", "severity": "INFO"}
+[2m23:05:29[0m [32m[automation][0m {"message": "(Automation|automations) initialize prop runs", "severity": "INFO"}
+[2m23:05:29[0m [32m[automation][0m {"message": "Automation.runs setup primary join automations.id = automation_runs.automation_id", "severity": "INFO"}
+[2m23:05:29[0m [32m[automation][0m {"message": "Automation.runs setup secondary join None", "severity": "INFO"}
+[2m23:05:29[0m [32m[automation][0m {"message": "Automation.runs synchronize pairs [(automations.id => automation_runs.automation_id)]", "severity": "INFO"}
+[2m23:05:29[0m [32m[automation][0m {"message": "Automation.runs secondary synchronize pairs []", "severity": "INFO"}
+[2m23:05:29[0m [32m[automation][0m {"message": "Automation.runs local/remote pairs [(automations.id / automation_runs.automation_id)]", "severity": "INFO"}
+[2m23:05:29[0m [32m[automation][0m {"message": "Automation.runs remote columns [automation_runs.automation_id]", "severity": "INFO"}
+[2m23:05:29[0m [32m[automation][0m {"message": "Automation.runs local columns [automations.id]", "severity": "INFO"}
+[2m23:05:29[0m [32m[automation][0m {"message": "Automation.runs relationship direction RelationshipDirection.ONETOMANY", "severity": "INFO"}
+[2m23:05:29[0m [32m[automation][0m {"message": "Automation.runs lazy loading clause :param_1 = automation_runs.automation_id", "severity": "INFO"}
+[2m23:05:29[0m [32m[automation][0m {"message": "(Automation|automations) initialize prop disable_events", "severity": "INFO"}
+[2m23:05:29[0m [32m[automation][0m {"message": "Automation.disable_events setup primary join automations.id = automation_disable_events.automation_id", "severity": "INFO"}
+[2m23:05:29[0m [32m[automation][0m {"message": "Automation.disable_events setup secondary join None", "severity": "INFO"}
+[2m23:05:29[0m [32m[automation][0m {"message": "Automation.disable_events synchronize pairs [(automations.id => automation_disable_events.automation_id)]", "severity": "INFO"}
+[2m23:05:29[0m [32m[automation][0m {"message": "Automation.disable_events secondary synchronize pairs []", "severity": "INFO"}
+[2m23:05:29[0m [32m[automation][0m {"message": "Automation.disable_events local/remote pairs [(automations.id / automation_disable_events.automation_id)]", "severity": "INFO"}
+[2m23:05:29[0m [32m[automation][0m {"message": "Automation.disable_events remote columns [automation_disable_events.automation_id]", "severity": "INFO"}
+[2m23:05:29[0m [32m[automation][0m {"message": "Automation.disable_events local columns [automations.id]", "severity": "INFO"}
+[2m23:05:29[0m [32m[automation][0m {"message": "Automation.disable_events relationship direction RelationshipDirection.ONETOMANY", "severity": "INFO"}
+[2m23:05:29[0m [32m[automation][0m {"message": "Automation.disable_events lazy loading clause :param_1 = automation_disable_events.automation_id", "severity": "INFO"}
+[2m23:05:29[0m [32m[automation][0m {"message": "(Automation|automations) initialize prop id", "severity": "INFO"}
+[2m23:05:29[0m [32m[automation][0m {"message": "(Automation|automations) initialize prop user_id", "severity": "INFO"}
+[2m23:05:29[0m [32m[automation][0m {"message": "(Automation|automations) initialize prop org_id", "severity": "INFO"}
+[2m23:05:29[0m [32m[automation][0m {"message": "(Automation|automations) initialize prop name", "severity": "INFO"}
+[2m23:05:29[0m [32m[automation][0m {"message": "(Automation|automations) initialize prop telemetry_distinct_id", "severity": "INFO"}
+[2m23:05:29[0m [32m[automation][0m {"message": "(Automation|automations) initialize prop prompt", "severity": "INFO"}
+[2m23:05:29[0m [32m[automation][0m {"message": "(Automation|automations) initialize prop preset_metadata", "severity": "INFO"}
+[2m23:05:29[0m [32m[automation][0m {"message": "(Automation|automations) initialize prop model", "severity": "INFO"}
+[2m23:05:29[0m [32m[automation][0m {"message": "(Automation|automations) initialize prop agent_profile_id", "severity": "INFO"}
+[2m23:05:29[0m [32m[automation][0m {"message": "(Automation|automations) initialize prop trigger", "severity": "INFO"}
+[2m23:05:29[0m [32m[automation][0m {"message": "(Automation|automations) initialize prop tarball_path", "severity": "INFO"}
+[2m23:05:29[0m [32m[automation][0m {"message": "(Automation|automations) initialize prop setup_script_path", "severity": "INFO"}
+[2m23:05:29[0m [32m[automation][0m {"message": "(Automation|automations) initialize prop entrypoint", "severity": "INFO"}
+[2m23:05:29[0m [32m[automation][0m {"message": "(Automation|automations) initialize prop timeout", "severity": "INFO"}
+[2m23:05:29[0m [32m[automation][0m {"message": "(Automation|automations) initialize prop keep_alive", "severity": "INFO"}
+[2m23:05:29[0m [32m[automation][0m {"message": "(Automation|automations) initialize prop enabled", "severity": "INFO"}
+[2m23:05:29[0m [32m[automation][0m {"message": "(Automation|automations) initialize prop disabled_reason", "severity": "INFO"}
+[2m23:05:29[0m [32m[automation][0m {"message": "(Automation|automations) initialize prop disabled_detail", "severity": "INFO"}
+[2m23:05:29[0m [32m[automation][0m {"message": "(Automation|automations) initialize prop disabled_at", "severity": "INFO"}
+[2m23:05:29[0m [32m[automation][0m {"message": "(Automation|automations) initialize prop deleted_at", "severity": "INFO"}
+[2m23:05:29[0m [32m[automation][0m {"message": "(Automation|automations) initialize prop last_triggered_at", "severity": "INFO"}
+[2m23:05:29[0m [32m[automation][0m {"message": "(Automation|automations) initialize prop last_polled_at", "severity": "INFO"}
+[2m23:05:29[0m [32m[automation][0m {"message": "(Automation|automations) initialize prop created_at", "severity": "INFO"}
+[2m23:05:29[0m [32m[automation][0m {"message": "(Automation|automations) initialize prop updated_at", "severity": "INFO"}
+[2m23:05:29[0m [32m[automation][0m {"message": "(Automation|automations) _post_configure_properties() complete", "severity": "INFO"}
+[2m23:05:29[0m [32m[automation][0m {"message": "(AutomationRun|automation_runs) _post_configure_properties() started", "severity": "INFO"}
+[2m23:05:29[0m [32m[automation][0m {"message": "(AutomationRun|automation_runs) initialize prop automation", "severity": "INFO"}
+[2m23:05:29[0m [32m[automation][0m {"message": "AutomationRun.automation setup primary join automations.id = automation_runs.automation_id", "severity": "INFO"}
+[2m23:05:29[0m [32m[automation][0m {"message": "AutomationRun.automation setup secondary join None", "severity": "INFO"}
+[2m23:05:29[0m [32m[automation][0m {"message": "AutomationRun.automation synchronize pairs [(automations.id => automation_runs.automation_id)]", "severity": "INFO"}
+[2m23:05:29[0m [32m[automation][0m {"message": "AutomationRun.automation secondary synchronize pairs []", "severity": "INFO"}
+[2m23:05:29[0m [32m[automation][0m {"message": "AutomationRun.automation local/remote pairs [(automation_runs.automation_id / automations.id)]", "severity": "INFO"}
+[2m23:05:29[0m [32m[automation][0m {"message": "AutomationRun.automation remote columns [automations.id]", "severity": "INFO"}
+[2m23:05:29[0m [32m[automation][0m {"message": "AutomationRun.automation local columns [automation_runs.automation_id]", "severity": "INFO"}
+[2m23:05:29[0m [32m[automation][0m {"message": "AutomationRun.automation relationship direction RelationshipDirection.MANYTOONE", "severity": "INFO"}
+[2m23:05:29[0m [32m[automation][0m {"message": "AutomationRun.automation lazy loading clause automations.id = :param_1", "severity": "INFO"}
+[2m23:05:29[0m [32m[automation][0m {"message": "AutomationRun.automation will use Session.get() to optimize instance loads", "severity": "INFO"}
+[2m23:05:29[0m [32m[automation][0m {"message": "(AutomationRun|automation_runs) initialize prop id", "severity": "INFO"}
+[2m23:05:29[0m [32m[automation][0m {"message": "(AutomationRun|automation_runs) initialize prop automation_id", "severity": "INFO"}
+[2m23:05:29[0m [32m[automation][0m {"message": "(AutomationRun|automation_runs) initialize prop telemetry_distinct_id", "severity": "INFO"}
+[2m23:05:29[0m [32m[automation][0m {"message": "(AutomationRun|automation_runs) initialize prop status", "severity": "INFO"}
+[2m23:05:29[0m [32m[automation][0m {"message": "(AutomationRun|automation_runs) initialize prop error_detail", "severity": "INFO"}
+[2m23:05:29[0m [32m[automation][0m {"message": "(AutomationRun|automation_runs) initialize prop status_detail", "severity": "INFO"}
+[2m23:05:29[0m [32m[automation][0m {"message": "(AutomationRun|automation_runs) initialize prop current_phase", "severity": "INFO"}
+[2m23:05:29[0m [32m[automation][0m {"message": "(AutomationRun|automation_runs) initialize prop conversation_id", "severity": "INFO"}
+[2m23:05:29[0m [32m[automation][0m {"message": "(AutomationRun|automation_runs) initialize prop cost", "severity": "INFO"}
+[2m23:05:29[0m [32m[automation][0m {"message": "(AutomationRun|automation_runs) initialize prop timeout_at", "severity": "INFO"}
+[2m23:05:29[0m [32m[automation][0m {"message": "(AutomationRun|automation_runs) initialize prop sandbox_id", "severity": "INFO"}
+[2m23:05:29[0m [32m[automation][0m {"message": "(AutomationRun|automation_runs) initialize prop subject_key", "severity": "INFO"}
+[2m23:05:29[0m [32m[automation][0m {"message": "(AutomationRun|automation_runs) initialize prop subject_released_at", "severity": "INFO"}
+[2m23:05:29[0m [32m[automation][0m {"message": "(AutomationRun|automation_runs) initialize prop sandbox_cleanup_due_at", "severity": "INFO"}
+[2m23:05:29[0m [32m[automation][0m {"message": "(AutomationRun|automation_runs) initialize prop bash_command_id", "severity": "INFO"}
+[2m23:05:29[0m [32m[automation][0m {"message": "(AutomationRun|automation_runs) initialize prop event_payload", "severity": "INFO"}
+[2m23:05:29[0m [32m[automation][0m {"message": "(AutomationRun|automation_runs) initialize prop run_metadata", "severity": "INFO"}
+[2m23:05:29[0m [32m[automation][0m {"message": "(AutomationRun|automation_runs) initialize prop created_at", "severity": "INFO"}
+[2m23:05:29[0m [32m[automation][0m {"message": "(AutomationRun|automation_runs) initialize prop started_at", "severity": "INFO"}
+[2m23:05:29[0m [32m[automation][0m {"message": "(AutomationRun|automation_runs) initialize prop completed_at", "severity": "INFO"}
+[2m23:05:29[0m [32m[automation][0m {"message": "(AutomationRun|automation_runs) _post_configure_properties() complete", "severity": "INFO"}
+[2m23:05:29[0m [32m[automation][0m {"message": "(AutomationDisableEvent|automation_disable_events) _post_configure_properties() started", "severity": "INFO"}
+[2m23:05:29[0m [32m[automation][0m {"message": "(AutomationDisableEvent|automation_disable_events) initialize prop automation", "severity": "INFO"}
+[2m23:05:29[0m [32m[automation][0m {"message": "AutomationDisableEvent.automation setup primary join automations.id = automation_disable_events.automation_id", "severity": "INFO"}
+[2m23:05:29[0m [32m[automation][0m {"message": "AutomationDisableEvent.automation setup secondary join None", "severity": "INFO"}
+[2m23:05:29[0m [32m[automation][0m {"message": "AutomationDisableEvent.automation synchronize pairs [(automations.id => automation_disable_events.automation_id)]", "severity": "INFO"}
+[2m23:05:29[0m [32m[automation][0m {"message": "AutomationDisableEvent.automation secondary synchronize pairs []", "severity": "INFO"}
+[2m23:05:29[0m [32m[automation][0m {"message": "AutomationDisableEvent.automation local/remote pairs [(automation_disable_events.automation_id / automations.id)]", "severity": "INFO"}
+[2m23:05:29[0m [32m[automation][0m {"message": "AutomationDisableEvent.automation remote columns [automations.id]", "severity": "INFO"}
+[2m23:05:29[0m [32m[automation][0m {"message": "AutomationDisableEvent.automation local columns [automation_disable_events.automation_id]", "severity": "INFO"}
+[2m23:05:29[0m [32m[automation][0m {"message": "AutomationDisableEvent.automation relationship direction RelationshipDirection.MANYTOONE", "severity": "INFO"}
+[2m23:05:29[0m [32m[automation][0m {"message": "AutomationDisableEvent.automation lazy loading clause automations.id = :param_1", "severity": "INFO"}
+[2m23:05:29[0m [32m[automation][0m {"message": "AutomationDisableEvent.automation will use Session.get() to optimize instance loads", "severity": "INFO"}
+[2m23:05:29[0m [32m[automation][0m {"message": "(AutomationDisableEvent|automation_disable_events) initialize prop run", "severity": "INFO"}
+[2m23:05:29[0m [32m[automation][0m {"message": "AutomationDisableEvent.run setup primary join automation_runs.id = automation_disable_events.run_id", "severity": "INFO"}
+[2m23:05:29[0m [32m[automation][0m {"message": "AutomationDisableEvent.run setup secondary join None", "severity": "INFO"}
+[2m23:05:29[0m [32m[automation][0m {"message": "AutomationDisableEvent.run synchronize pairs [(automation_runs.id => automation_disable_events.run_id)]", "severity": "INFO"}
+[2m23:05:29[0m [32m[automation][0m {"message": "AutomationDisableEvent.run secondary synchronize pairs []", "severity": "INFO"}
+[2m23:05:29[0m [32m[automation][0m {"message": "AutomationDisableEvent.run local/remote pairs [(automation_disable_events.run_id / automation_runs.id)]", "severity": "INFO"}
+[2m23:05:29[0m [32m[automation][0m {"message": "AutomationDisableEvent.run remote columns [automation_runs.id]", "severity": "INFO"}
+[2m23:05:29[0m [32m[automation][0m {"message": "AutomationDisableEvent.run local columns [automation_disable_events.run_id]", "severity": "INFO"}
+[2m23:05:29[0m [32m[automation][0m {"message": "AutomationDisableEvent.run relationship direction RelationshipDirection.MANYTOONE", "severity": "INFO"}
+[2m23:05:29[0m [32m[automation][0m {"message": "AutomationDisableEvent.run lazy loading clause automation_runs.id = :param_1", "severity": "INFO"}
+[2m23:05:29[0m [32m[automation][0m {"message": "AutomationDisableEvent.run will use Session.get() to optimize instance loads", "severity": "INFO"}
+[2m23:05:29[0m [32m[automation][0m {"message": "(AutomationDisableEvent|automation_disable_events) initialize prop id", "severity": "INFO"}
+[2m23:05:29[0m [32m[automation][0m {"message": "(AutomationDisableEvent|automation_disable_events) initialize prop automation_id", "severity": "INFO"}
+[2m23:05:29[0m [32m[automation][0m {"message": "(AutomationDisableEvent|automation_disable_events) initialize prop run_id", "severity": "INFO"}
+[2m23:05:29[0m [32m[automation][0m {"message": "(AutomationDisableEvent|automation_disable_events) initialize prop reason", "severity": "INFO"}
+[2m23:05:29[0m [32m[automation][0m {"message": "(AutomationDisableEvent|automation_disable_events) initialize prop detail", "severity": "INFO"}
+[2m23:05:29[0m [32m[automation][0m {"message": "(AutomationDisableEvent|automation_disable_events) initialize prop source", "severity": "INFO"}
+[2m23:05:29[0m [32m[automation][0m {"message": "(AutomationDisableEvent|automation_disable_events) initialize prop created_at", "severity": "INFO"}
+[2m23:05:29[0m [32m[automation][0m {"message": "(AutomationDisableEvent|automation_disable_events) _post_configure_properties() complete", "severity": "INFO"}
+[2m23:05:29[0m [32m[automation][0m {"message": "(TarballUpload|tarball_uploads) _post_configure_properties() started", "severity": "INFO"}
+[2m23:05:29[0m [32m[automation][0m {"message": "(TarballUpload|tarball_uploads) initialize prop id", "severity": "INFO"}
+[2m23:05:29[0m [32m[automation][0m {"message": "(TarballUpload|tarball_uploads) initialize prop user_id", "severity": "INFO"}
+[2m23:05:29[0m [32m[automation][0m {"message": "(TarballUpload|tarball_uploads) initialize prop org_id", "severity": "INFO"}
+[2m23:05:29[0m [32m[automation][0m {"message": "(TarballUpload|tarball_uploads) initialize prop name", "severity": "INFO"}
+[2m23:05:29[0m [32m[automation][0m {"message": "(TarballUpload|tarball_uploads) initialize prop description", "severity": "INFO"}
+[2m23:05:29[0m [32m[automation][0m {"message": "(TarballUpload|tarball_uploads) initialize prop status", "severity": "INFO"}
+[2m23:05:29[0m [32m[automation][0m {"message": "(TarballUpload|tarball_uploads) initialize prop error_message", "severity": "INFO"}
+[2m23:05:29[0m [32m[automation][0m {"message": "(TarballUpload|tarball_uploads) initialize prop size_bytes", "severity": "INFO"}
+[2m23:05:29[0m [32m[automation][0m {"message": "(TarballUpload|tarball_uploads) initialize prop storage_path", "severity": "INFO"}
+[2m23:05:29[0m [32m[automation][0m {"message": "(TarballUpload|tarball_uploads) initialize prop created_at", "severity": "INFO"}
+[2m23:05:29[0m [32m[automation][0m {"message": "(TarballUpload|tarball_uploads) initialize prop updated_at", "severity": "INFO"}
+[2m23:05:29[0m [32m[automation][0m {"message": "(TarballUpload|tarball_uploads) initialize prop deleted_at", "severity": "INFO"}
+[2m23:05:29[0m [32m[automation][0m {"message": "(TarballUpload|tarball_uploads) _post_configure_properties() complete", "severity": "INFO"}
+[2m23:05:29[0m [32m[automation][0m {"message": "(CustomWebhook|custom_webhooks) _post_configure_properties() started", "severity": "INFO"}
+[2m23:05:29[0m [32m[automation][0m {"message": "(CustomWebhook|custom_webhooks) initialize prop id", "severity": "INFO"}
+[2m23:05:29[0m [32m[automation][0m {"message": "(CustomWebhook|custom_webhooks) initialize prop org_id", "severity": "INFO"}
+[2m23:05:29[0m [32m[automation][0m {"message": "(CustomWebhook|custom_webhooks) initialize prop name", "severity": "INFO"}
+[2m23:05:29[0m [32m[automation][0m {"message": "(CustomWebhook|custom_webhooks) initialize prop source", "severity": "INFO"}
+[2m23:05:29[0m [32m[automation][0m {"message": "(CustomWebhook|custom_webhooks) initialize prop webhook_secret", "severity": "INFO"}
+[2m23:05:29[0m [32m[automation][0m {"message": "(CustomWebhook|custom_webhooks) initialize prop enabled", "severity": "INFO"}
+[2m23:05:29[0m [32m[automation][0m {"message": "(CustomWebhook|custom_webhooks) initialize prop event_key_expr", "severity": "INFO"}
+[2m23:05:29[0m [32m[automation][0m {"message": "(CustomWebhook|custom_webhooks) initialize prop signature_header", "severity": "INFO"}
+[2m23:05:29[0m [32m[automation][0m {"message": "(CustomWebhook|custom_webhooks) initialize prop signature_scheme", "severity": "INFO"}
+[2m23:05:29[0m [32m[automation][0m {"message": "(CustomWebhook|custom_webhooks) initialize prop created_at", "severity": "INFO"}
+[2m23:05:29[0m [32m[automation][0m {"message": "(CustomWebhook|custom_webhooks) initialize prop updated_at", "severity": "INFO"}
+[2m23:05:29[0m [32m[automation][0m {"message": "(CustomWebhook|custom_webhooks) _post_configure_properties() complete", "severity": "INFO"}
+[2m23:05:29[0m [32m[automation][0m {"message": "(IntegrationEvent|integration_events) _post_configure_properties() started", "severity": "INFO"}
+[2m23:05:29[0m [32m[automation][0m {"message": "(IntegrationEvent|integration_events) initialize prop id", "severity": "INFO"}
+[2m23:05:29[0m [32m[automation][0m {"message": "(IntegrationEvent|integration_events) initialize prop org_id", "severity": "INFO"}
+[2m23:05:29[0m [32m[automation][0m {"message": "(IntegrationEvent|integration_events) initialize prop source", "severity": "INFO"}
+[2m23:05:29[0m [32m[automation][0m {"message": "(IntegrationEvent|integration_events) initialize prop provider_event_id", "severity": "INFO"}
+[2m23:05:29[0m [32m[automation][0m {"message": "(IntegrationEvent|integration_events) initialize prop event_key", "severity": "INFO"}
+[2m23:05:29[0m [32m[automation][0m {"message": "(IntegrationEvent|integration_events) initialize prop payload", "severity": "INFO"}
+[2m23:05:29[0m [32m[automation][0m {"message": "(IntegrationEvent|integration_events) initialize prop matched_count", "severity": "INFO"}
+[2m23:05:29[0m [32m[automation][0m {"message": "(IntegrationEvent|integration_events) initialize prop received_at", "severity": "INFO"}
+[2m23:05:29[0m [32m[automation][0m {"message": "(IntegrationEvent|integration_events) _post_configure_properties() complete", "severity": "INFO"}
+[2m23:05:29[0m [32m[automation][0m {"message": "(AutomationServiceMetadata|automation_service_metadata) _post_configure_properties() started", "severity": "INFO"}
+[2m23:05:29[0m [32m[automation][0m {"message": "(AutomationServiceMetadata|automation_service_metadata) initialize prop key", "severity": "INFO"}
+[2m23:05:29[0m [32m[automation][0m {"message": "(AutomationServiceMetadata|automation_service_metadata) initialize prop value", "severity": "INFO"}
+[2m23:05:29[0m [32m[automation][0m {"message": "(AutomationServiceMetadata|automation_service_metadata) initialize prop created_at", "severity": "INFO"}
+[2m23:05:29[0m [32m[automation][0m {"message": "(AutomationServiceMetadata|automation_service_metadata) initialize prop updated_at", "severity": "INFO"}
+[2m23:05:29[0m [32m[automation][0m {"message": "(AutomationServiceMetadata|automation_service_metadata) _post_configure_properties() complete", "severity": "INFO"}
+[2m23:05:29[0m [32m[automation][0m {"message": "(AutomationKV|automation_kv) _post_configure_properties() started", "severity": "INFO"}
+[2m23:05:29[0m [32m[automation][0m {"message": "(AutomationKV|automation_kv) initialize prop id", "severity": "INFO"}
+[2m23:05:29[0m [32m[automation][0m {"message": "(AutomationKV|automation_kv) initialize prop automation_id", "severity": "INFO"}
+[2m23:05:29[0m [32m[automation][0m {"message": "(AutomationKV|automation_kv) initialize prop state_encrypted", "severity": "INFO"}
+[2m23:05:29[0m [32m[automation][0m {"message": "(AutomationKV|automation_kv) initialize prop created_at", "severity": "INFO"}
+[2m23:05:29[0m [32m[automation][0m {"message": "(AutomationKV|automation_kv) initialize prop updated_at", "severity": "INFO"}
+[2m23:05:29[0m [32m[automation][0m {"message": "(AutomationKV|automation_kv) _post_configure_properties() complete", "severity": "INFO"}
+[2m23:05:29[0m [32m[automation][0m {"message": "(AutomationGitSyncState|automation_git_sync_state) _post_configure_properties() started", "severity": "INFO"}
+[2m23:05:29[0m [32m[automation][0m {"message": "(AutomationGitSyncState|automation_git_sync_state) initialize prop automation_id", "severity": "INFO"}
+[2m23:05:29[0m [32m[automation][0m {"message": "(AutomationGitSyncState|automation_git_sync_state) initialize prop org_id", "severity": "INFO"}
+[2m23:05:29[0m [32m[automation][0m {"message": "(AutomationGitSyncState|automation_git_sync_state) initialize prop slug", "severity": "INFO"}
+[2m23:05:29[0m [32m[automation][0m {"message": "(AutomationGitSyncState|automation_git_sync_state) initialize prop content_hash", "severity": "INFO"}
+[2m23:05:29[0m [32m[automation][0m {"message": "(AutomationGitSyncState|automation_git_sync_state) initialize prop last_synced_commit", "severity": "INFO"}
+[2m23:05:29[0m [32m[automation][0m {"message": "(AutomationGitSyncState|automation_git_sync_state) initialize prop last_synced_at", "severity": "INFO"}
+[2m23:05:29[0m [32m[automation][0m {"message": "(AutomationGitSyncState|automation_git_sync_state) initialize prop dirty", "severity": "INFO"}
+[2m23:05:29[0m [32m[automation][0m {"message": "(AutomationGitSyncState|automation_git_sync_state) initialize prop created_at", "severity": "INFO"}
+[2m23:05:29[0m [32m[automation][0m {"message": "(AutomationGitSyncState|automation_git_sync_state) initialize prop updated_at", "severity": "INFO"}
+[2m23:05:29[0m [32m[automation][0m {"message": "(AutomationGitSyncState|automation_git_sync_state) _post_configure_properties() complete", "severity": "INFO"}
+[2m23:05:29[0m [32m[automation][0m {"message": "(AutomationGitSyncOrgConfig|automation_git_sync_org_config) _post_configure_properties() started", "severity": "INFO"}
+[2m23:05:29[0m [32m[automation][0m {"message": "(AutomationGitSyncOrgConfig|automation_git_sync_org_config) initialize prop org_id", "severity": "INFO"}
+[2m23:05:29[0m [32m[automation][0m {"message": "(AutomationGitSyncOrgConfig|automation_git_sync_org_config) initialize prop overrides", "severity": "INFO"}
+[2m23:05:29[0m [32m[automation][0m {"message": "(AutomationGitSyncOrgConfig|automation_git_sync_org_config) initialize prop configured_by_user_id", "severity": "INFO"}
+[2m23:05:29[0m [32m[automation][0m {"message": "(AutomationGitSyncOrgConfig|automation_git_sync_org_config) initialize prop last_synced_commit", "severity": "INFO"}
+[2m23:05:29[0m [32m[automation][0m {"message": "(AutomationGitSyncOrgConfig|automation_git_sync_org_config) initialize prop last_synced_path", "severity": "INFO"}
+[2m23:05:29[0m [32m[automation][0m {"message": "(AutomationGitSyncOrgConfig|automation_git_sync_org_config) initialize prop last_run_at", "severity": "INFO"}
+[2m23:05:29[0m [32m[automation][0m {"message": "(AutomationGitSyncOrgConfig|automation_git_sync_org_config) initialize prop last_error", "severity": "INFO"}
+[2m23:05:29[0m [32m[automation][0m {"message": "(AutomationGitSyncOrgConfig|automation_git_sync_org_config) initialize prop last_error_at", "severity": "INFO"}
+[2m23:05:29[0m [32m[automation][0m {"message": "(AutomationGitSyncOrgConfig|automation_git_sync_org_config) initialize prop sync_started_at", "severity": "INFO"}
+[2m23:05:29[0m [32m[automation][0m {"message": "(AutomationGitSyncOrgConfig|automation_git_sync_org_config) initialize prop created_at", "severity": "INFO"}
+[2m23:05:29[0m [32m[automation][0m {"message": "(AutomationGitSyncOrgConfig|automation_git_sync_org_config) initialize prop updated_at", "severity": "INFO"}
+[2m23:05:29[0m [32m[automation][0m {"message": "(AutomationGitSyncOrgConfig|automation_git_sync_org_config) _post_configure_properties() complete", "severity": "INFO"}
+[2m23:05:29[0m [32m[automation][0m {"message": "Watchdog started, scanning every 60s", "severity": "INFO"}
+[2m23:05:29[0m [32m[automation][0m {"message": "Git sync loop started; each org's interval is set from the UI, 0 means manual-only", "severity": "INFO"}
+[2m23:05:29[0m [32m[automation][0m {"message": "Application startup complete.", "severity": "INFO", "litellm_redacted": "<object object at 0x000001B0BADCD870>"}
+[2m23:05:29[0m [32m[automation][0m {"message": "Uvicorn running on http://127.0.0.1:18402 (Press CTRL+C to quit)", "severity": "INFO", "color_message": "Uvicorn running on \u001b[1mhttp://127.0.0.1:18402\u001b[0m (Press CTRL+C to quit)", "litellm_redacted": "<object object at 0x000001B0BADCD870>"}
+[2m23:05:29[0m [32m[automation][0m {"message": "Workspace retention is enabled but the configured root D:\\projetos\\codepro-mini-runtime\\phase7\\S4-OpenHands\\codepro-phase7-s4-0im3ulte\\canvas-state\\workspaces\\automation-runs does not exist on this host; no workspace will be purged.", "severity": "WARNING"}
+[2m23:05:30[0m [33m[ingress][0m (node:24596) MaxListenersExceededWarning: Possible EventEmitter memory leak detected. 11 timeout listeners added to [Socket]. MaxListeners is 10. Use emitter.setMaxListeners() to increase limit
+[2m23:05:30[0m [33m[ingress][0m (Use `node --trace-warnings ...` to show where the warning was created)
+[2m23:05:30[0m [34m[agent-server][0m INFO     ::ffff:127.0.0.1:0 - "GET /api/conversations/fce9f0b4-6043-42aa-a8ad-32bf81b5a8a5 HTTP/1.1" 200
+[2m23:05:32[0m [34m[agent-server][0m INFO     ::ffff:127.0.0.1:0 - "GET /api/conversations/fce9f0b4-6043-42aa-a8ad-32bf81b5a8a5 HTTP/1.1" 200
+[2m23:05:33[0m [34m[agent-server][0m INFO     ::ffff:127.0.0.1:0 - "GET /api/conversations/fce9f0b4-6043-42aa-a8ad-32bf81b5a8a5 HTTP/1.1" 200
+[2m23:05:35[0m [34m[agent-server][0m INFO     ::ffff:127.0.0.1:0 - "GET /api/conversations/fce9f0b4-6043-42aa-a8ad-32bf81b5a8a5 HTTP/1.1" 200
+[2m23:05:36[0m [34m[agent-server][0m INFO     ::ffff:127.0.0.1:0 - "GET /api/conversations/fce9f0b4-6043-42aa-a8ad-32bf81b5a8a5 HTTP/1.1" 200
+[2m23:05:38[0m [34m[agent-server][0m INFO     ::ffff:127.0.0.1:0 - "GET /api/conversations/fce9f0b4-6043-42aa-a8ad-32bf81b5a8a5 HTTP/1.1" 200
+[2m23:05:39[0m [34m[agent-server][0m INFO     ::ffff:127.0.0.1:0 - "GET /api/conversations/fce9f0b4-6043-42aa-a8ad-32bf81b5a8a5 HTTP/1.1" 200
+[2m23:05:41[0m [34m[agent-server][0m INFO     ::ffff:127.0.0.1:0 - "GET /api/conversations/fce9f0b4-6043-42aa-a8ad-32bf81b5a8a5 HTTP/1.1" 200
+[2m23:05:42[0m [34m[agent-server][0m INFO     ::ffff:127.0.0.1:0 - "GET /api/conversations/fce9f0b4-6043-42aa-a8ad-32bf81b5a8a5 HTTP/1.1" 200
+[2m23:05:44[0m [34m[agent-server][0m INFO     ::ffff:127.0.0.1:0 - "GET /api/conversations/fce9f0b4-6043-42aa-a8ad-32bf81b5a8a5 HTTP/1.1" 200
+[2m23:05:45[0m [34m[agent-server][0m INFO     ::ffff:127.0.0.1:0 - "GET /api/conversations/fce9f0b4-6043-42aa-a8ad-32bf81b5a8a5 HTTP/1.1" 200
+[2m23:05:47[0m [34m[agent-server][0m INFO     ::ffff:127.0.0.1:0 - "GET /api/conversations/fce9f0b4-6043-42aa-a8ad-32bf81b5a8a5 HTTP/1.1" 200
+[2m23:05:48[0m [34m[agent-server][0m INFO     ::ffff:127.0.0.1:0 - "GET /api/conversations/fce9f0b4-6043-42aa-a8ad-32bf81b5a8a5 HTTP/1.1" 200
+[2m23:05:50[0m [34m[agent-server][0m INFO     ::ffff:127.0.0.1:0 - "GET /api/conversations/fce9f0b4-6043-42aa-a8ad-32bf81b5a8a5 HTTP/1.1" 200
+[2m23:05:51[0m [34m[agent-server][0m INFO     ::ffff:127.0.0.1:0 - "GET /api/conversations/fce9f0b4-6043-42aa-a8ad-32bf81b5a8a5 HTTP/1.1" 200
+[2m23:05:53[0m [34m[agent-server][0m INFO     ::ffff:127.0.0.1:0 - "GET /api/conversations/fce9f0b4-6043-42aa-a8ad-32bf81b5a8a5 HTTP/1.1" 200
+[2m23:05:54[0m [34m[agent-server][0m INFO     ::ffff:127.0.0.1:0 - "GET /api/conversations/fce9f0b4-6043-42aa-a8ad-32bf81b5a8a5 HTTP/1.1" 200
+[2m23:05:56[0m [34m[agent-server][0m INFO     ::ffff:127.0.0.1:0 - "GET /api/conversations/fce9f0b4-6043-42aa-a8ad-32bf81b5a8a5 HTTP/1.1" 200
+[2m23:05:57[0m [34m[agent-server][0m INFO     ::ffff:127.0.0.1:0 - "GET /api/conversations/fce9f0b4-6043-42aa-a8ad-32bf81b5a8a5 HTTP/1.1" 200
+[2m23:05:59[0m [34m[agent-server][0m INFO     ::ffff:127.0.0.1:0 - "GET /api/conversations/fce9f0b4-6043-42aa-a8ad-32bf81b5a8a5 HTTP/1.1" 200
+[2m23:06:00[0m [34m[agent-server][0m INFO     ::ffff:127.0.0.1:0 - "GET /api/conversations/fce9f0b4-6043-42aa-a8ad-32bf81b5a8a5 HTTP/1.1" 200
+[2m23:06:02[0m [34m[agent-server][0m INFO     ::ffff:127.0.0.1:0 - "GET /api/conversations/fce9f0b4-6043-42aa-a8ad-32bf81b5a8a5 HTTP/1.1" 200
+[2m23:06:03[0m [34m[agent-server][0m INFO     ::ffff:127.0.0.1:0 - "GET /api/conversations/fce9f0b4-6043-42aa-a8ad-32bf81b5a8a5 HTTP/1.1" 200
+[2m23:06:05[0m [34m[agent-server][0m INFO     ::ffff:127.0.0.1:0 - "GET /api/conversations/fce9f0b4-6043-42aa-a8ad-32bf81b5a8a5 HTTP/1.1" 200
+[2m23:06:06[0m [34m[agent-server][0m INFO     ::ffff:127.0.0.1:0 - "GET /api/conversations/fce9f0b4-6043-42aa-a8ad-32bf81b5a8a5 HTTP/1.1" 200
+[2m23:06:08[0m [34m[agent-server][0m INFO     ::ffff:127.0.0.1:0 - "GET /api/conversations/fce9f0b4-6043-42aa-a8ad-32bf81b5a8a5 HTTP/1.1" 200
+[2m23:06:09[0m [34m[agent-server][0m INFO     ::ffff:127.0.0.1:0 - "GET /api/conversations/fce9f0b4-6043-42aa-a8ad-32bf81b5a8a5 HTTP/1.1" 200
+[2m23:06:11[0m [34m[agent-server][0m INFO     ::ffff:127.0.0.1:0 - "GET /api/conversations/fce9f0b4-6043-42aa-a8ad-32bf81b5a8a5 HTTP/1.1" 200
+[2m23:06:12[0m [34m[agent-server][0m INFO     ::ffff:127.0.0.1:0 - "GET /api/conversations/fce9f0b4-6043-42aa-a8ad-32bf81b5a8a5 HTTP/1.1" 200
+[2m23:06:14[0m [34m[agent-server][0m INFO     ::ffff:127.0.0.1:0 - "GET /api/conversations/fce9f0b4-6043-42aa-a8ad-32bf81b5a8a5 HTTP/1.1" 200
+[2m23:06:15[0m [34m[agent-server][0m INFO     ::ffff:127.0.0.1:0 - "GET /api/conversations/fce9f0b4-6043-42aa-a8ad-32bf81b5a8a5 HTTP/1.1" 200
+[2m23:06:17[0m [34m[agent-server][0m INFO     ::ffff:127.0.0.1:0 - "GET /api/conversations/fce9f0b4-6043-42aa-a8ad-32bf81b5a8a5 HTTP/1.1" 200
+[2m23:06:18[0m [34m[agent-server][0m INFO     ::ffff:127.0.0.1:0 - "GET /api/conversations/fce9f0b4-6043-42aa-a8ad-32bf81b5a8a5 HTTP/1.1" 200
+[2m23:06:20[0m [34m[agent-server][0m INFO     ::ffff:127.0.0.1:0 - "GET /api/conversations/fce9f0b4-6043-42aa-a8ad-32bf81b5a8a5 HTTP/1.1" 200
+[2m23:06:22[0m [34m[agent-server][0m INFO     ::ffff:127.0.0.1:0 - "GET /api/conversations/fce9f0b4-6043-42aa-a8ad-32bf81b5a8a5 HTTP/1.1" 200
+[2m23:06:23[0m [34m[agent-server][0m INFO     ::ffff:127.0.0.1:0 - "GET /api/conversations/fce9f0b4-6043-42aa-a8ad-32bf81b5a8a5 HTTP/1.1" 200
+[2m23:06:25[0m [34m[agent-server][0m INFO     ::ffff:127.0.0.1:0 - "GET /api/conversations/fce9f0b4-6043-42aa-a8ad-32bf81b5a8a5 HTTP/1.1" 200
+[2m23:06:26[0m [34m[agent-server][0m INFO     ::ffff:127.0.0.1:0 - "GET /api/conversations/fce9f0b4-6043-42aa-a8ad-32bf81b5a8a5 HTTP/1.1" 200
+[2m23:06:28[0m [34m[agent-server][0m INFO     ::ffff:127.0.0.1:0 - "GET /api/conversations/fce9f0b4-6043-42aa-a8ad-32bf81b5a8a5 HTTP/1.1" 200
+[2m23:06:29[0m [34m[agent-server][0m INFO     ::ffff:127.0.0.1:0 - "GET /api/conversations/fce9f0b4-6043-42aa-a8ad-32bf81b5a8a5 HTTP/1.1" 200
+[2m23:06:31[0m [34m[agent-server][0m INFO     ::ffff:127.0.0.1:0 - "GET /api/conversations/fce9f0b4-6043-42aa-a8ad-32bf81b5a8a5 HTTP/1.1" 200
+[2m23:06:32[0m [34m[agent-server][0m INFO     ::ffff:127.0.0.1:0 - "GET /api/conversations/fce9f0b4-6043-42aa-a8ad-32bf81b5a8a5 HTTP/1.1" 200
+[2m23:06:34[0m [34m[agent-server][0m INFO     ::ffff:127.0.0.1:0 - "GET /api/conversations/fce9f0b4-6043-42aa-a8ad-32bf81b5a8a5 HTTP/1.1" 200
+[2m23:06:35[0m [34m[agent-server][0m INFO     ::ffff:127.0.0.1:0 - "GET /api/conversations/fce9f0b4-6043-42aa-a8ad-32bf81b5a8a5 HTTP/1.1" 200
+[2m23:06:37[0m [34m[agent-server][0m INFO     ::ffff:127.0.0.1:0 - "GET /api/conversations/fce9f0b4-6043-42aa-a8ad-32bf81b5a8a5 HTTP/1.1" 200
+[2m23:06:38[0m [34m[agent-server][0m INFO     ::ffff:127.0.0.1:0 - "GET /api/conversations/fce9f0b4-6043-42aa-a8ad-32bf81b5a8a5 HTTP/1.1" 200
+[2m23:06:40[0m [34m[agent-server][0m INFO     ::ffff:127.0.0.1:0 - "GET /api/conversations/fce9f0b4-6043-42aa-a8ad-32bf81b5a8a5 HTTP/1.1" 200
+[2m23:06:41[0m [34m[agent-server][0m INFO     ::ffff:127.0.0.1:0 - "GET /api/conversations/fce9f0b4-6043-42aa-a8ad-32bf81b5a8a5 HTTP/1.1" 200
+[2m23:06:43[0m [34m[agent-server][0m INFO     ::ffff:127.0.0.1:0 - "GET /api/conversations/fce9f0b4-6043-42aa-a8ad-32bf81b5a8a5 HTTP/1.1" 200
+[2m23:06:44[0m [34m[agent-server][0m INFO     ::ffff:127.0.0.1:0 - "GET /api/conversations/fce9f0b4-6043-42aa-a8ad-32bf81b5a8a5 HTTP/1.1" 200
+[2m23:06:46[0m [34m[agent-server][0m INFO     ::ffff:127.0.0.1:0 - "GET /api/conversations/fce9f0b4-6043-42aa-a8ad-32bf81b5a8a5 HTTP/1.1" 200
+[2m23:06:47[0m [34m[agent-server][0m INFO     ::ffff:127.0.0.1:0 - "GET /api/conversations/fce9f0b4-6043-42aa-a8ad-32bf81b5a8a5 HTTP/1.1" 200
+[2m23:06:49[0m [34m[agent-server][0m INFO     ::ffff:127.0.0.1:0 - "GET /api/conversations/fce9f0b4-6043-42aa-a8ad-32bf81b5a8a5 HTTP/1.1" 200
+[2m23:06:50[0m [34m[agent-server][0m INFO     ::ffff:127.0.0.1:0 - "GET /api/conversations/fce9f0b4-6043-42aa-a8ad-32bf81b5a8a5 HTTP/1.1" 200
+[2m23:06:52[0m [34m[agent-server][0m INFO     ::ffff:127.0.0.1:0 - "GET /api/conversations/fce9f0b4-6043-42aa-a8ad-32bf81b5a8a5 HTTP/1.1" 200
+[2m23:06:53[0m [34m[agent-server][0m INFO     ::ffff:127.0.0.1:0 - "GET /api/conversations/fce9f0b4-6043-42aa-a8ad-32bf81b5a8a5 HTTP/1.1" 200
+[2m23:06:55[0m [34m[agent-server][0m INFO     ::ffff:127.0.0.1:0 - "GET /api/conversations/fce9f0b4-6043-42aa-a8ad-32bf81b5a8a5 HTTP/1.1" 200
+[2m23:06:56[0m [34m[agent-server][0m INFO     ::ffff:127.0.0.1:0 - "GET /api/conversations/fce9f0b4-6043-42aa-a8ad-32bf81b5a8a5 HTTP/1.1" 200
+[2m23:06:58[0m [34m[agent-server][0m INFO     ::ffff:127.0.0.1:0 - "GET /api/conversations/fce9f0b4-6043-42aa-a8ad-32bf81b5a8a5 HTTP/1.1" 200
+[2m23:06:59[0m [34m[agent-server][0m INFO     ::ffff:127.0.0.1:0 - "GET /api/conversations/fce9f0b4-6043-42aa-a8ad-32bf81b5a8a5 HTTP/1.1" 200
+[2m23:07:01[0m [34m[agent-server][0m INFO     ::ffff:127.0.0.1:0 - "GET /api/conversations/fce9f0b4-6043-42aa-a8ad-32bf81b5a8a5 HTTP/1.1" 200
+[2m23:07:02[0m [34m[agent-server][0m INFO     ::ffff:127.0.0.1:0 - "GET /api/conversations/fce9f0b4-6043-42aa-a8ad-32bf81b5a8a5 HTTP/1.1" 200
+[2m23:07:04[0m [34m[agent-server][0m INFO     ::ffff:127.0.0.1:0 - "GET /api/conversations/fce9f0b4-6043-42aa-a8ad-32bf81b5a8a5 HTTP/1.1" 200
+[2m23:07:05[0m [34m[agent-server][0m INFO     ::ffff:127.0.0.1:0 - "GET /api/conversations/fce9f0b4-6043-42aa-a8ad-32bf81b5a8a5 HTTP/1.1" 200
+[2m23:07:07[0m [34m[agent-server][0m INFO     ::ffff:127.0.0.1:0 - "GET /api/conversations/fce9f0b4-6043-42aa-a8ad-32bf81b5a8a5 HTTP/1.1" 200
+[2m23:07:08[0m [34m[agent-server][0m INFO     ::ffff:127.0.0.1:0 - "GET /api/conversations/fce9f0b4-6043-42aa-a8ad-32bf81b5a8a5 HTTP/1.1" 200
+[2m23:07:10[0m [34m[agent-server][0m INFO     ::ffff:127.0.0.1:0 - "GET /api/conversations/fce9f0b4-6043-42aa-a8ad-32bf81b5a8a5 HTTP/1.1" 200
+[2m23:07:11[0m [34m[agent-server][0m INFO     ::ffff:127.0.0.1:0 - "GET /api/conversations/fce9f0b4-6043-42aa-a8ad-32bf81b5a8a5 HTTP/1.1" 200
+[2m23:07:13[0m [34m[agent-server][0m INFO     ::ffff:127.0.0.1:0 - "GET /api/conversations/fce9f0b4-6043-42aa-a8ad-32bf81b5a8a5 HTTP/1.1" 200
+[2m23:07:14[0m [34m[agent-server][0m INFO     ::ffff:127.0.0.1:0 - "GET /api/conversations/fce9f0b4-6043-42aa-a8ad-32bf81b5a8a5 HTTP/1.1" 200
+[2m23:07:16[0m [34m[agent-server][0m INFO     ::ffff:127.0.0.1:0 - "GET /api/conversations/fce9f0b4-6043-42aa-a8ad-32bf81b5a8a5 HTTP/1.1" 200
+[2m23:07:17[0m [34m[agent-server][0m INFO     ::ffff:127.0.0.1:0 - "GET /api/conversations/fce9f0b4-6043-42aa-a8ad-32bf81b5a8a5 HTTP/1.1" 200
+[2m23:07:19[0m [34m[agent-server][0m INFO     ::ffff:127.0.0.1:0 - "GET /api/conversations/fce9f0b4-6043-42aa-a8ad-32bf81b5a8a5 HTTP/1.1" 200
+[2m23:07:21[0m [34m[agent-server][0m INFO     ::ffff:127.0.0.1:0 - "GET /api/conversations/fce9f0b4-6043-42aa-a8ad-32bf81b5a8a5 HTTP/1.1" 200
+[2m23:07:22[0m [34m[agent-server][0m INFO     ::ffff:127.0.0.1:0 - "GET /api/conversations/fce9f0b4-6043-42aa-a8ad-32bf81b5a8a5 HTTP/1.1" 200
+[2m23:07:24[0m [34m[agent-server][0m INFO     ::ffff:127.0.0.1:0 - "GET /api/conversations/fce9f0b4-6043-42aa-a8ad-32bf81b5a8a5 HTTP/1.1" 200
+[2m23:07:25[0m [34m[agent-server][0m INFO     ::ffff:127.0.0.1:0 - "GET /api/conversations/fce9f0b4-6043-42aa-a8ad-32bf81b5a8a5 HTTP/1.1" 200
+[2m23:07:27[0m [34m[agent-server][0m INFO     ::ffff:127.0.0.1:0 - "GET /api/conversations/fce9f0b4-6043-42aa-a8ad-32bf81b5a8a5 HTTP/1.1" 200
+[2m23:07:28[0m [34m[agent-server][0m INFO     ::ffff:127.0.0.1:0 - "GET /api/conversations/fce9f0b4-6043-42aa-a8ad-32bf81b5a8a5 HTTP/1.1" 200
+[2m23:07:30[0m [34m[agent-server][0m INFO     ::ffff:127.0.0.1:0 - "GET /api/conversations/fce9f0b4-6043-42aa-a8ad-32bf81b5a8a5 HTTP/1.1" 200
+[2m23:07:31[0m [34m[agent-server][0m INFO     ::ffff:127.0.0.1:0 - "GET /api/conversations/fce9f0b4-6043-42aa-a8ad-32bf81b5a8a5 HTTP/1.1" 200
+[2m23:07:33[0m [34m[agent-server][0m INFO     ::ffff:127.0.0.1:0 - "GET /api/conversations/fce9f0b4-6043-42aa-a8ad-32bf81b5a8a5 HTTP/1.1" 200
+[2m23:07:34[0m [34m[agent-server][0m INFO     ::ffff:127.0.0.1:0 - "GET /api/conversations/fce9f0b4-6043-42aa-a8ad-32bf81b5a8a5 HTTP/1.1" 200
+[2m23:07:36[0m [34m[agent-server][0m INFO     ::ffff:127.0.0.1:0 - "GET /api/conversations/fce9f0b4-6043-42aa-a8ad-32bf81b5a8a5 HTTP/1.1" 200
+[2m23:07:37[0m [34m[agent-server][0m INFO     ::ffff:127.0.0.1:0 - "GET /api/conversations/fce9f0b4-6043-42aa-a8ad-32bf81b5a8a5 HTTP/1.1" 200
+[2m23:07:39[0m [34m[agent-server][0m INFO     ::ffff:127.0.0.1:0 - "GET /api/conversations/fce9f0b4-6043-42aa-a8ad-32bf81b5a8a5 HTTP/1.1" 200
+[2m23:07:40[0m [34m[agent-server][0m INFO     ::ffff:127.0.0.1:0 - "GET /api/conversations/fce9f0b4-6043-42aa-a8ad-32bf81b5a8a5 HTTP/1.1" 200
+[2m23:07:42[0m [34m[agent-server][0m INFO     ::ffff:127.0.0.1:0 - "GET /api/conversations/fce9f0b4-6043-42aa-a8ad-32bf81b5a8a5 HTTP/1.1" 200
+[2m23:07:43[0m [34m[agent-server][0m INFO     ::ffff:127.0.0.1:0 - "GET /api/conversations/fce9f0b4-6043-42aa-a8ad-32bf81b5a8a5 HTTP/1.1" 200
+[2m23:07:45[0m [34m[agent-server][0m INFO     ::ffff:127.0.0.1:0 - "GET /api/conversations/fce9f0b4-6043-42aa-a8ad-32bf81b5a8a5 HTTP/1.1" 200
+[2m23:07:46[0m [34m[agent-server][0m INFO     ::ffff:127.0.0.1:0 - "GET /api/conversations/fce9f0b4-6043-42aa-a8ad-32bf81b5a8a5 HTTP/1.1" 200
+[2m23:07:48[0m [31m[agent-server][0m ERROR    litellm.InternalServerError: InternalServerError: OpenAIException - Context size has been exceeded.. Attempt #1 | You can customize retry values in the configuration.  retry_mixin.py:154
+[2m23:07:48[0m [31m[agent-server][0m ERROR    litellm.InternalServerError: InternalServerError: OpenAIException - Context size has been exceeded.. Attempt #1 | You can customize retry values in the configuration.  retry_mixin.py:154
+[2m23:07:48[0m [34m[agent-server][0m INFO     ::ffff:127.0.0.1:0 - "GET /api/conversations/fce9f0b4-6043-42aa-a8ad-32bf81b5a8a5 HTTP/1.1" 200
+[2m23:07:49[0m [34m[agent-server][0m INFO     ::ffff:127.0.0.1:0 - "GET /api/conversations/fce9f0b4-6043-42aa-a8ad-32bf81b5a8a5 HTTP/1.1" 200
+[2m23:07:51[0m [34m[agent-server][0m INFO     ::ffff:127.0.0.1:0 - "GET /api/conversations/fce9f0b4-6043-42aa-a8ad-32bf81b5a8a5 HTTP/1.1" 200
+[2m23:07:52[0m [34m[agent-server][0m INFO     ::ffff:127.0.0.1:0 - "GET /api/conversations/fce9f0b4-6043-42aa-a8ad-32bf81b5a8a5 HTTP/1.1" 200
+[2m23:07:54[0m [34m[agent-server][0m INFO     ::ffff:127.0.0.1:0 - "GET /api/conversations/fce9f0b4-6043-42aa-a8ad-32bf81b5a8a5 HTTP/1.1" 200
+[2m23:07:55[0m [34m[agent-server][0m INFO     ::ffff:127.0.0.1:0 - "GET /api/conversations/fce9f0b4-6043-42aa-a8ad-32bf81b5a8a5 HTTP/1.1" 200
+[2m23:07:57[0m [34m[agent-server][0m INFO     ::ffff:127.0.0.1:0 - "GET /api/conversations/fce9f0b4-6043-42aa-a8ad-32bf81b5a8a5 HTTP/1.1" 200
+[2m23:07:58[0m [34m[agent-server][0m INFO     ::ffff:127.0.0.1:0 - "GET /api/conversations/fce9f0b4-6043-42aa-a8ad-32bf81b5a8a5 HTTP/1.1" 200
+[2m23:08:00[0m [34m[agent-server][0m INFO     ::ffff:127.0.0.1:0 - "GET /api/conversations/fce9f0b4-6043-42aa-a8ad-32bf81b5a8a5 HTTP/1.1" 200
+[2m23:08:01[0m [34m[agent-server][0m INFO     ::ffff:127.0.0.1:0 - "GET /api/conversations/fce9f0b4-6043-42aa-a8ad-32bf81b5a8a5 HTTP/1.1" 200
+[2m23:08:03[0m [34m[agent-server][0m INFO     ::ffff:127.0.0.1:0 - "GET /api/conversations/fce9f0b4-6043-42aa-a8ad-32bf81b5a8a5 HTTP/1.1" 200
+[2m23:08:04[0m [34m[agent-server][0m INFO     ::ffff:127.0.0.1:0 - "GET /api/conversations/fce9f0b4-6043-42aa-a8ad-32bf81b5a8a5 HTTP/1.1" 200
+[2m23:08:06[0m [34m[agent-server][0m INFO     ::ffff:127.0.0.1:0 - "GET /api/conversations/fce9f0b4-6043-42aa-a8ad-32bf81b5a8a5 HTTP/1.1" 200
+[2m23:08:08[0m [34m[agent-server][0m INFO     ::ffff:127.0.0.1:0 - "GET /api/conversations/fce9f0b4-6043-42aa-a8ad-32bf81b5a8a5 HTTP/1.1" 200
+[2m23:08:09[0m [34m[agent-server][0m INFO     ::ffff:127.0.0.1:0 - "GET /api/conversations/fce9f0b4-6043-42aa-a8ad-32bf81b5a8a5 HTTP/1.1" 200
+[2m23:08:11[0m [34m[agent-server][0m INFO     ::ffff:127.0.0.1:0 - "GET /api/conversations/fce9f0b4-6043-42aa-a8ad-32bf81b5a8a5 HTTP/1.1" 200
+[2m23:08:12[0m [34m[agent-server][0m INFO     ::ffff:127.0.0.1:0 - "GET /api/conversations/fce9f0b4-6043-42aa-a8ad-32bf81b5a8a5 HTTP/1.1" 200
+[2m23:08:14[0m [34m[agent-server][0m INFO     ::ffff:127.0.0.1:0 - "GET /api/conversations/fce9f0b4-6043-42aa-a8ad-32bf81b5a8a5 HTTP/1.1" 200
+[2m23:08:15[0m [34m[agent-server][0m INFO     ::ffff:127.0.0.1:0 - "GET /api/conversations/fce9f0b4-6043-42aa-a8ad-32bf81b5a8a5 HTTP/1.1" 200
+[2m23:08:17[0m [34m[agent-server][0m INFO     ::ffff:127.0.0.1:0 - "GET /api/conversations/fce9f0b4-6043-42aa-a8ad-32bf81b5a8a5 HTTP/1.1" 200
+[2m23:08:18[0m [34m[agent-server][0m INFO     ::ffff:127.0.0.1:0 - "GET /api/conversations/fce9f0b4-6043-42aa-a8ad-32bf81b5a8a5 HTTP/1.1" 200
+[2m23:08:20[0m [34m[agent-server][0m INFO     ::ffff:127.0.0.1:0 - "GET /api/conversations/fce9f0b4-6043-42aa-a8ad-32bf81b5a8a5 HTTP/1.1" 200
+[2m23:08:21[0m [34m[agent-server][0m INFO     ::ffff:127.0.0.1:0 - "GET /api/conversations/fce9f0b4-6043-42aa-a8ad-32bf81b5a8a5 HTTP/1.1" 200
+[2m23:08:23[0m [34m[agent-server][0m INFO     ::ffff:127.0.0.1:0 - "GET /api/conversations/fce9f0b4-6043-42aa-a8ad-32bf81b5a8a5 HTTP/1.1" 200
+[2m23:08:24[0m [34m[agent-server][0m INFO     ::ffff:127.0.0.1:0 - "GET /api/conversations/fce9f0b4-6043-42aa-a8ad-32bf81b5a8a5 HTTP/1.1" 200
+[2m23:08:26[0m [34m[agent-server][0m INFO     ::ffff:127.0.0.1:0 - "GET /api/conversations/fce9f0b4-6043-42aa-a8ad-32bf81b5a8a5 HTTP/1.1" 200
+[2m23:08:27[0m [34m[agent-server][0m INFO     ::ffff:127.0.0.1:0 - "GET /api/conversations/fce9f0b4-6043-42aa-a8ad-32bf81b5a8a5 HTTP/1.1" 200
+[2m23:08:29[0m [34m[agent-server][0m INFO     ::ffff:127.0.0.1:0 - "GET /api/conversations/fce9f0b4-6043-42aa-a8ad-32bf81b5a8a5 HTTP/1.1" 200
+[2m23:08:30[0m [34m[agent-server][0m INFO     ::ffff:127.0.0.1:0 - "GET /api/conversations/fce9f0b4-6043-42aa-a8ad-32bf81b5a8a5 HTTP/1.1" 200
+[2m23:08:32[0m [34m[agent-server][0m INFO     ::ffff:127.0.0.1:0 - "GET /api/conversations/fce9f0b4-6043-42aa-a8ad-32bf81b5a8a5 HTTP/1.1" 200
+[2m23:08:33[0m [34m[agent-server][0m INFO     ::ffff:127.0.0.1:0 - "GET /api/conversations/fce9f0b4-6043-42aa-a8ad-32bf81b5a8a5 HTTP/1.1" 200
+[2m23:08:35[0m [34m[agent-server][0m INFO     ::ffff:127.0.0.1:0 - "GET /api/conversations/fce9f0b4-6043-42aa-a8ad-32bf81b5a8a5 HTTP/1.1" 200
+[2m23:08:36[0m [34m[agent-server][0m INFO     ::ffff:127.0.0.1:0 - "GET /api/conversations/fce9f0b4-6043-42aa-a8ad-32bf81b5a8a5 HTTP/1.1" 200
+[2m23:08:38[0m [34m[agent-server][0m INFO     ::ffff:127.0.0.1:0 - "GET /api/conversations/fce9f0b4-6043-42aa-a8ad-32bf81b5a8a5 HTTP/1.1" 200
+[2m23:08:39[0m [34m[agent-server][0m INFO     ::ffff:127.0.0.1:0 - "GET /api/conversations/fce9f0b4-6043-42aa-a8ad-32bf81b5a8a5 HTTP/1.1" 200
+[2m23:08:41[0m [34m[agent-server][0m INFO     ::ffff:127.0.0.1:0 - "GET /api/conversations/fce9f0b4-6043-42aa-a8ad-32bf81b5a8a5 HTTP/1.1" 200
+[2m23:08:42[0m [34m[agent-server][0m INFO     ::ffff:127.0.0.1:0 - "GET /api/conversations/fce9f0b4-6043-42aa-a8ad-32bf81b5a8a5 HTTP/1.1" 200
+[2m23:08:44[0m [34m[agent-server][0m INFO     ::ffff:127.0.0.1:0 - "GET /api/conversations/fce9f0b4-6043-42aa-a8ad-32bf81b5a8a5 HTTP/1.1" 200
+[2m23:08:45[0m [34m[agent-server][0m INFO     ::ffff:127.0.0.1:0 - "GET /api/conversations/fce9f0b4-6043-42aa-a8ad-32bf81b5a8a5 HTTP/1.1" 200
+[2m23:08:47[0m [34m[agent-server][0m INFO     ::ffff:127.0.0.1:0 - "GET /api/conversations/fce9f0b4-6043-42aa-a8ad-32bf81b5a8a5 HTTP/1.1" 200
+[2m23:08:48[0m [34m[agent-server][0m INFO     ::ffff:127.0.0.1:0 - "GET /api/conversations/fce9f0b4-6043-42aa-a8ad-32bf81b5a8a5 HTTP/1.1" 200
+[2m23:08:50[0m [34m[agent-server][0m INFO     ::ffff:127.0.0.1:0 - "GET /api/conversations/fce9f0b4-6043-42aa-a8ad-32bf81b5a8a5 HTTP/1.1" 200
+[2m23:08:51[0m [34m[agent-server][0m INFO     ::ffff:127.0.0.1:0 - "GET /api/conversations/fce9f0b4-6043-42aa-a8ad-32bf81b5a8a5 HTTP/1.1" 200
+[2m23:08:53[0m [34m[agent-server][0m INFO     ::ffff:127.0.0.1:0 - "GET /api/conversations/fce9f0b4-6043-42aa-a8ad-32bf81b5a8a5 HTTP/1.1" 200
+[2m23:08:54[0m [34m[agent-server][0m INFO     ::ffff:127.0.0.1:0 - "GET /api/conversations/fce9f0b4-6043-42aa-a8ad-32bf81b5a8a5 HTTP/1.1" 200
+[2m23:08:56[0m [34m[agent-server][0m INFO     ::ffff:127.0.0.1:0 - "GET /api/conversations/fce9f0b4-6043-42aa-a8ad-32bf81b5a8a5 HTTP/1.1" 200
+[2m23:08:57[0m [34m[agent-server][0m INFO     ::ffff:127.0.0.1:0 - "GET /api/conversations/fce9f0b4-6043-42aa-a8ad-32bf81b5a8a5 HTTP/1.1" 200
+[2m23:08:59[0m [34m[agent-server][0m INFO     ::ffff:127.0.0.1:0 - "GET /api/conversations/fce9f0b4-6043-42aa-a8ad-32bf81b5a8a5 HTTP/1.1" 200
+[2m23:09:01[0m [34m[agent-server][0m INFO     ::ffff:127.0.0.1:0 - "GET /api/conversations/fce9f0b4-6043-42aa-a8ad-32bf81b5a8a5 HTTP/1.1" 200
+[2m23:09:02[0m [34m[agent-server][0m INFO     ::ffff:127.0.0.1:0 - "GET /api/conversations/fce9f0b4-6043-42aa-a8ad-32bf81b5a8a5 HTTP/1.1" 200
+[2m23:09:04[0m [34m[agent-server][0m INFO     ::ffff:127.0.0.1:0 - "GET /api/conversations/fce9f0b4-6043-42aa-a8ad-32bf81b5a8a5 HTTP/1.1" 200
+[2m23:09:05[0m [34m[agent-server][0m INFO     ::ffff:127.0.0.1:0 - "GET /api/conversations/fce9f0b4-6043-42aa-a8ad-32bf81b5a8a5 HTTP/1.1" 200
+[2m23:09:07[0m [34m[agent-server][0m INFO     ::ffff:127.0.0.1:0 - "GET /api/conversations/fce9f0b4-6043-42aa-a8ad-32bf81b5a8a5 HTTP/1.1" 200
+[2m23:09:08[0m [34m[agent-server][0m INFO     ::ffff:127.0.0.1:0 - "GET /api/conversations/fce9f0b4-6043-42aa-a8ad-32bf81b5a8a5 HTTP/1.1" 200
+[2m23:09:10[0m [34m[agent-server][0m INFO     ::ffff:127.0.0.1:0 - "GET /api/conversations/fce9f0b4-6043-42aa-a8ad-32bf81b5a8a5 HTTP/1.1" 200
+[2m23:09:11[0m [34m[agent-server][0m INFO     ::ffff:127.0.0.1:0 - "GET /api/conversations/fce9f0b4-6043-42aa-a8ad-32bf81b5a8a5 HTTP/1.1" 200
+[2m23:09:13[0m [34m[agent-server][0m INFO     ::ffff:127.0.0.1:0 - "GET /api/conversations/fce9f0b4-6043-42aa-a8ad-32bf81b5a8a5 HTTP/1.1" 200
+[2m23:09:14[0m [34m[agent-server][0m INFO     ::ffff:127.0.0.1:0 - "GET /api/conversations/fce9f0b4-6043-42aa-a8ad-32bf81b5a8a5 HTTP/1.1" 200
+[2m23:09:16[0m [34m[agent-server][0m INFO     ::ffff:127.0.0.1:0 - "GET /api/conversations/fce9f0b4-6043-42aa-a8ad-32bf81b5a8a5 HTTP/1.1" 200
+[2m23:09:18[0m [33m[agent-server][0m WARNING  Conversation lease lost while renewing: fce9f0b4-6043-42aa-a8ad-32bf81b5a8a5  event_service.py:388
+[2m23:09:31[0m [31m[automation][0m Exited with code 1
+[2m23:09:31[0m [31m[agent-server][0m Exited with code 1

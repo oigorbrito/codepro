@@ -1,0 +1,22 @@
+{
+  "acceptance_checks": [
+    "declared verifier exits zero"
+  ],
+  "affected_components": [
+    "fixture"
+  ],
+  "ambiguity_markers": [],
+  "architectural_change": false,
+  "bundle_sha256": "398cfaa5c736d72efd0b90ba034d73023a9b4cd791d28487796c827ef8349963",
+  "candidate_files": [
+    "value.txt"
+  ],
+  "declared_scope": null,
+  "dependency_edges": [],
+  "known_tests": [
+    "declared-verifier"
+  ],
+  "risk_markers": [],
+  "source_ref": "evidence://phase7-s1-frozen-task",
+  "state_shared": false
+}

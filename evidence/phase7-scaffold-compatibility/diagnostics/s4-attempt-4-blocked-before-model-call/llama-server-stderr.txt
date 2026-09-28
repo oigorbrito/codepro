@@ -1,0 +1,381 @@
+0.00.002.169 I srv  llama_server: initializing ...
+0.13.023.246 I cmn  common_param: common_params_print_info: verbosity = 3 (adjust with the `-lv N` CLI arg)
+0.13.023.710 W srv  llama_server: security: no API key is set and CORS allows all origins (see https://github.com/ggml-org/llama.cpp/pull/25655)
+0.13.032.999 I srv    load_model: loading model 'D:\projetos\codepro-mini-runtime\models\phase4\L3-Granite-4.2-3B\granite-4.2-3b-Q4_K_M.gguf'
+0.13.388.816 W common_fit_params: failed to fit params to free device memory: n_gpu_layers already set by user to 99, abort
+0.16.717.687 I cmn          init: llama threadpool init, n_threads = 4
+0.17.052.002 I srv    load_model: initializing, n_slots = 4, n_ctx_slot = 4096, kv_unified = 'true'
+0.17.075.576 W srv          init: chat template supports preserving reasoning, it is enabled by default (may use more tokens, disable via --no-reasoning-preserve)
+0.17.076.261 I srv  llama_server: model loaded
+0.17.076.289 I srv  llama_server: listening on http://127.0.0.1:18092
+1.13.737.249 I slot get_availabl: id  3 | task -1 | selected slot by LRU, t_last = -1
+1.13.737.970 I slot launch_slot_: id  3 | task 0 | processing task, is_child = 0
+1.16.099.277 I slot get_availabl: id  2 | task -1 | selected slot by LRU, t_last = -1
+1.16.101.734 I slot launch_slot_: id  2 | task 2 | processing task, is_child = 0
+1.16.101.971 E srv    send_error: task id = 2, error: request (14816 tokens) exceeds the available context size (4096 tokens), try increasing it
+1.16.101.996 I slot      release: id  2 | task 2 | stop processing: n_tokens = 0, truncated = 0
+1.16.102.006 W srv          stop: cancel task, id_task = 2
+1.16.197.709 I slot get_availabl: id  1 | task -1 | selected slot by LRU, t_last = -1
+1.16.197.834 I slot launch_slot_: id  1 | task 6 | processing task, is_child = 0
+1.24.070.341 I slot print_timing: id  3 | task 0 | n_gen =    100, tg =  12.42 t/s, tg_3s =  12.55 t/s
+1.24.656.136 I slot print_timing: id  1 | task 6 | n_gen =    119, tg =  38.99 t/s, tg_3s =  39.32 t/s
+1.27.086.132 I slot print_timing: id  3 | task 0 | n_gen =    212, tg =  19.20 t/s, tg_3s =  37.14 t/s
+1.27.665.236 I slot print_timing: id  1 | task 6 | n_gen =    230, tg =  37.94 t/s, tg_3s =  36.89 t/s
+1.30.088.052 I slot print_timing: id  3 | task 0 | n_gen =    320, tg =  22.80 t/s, tg_3s =  35.98 t/s
+1.30.680.055 I slot print_timing: id  1 | task 6 | n_gen =    339, tg =  37.35 t/s, tg_3s =  36.15 t/s
+1.33.112.561 I slot print_timing: id  3 | task 0 | n_gen =    428, tg =  25.10 t/s, tg_3s =  35.71 t/s
+1.33.705.545 I slot print_timing: id  1 | task 6 | n_gen =    447, tg =  36.93 t/s, tg_3s =  35.70 t/s
+1.36.134.439 I slot print_timing: id  3 | task 0 | n_gen =    540, tg =  26.90 t/s, tg_3s =  37.06 t/s
+1.36.727.166 I slot print_timing: id  1 | task 6 | n_gen =    558, tg =  36.89 t/s, tg_3s =  36.74 t/s
+1.39.162.129 I slot print_timing: id  3 | task 0 | n_gen =    647, tg =  28.01 t/s, tg_3s =  35.34 t/s
+1.39.728.878 I slot print_timing: id  1 | task 6 | n_gen =    665, tg =  36.69 t/s, tg_3s =  35.65 t/s
+1.42.173.810 I slot print_timing: id  3 | task 0 | n_gen =    758, tg =  29.03 t/s, tg_3s =  36.86 t/s
+1.42.752.847 I slot print_timing: id  1 | task 6 | n_gen =    776, tg =  36.69 t/s, tg_3s =  36.71 t/s
+1.45.178.656 I slot print_timing: id  3 | task 0 | n_gen =    866, tg =  29.75 t/s, tg_3s =  35.94 t/s
+1.45.779.812 I slot print_timing: id  1 | task 6 | n_gen =    883, tg =  36.52 t/s, tg_3s =  35.35 t/s
+1.48.194.069 I slot print_timing: id  3 | task 0 | n_gen =    966, tg =  30.07 t/s, tg_3s =  33.16 t/s
+1.48.784.275 I slot print_timing: id  1 | task 6 | n_gen =    983, tg =  36.16 t/s, tg_3s =  33.28 t/s
+1.51.215.391 I slot print_timing: id  3 | task 0 | n_gen =   1070, tg =  30.44 t/s, tg_3s =  34.42 t/s
+1.51.796.004 I slot print_timing: id  1 | task 6 | n_gen =   1087, tg =  36.00 t/s, tg_3s =  34.53 t/s
+1.54.215.879 I slot print_timing: id  3 | task 0 | n_gen =   1173, tg =  30.75 t/s, tg_3s =  34.33 t/s
+1.54.797.880 I slot print_timing: id  1 | task 6 | n_gen =   1190, tg =  35.85 t/s, tg_3s =  34.31 t/s
+1.57.218.979 I slot print_timing: id  3 | task 0 | n_gen =   1275, tg =  30.98 t/s, tg_3s =  33.96 t/s
+1.57.811.275 I slot print_timing: id  1 | task 6 | n_gen =   1292, tg =  35.68 t/s, tg_3s =  33.85 t/s
+2.00.233.940 I slot print_timing: id  3 | task 0 | n_gen =   1376, tg =  31.15 t/s, tg_3s =  33.50 t/s
+2.00.811.295 I slot print_timing: id  1 | task 6 | n_gen =   1392, tg =  35.50 t/s, tg_3s =  33.33 t/s
+2.03.260.136 I slot print_timing: id  3 | task 0 | n_gen =   1476, tg =  31.28 t/s, tg_3s =  33.04 t/s
+2.03.838.464 I slot print_timing: id  1 | task 6 | n_gen =   1492, tg =  35.32 t/s, tg_3s =  33.03 t/s
+2.04.053.086 W decode: failed to find a memory slot for batch of size 2
+2.04.053.167 W srv        decode: failed to find free space in the KV cache, retrying with smaller batch size, off = 0, n_batch = 1024, ret = 1
+2.04.053.262 W decode: failed to find a memory slot for batch of size 2
+2.04.053.318 W srv        decode: failed to find free space in the KV cache, retrying with smaller batch size, off = 0, n_batch = 512, ret = 1
+2.04.053.398 W decode: failed to find a memory slot for batch of size 2
+2.04.053.462 W srv        decode: failed to find free space in the KV cache, retrying with smaller batch size, off = 0, n_batch = 256, ret = 1
+2.04.053.567 W decode: failed to find a memory slot for batch of size 2
+2.04.053.634 W srv        decode: failed to find free space in the KV cache, retrying with smaller batch size, off = 0, n_batch = 128, ret = 1
+2.04.053.715 W decode: failed to find a memory slot for batch of size 2
+2.04.053.774 W srv        decode: failed to find free space in the KV cache, retrying with smaller batch size, off = 0, n_batch = 64, ret = 1
+2.04.053.812 W decode: failed to find a memory slot for batch of size 2
+2.04.053.862 W srv        decode: failed to find free space in the KV cache, retrying with smaller batch size, off = 0, n_batch = 32, ret = 1
+2.04.053.897 W decode: failed to find a memory slot for batch of size 2
+2.04.053.947 W srv        decode: failed to find free space in the KV cache, retrying with smaller batch size, off = 0, n_batch = 16, ret = 1
+2.04.053.981 W decode: failed to find a memory slot for batch of size 2
+2.04.054.031 W srv        decode: failed to find free space in the KV cache, retrying with smaller batch size, off = 0, n_batch = 8, ret = 1
+2.04.054.065 W decode: failed to find a memory slot for batch of size 2
+2.04.054.115 W srv        decode: failed to find free space in the KV cache, retrying with smaller batch size, off = 0, n_batch = 4, ret = 1
+2.04.054.149 W decode: failed to find a memory slot for batch of size 2
+2.04.054.199 W srv        decode: failed to find free space in the KV cache, retrying with smaller batch size, off = 0, n_batch = 2, ret = 1
+2.04.054.233 W decode: failed to find a memory slot for batch of size 2
+2.04.054.258 W srv        decode: failed to find free space in the KV cache, retrying with smaller batch size, off = 0, n_batch = 1, ret = 1
+2.04.078.410 W decode: failed to find a memory slot for batch of size 1
+2.04.078.437 W srv        decode: failed to find free space in the KV cache, retrying with smaller batch size, off = 1, n_batch = 1024, ret = 1
+2.04.078.483 W decode: failed to find a memory slot for batch of size 1
+2.04.078.507 W srv        decode: failed to find free space in the KV cache, retrying with smaller batch size, off = 1, n_batch = 512, ret = 1
+2.04.078.546 W decode: failed to find a memory slot for batch of size 1
+2.04.078.569 W srv        decode: failed to find free space in the KV cache, retrying with smaller batch size, off = 1, n_batch = 256, ret = 1
+2.04.078.610 W decode: failed to find a memory slot for batch of size 1
+2.04.078.664 W srv        decode: failed to find free space in the KV cache, retrying with smaller batch size, off = 1, n_batch = 128, ret = 1
+2.04.078.710 W decode: failed to find a memory slot for batch of size 1
+2.04.078.736 W srv        decode: failed to find free space in the KV cache, retrying with smaller batch size, off = 1, n_batch = 64, ret = 1
+2.04.078.783 W decode: failed to find a memory slot for batch of size 1
+2.04.078.804 W srv        decode: failed to find free space in the KV cache, retrying with smaller batch size, off = 1, n_batch = 32, ret = 1
+2.04.078.842 W decode: failed to find a memory slot for batch of size 1
+2.04.078.865 W srv        decode: failed to find free space in the KV cache, retrying with smaller batch size, off = 1, n_batch = 16, ret = 1
+2.04.078.907 W decode: failed to find a memory slot for batch of size 1
+2.04.078.947 W srv        decode: failed to find free space in the KV cache, retrying with smaller batch size, off = 1, n_batch = 8, ret = 1
+2.04.079.030 W decode: failed to find a memory slot for batch of size 1
+2.04.079.067 W srv        decode: failed to find free space in the KV cache, retrying with smaller batch size, off = 1, n_batch = 4, ret = 1
+2.04.079.109 W decode: failed to find a memory slot for batch of size 1
+2.04.079.133 W srv        decode: failed to find free space in the KV cache, retrying with smaller batch size, off = 1, n_batch = 2, ret = 1
+2.04.079.177 W decode: failed to find a memory slot for batch of size 1
+2.04.079.200 W srv        decode: failed to find free space in the KV cache, retrying with smaller batch size, off = 1, n_batch = 1, ret = 1
+2.04.079.241 W decode: failed to find a memory slot for batch of size 1
+2.04.079.263 E srv        decode: Context size has been exceeded. off = 1, n_batch = 1, ret = 1
+2.04.079.268 E srv    send_error: task id = 6, error: Context size has been exceeded.
+2.04.079.278 I slot      release: id  1 | task 6 | stop processing: n_tokens = 2279, truncated = 0
+2.04.079.288 W srv          stop: cancel task, id_task = 6
+2.04.079.743 E srv    send_error: task id = 0, error: Context size has been exceeded.
+2.04.079.752 I slot      release: id  3 | task 0 | stop processing: n_tokens = 1818, truncated = 0
+2.04.079.766 W srv          stop: cancel task, id_task = 0
+2.04.083.763 E srv  update_slots: decode() failed: Context size has been exceeded.
+2.04.505.417 I slot get_availabl: id  0 | task -1 | selected slot by LRU, t_last = -1
+2.04.505.454 I slot launch_slot_: id  0 | task 1509 | processing task, is_child = 0
+2.09.224.093 I slot get_availabl: id  2 | task -1 | selected slot by LRU, t_last = 63110987
+2.09.279.725 I slot launch_slot_: id  2 | task 1511 | processing task, is_child = 0
+2.13.849.581 I slot print_timing: id  0 | task 1509 | n_gen =    100, tg =  21.40 t/s, tg_3s =  21.62 t/s
+2.14.426.222 I slot print_timing: id  2 | task 1511 | n_gen =    122, tg =  40.08 t/s, tg_3s =  40.41 t/s
+2.16.865.236 I slot print_timing: id  0 | task 1509 | n_gen =    218, tg =  28.40 t/s, tg_3s =  39.13 t/s
+2.17.440.587 I slot print_timing: id  2 | task 1511 | n_gen =    239, tg =  39.45 t/s, tg_3s =  38.81 t/s
+2.19.886.119 I slot print_timing: id  0 | task 1509 | n_gen =    334, tg =  31.23 t/s, tg_3s =  38.40 t/s
+2.20.456.839 I slot print_timing: id  2 | task 1511 | n_gen =    355, tg =  39.12 t/s, tg_3s =  38.46 t/s
+2.22.910.680 I slot print_timing: id  0 | task 1509 | n_gen =    447, tg =  32.59 t/s, tg_3s =  37.38 t/s
+2.23.462.236 I slot print_timing: id  2 | task 1511 | n_gen =    464, tg =  38.41 t/s, tg_3s =  36.27 t/s
+2.25.911.458 I slot print_timing: id  0 | task 1509 | n_gen =    550, tg =  32.90 t/s, tg_3s =  34.31 t/s
+2.26.479.171 I slot print_timing: id  2 | task 1511 | n_gen =    570, tg =  37.75 t/s, tg_3s =  35.13 t/s
+2.28.919.339 I slot print_timing: id  0 | task 1509 | n_gen =    660, tg =  33.46 t/s, tg_3s =  36.57 t/s
+2.29.496.023 I slot print_timing: id  2 | task 1511 | n_gen =    680, tg =  37.54 t/s, tg_3s =  36.46 t/s
+2.31.922.097 I slot print_timing: id  0 | task 1509 | n_gen =    765, tg =  33.66 t/s, tg_3s =  34.97 t/s
+2.32.499.072 I slot print_timing: id  2 | task 1511 | n_gen =    784, tg =  37.12 t/s, tg_3s =  34.63 t/s
+2.34.941.951 I slot print_timing: id  0 | task 1509 | n_gen =    870, tg =  33.79 t/s, tg_3s =  34.77 t/s
+2.35.525.176 I slot print_timing: id  2 | task 1511 | n_gen =    889, tg =  36.82 t/s, tg_3s =  34.70 t/s
+2.37.952.340 I slot print_timing: id  0 | task 1509 | n_gen =    972, tg =  33.80 t/s, tg_3s =  33.88 t/s
+2.38.529.378 I slot print_timing: id  2 | task 1511 | n_gen =    991, tg =  36.50 t/s, tg_3s =  33.95 t/s
+2.40.967.162 I slot print_timing: id  0 | task 1509 | n_gen =   1069, tg =  33.65 t/s, tg_3s =  32.17 t/s
+2.41.541.906 I slot print_timing: id  2 | task 1511 | n_gen =   1088, tg =  36.07 t/s, tg_3s =  32.20 t/s
+2.43.975.713 I slot print_timing: id  0 | task 1509 | n_gen =   1166, tg =  33.52 t/s, tg_3s =  32.24 t/s
+2.44.564.959 I slot print_timing: id  2 | task 1511 | n_gen =   1185, tg =  35.71 t/s, tg_3s =  32.09 t/s
+2.47.006.186 I slot print_timing: id  0 | task 1509 | n_gen =   1267, tg =  33.51 t/s, tg_3s =  33.33 t/s
+2.47.592.154 I slot print_timing: id  2 | task 1511 | n_gen =   1284, tg =  35.46 t/s, tg_3s =  32.70 t/s
+2.50.014.779 I slot print_timing: id  0 | task 1509 | n_gen =   1362, tg =  33.37 t/s, tg_3s =  31.58 t/s
+2.50.615.018 I slot print_timing: id  2 | task 1511 | n_gen =   1380, tg =  35.17 t/s, tg_3s =  31.76 t/s
+2.53.019.144 I slot print_timing: id  0 | task 1509 | n_gen =   1460, tg =  33.31 t/s, tg_3s =  32.62 t/s
+2.53.627.589 I slot print_timing: id  2 | task 1511 | n_gen =   1479, tg =  35.01 t/s, tg_3s =  32.86 t/s
+2.54.273.445 W decode: failed to find a memory slot for batch of size 2
+2.54.276.037 W srv        decode: failed to find free space in the KV cache, retrying with smaller batch size, off = 0, n_batch = 1024, ret = 1
+2.54.276.736 W decode: failed to find a memory slot for batch of size 2
+2.54.276.841 W srv        decode: failed to find free space in the KV cache, retrying with smaller batch size, off = 0, n_batch = 512, ret = 1
+2.54.276.911 W decode: failed to find a memory slot for batch of size 2
+2.54.276.941 W srv        decode: failed to find free space in the KV cache, retrying with smaller batch size, off = 0, n_batch = 256, ret = 1
+2.54.276.994 W decode: failed to find a memory slot for batch of size 2
+2.54.277.015 W srv        decode: failed to find free space in the KV cache, retrying with smaller batch size, off = 0, n_batch = 128, ret = 1
+2.54.277.054 W decode: failed to find a memory slot for batch of size 2
+2.54.277.071 W srv        decode: failed to find free space in the KV cache, retrying with smaller batch size, off = 0, n_batch = 64, ret = 1
+2.54.277.108 W decode: failed to find a memory slot for batch of size 2
+2.54.277.137 W srv        decode: failed to find free space in the KV cache, retrying with smaller batch size, off = 0, n_batch = 32, ret = 1
+2.54.277.186 W decode: failed to find a memory slot for batch of size 2
+2.54.277.206 W srv        decode: failed to find free space in the KV cache, retrying with smaller batch size, off = 0, n_batch = 16, ret = 1
+2.54.277.244 W decode: failed to find a memory slot for batch of size 2
+2.54.277.267 W srv        decode: failed to find free space in the KV cache, retrying with smaller batch size, off = 0, n_batch = 8, ret = 1
+2.54.277.315 W decode: failed to find a memory slot for batch of size 2
+2.54.277.344 W srv        decode: failed to find free space in the KV cache, retrying with smaller batch size, off = 0, n_batch = 4, ret = 1
+2.54.277.393 W decode: failed to find a memory slot for batch of size 2
+2.54.277.414 W srv        decode: failed to find free space in the KV cache, retrying with smaller batch size, off = 0, n_batch = 2, ret = 1
+2.54.277.452 W decode: failed to find a memory slot for batch of size 2
+2.54.277.478 W srv        decode: failed to find free space in the KV cache, retrying with smaller batch size, off = 0, n_batch = 1, ret = 1
+2.54.301.728 W decode: failed to find a memory slot for batch of size 1
+2.54.301.774 W srv        decode: failed to find free space in the KV cache, retrying with smaller batch size, off = 1, n_batch = 1024, ret = 1
+2.54.301.821 W decode: failed to find a memory slot for batch of size 1
+2.54.301.845 W srv        decode: failed to find free space in the KV cache, retrying with smaller batch size, off = 1, n_batch = 512, ret = 1
+2.54.301.923 W decode: failed to find a memory slot for batch of size 1
+2.54.301.954 W srv        decode: failed to find free space in the KV cache, retrying with smaller batch size, off = 1, n_batch = 256, ret = 1
+2.54.302.007 W decode: failed to find a memory slot for batch of size 1
+2.54.302.037 W srv        decode: failed to find free space in the KV cache, retrying with smaller batch size, off = 1, n_batch = 128, ret = 1
+2.54.302.090 W decode: failed to find a memory slot for batch of size 1
+2.54.302.126 W srv        decode: failed to find free space in the KV cache, retrying with smaller batch size, off = 1, n_batch = 64, ret = 1
+2.54.302.179 W decode: failed to find a memory slot for batch of size 1
+2.54.302.211 W srv        decode: failed to find free space in the KV cache, retrying with smaller batch size, off = 1, n_batch = 32, ret = 1
+2.54.302.263 W decode: failed to find a memory slot for batch of size 1
+2.54.302.293 W srv        decode: failed to find free space in the KV cache, retrying with smaller batch size, off = 1, n_batch = 16, ret = 1
+2.54.302.345 W decode: failed to find a memory slot for batch of size 1
+2.54.302.361 W srv        decode: failed to find free space in the KV cache, retrying with smaller batch size, off = 1, n_batch = 8, ret = 1
+2.54.302.427 W decode: failed to find a memory slot for batch of size 1
+2.54.302.457 W srv        decode: failed to find free space in the KV cache, retrying with smaller batch size, off = 1, n_batch = 4, ret = 1
+2.54.302.508 W decode: failed to find a memory slot for batch of size 1
+2.54.302.526 W srv        decode: failed to find free space in the KV cache, retrying with smaller batch size, off = 1, n_batch = 2, ret = 1
+2.54.302.559 W decode: failed to find a memory slot for batch of size 1
+2.54.302.583 W srv        decode: failed to find free space in the KV cache, retrying with smaller batch size, off = 1, n_batch = 1, ret = 1
+2.54.302.628 W decode: failed to find a memory slot for batch of size 1
+2.54.302.651 E srv        decode: Context size has been exceeded. off = 1, n_batch = 1, ret = 1
+2.54.302.655 E srv    send_error: task id = 1509, error: Context size has been exceeded.
+2.54.302.664 I slot      release: id  0 | task 1509 | stop processing: n_tokens = 2281, truncated = 0
+2.54.302.676 W srv          stop: cancel task, id_task = 1509
+2.54.303.099 E srv    send_error: task id = 1511, error: Context size has been exceeded.
+2.54.303.106 I slot      release: id  2 | task 1511 | stop processing: n_tokens = 1816, truncated = 0
+2.54.303.114 W srv          stop: cancel task, id_task = 1511
+2.54.303.486 E srv  update_slots: decode() failed: Context size has been exceeded.
+2.55.241.030 I slot get_availabl: id  1 | task -1 | selected slot by LRU, t_last = 111088269
+2.55.241.226 I slot launch_slot_: id  1 | task 3015 | processing task, is_child = 0
+3.00.167.186 I slot get_availabl: id  3 | task -1 | selected slot by LRU, t_last = 111088743
+3.00.167.367 I slot launch_slot_: id  3 | task 3017 | processing task, is_child = 0
+3.04.823.837 I slot print_timing: id  1 | task 3015 | n_gen =    100, tg =  21.26 t/s, tg_3s =  21.47 t/s
+3.05.391.282 I slot print_timing: id  3 | task 3017 | n_gen =    120, tg =  39.39 t/s, tg_3s =  39.72 t/s
+3.07.842.857 I slot print_timing: id  1 | task 3015 | n_gen =    215, tg =  27.88 t/s, tg_3s =  38.09 t/s
+3.08.391.850 I slot print_timing: id  3 | task 3017 | n_gen =    235, tg =  38.86 t/s, tg_3s =  38.33 t/s
+3.10.865.628 I slot print_timing: id  1 | task 3015 | n_gen =    326, tg =  30.38 t/s, tg_3s =  36.72 t/s
+3.11.402.958 I slot print_timing: id  3 | task 3017 | n_gen =    345, tg =  38.08 t/s, tg_3s =  36.53 t/s
+3.13.887.275 I slot print_timing: id  1 | task 3015 | n_gen =    437, tg =  31.78 t/s, tg_3s =  36.73 t/s
+3.14.419.150 I slot print_timing: id  3 | task 3017 | n_gen =    456, tg =  37.76 t/s, tg_3s =  36.80 t/s
+3.16.900.254 I slot print_timing: id  1 | task 3015 | n_gen =    547, tg =  32.63 t/s, tg_3s =  36.51 t/s
+3.17.436.277 I slot print_timing: id  3 | task 3017 | n_gen =    565, tg =  37.43 t/s, tg_3s =  36.13 t/s
+3.19.905.938 I slot print_timing: id  1 | task 3015 | n_gen =    654, tg =  33.08 t/s, tg_3s =  35.60 t/s
+3.20.451.262 I slot print_timing: id  3 | task 3017 | n_gen =    673, tg =  37.17 t/s, tg_3s =  35.82 t/s
+3.22.929.203 I slot print_timing: id  1 | task 3015 | n_gen =    760, tg =  33.35 t/s, tg_3s =  35.06 t/s
+3.23.456.347 I slot print_timing: id  3 | task 3017 | n_gen =    778, tg =  36.85 t/s, tg_3s =  34.94 t/s
+3.25.931.750 I slot print_timing: id  1 | task 3015 | n_gen =    865, tg =  33.53 t/s, tg_3s =  34.97 t/s
+3.26.463.049 I slot print_timing: id  3 | task 3017 | n_gen =    882, tg =  36.57 t/s, tg_3s =  34.59 t/s
+3.28.957.801 I slot print_timing: id  1 | task 3015 | n_gen =    969, tg =  33.62 t/s, tg_3s =  34.37 t/s
+3.29.469.852 I slot print_timing: id  3 | task 3017 | n_gen =    986, tg =  36.35 t/s, tg_3s =  34.59 t/s
+3.31.970.932 I slot print_timing: id  1 | task 3015 | n_gen =   1069, tg =  33.58 t/s, tg_3s =  33.19 t/s
+3.32.484.547 I slot print_timing: id  3 | task 3017 | n_gen =   1085, tg =  36.00 t/s, tg_3s =  32.84 t/s
+3.34.993.896 I slot print_timing: id  1 | task 3015 | n_gen =   1168, tg =  33.51 t/s, tg_3s =  32.75 t/s
+3.35.487.869 I slot print_timing: id  3 | task 3017 | n_gen =   1183, tg =  35.69 t/s, tg_3s =  32.63 t/s
+3.38.016.622 I slot print_timing: id  1 | task 3015 | n_gen =   1266, tg =  33.42 t/s, tg_3s =  32.42 t/s
+3.38.512.642 I slot print_timing: id  3 | task 3017 | n_gen =   1281, tg =  35.42 t/s, tg_3s =  32.40 t/s
+3.41.043.342 I slot print_timing: id  1 | task 3015 | n_gen =   1363, tg =  33.32 t/s, tg_3s =  32.05 t/s
+3.41.522.648 I slot print_timing: id  3 | task 3017 | n_gen =   1377, tg =  35.14 t/s, tg_3s =  31.89 t/s
+3.44.043.377 I slot print_timing: id  1 | task 3015 | n_gen =   1459, tg =  33.23 t/s, tg_3s =  32.00 t/s
+3.44.534.835 I slot print_timing: id  3 | task 3017 | n_gen =   1474, tg =  34.93 t/s, tg_3s =  32.20 t/s
+3.45.333.141 W decode: failed to find a memory slot for batch of size 2
+3.45.333.255 W srv        decode: failed to find free space in the KV cache, retrying with smaller batch size, off = 0, n_batch = 1024, ret = 1
+3.45.333.323 W decode: failed to find a memory slot for batch of size 2
+3.45.333.349 W srv        decode: failed to find free space in the KV cache, retrying with smaller batch size, off = 0, n_batch = 512, ret = 1
+3.45.333.449 W decode: failed to find a memory slot for batch of size 2
+3.45.333.499 W srv        decode: failed to find free space in the KV cache, retrying with smaller batch size, off = 0, n_batch = 256, ret = 1
+3.45.333.547 W decode: failed to find a memory slot for batch of size 2
+3.45.333.574 W srv        decode: failed to find free space in the KV cache, retrying with smaller batch size, off = 0, n_batch = 128, ret = 1
+3.45.333.615 W decode: failed to find a memory slot for batch of size 2
+3.45.333.651 W srv        decode: failed to find free space in the KV cache, retrying with smaller batch size, off = 0, n_batch = 64, ret = 1
+3.45.333.695 W decode: failed to find a memory slot for batch of size 2
+3.45.333.711 W srv        decode: failed to find free space in the KV cache, retrying with smaller batch size, off = 0, n_batch = 32, ret = 1
+3.45.333.750 W decode: failed to find a memory slot for batch of size 2
+3.45.333.767 W srv        decode: failed to find free space in the KV cache, retrying with smaller batch size, off = 0, n_batch = 16, ret = 1
+3.45.333.833 W decode: failed to find a memory slot for batch of size 2
+3.45.333.841 W srv        decode: failed to find free space in the KV cache, retrying with smaller batch size, off = 0, n_batch = 8, ret = 1
+3.45.333.890 W decode: failed to find a memory slot for batch of size 2
+3.45.333.907 W srv        decode: failed to find free space in the KV cache, retrying with smaller batch size, off = 0, n_batch = 4, ret = 1
+3.45.333.943 W decode: failed to find a memory slot for batch of size 2
+3.45.333.959 W srv        decode: failed to find free space in the KV cache, retrying with smaller batch size, off = 0, n_batch = 2, ret = 1
+3.45.333.994 W decode: failed to find a memory slot for batch of size 2
+3.45.334.014 W srv        decode: failed to find free space in the KV cache, retrying with smaller batch size, off = 0, n_batch = 1, ret = 1
+3.45.358.353 W decode: failed to find a memory slot for batch of size 1
+3.45.358.402 W srv        decode: failed to find free space in the KV cache, retrying with smaller batch size, off = 1, n_batch = 1024, ret = 1
+3.45.358.486 W decode: failed to find a memory slot for batch of size 1
+3.45.358.552 W srv        decode: failed to find free space in the KV cache, retrying with smaller batch size, off = 1, n_batch = 512, ret = 1
+3.45.358.632 W decode: failed to find a memory slot for batch of size 1
+3.45.358.688 W srv        decode: failed to find free space in the KV cache, retrying with smaller batch size, off = 1, n_batch = 256, ret = 1
+3.45.358.724 W decode: failed to find a memory slot for batch of size 1
+3.45.358.774 W srv        decode: failed to find free space in the KV cache, retrying with smaller batch size, off = 1, n_batch = 128, ret = 1
+3.45.358.808 W decode: failed to find a memory slot for batch of size 1
+3.45.358.857 W srv        decode: failed to find free space in the KV cache, retrying with smaller batch size, off = 1, n_batch = 64, ret = 1
+3.45.358.891 W decode: failed to find a memory slot for batch of size 1
+3.45.358.917 W srv        decode: failed to find free space in the KV cache, retrying with smaller batch size, off = 1, n_batch = 32, ret = 1
+3.45.358.996 W decode: failed to find a memory slot for batch of size 1
+3.45.359.049 W srv        decode: failed to find free space in the KV cache, retrying with smaller batch size, off = 1, n_batch = 16, ret = 1
+3.45.359.085 W decode: failed to find a memory slot for batch of size 1
+3.45.359.137 W srv        decode: failed to find free space in the KV cache, retrying with smaller batch size, off = 1, n_batch = 8, ret = 1
+3.45.359.172 W decode: failed to find a memory slot for batch of size 1
+3.45.359.224 W srv        decode: failed to find free space in the KV cache, retrying with smaller batch size, off = 1, n_batch = 4, ret = 1
+3.45.359.259 W decode: failed to find a memory slot for batch of size 1
+3.45.359.310 W srv        decode: failed to find free space in the KV cache, retrying with smaller batch size, off = 1, n_batch = 2, ret = 1
+3.45.359.345 W decode: failed to find a memory slot for batch of size 1
+3.45.359.396 W srv        decode: failed to find free space in the KV cache, retrying with smaller batch size, off = 1, n_batch = 1, ret = 1
+3.45.359.431 W decode: failed to find a memory slot for batch of size 1
+3.45.359.482 E srv        decode: Context size has been exceeded. off = 1, n_batch = 1, ret = 1
+3.45.359.483 E srv    send_error: task id = 3015, error: Context size has been exceeded.
+3.45.359.490 I slot      release: id  1 | task 3015 | stop processing: n_tokens = 2281, truncated = 0
+3.45.359.502 W srv          stop: cancel task, id_task = 3015
+3.45.359.917 E srv    send_error: task id = 3017, error: Context size has been exceeded.
+3.45.359.924 I slot      release: id  3 | task 3017 | stop processing: n_tokens = 1816, truncated = 0
+3.45.359.964 W srv          stop: cancel task, id_task = 3017
+3.45.360.253 E srv  update_slots: decode() failed: Context size has been exceeded.
+3.53.405.718 I slot get_availabl: id  0 | task -1 | selected slot by LRU, t_last = 161311655
+3.53.405.871 I slot launch_slot_: id  0 | task 4521 | processing task, is_child = 0
+3.58.499.612 I slot get_availabl: id  2 | task -1 | selected slot by LRU, t_last = 161312097
+3.58.499.759 I slot launch_slot_: id  2 | task 4523 | processing task, is_child = 0
+4.03.279.655 I slot print_timing: id  0 | task 4521 | n_gen =    100, tg =  20.71 t/s, tg_3s =  20.92 t/s
+4.03.716.736 I slot print_timing: id  2 | task 4523 | n_gen =    115, tg =  37.93 t/s, tg_3s =  38.26 t/s
+4.06.284.841 I slot print_timing: id  0 | task 4521 | n_gen =    214, tg =  27.36 t/s, tg_3s =  37.93 t/s
+4.06.726.349 I slot print_timing: id  2 | task 4523 | n_gen =    230, tg =  38.07 t/s, tg_3s =  38.21 t/s
+4.09.299.053 I slot print_timing: id  0 | task 4521 | n_gen =    329, tg =  30.37 t/s, tg_3s =  38.15 t/s
+4.09.728.482 I slot print_timing: id  2 | task 4523 | n_gen =    344, tg =  38.04 t/s, tg_3s =  37.97 t/s
+4.12.304.138 I slot print_timing: id  0 | task 4521 | n_gen =    438, tg =  31.66 t/s, tg_3s =  36.27 t/s
+4.12.736.110 I slot print_timing: id  2 | task 4523 | n_gen =    452, tg =  37.51 t/s, tg_3s =  35.91 t/s
+4.15.323.825 I slot print_timing: id  0 | task 4521 | n_gen =    542, tg =  32.16 t/s, tg_3s =  34.44 t/s
+4.15.761.683 I slot print_timing: id  2 | task 4523 | n_gen =    556, tg =  36.88 t/s, tg_3s =  34.38 t/s
+4.18.350.943 I slot print_timing: id  0 | task 4521 | n_gen =    645, tg =  32.44 t/s, tg_3s =  34.03 t/s
+4.18.786.642 I slot print_timing: id  2 | task 4523 | n_gen =    659, tg =  36.40 t/s, tg_3s =  34.05 t/s
+4.21.364.109 I slot print_timing: id  0 | task 4521 | n_gen =    753, tg =  32.89 t/s, tg_3s =  35.84 t/s
+4.21.787.685 I slot print_timing: id  2 | task 4523 | n_gen =    767, tg =  36.34 t/s, tg_3s =  35.99 t/s
+4.24.379.350 I slot print_timing: id  0 | task 4521 | n_gen =    860, tg =  33.19 t/s, tg_3s =  35.49 t/s
+4.24.815.047 I slot print_timing: id  2 | task 4523 | n_gen =    874, tg =  36.22 t/s, tg_3s =  35.34 t/s
+4.27.404.021 I slot print_timing: id  0 | task 4521 | n_gen =    962, tg =  33.25 t/s, tg_3s =  33.72 t/s
+4.27.846.088 I slot print_timing: id  2 | task 4523 | n_gen =    976, tg =  35.93 t/s, tg_3s =  33.65 t/s
+4.30.424.307 I slot print_timing: id  0 | task 4521 | n_gen =   1061, tg =  33.20 t/s, tg_3s =  32.78 t/s
+4.30.847.097 I slot print_timing: id  2 | task 4523 | n_gen =   1074, tg =  35.61 t/s, tg_3s =  32.66 t/s
+4.33.441.638 I slot print_timing: id  0 | task 4521 | n_gen =   1156, tg =  33.05 t/s, tg_3s =  31.48 t/s
+4.33.866.948 I slot print_timing: id  2 | task 4523 | n_gen =   1168, tg =  35.20 t/s, tg_3s =  31.13 t/s
+4.36.448.581 I slot print_timing: id  0 | task 4521 | n_gen =   1254, tg =  33.02 t/s, tg_3s =  32.59 t/s
+4.36.899.434 I slot print_timing: id  2 | task 4523 | n_gen =   1267, tg =  34.98 t/s, tg_3s =  32.65 t/s
+4.39.462.723 I slot print_timing: id  0 | task 4521 | n_gen =   1348, tg =  32.88 t/s, tg_3s =  31.19 t/s
+4.39.904.754 I slot print_timing: id  2 | task 4523 | n_gen =   1361, tg =  34.70 t/s, tg_3s =  31.28 t/s
+4.42.469.484 I slot print_timing: id  0 | task 4521 | n_gen =   1445, tg =  32.84 t/s, tg_3s =  32.26 t/s
+4.42.929.837 I slot print_timing: id  2 | task 4523 | n_gen =   1458, tg =  34.51 t/s, tg_3s =  32.07 t/s
+4.44.292.880 W decode: failed to find a memory slot for batch of size 2
+4.44.292.959 W srv        decode: failed to find free space in the KV cache, retrying with smaller batch size, off = 0, n_batch = 1024, ret = 1
+4.44.293.011 W decode: failed to find a memory slot for batch of size 2
+4.44.293.019 W srv        decode: failed to find free space in the KV cache, retrying with smaller batch size, off = 0, n_batch = 512, ret = 1
+4.44.293.057 W decode: failed to find a memory slot for batch of size 2
+4.44.293.086 W srv        decode: failed to find free space in the KV cache, retrying with smaller batch size, off = 0, n_batch = 256, ret = 1
+4.44.293.131 W decode: failed to find a memory slot for batch of size 2
+4.44.293.158 W srv        decode: failed to find free space in the KV cache, retrying with smaller batch size, off = 0, n_batch = 128, ret = 1
+4.44.293.234 W decode: failed to find a memory slot for batch of size 2
+4.44.293.258 W srv        decode: failed to find free space in the KV cache, retrying with smaller batch size, off = 0, n_batch = 64, ret = 1
+4.44.293.293 W decode: failed to find a memory slot for batch of size 2
+4.44.293.318 W srv        decode: failed to find free space in the KV cache, retrying with smaller batch size, off = 0, n_batch = 32, ret = 1
+4.44.293.360 W decode: failed to find a memory slot for batch of size 2
+4.44.293.380 W srv        decode: failed to find free space in the KV cache, retrying with smaller batch size, off = 0, n_batch = 16, ret = 1
+4.44.293.415 W decode: failed to find a memory slot for batch of size 2
+4.44.293.437 W srv        decode: failed to find free space in the KV cache, retrying with smaller batch size, off = 0, n_batch = 8, ret = 1
+4.44.293.475 W decode: failed to find a memory slot for batch of size 2
+4.44.293.504 W srv        decode: failed to find free space in the KV cache, retrying with smaller batch size, off = 0, n_batch = 4, ret = 1
+4.44.293.547 W decode: failed to find a memory slot for batch of size 2
+4.44.293.566 W srv        decode: failed to find free space in the KV cache, retrying with smaller batch size, off = 0, n_batch = 2, ret = 1
+4.44.293.601 W decode: failed to find a memory slot for batch of size 2
+4.44.293.626 W srv        decode: failed to find free space in the KV cache, retrying with smaller batch size, off = 0, n_batch = 1, ret = 1
+4.44.317.700 W decode: failed to find a memory slot for batch of size 1
+4.44.317.801 W srv        decode: failed to find free space in the KV cache, retrying with smaller batch size, off = 1, n_batch = 1024, ret = 1
+4.44.317.860 W decode: failed to find a memory slot for batch of size 1
+4.44.317.900 W srv        decode: failed to find free space in the KV cache, retrying with smaller batch size, off = 1, n_batch = 512, ret = 1
+4.44.317.936 W decode: failed to find a memory slot for batch of size 1
+4.44.317.986 W srv        decode: failed to find free space in the KV cache, retrying with smaller batch size, off = 1, n_batch = 256, ret = 1
+4.44.318.018 W decode: failed to find a memory slot for batch of size 1
+4.44.318.048 W srv        decode: failed to find free space in the KV cache, retrying with smaller batch size, off = 1, n_batch = 128, ret = 1
+4.44.318.100 W decode: failed to find a memory slot for batch of size 1
+4.44.318.130 W srv        decode: failed to find free space in the KV cache, retrying with smaller batch size, off = 1, n_batch = 64, ret = 1
+4.44.318.182 W decode: failed to find a memory slot for batch of size 1
+4.44.318.212 W srv        decode: failed to find free space in the KV cache, retrying with smaller batch size, off = 1, n_batch = 32, ret = 1
+4.44.318.264 W decode: failed to find a memory slot for batch of size 1
+4.44.318.294 W srv        decode: failed to find free space in the KV cache, retrying with smaller batch size, off = 1, n_batch = 16, ret = 1
+4.44.318.346 W decode: failed to find a memory slot for batch of size 1
+4.44.318.422 W srv        decode: failed to find free space in the KV cache, retrying with smaller batch size, off = 1, n_batch = 8, ret = 1
+4.44.318.470 W decode: failed to find a memory slot for batch of size 1
+4.44.318.499 W srv        decode: failed to find free space in the KV cache, retrying with smaller batch size, off = 1, n_batch = 4, ret = 1
+4.44.318.604 W decode: failed to find a memory slot for batch of size 1
+4.44.318.647 W srv        decode: failed to find free space in the KV cache, retrying with smaller batch size, off = 1, n_batch = 2, ret = 1
+4.44.318.701 W decode: failed to find a memory slot for batch of size 1
+4.44.318.739 W srv        decode: failed to find free space in the KV cache, retrying with smaller batch size, off = 1, n_batch = 1, ret = 1
+4.44.318.788 W decode: failed to find a memory slot for batch of size 1
+4.44.318.826 E srv        decode: Context size has been exceeded. off = 1, n_batch = 1, ret = 1
+4.44.318.835 E srv    send_error: task id = 4521, error: Context size has been exceeded.
+4.44.318.845 I slot      release: id  0 | task 4521 | stop processing: n_tokens = 2281, truncated = 0
+4.44.318.898 W srv          stop: cancel task, id_task = 4521
+4.44.319.337 E srv    send_error: task id = 4523, error: Context size has been exceeded.
+4.44.319.343 I slot      release: id  2 | task 4523 | stop processing: n_tokens = 1816, truncated = 0
+4.44.319.355 W srv          stop: cancel task, id_task = 4523
+4.44.319.656 E srv  update_slots: decode() failed: Context size has been exceeded.
+4.44.757.081 I slot get_availabl: id  1 | task -1 | selected slot by LRU, t_last = 212368482
+4.44.757.491 I slot launch_slot_: id  1 | task 6027 | processing task, is_child = 0
+4.46.715.414 I slot get_availabl: id  3 | task -1 | selected slot by LRU, t_last = 212368915
+4.46.715.541 I slot launch_slot_: id  3 | task 6029 | processing task, is_child = 0
+4.54.570.467 I slot print_timing: id  1 | task 6027 | n_gen =    100, tg =  12.60 t/s, tg_3s =  12.73 t/s
+4.54.979.252 I slot print_timing: id  3 | task 6029 | n_gen =    114, tg =  37.64 t/s, tg_3s =  37.97 t/s
+4.57.577.312 I slot print_timing: id  1 | task 6027 | n_gen =    211, tg =  19.33 t/s, tg_3s =  36.92 t/s
+4.57.991.199 I slot print_timing: id  3 | task 6029 | n_gen =    225, tg =  37.25 t/s, tg_3s =  36.85 t/s
+5.00.594.378 I slot print_timing: id  1 | task 6027 | n_gen =    319, tg =  22.91 t/s, tg_3s =  35.80 t/s
+5.01.016.198 I slot print_timing: id  3 | task 6029 | n_gen =    333, tg =  36.73 t/s, tg_3s =  35.70 t/s
+5.03.610.691 I slot print_timing: id  1 | task 6027 | n_gen =    425, tg =  25.10 t/s, tg_3s =  35.14 t/s
+5.04.036.093 I slot print_timing: id  3 | task 6029 | n_gen =    439, tg =  36.32 t/s, tg_3s =  35.10 t/s
+5.06.628.189 I slot print_timing: id  1 | task 6027 | n_gen =    532, tg =  26.67 t/s, tg_3s =  35.46 t/s
+5.07.050.371 I slot print_timing: id  3 | task 6029 | n_gen =    546, tg =  36.16 t/s, tg_3s =  35.50 t/s
+5.09.645.652 I slot print_timing: id  1 | task 6027 | n_gen =    643, tg =  28.00 t/s, tg_3s =  36.79 t/s
+5.10.069.083 I slot print_timing: id  3 | task 6029 | n_gen =    657, tg =  36.26 t/s, tg_3s =  36.77 t/s
+5.12.652.133 I slot print_timing: id  1 | task 6027 | n_gen =    752, tg =  28.96 t/s, tg_3s =  36.26 t/s
+5.13.091.850 I slot print_timing: id  3 | task 6029 | n_gen =    766, tg =  36.23 t/s, tg_3s =  36.06 t/s
+5.15.663.467 I slot print_timing: id  1 | task 6027 | n_gen =    856, tg =  29.54 t/s, tg_3s =  34.54 t/s
+5.16.099.281 I slot print_timing: id  3 | task 6029 | n_gen =    869, tg =  35.98 t/s, tg_3s =  34.25 t/s
+5.18.671.531 I slot print_timing: id  1 | task 6027 | n_gen =    953, tg =  29.79 t/s, tg_3s =  32.25 t/s
+5.19.099.355 I slot print_timing: id  3 | task 6029 | n_gen =    967, tg =  35.62 t/s, tg_3s =  32.67 t/s
+5.21.688.172 I slot print_timing: id  1 | task 6027 | n_gen =   1053, tg =  30.08 t/s, tg_3s =  33.15 t/s
+5.22.105.460 I slot print_timing: id  3 | task 6029 | n_gen =   1066, tg =  35.35 t/s, tg_3s =  32.93 t/s
+5.24.696.957 I slot print_timing: id  1 | task 6027 | n_gen =   1153, tg =  30.33 t/s, tg_3s =  33.24 t/s
+5.25.108.414 I slot print_timing: id  3 | task 6029 | n_gen =   1165, tg =  35.13 t/s, tg_3s =  32.97 t/s

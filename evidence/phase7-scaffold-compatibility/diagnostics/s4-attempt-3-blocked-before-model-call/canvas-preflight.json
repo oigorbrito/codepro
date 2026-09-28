@@ -1,0 +1,6 @@
+{
+  "path": "/ready",
+  "response": {
+    "status": "ready"
+  }
+}

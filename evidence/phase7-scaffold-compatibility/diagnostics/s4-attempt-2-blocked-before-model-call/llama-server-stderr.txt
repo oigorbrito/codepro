@@ -1,0 +1,10 @@
+0.00.001.301 I srv  llama_server: initializing ...
+0.10.581.487 I cmn  common_param: common_params_print_info: verbosity = 3 (adjust with the `-lv N` CLI arg)
+0.10.587.579 W srv  llama_server: security: no API key is set and CORS allows all origins (see https://github.com/ggml-org/llama.cpp/pull/25655)
+0.10.595.443 I srv    load_model: loading model 'D:\projetos\codepro-mini-runtime\models\phase4\L3-Granite-4.2-3B\granite-4.2-3b-Q4_K_M.gguf'
+0.10.949.970 W common_fit_params: failed to fit params to free device memory: n_gpu_layers already set by user to 99, abort
+0.12.678.596 I cmn          init: llama threadpool init, n_threads = 4
+0.12.932.241 I srv    load_model: initializing, n_slots = 4, n_ctx_slot = 4096, kv_unified = 'true'
+0.12.951.983 W srv          init: chat template supports preserving reasoning, it is enabled by default (may use more tokens, disable via --no-reasoning-preserve)
+0.12.952.703 I srv  llama_server: model loaded
+0.12.952.713 I srv  llama_server: listening on http://127.0.0.1:18092

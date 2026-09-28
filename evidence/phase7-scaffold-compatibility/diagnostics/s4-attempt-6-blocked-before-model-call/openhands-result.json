@@ -1,0 +1,21 @@
+{
+  "adapter": "openhands-agent-canvas-native",
+  "backend_url": "http://127.0.0.1:18400",
+  "working_dir": "D:\\projetos\\codepro-mini-runtime\\phase7\\S4-OpenHands\\codepro-phase7-s4-vfc1ekqs\\workspaces\\s4-task",
+  "llm_binding": {
+    "model": "openai/codepro-phase7-granite42-3b",
+    "base_url": "http://127.0.0.1:18092/v1",
+    "fallback": "DISABLED"
+  },
+  "conversation_id": "cae935cf-1d5c-43f4-b706-0de3e9c34602",
+  "execution_status": null,
+  "final_reply": null,
+  "conversation_info": null,
+  "events": null,
+  "bash_events": null,
+  "observations": null,
+  "error": {
+    "type": "Error",
+    "message": "conversation polling timed out after 240 seconds"
+  }
+}

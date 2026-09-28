@@ -1,0 +1,58 @@
+{
+  "health": {
+    "status": "ok"
+  },
+  "models": {
+    "data": [
+      {
+        "aliases": [
+          "codepro-phase7-granite42-3b"
+        ],
+        "created": 1790622534,
+        "id": "codepro-phase7-granite42-3b",
+        "meta": {
+          "ftype": "Q4_K - Medium",
+          "n_ctx": 4096,
+          "n_ctx_train": 131072,
+          "n_embd": 2560,
+          "n_params": 3659737600,
+          "n_vocab": 100352,
+          "size": 2240440320,
+          "vocab_type": 2
+        },
+        "object": "model",
+        "owned_by": "llamacpp",
+        "tags": []
+      }
+    ],
+    "models": [
+      {
+        "capabilities": [
+          "completion"
+        ],
+        "description": "",
+        "details": {
+          "families": [
+            ""
+          ],
+          "family": "",
+          "format": "gguf",
+          "parameter_size": "",
+          "parent_model": "",
+          "quantization_level": ""
+        },
+        "digest": "",
+        "model": "codepro-phase7-granite42-3b",
+        "modified_at": "",
+        "name": "codepro-phase7-granite42-3b",
+        "parameters": "",
+        "size": "",
+        "tags": [
+          ""
+        ],
+        "type": "model"
+      }
+    ],
+    "object": "list"
+  }
+}

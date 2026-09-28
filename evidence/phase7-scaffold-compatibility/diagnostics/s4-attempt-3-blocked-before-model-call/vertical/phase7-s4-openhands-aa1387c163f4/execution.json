@@ -1,0 +1,174 @@
+{
+  "acceptance_authority_ref": "acceptance://phase7-independent-verifier",
+  "binding": {
+    "adapter_id": "codepro-local-command",
+    "adapter_version": "1",
+    "availability_evidence_ref": "runtime://local-command/1",
+    "capability_id": "repository-edit",
+    "executor_id": "local-command",
+    "executor_version": "1",
+    "qualification_evidence_refs": [
+      "local-evidence://command-contract-tests"
+    ],
+    "reason": "SINGLE_QUALIFIED_EXECUTOR",
+    "requirement_id": "phase7-s4-openhands:capability",
+    "schema_version": 1,
+    "status": "BOUND"
+  },
+  "capability_requirement": {
+    "capability_id": "repository-edit",
+    "requirement_id": "phase7-s4-openhands:capability",
+    "schema_version": 1,
+    "source_ref": "routing:sha256:d7f852b9c86de0670ec9330f1a5c76b220df9624070d197d675f8368a0f04774"
+  },
+  "characterization": {
+    "acceptance_complexity": "MEDIUM",
+    "ambiguity": "LOW",
+    "confidence": "HIGH",
+    "dependency_fanout": 0,
+    "derived_signals": {
+      "acceptance_check_count": 1,
+      "ambiguity_marker_count": 0,
+      "component_count": 1,
+      "has_architectural_change": false,
+      "has_shared_state": false,
+      "risk_marker_count": 0
+    },
+    "estimated_files": 1,
+    "input_signals": {
+      "acceptance_checks": [
+        "declared verifier exits zero"
+      ],
+      "affected_components": [
+        "fixture"
+      ],
+      "ambiguity_markers": [],
+      "architectural_change": false,
+      "candidate_files": [
+        "value.py"
+      ],
+      "declared_scope": null,
+      "dependency_edges": [],
+      "known_tests": [
+        "declared-verifier"
+      ],
+      "risk_markers": [],
+      "state_shared": false
+    },
+    "recommended_path": "SIMPLE_PATH",
+    "risk": "LOW",
+    "schema_version": 1,
+    "scope": "SIMPLE",
+    "signals": [
+      "SINGLE_FILE",
+      "SINGLE_COMPONENT",
+      "LOW_DEPENDENCY_FANOUT"
+    ],
+    "telemetry": {
+      "characterization_confidence": "HIGH",
+      "characterization_duration_ms": null,
+      "characterization_scope": "SIMPLE",
+      "recommended_path": "SIMPLE_PATH",
+      "signal_count": 7
+    },
+    "test_surface": "LIMITED"
+  },
+  "characterization_bundle_sha256": "b3a179af01820f4353647608908015f413c802b8f8661366c2fd7de399bddac0",
+  "characterization_ref": "characterization:sha256:55d04d78325ef5517af13290dbc1d93236f4ad870871153825237a564903ae3f",
+  "command_result": {
+    "argv": [
+      "C:\\Users\\igorb\\AppData\\Local\\Programs\\Python\\Python311\\python.exe",
+      "D:\\projetos\\codepro-r2-validation\\tools\\phase7_openhands_executor.py",
+      "--upstream",
+      "D:\\projetos\\codepro-mini-runtime\\phase7\\S4-OpenHands\\upstream",
+      "--backend-url",
+      "http://127.0.0.1:18400",
+      "--api-key",
+      "codepro-phase7-s4-local-key",
+      "--working-dir",
+      "D:\\projetos\\codepro-mini-runtime\\phase7\\S4-OpenHands\\codepro-phase7-s4-xgoyhmb0\\workspaces\\s4-task",
+      "--llm-base-url",
+      "http://127.0.0.1:18092/v1",
+      "--model-alias",
+      "codepro-phase7-granite42-3b",
+      "--result",
+      "D:\\projetos\\codepro-r2-validation\\evidence\\phase7-scaffold-compatibility\\S4-OpenHands\\openhands-result.json",
+      "--issue",
+      "Work only in the current repository. Inspect value.py and confirm it contains VALUE = \"before\". Change it to VALUE = \"after\". Then run a Python command that imports value and asserts value.VALUE == \"after\". Finish after the check succeeds."
+    ],
+    "cwd": "D:\\projetos\\codepro-mini-runtime\\phase7\\S4-OpenHands\\codepro-phase7-s4-xgoyhmb0\\workspaces\\s4-task",
+    "duration_ms": 4281,
+    "environment_error": null,
+    "exit_code": 0,
+    "schema_version": 1,
+    "stderr": "",
+    "stdout": "{\"adapter\":\"openhands-agent-canvas-native\",\"backend_url\":\"http://127.0.0.1:18400\",\"working_dir\":\"D:\\\\projetos\\\\codepro-mini-runtime\\\\phase7\\\\S4-OpenHands\\\\codepro-phase7-s4-xgoyhmb0\\\\workspaces\\\\s4-task\",\"llm_binding\":{\"model\":\"openai/codepro-phase7-granite42-3b\",\"base_url\":\"http://127.0.0.1:18092/v1\",\"fallback\":\"DISABLED\"},\"conversation_id\":null,\"execution_status\":null,\"final_reply\":null,\"conversation_info\":null,\"events\":null,\"bash_events\":null,\"observations\":null,\"error\":{\"type\":\"ReferenceError\",\"message\":\"__EXTENSIONS_SKILLS_DIR__ is not defined\"}}\n",
+    "timed_out": false
+  },
+  "governance": {
+    "acceptance_authority_ref": "acceptance://phase7-independent-verifier",
+    "authority_ref": "authority://phase7-compatibility",
+    "authorized_scope": [
+      "value.py"
+    ],
+    "environment_ref": "workspace://D:/projetos/codepro-mini-runtime/phase7/S4-OpenHands/codepro-phase7-s4-xgoyhmb0/workspaces/s4-task@bf9a8a8a3cfb29ee7e30607852c6b10c4572e0f6",
+    "evidence_refs": [
+      "request://phase7-s4-openhands"
+    ],
+    "grant_id": "phase7-s4-openhands:grant",
+    "max_commands": 1,
+    "max_wall_time_seconds": 320.0,
+    "permissions": [
+      "edit",
+      "test"
+    ],
+    "reasons": [
+      "AUTHORIZED"
+    ],
+    "request_id": "phase7-s4-openhands",
+    "schema_version": 1,
+    "status": "AUTHORIZED"
+  },
+  "invocation_state": "OBSERVED",
+  "progress": null,
+  "reason": "EXECUTION_OBSERVED",
+  "request_id": "phase7-s4-openhands",
+  "requested_scope": [
+    "value.py"
+  ],
+  "routing": {
+    "budget": {
+      "attempts_used": 0,
+      "max_attempts": 3,
+      "max_path_escalations": 2,
+      "path_escalations_used": 0
+    },
+    "characterization_ref": "characterization:sha256:55d04d78325ef5517af13290dbc1d93236f4ad870871153825237a564903ae3f",
+    "confidence": "HIGH",
+    "decision": "ROUTE",
+    "initial_path": "SIMPLE_PATH",
+    "policy_version": "p3.rule-based.v1",
+    "reason_codes": [
+      "CHARACTERIZED_SIMPLE"
+    ],
+    "schema_version": 1,
+    "selected_path": "SIMPLE_PATH",
+    "task_id": "phase7-trivial-edit",
+    "telemetry": {
+      "attempt_count": 0,
+      "escalation_action": null,
+      "escalation_count": 0,
+      "initial_path": "SIMPLE_PATH",
+      "routing_decision": "ROUTE",
+      "routing_reason_codes": [
+        "CHARACTERIZED_SIMPLE"
+      ],
+      "selected_path": "SIMPLE_PATH"
+    }
+  },
+  "routing_ref": "routing:sha256:d7f852b9c86de0670ec9330f1a5c76b220df9624070d197d675f8368a0f04774",
+  "schema_version": 1,
+  "status": "EXECUTED",
+  "task_ref": "phase7-trivial-edit",
+  "verification": null
+}

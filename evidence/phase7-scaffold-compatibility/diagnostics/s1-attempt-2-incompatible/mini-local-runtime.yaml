@@ -1,0 +1,19 @@
+agent:
+  step_limit: 8
+  cost_limit: 0
+  wall_time_limit_seconds: 120
+  max_consecutive_format_errors: 2
+environment:
+  cwd: "D:/projetos/codepro-mini-runtime/phase7/S1-mini-swe-agent/codepro-phase7-s1-lzsl5dzi/workspaces/s1-task"
+  timeout: 20
+model:
+  model_name: "openai/codepro-phase7-granite42-3b"
+  cost_tracking: "ignore_errors"
+  model_kwargs:
+    custom_llm_provider: "openai"
+    api_base: "http://127.0.0.1:18089/v1"
+    api_key: "local-llm"
+    drop_params: true
+    temperature: 1.0
+    top_p: 0.95
+    max_tokens: 512

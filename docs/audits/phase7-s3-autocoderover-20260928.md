@@ -1,0 +1,60 @@
+# Phase 7 S3 - AutoCodeRover compatibility audit
+
+Date: 2026-09-28
+
+## Frozen identity
+
+repository = AutoCodeRoverSG/auto-code-rover
+version = v1.1.0
+commit = 1aafff1be4549fff4db9d61bf54bfa8b0669ea57
+
+## Native compatibility contract
+
+PlainTask -> ProjectApiManager structural search tools -> upstream OpenaiModel tool calls -> write_patch -> extracted patch -> CodePro independent verifier
+
+The exact upstream requirements are attempted on Windows-native without silently removing Linux/CUDA dependencies.
+
+## Result
+
+classification = BLOCKED_INSTALLATION_WINDOWS_NATIVE
+vertical_status = None
+vertical_reason = None
+prompt_tokens = None
+completion_tokens = None
+native_tool_call_count = None
+blocker = {'detail': {'returncode': 1, 'stage': 'exact_upstream_requirements', 'stderr_tail': '0.1.700.dev0, 0.1.700.dev1, 0.1.700.dev2, 0.1.700.dev3, 0.1.700.dev4, 0.1.700.dev5, 0.1.700, 0.1.702, 0.1.704, 0.1.706, 0.1.714.dev1, 0.1.714, 0.1.715, 0.1.716, 0.1.719, 0.1.720, 0.1.721, 0.1.723, 0.1.724, 0.1.729, 0.1.736, 0.1.738, 0.1.743, 0.1.745, 0.1.746, 0.1.747, 0.1.748, 0.1.749, 0.1.750, 0.1.751, 0.1.758, 0.1.765, 0.1.769, 0.1.772, 0.1.774, 0.1.780, 0.1.781, 0.1.784, 0.1.786, 0.1.788, 0.1.789, 0.1.793, 0.1.794, 0.1.805, 0.1.806, 0.1.807, 0.1.813, 0.1.814, 0.1.815, 0.1.816, 0.1.817, 0.1.818, 0.1.819, 0.1.820, 0.1.821, 0.1.824, 0.2.5, 0.2.6, 0.3.0, 0.3.1, 0.4.0, 0.4.4, 0.5.2, 0.5.3, 0.5.4, 0.5.6, 0.6.0, 0.6.1, 0.6.2, 0.6.6, 0.7.1.dev1, 0.7.1.dev2, 0.7.1.dev3, 0.7.1, 0.7.3, 0.7.4, 0.7.5, 0.7.9, 0.7.10, 0.8.0, 0.8.1, 0.8.2, 0.8.3, 0.8.4, 0.8.5, 0.8.6, 0.9.0, 0.9.1, 0.9.2.dev1, 0.9.2, 0.10.0, 0.10.1, 0.11.1, 0.12.4.dev1, 0.12.4.dev2, 0.12.4, 0.12.5.dev1, 0.12.5, 0.12.7.dev1, 0.12.7, 0.12.8, 0.12.9, 0.12.10, 0.12.11, 0.12.12, 0.13.0, 0.13.1.dev1, 0.13.1.dev2, 0.13.1.dev3, 0.13.1, 0.13.2.dev1, 0.13.2, 0.13.3.dev1, 0.13.3.dev2, 0.13.6.dev1, 0.13.6.dev2, 0.13.6.dev3, 0.13.7.dev1, 0.14.0.dev1, 0.14.0, 0.14.1, 1.0.0.dev1, 1.0.0, 1.0.3.dev1, 1.0.3, 1.1.0, 1.1.1, 1.1.2, 1.1.3, 1.2.0, 1.3.1, 1.3.3.dev1, 1.3.3.dev2, 1.3.3.dev3, 1.3.3, 1.4.0, 1.6.0, 1.7.1, 1.7.2, 1.7.3, 1.7.4, 1.7.5, 1.7.6, 1.7.7, 1.7.8, 1.7.9, 1.7.11, 1.7.12, 1.8.1, 1.9.dev0, 1.9.0, 1.9.1, 1.9.2, 1.9.3, 1.9.4, 1.9.5, 1.10.dev11, 1.10.0, 1.10.1, 1.10.2, 1.10.3, 1.10.4, 1.10.6, 1.10.8, 1.10.9, 1.10.10, 1.10.11, 1.11.0, 1.11.1, 1.12.0, 1.12.1, 1.12.2, 1.12.3, 1.12.5.dev1, 1.12.5, 1.12.6.dev1, 1.12.6.dev2, 1.12.6.dev3, 1.12.6.dev4, 1.12.6.dev5, 1.13.2, 1.14.0.dev1, 1.14.0, 1.14.1, 1.14.2, 1.14.3, 1.14.4, 1.53.1.dev1, 1.53.1, 1.53.2, 1.53.3, 1.53.4, 1.53.5, 1.53.6, 1.53.7, 1.53.8, 1.53.9, 1.54.0, 1.54.1, 1.55.0, 1.55.1, 1.55.2, 1.55.3, 1.55.4, 1.55.6, 1.55.7, 1.55.8, 1.55.9, 1.55.10, 1.55.11, 1.55.12, 1.56.2, 1.56.3, 1.56.4, 1.56.5, 1.56.6, 1.56.8.dev4, 1.56.8.dev5, 1.56.8.dev6, 1.56.8.dev7, 1.56.8, 1.56.9, 1.56.10, 1.57.0, 1.57.1, 1.57.2, 1.57.3, 1.57.4, 1.57.5, 1.57.7.dev1, 1.57.7, 1.57.8, 1.57.10, 1.57.11, 1.58.0, 1.58.1, 1.58.2, 1.58.4, 1.59.0, 1.59.1.dev1, 1.59.1, 1.59.2, 1.59.3, 1.59.5, 1.59.6, 1.59.7, 1.59.8, 1.59.9, 1.59.10.dev1, 1.59.10, 1.59.12, 1.60.0, 1.60.2, 1.60.4, 1.60.5, 1.60.6, 1.60.7, 1.60.8, 1.60.9, 1.61.0.dev1, 1.61.0, 1.61.1, 1.61.2, 1.61.3, 1.61.4, 1.61.5, 1.61.6, 1.61.7, 1.61.8, 1.61.9, 1.61.11, 1.61.13, 1.61.15, 1.61.16, 1.61.17, 1.61.19, 1.61.20, 1.62.1, 1.62.4, 1.63.0.dev12, 1.63.0, 1.63.2, 1.63.3, 1.63.4.dev1, 1.63.5, 1.63.6, 1.63.7, 1.63.8, 1.63.11.dev1, 1.63.11, 1.63.12, 1.63.14, 1.64.1, 1.65.0, 1.65.0.post1, 1.65.1, 1.65.3, 1.65.4, 1.65.4.post1, 1.65.5, 1.65.6, 1.65.7, 1.65.8, 1.66.0, 1.66.1, 1.66.2, 1.66.3, 1.67.0, 1.67.0.post1, 1.67.1, 1.67.2, 1.67.4.dev1, 1.67.4, 1.67.4.post1, 1.67.5, 1.67.6, 1.68.0, 1.68.1.dev1, 1.68.1, 1.68.2, 1.69.0, 1.69.1, 1.69.2, 1.69.3, 1.70.0, 1.70.2, 1.70.4, 1.71.0, 1.71.1, 1.71.2, 1.71.3, 1.72.0, 1.72.1, 1.72.2, 1.72.2.post1, 1.72.3, 1.72.4, 1.72.5.dev1, 1.72.5.dev2, 1.72.5.dev3, 1.72.6, 1.72.6.post1, 1.72.6.post2, 1.72.7.dev1, 1.72.7.dev7, 1.72.7, 1.72.9, 1.73.0rc1, 1.73.0, 1.73.0.post1, 1.73.1, 1.73.2, 1.73.6rc2, 1.73.6, 1.73.6.post1, 1.73.7.dev1, 1.73.7.dev2, 1.73.7.dev3, 1.73.7.dev4, 1.73.7, 1.74.0, 1.74.0.post1, 1.74.0.post2, 1.74.1, 1.74.2, 1.74.3rc1, 1.74.3rc2, 1.74.3rc3, 1.74.3, 1.74.3.post1, 1.74.4.dev1, 1.74.4, 1.74.6, 1.74.7rc1, 1.74.7, 1.74.7.post1, 1.74.7.post2, 1.74.8.dev2, 1.74.8, 1.74.9.dev1, 1.74.9.dev2, 1.74.9, 1.74.9.post1, 1.74.9.post2, 1.74.12, 1.74.14, 1.74.15, 1.74.15.post1, 1.74.15.post2, 1.75.0, 1.75.2, 1.75.3, 1.75.4, 1.75.5.post1, 1.75.5.post2, 1.75.6, 1.75.7, 1.75.8, 1.75.9, 1.76.0, 1.76.1, 1.76.2, 1.76.3, 1.77.0, 1.77.1, 1.77.2.post1, 1.77.3, 1.77.4.dev1, 1.77.4, 1.77.5, 1.77.7, 1.78.0rc2, 1.78.0, 1.78.2, 1.78.3, 1.78.4, 1.78.5, 1.78.6, 1.78.7, 1.79.0.dev1, 1.79.0.dev2, 1.79.0.dev3, 1.79.0, 1.79.1, 1.79.2, 1.79.3.dev8, 1.79.3, 1.80.0, 1.80.5, 1.80.6, 1.80.7, 1.80.8, 1.80.9, 1.80.10, 1.80.11, 1.80.12, 1.80.13, 1.80.15, 1.80.16, 1.80.17, 1.81.0, 1.81.1, 1.81.3, 1.81.4, 1.81.5, 1.81.6, 1.81.7, 1.81.8, 1.81.9.dev1, 1.81.9, 1.81.10, 1.81.11, 1.81.12, 1.81.13, 1.81.14, 1.81.15, 1.81.16, 1.82.0, 1.82.1, 1.82.2, 1.82.3, 1.82.4, 1.82.5, 1.82.6, 1.83.0, 1.83.1, 1.83.2, 1.83.3, 1.83.4, 1.83.5, 1.83.6, 1.83.7, 1.83.8, 1.83.9, 1.83.10, 1.83.11, 1.83.12, 1.83.13, 1.83.14, 1.84.0.dev1, 1.84.0.dev2, 1.84.0rc1, 1.84.0, 1.84.1, 1.84.2, 1.84.3, 1.84.4, 1.84.5, 1.84.6, 1.84.7, 1.84.8, 1.84.9, 1.84.10, 1.85.0.dev1, 1.85.0.dev2, 1.85.0rc1, 1.85.0rc2, 1.85.0, 1.85.1, 1.85.2, 1.85.3, 1.85.4, 1.85.5, 1.85.6, 1.85.7, 1.86.0rc1, 1.86.0, 1.86.1, 1.86.2, 1.86.3, 1.86.4, 1.86.5, 1.86.6, 1.86.7, 1.87.0.dev1, 1.87.0rc1, 1.87.0rc2, 1.87.0, 1.87.1, 1.87.2, 1.87.3, 1.87.4, 1.87.5, 1.88.0.dev1, 1.88.0rc1, 1.88.0rc2, 1.88.0rc3, 1.88.0, 1.88.1, 1.88.2, 1.88.3, 1.88.4, 1.88.5, 1.88.6, 1.89.0rc1, 1.89.0rc2, 1.89.0, 1.89.1, 1.89.2, 1.89.3, 1.89.4, 1.89.5, 1.89.6, 1.89.7, 1.90.0rc1, 1.90.0, 1.90.1, 1.90.2, 1.90.3, 1.90.4, 1.90.5, 1.90.6, 1.90.7, 1.91.0.dev1, 1.91.0.dev2, 1.91.0rc1, 1.91.0, 1.91.1, 1.91.2, 1.91.3, 1.91.4, 1.91.5, 1.92.0.dev1, 1.92.0.dev2, 1.92.0rc1, 1.92.0rc2, 1.92.0, 1.92.1, 1.92.2, 1.93.0.dev1, 1.93.0.dev2, 1.93.0.dev3, 1.93.0rc1, 1.93.0rc2, 1.93.0, 1.93.1, 1.93.2, 1.94.0.dev3, 1.94.0rc1, 1.94.0rc2, 1.94.0rc3, 1.94.0, 1.94.1, 1.94.2, 1.94.3, 1.95.0.dev3, 1.95.0rc1, 1.95.0rc2, 1.95.0rc3, 1.95.0, 1.95.1, 1.96.0.dev2, 1.96.0rc1, 1.96.0, 1.96.2, 1.97.0.dev1, 1.97.0rc1, 1.97.0, 1.98.0.dev1, 1.98.0.dev2, 1.98.0rc1, 1.98.0, 1.98.1, 1.99.0.dev1, 1.99.0.dev2, 1.99.0rc1, 1.99.0rc2, 1.99.0, 1.99.2, 1.99.3, 1.99.4, 1.100.0.dev1, 1.100.0.dev2, 1.100.0rc1, 1.100.0, 1.100.1, 1.100.2, 1.100.3, 1.101.0.dev1, 1.101.0.dev2, 1.101.0rc1, 1.101.0rc2, 1.101.0, 1.101.1, 1.101.2, 1.102.0.dev1, 1.102.0.dev2, 1.102.0rc1, 1.102.0rc2, 1.102.0, 1.102.1, 1.103.0.dev1, 1.103.0.dev2, 1.103.0rc1, 1.103.0, 1.104.0.dev1, 1.104.0.dev2, 1.104.0rc1)\nERROR: No matching distribution found for litellm==1.41.24\n', 'stdout_tail': 'ecting httpcore==1.0.5 (from -r D:\\projetos\\codepro-mini-runtime\\phase7\\S3-AutoCodeRover\\upstream\\requirements.txt (line 30))\n  Downloading httpcore-1.0.5-py3-none-any.whl.metadata (20 kB)\nCollecting httpx==0.27.0 (from -r D:\\projetos\\codepro-mini-runtime\\phase7\\S3-AutoCodeRover\\upstream\\requirements.txt (line 31))\n  Downloading httpx-0.27.0-py3-none-any.whl.metadata (7.2 kB)\nCollecting huggingface-hub==0.23.5 (from -r D:\\projetos\\codepro-mini-runtime\\phase7\\S3-AutoCodeRover\\upstream\\requirements.txt (line 32))\n  Downloading huggingface_hub-0.23.5-py3-none-any.whl.metadata (12 kB)\nCollecting hyperframe (from -r D:\\projetos\\codepro-mini-runtime\\phase7\\S3-AutoCodeRover\\upstream\\requirements.txt (line 33))\n  Using cached hyperframe-6.1.0-py3-none-any.whl.metadata (4.3 kB)\nCollecting identify==2.5.33 (from -r D:\\projetos\\codepro-mini-runtime\\phase7\\S3-AutoCodeRover\\upstream\\requirements.txt (line 34))\n  Downloading identify-2.5.33-py2.py3-none-any.whl.metadata (4.4 kB)\nCollecting idna==3.7 (from -r D:\\projetos\\codepro-mini-runtime\\phase7\\S3-AutoCodeRover\\upstream\\requirements.txt (line 35))\n  Downloading idna-3.7-py3-none-any.whl.metadata (9.9 kB)\nCollecting importlib-metadata==7.0.1 (from -r D:\\projetos\\codepro-mini-runtime\\phase7\\S3-AutoCodeRover\\upstream\\requirements.txt (line 36))\n  Downloading importlib_metadata-7.0.1-py3-none-any.whl.metadata (4.9 kB)\nCollecting install-jdk==1.1.0 (from -r D:\\projetos\\codepro-mini-runtime\\phase7\\S3-AutoCodeRover\\upstream\\requirements.txt (line 37))\n  Downloading install_jdk-1.1.0-py3-none-any.whl.metadata (12 kB)\nCollecting isort==5.13.2 (from -r D:\\projetos\\codepro-mini-runtime\\phase7\\S3-AutoCodeRover\\upstream\\requirements.txt (line 38))\n  Downloading isort-5.13.2-py3-none-any.whl.metadata (12 kB)\nCollecting javalang==0.13.0 (from -r D:\\projetos\\codepro-mini-runtime\\phase7\\S3-AutoCodeRover\\upstream\\requirements.txt (line 39))\n  Downloading javalang-0.13.0-py3-none-any.whl.metadata (805 bytes)\nCollecting Jinja2==3.1.4 (from -r D:\\projetos\\codepro-mini-runtime\\phase7\\S3-AutoCodeRover\\upstream\\requirements.txt (line 40))\n  Downloading jinja2-3.1.4-py3-none-any.whl.metadata (2.6 kB)\nCollecting jsonschema==4.22.0 (from -r D:\\projetos\\codepro-mini-runtime\\phase7\\S3-AutoCodeRover\\upstream\\requirements.txt (line 41))\n  Downloading jsonschema-4.22.0-py3-none-any.whl.metadata (8.2 kB)\nCollecting jsonschema-specifications==2023.12.1 (from -r D:\\projetos\\codepro-mini-runtime\\phase7\\S3-AutoCodeRover\\upstream\\requirements.txt (line 42))\n  Using cached jsonschema_specifications-2023.12.1-py3-none-any.whl.metadata (3.0 kB)\nCollecting libclang==18.1.1 (from -r D:\\projetos\\codepro-mini-runtime\\phase7\\S3-AutoCodeRover\\upstream\\requirements.txt (line 43))\n  Downloading libclang-18.1.1-py2.py3-none-win_amd64.whl.metadata (5.3 kB)\nCollecting linkify-it-py==2.0.2 (from -r D:\\projetos\\codepro-mini-runtime\\phase7\\S3-AutoCodeRover\\upstream\\requirements.txt (line 44))\n  Downloading linkify_it_py-2.0.2-py3-none-any.whl.metadata (8.4 kB)\n'}, 'stage': 'installation'}
+
+## Gates
+
+EXACT_UPSTREAM_IDENTITY = PASS
+EXACT_UPSTREAM_REQUIREMENTS = False
+PYTHON_3_11 = PASS
+
+## Semantics
+
+S3 classification closes only the AutoCodeRover compatibility cell.
+An upstream Windows installation blocker is retained as evidence; dependencies are not silently pruned to manufacture compatibility.
+
+AVAILABLE != QUALIFIED
+COMPATIBLE != SELECTED
+INFRA_FAILURE != MODEL_FAILURE
+EXECUTED != VERIFIED
+VERIFIED != ACCEPTED
+NO_SILENT_FALLBACK
+NO_SILENT_EXECUTOR_SWITCH
+
+Evidence: evidence/phase7-scaffold-compatibility/S3-AutoCodeRover/.
+
+Next compatibility cell: S4 OpenHands.
+
+## Exact installation root cause
+
+The Windows-native exact-upstream installation stopped at the pinned dependency `litellm==1.41.24`.
+
+pip reported `No matching distribution found for litellm==1.41.24` under the selected Python 3.11 Windows environment. The local runtime was therefore not started and no model call occurred.
+
+This blocker is narrower than a generic Linux/CUDA dependency incompatibility and must be preserved as the observed cause:
+
+EXACT_UPSTREAM_REQUIREMENTS = FAIL
+BLOCKER = PINNED_LITELLM_DISTRIBUTION_UNAVAILABLE
+MODEL_CALLS = NOT_REACHED

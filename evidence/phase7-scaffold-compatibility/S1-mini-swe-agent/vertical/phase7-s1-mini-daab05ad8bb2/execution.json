@@ -1,0 +1,164 @@
+{
+  "acceptance_authority_ref": "acceptance://phase7-independent-verifier",
+  "binding": {
+    "adapter_id": "codepro-local-command",
+    "adapter_version": "1",
+    "availability_evidence_ref": "runtime://local-command/1",
+    "capability_id": "repository-edit",
+    "executor_id": "local-command",
+    "executor_version": "1",
+    "qualification_evidence_refs": [
+      "local-evidence://command-contract-tests"
+    ],
+    "reason": "SINGLE_QUALIFIED_EXECUTOR",
+    "requirement_id": "phase7-s1-mini:capability",
+    "schema_version": 1,
+    "status": "BOUND"
+  },
+  "capability_requirement": {
+    "capability_id": "repository-edit",
+    "requirement_id": "phase7-s1-mini:capability",
+    "schema_version": 1,
+    "source_ref": "routing:sha256:a2cc118b9a5d6a1ced981a31e61ad5ea55d505bf5101f74b3d43233fd28f02bc"
+  },
+  "characterization": {
+    "acceptance_complexity": "MEDIUM",
+    "ambiguity": "LOW",
+    "confidence": "HIGH",
+    "dependency_fanout": 0,
+    "derived_signals": {
+      "acceptance_check_count": 1,
+      "ambiguity_marker_count": 0,
+      "component_count": 1,
+      "has_architectural_change": false,
+      "has_shared_state": false,
+      "risk_marker_count": 0
+    },
+    "estimated_files": 1,
+    "input_signals": {
+      "acceptance_checks": [
+        "declared verifier exits zero"
+      ],
+      "affected_components": [
+        "fixture"
+      ],
+      "ambiguity_markers": [],
+      "architectural_change": false,
+      "candidate_files": [
+        "value.txt"
+      ],
+      "declared_scope": null,
+      "dependency_edges": [],
+      "known_tests": [
+        "declared-verifier"
+      ],
+      "risk_markers": [],
+      "state_shared": false
+    },
+    "recommended_path": "SIMPLE_PATH",
+    "risk": "LOW",
+    "schema_version": 1,
+    "scope": "SIMPLE",
+    "signals": [
+      "SINGLE_FILE",
+      "SINGLE_COMPONENT",
+      "LOW_DEPENDENCY_FANOUT"
+    ],
+    "telemetry": {
+      "characterization_confidence": "HIGH",
+      "characterization_duration_ms": null,
+      "characterization_scope": "SIMPLE",
+      "recommended_path": "SIMPLE_PATH",
+      "signal_count": 7
+    },
+    "test_surface": "LIMITED"
+  },
+  "characterization_bundle_sha256": "398cfaa5c736d72efd0b90ba034d73023a9b4cd791d28487796c827ef8349963",
+  "characterization_ref": "characterization:sha256:9dc0d0a305192ff85ed87869dae2f409096bac3815d9906f0f85f257c6b96815",
+  "command_result": {
+    "argv": [
+      "D:\\projetos\\codepro-mini-runtime\\phase7\\S1-mini-swe-agent\\venv\\Scripts\\python.exe",
+      "D:\\projetos\\codepro-r2-validation\\tools\\phase7_mini_headless.py",
+      "--config",
+      "D:\\projetos\\codepro-r2-validation\\evidence\\phase7-scaffold-compatibility\\S1-mini-swe-agent\\mini-local-runtime.yaml",
+      "--task",
+      "You are running on Windows. Work only in the current repository. First inspect value.txt and confirm it contains the single line 'before'. Then change that line to 'after'. Use Python commands for file inspection and editing (do not use sed/cat/grep). Verify the resulting file content with another Python command. Finally run exactly 'echo COMPLETE_TASK_AND_SUBMIT_FINAL_OUTPUT' as a separate command.",
+      "--output",
+      "D:\\projetos\\codepro-r2-validation\\evidence\\phase7-scaffold-compatibility\\S1-mini-swe-agent\\mini-trajectory.json"
+    ],
+    "cwd": "D:\\projetos\\codepro-mini-runtime\\phase7\\S1-mini-swe-agent\\codepro-phase7-s1-8zqn6pbq\\workspaces\\s1-task",
+    "duration_ms": 41558,
+    "environment_error": null,
+    "exit_code": 0,
+    "schema_version": 1,
+    "stderr": "",
+    "stdout": "This is mini-swe-agent version 2.4.6.\nCheck the v2 migration guide at https://klieret.short.gy/mini-v2-migration\nLoading global config from \n'C:\\Users\\igorb\\AppData\\Local\\mini-swe-agent\\mini-swe-agent\\.env'\n{\"result\": {\"exit_status\": \"LimitsExceeded\", \"submission\": \"\"}}\n",
+    "timed_out": false
+  },
+  "governance": {
+    "acceptance_authority_ref": "acceptance://phase7-independent-verifier",
+    "authority_ref": "authority://phase7-compatibility",
+    "authorized_scope": [
+      "value.txt"
+    ],
+    "environment_ref": "workspace://D:/projetos/codepro-mini-runtime/phase7/S1-mini-swe-agent/codepro-phase7-s1-8zqn6pbq/workspaces/s1-task@10f838764607858057cd32312e3ec0bccc2d4469",
+    "evidence_refs": [
+      "request://phase7-s1-mini"
+    ],
+    "grant_id": "phase7-s1-mini:grant",
+    "max_commands": 1,
+    "max_wall_time_seconds": 180.0,
+    "permissions": [
+      "edit",
+      "test"
+    ],
+    "reasons": [
+      "AUTHORIZED"
+    ],
+    "request_id": "phase7-s1-mini",
+    "schema_version": 1,
+    "status": "AUTHORIZED"
+  },
+  "invocation_state": "OBSERVED",
+  "progress": null,
+  "reason": "EXECUTION_OBSERVED",
+  "request_id": "phase7-s1-mini",
+  "requested_scope": [
+    "value.txt"
+  ],
+  "routing": {
+    "budget": {
+      "attempts_used": 0,
+      "max_attempts": 3,
+      "max_path_escalations": 2,
+      "path_escalations_used": 0
+    },
+    "characterization_ref": "characterization:sha256:9dc0d0a305192ff85ed87869dae2f409096bac3815d9906f0f85f257c6b96815",
+    "confidence": "HIGH",
+    "decision": "ROUTE",
+    "initial_path": "SIMPLE_PATH",
+    "policy_version": "p3.rule-based.v1",
+    "reason_codes": [
+      "CHARACTERIZED_SIMPLE"
+    ],
+    "schema_version": 1,
+    "selected_path": "SIMPLE_PATH",
+    "task_id": "phase7-trivial-edit",
+    "telemetry": {
+      "attempt_count": 0,
+      "escalation_action": null,
+      "escalation_count": 0,
+      "initial_path": "SIMPLE_PATH",
+      "routing_decision": "ROUTE",
+      "routing_reason_codes": [
+        "CHARACTERIZED_SIMPLE"
+      ],
+      "selected_path": "SIMPLE_PATH"
+    }
+  },
+  "routing_ref": "routing:sha256:a2cc118b9a5d6a1ced981a31e61ad5ea55d505bf5101f74b3d43233fd28f02bc",
+  "schema_version": 1,
+  "status": "EXECUTED",
+  "task_ref": "phase7-trivial-edit",
+  "verification": null
+}

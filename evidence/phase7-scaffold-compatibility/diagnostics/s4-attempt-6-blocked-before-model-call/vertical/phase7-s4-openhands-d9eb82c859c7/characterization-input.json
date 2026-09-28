@@ -1,0 +1,22 @@
+{
+  "acceptance_checks": [
+    "declared verifier exits zero"
+  ],
+  "affected_components": [
+    "fixture"
+  ],
+  "ambiguity_markers": [],
+  "architectural_change": false,
+  "bundle_sha256": "b3a179af01820f4353647608908015f413c802b8f8661366c2fd7de399bddac0",
+  "candidate_files": [
+    "value.py"
+  ],
+  "declared_scope": null,
+  "dependency_edges": [],
+  "known_tests": [
+    "declared-verifier"
+  ],
+  "risk_markers": [],
+  "source_ref": "evidence://phase7-s4-frozen-task",
+  "state_shared": false
+}

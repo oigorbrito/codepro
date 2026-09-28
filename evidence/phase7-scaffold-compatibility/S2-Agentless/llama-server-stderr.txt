@@ -1,0 +1,20 @@
+0.00.001.690 I srv  llama_server: initializing ...
+0.13.149.383 I cmn  common_param: common_params_print_info: verbosity = 3 (adjust with the `-lv N` CLI arg)
+0.13.155.760 W srv  llama_server: security: no API key is set and CORS allows all origins (see https://github.com/ggml-org/llama.cpp/pull/25655)
+0.13.176.252 I srv    load_model: loading model 'D:\projetos\codepro-mini-runtime\models\phase4\L3-Granite-4.2-3B\granite-4.2-3b-Q4_K_M.gguf'
+0.13.555.838 W common_fit_params: failed to fit params to free device memory: n_gpu_layers already set by user to 99, abort
+0.17.293.329 I cmn          init: llama threadpool init, n_threads = 4
+0.17.643.651 I srv    load_model: initializing, n_slots = 4, n_ctx_slot = 4096, kv_unified = 'true'
+0.17.748.603 W srv          init: chat template supports preserving reasoning, it is enabled by default (may use more tokens, disable via --no-reasoning-preserve)
+0.17.749.527 I srv  llama_server: model loaded
+0.17.749.735 I srv  llama_server: listening on http://127.0.0.1:18090
+1.28.484.699 I slot get_availabl: id  3 | task -1 | selected slot by LRU, t_last = -1
+1.28.486.283 I slot launch_slot_: id  3 | task 0 | processing task, is_child = 0
+1.33.990.496 I slot print_timing: id  3 | task 0 | n_gen =    150, tg =  49.49 t/s, tg_3s =  49.82 t/s
+1.36.999.808 I slot print_timing: id  3 | task 0 | n_gen =    302, tg =  50.00 t/s, tg_3s =  50.51 t/s
+1.40.006.563 I slot print_timing: id  3 | task 0 | n_gen =    456, tg =  50.41 t/s, tg_3s =  51.22 t/s
+1.41.126.054 I slot print_timing: id  3 | task 0 | prompt eval time =    2493.28 ms /   355 tokens (    7.02 ms per token,   142.38 tokens per second)
+1.41.126.063 I slot print_timing: id  3 | task 0 |        eval time =   10146.27 ms /   512 tokens (   19.86 ms per token,    50.36 tokens per second)
+1.41.129.202 I slot print_timing: id  3 | task 0 |       total time =   12639.55 ms /   867 tokens
+1.41.129.214 I slot print_timing: id  3 | task 0 |    graphs reused =        509
+1.41.139.902 I slot      release: id  3 | task 0 | stop processing: n_tokens = 866, truncated = 0

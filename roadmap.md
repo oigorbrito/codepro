@@ -394,17 +394,33 @@ Frozen pool:
 - S3 AutoCodeRover
 - S4 OpenHands
 
-For each:
+For each frozen candidate, execute the compatibility cell as far as the platform/scaffold permits and preserve blockers without substitution:
 
-- [ ] Install and record version/commit.
-- [ ] Connect to local runtime.
-- [ ] Execute trivial repository task.
-- [ ] Confirm inspect/edit/command/termination.
-- [ ] Capture artifacts and telemetry.
-- [ ] Verify patch.
-- [ ] Classify compatibility.
+- [x] Attempt installation and record exact version/commit.
+- [x] Attempt explicit local-runtime binding where installation/runtime startup is reachable.
+- [x] Execute the frozen trivial repository task where the scaffold reaches execution.
+- [x] Capture inspect/edit/command/termination observations where reachable; unknown remains unknown.
+- [x] Capture artifacts and telemetry for every reached boundary.
+- [x] Invoke the independent verifier only after an observable repository change.
+- [x] Classify all four frozen candidates.
+
+Pool identity: `experiments/phase7/scaffold-pool.json`.
+
+Decision: `docs/decisions/0167-phase7-scaffold-pool.md`.
+
+Execution order: S1 -> S2 -> S3 -> S4. Order is operational, not a quality ranking.
+
+Candidate compatibility cells:
+
+- S1 mini-swe-agent v2.4.6: **BLOCKED_WINDOWS_SHELL_PROTOCOL** — model calls/tool calls observed, but Bash-oriented command contract produced no valid Windows-native edit; CodePro correctly stopped at `NO_OBSERVABLE_CHANGE`.
+- S2 Agentless: **BLOCKED_MODEL_EDIT_FORMAT** — docs/audits/phase7-s2-agentless-20260928.md.
+- S3 AutoCodeRover: **BLOCKED_INSTALLATION_WINDOWS_NATIVE** — docs/audits/phase7-s3-autocoderover-20260928.md.
+- S4 OpenHands: **BLOCKED_TIMEOUT** — docs/audits/phase7-s4-openhands-20260928.md.
+
+**Phase status:** COMPLETE — all four frozen scaffold cells classified; compatible survivors = 0; Phase 8 = BLOCKED_BY_NO_COMPATIBLE_SCAFFOLD.
 
 ---
+
 
 ## Phase 8 â€” Scaffold screen
 
@@ -584,7 +600,7 @@ PHASE 3   Telemetry baseline            COMPLETE
 PHASE 4   Model compatibility           COMPLETE
 PHASE 5   CodePro local plumbing        COMPLETE
 PHASE 6   Execution/verifier plumbing   COMPLETE
-PHASE 7   Scaffold compatibility        NOT_STARTED
+PHASE 7   Scaffold compatibility        COMPLETE
 PHASE 8   Scaffold screen               NOT_STARTED
 PHASE 9   Scaffold pruning              NOT_STARTED
 PHASE 10  Model screen                  NOT_STARTED
@@ -603,5 +619,5 @@ Current task:
 
 ```text
 PHASE 7 = SCAFFOLD COMPATIBILITY
-STATUS = NEXT
+STATUS = COMPLETE / PR90_ACCEPTANCE_BEFORE_PHASE8
 ```
