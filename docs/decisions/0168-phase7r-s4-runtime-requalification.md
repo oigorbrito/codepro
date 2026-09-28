@@ -4,7 +4,7 @@ Date: 2026-09-28
 
 ## Status
 
-PROPOSED / EXECUTION_READY
+EXECUTED / ATTRIBUTION_PENDING
 
 ## Context
 
@@ -107,3 +107,25 @@ NO_SILENT_FALLBACK
 NO_SILENT_EXECUTOR_SWITCH
 NO_SILENT_SCOPE_EXPANSION
 ```
+
+
+## S4-R1 observed result
+
+The controlled `--parallel 1` cell executed and remained `BLOCKED_TIMEOUT`.
+
+Observed summary:
+
+```text
+conversation_id = present
+explicit_local_binding = true
+parallel = 1
+edit_observed = false
+patch_captured = false
+independent_verifier = false
+model_calls_observed = unknown
+classification = BLOCKED_TIMEOUT
+```
+
+This result rejects the claim that setting server parallelism to 1 is sufficient by itself. It does not yet prove whether context/KV pressure persisted, because that attribution requires the S4-R1 runtime logs.
+
+Next action: run `tools/analyze_phase7r_s4_requalification.py` against the local evidence bundle and review `phase7r-analysis.json` before authorizing another treatment.
