@@ -66,19 +66,31 @@ if (Test-Path $evidenceRoot) {
     }
 
     $existingResult = Get-Content $existingResultPath -Raw | ConvertFrom-Json
-    $isKnownHarnessTruncation = (
-        $existingResult.classification -eq "MODEL_RESPONSE_INVALID" -and
+    $isAttempt1 = (
         $existingResult.telemetry.finish_reason -eq "length" -and
         $existingResult.telemetry.completion_tokens -eq 16
     )
+    $isAttempt2 = (
+        $existingResult.classification -eq "MODEL_RESPONSE_INVALID" -and
+        $existingResult.telemetry.finish_reason -eq "stop" -and
+        $existingResult.telemetry.completion_tokens -eq 7
+    )
 
-    if (-not $isKnownHarnessTruncation) {
-        throw "Existing Phase 5 evidence is not the known 16-token harness truncation; refusing overwrite."
+    if (-not $isAttempt1 -and -not $isAttempt2) {
+        throw "Existing Phase 5 evidence is not a recognized diagnostic attempt; refusing overwrite."
     }
 
     $diagnosticsRoot = "$repoRoot\evidence\phase5-local-runtime\diagnostics"
     New-Item -ItemType Directory -Force -Path $diagnosticsRoot | Out-Null
-    $archive = Join-Path $diagnosticsRoot "attempt-1-harness-truncated"
+
+    if ($isAttempt1) {
+        $archiveName = "attempt-1-harness-truncated"
+    }
+    else {
+        $archiveName = "attempt-2-freeform-response-variance"
+    }
+
+    $archive = Join-Path $diagnosticsRoot $archiveName
     if (Test-Path $archive) {
         throw "Diagnostic archive already exists: $archive"
     }
