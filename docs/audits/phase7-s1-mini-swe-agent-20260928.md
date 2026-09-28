@@ -16,7 +16,7 @@ fallback = DISABLED
 
 ## Result
 
-classification = INCOMPATIBLE
+classification = RETEST_REQUIRED_ENVIRONMENT_HARNESS
 vertical_status = FAILED
 vertical_reason = EXECUTOR_EXIT_NONZERO:1
 mini_exit_status = None
@@ -57,3 +57,16 @@ If the classification is BLOCKED_MODEL_TOOL_PROTOCOL, the observed blocker belon
 Evidence: evidence/phase7-scaffold-compatibility/S1-mini-swe-agent/.
 
 Next compatibility cell: S2 Agentless.
+
+## Reconciliation note
+
+The first S1 run is not a valid scaffold compatibility result.
+
+Raw executor evidence shows `prompt_toolkit.output.win32.NoConsoleScreenBufferError` before the first model call because the interactive `mini` CLI was executed under captured Windows stdout/stderr.
+
+Therefore:
+
+INFRA_FAILURE != MODEL_FAILURE
+NO_MODEL_CALL != SCAFFOLD_INCOMPATIBLE
+
+Disposition: archive the first run as diagnostic evidence and retest the same pinned mini-SWE-agent through its native headless DefaultAgent/LocalEnvironment/LitellmModel API.
