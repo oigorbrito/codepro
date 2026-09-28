@@ -26,6 +26,9 @@ class LocalOpenAIModel(OpenaiModel):
 
     _instances = {}
 
+    def __new__(cls, model_name: str, base_url: str):
+        return object.__new__(cls)
+
     def __init__(self, model_name: str, base_url: str):
         if getattr(self, "_initialized", False):
             return
