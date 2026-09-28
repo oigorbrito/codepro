@@ -35,6 +35,19 @@ persistLocalInferenceMeasurementRecord(gpu, tempPath);
 const roundTrip = JSON.parse(fs.readFileSync(tempPath, "utf8")) as LocalInferenceMeasurementRecordV1;
 validateLocalInferenceMeasurementRecord(roundTrip);
 assert.deepEqual(roundTrip, gpu);
+
+assert.throws(
+  () => persistLocalInferenceMeasurementRecord(cpu, tempPath),
+  (error: unknown) =>
+    error instanceof Error &&
+    "code" in error &&
+    (error as NodeJS.ErrnoException).code === "EEXIST",
+);
+const preserved = JSON.parse(
+  fs.readFileSync(tempPath, "utf8"),
+) as LocalInferenceMeasurementRecordV1;
+assert.deepEqual(preserved, gpu);
+
 fs.rmSync(path.dirname(tempPath), { recursive: true, force: true });
 
 console.log("execution telemetry contract: PASS");
