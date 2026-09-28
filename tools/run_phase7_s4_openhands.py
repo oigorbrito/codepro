@@ -191,8 +191,11 @@ def token_usage(adapter:dict[str,Any])->dict[str,Any]:
 
 def classify(vertical:dict[str,Any],adapter:dict[str,Any],gates:dict[str,Any])->str:
     usage=token_usage(adapter); model_calls=isinstance(usage.get("prompt_tokens"),int) and usage.get("prompt_tokens",0)>0
-    if vertical.get("status")=="TIMED_OUT": return "BLOCKED_TIMEOUT"
+    error=adapter.get("error") if isinstance(adapter.get("error"),dict) else {}
+    error_message=str(error.get("message") or "").lower()
+    if vertical.get("status")=="TIMED_OUT" or (adapter.get("conversation_id") and "timed out" in error_message): return "BLOCKED_TIMEOUT"
     if adapter.get("error") and not adapter.get("conversation_id"): return "BLOCKED_BEFORE_MODEL_CALL"
+    if usage.get("prompt_tokens") is None: return "BLOCKED_BEFORE_MODEL_CALL"
     if not model_calls: return "BLOCKED_BEFORE_MODEL_CALL"
     if model_calls and not gates.get("edit_observed"): return "BLOCKED_MODEL_TOOL_PROTOCOL"
     if vertical.get("status")=="VERIFIED" and all(gates.get(k) is True for k in ("edit_observed","patch_captured","independent_verifier")): return "COMPATIBLE"
@@ -258,7 +261,7 @@ def main(argv:list[str]|None=None)->int:
             verifier_path=run_root/"verification-summary.json"; verifier=json.loads(verifier_path.read_text(encoding="utf-8")) if verifier_path.is_file() else {}; verifier_ok=verifier.get("status")=="PASSED"
             usage=token_usage(adapter); summary["telemetry"]={**usage,"provider_api_cost_usd":0}
             final_state=isolated.capture_state().to_dict(); source_state=capture_repository_state(source).to_dict(); cleanup=isolated.remove(); isolated=None
-            summary["gates"].update({"explicit_local_binding":(adapter.get("llm_binding") or {}).get("base_url")==LLAMA_BASE and (adapter.get("llm_binding") or {}).get("model")==f"openai/{MODEL_ALIAS}","model_calls_observed":isinstance(usage.get("prompt_tokens"),int) and usage.get("prompt_tokens",0)>0,"inspect_observed":obs.get("inspectObserved") is True,"command_observed":obs.get("commandObserved") is True,"event_edit_signal":obs.get("editObserved") is True,"edit_observed":len(vertical.get("changed_files") or [])>0,"termination_observed":str(adapter.get("execution_status") or "").lower() in {"finished","error","stuck","stopped"},"patch_captured":patch_ok,"independent_verifier":verifier_ok,"source_repository_unchanged":source_state.get("clean") is True,"workspace_cleanup":cleanup.removed})
+            summary["gates"].update({"explicit_local_binding":(adapter.get("llm_binding") or {}).get("base_url")==LLAMA_BASE and (adapter.get("llm_binding") or {}).get("model")==f"openai/{MODEL_ALIAS}","model_calls_observed":(None if usage.get("prompt_tokens") is None else usage.get("prompt_tokens",0)>0),"inspect_observed":obs.get("inspectObserved") is True,"command_observed":obs.get("commandObserved") is True,"event_edit_signal":obs.get("editObserved") is True,"edit_observed":len(vertical.get("changed_files") or [])>0,"termination_observed":str(adapter.get("execution_status") or "").lower() in {"finished","error","stuck","stopped"},"patch_captured":patch_ok,"independent_verifier":verifier_ok,"source_repository_unchanged":source_state.get("clean") is True,"workspace_cleanup":cleanup.removed})
             summary["repository_state"]={"initial_revision":revision,"final":final_state,"source":source_state}; summary["classification"]=classify(vertical,adapter,summary["gates"])
             write_json(evidence/"s4-summary.json",summary); print(json.dumps(summary,ensure_ascii=False,indent=2,sort_keys=True)); return 0
     except Exception as exc:
