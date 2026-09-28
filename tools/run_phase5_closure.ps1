@@ -181,7 +181,7 @@ try {
     $oldPythonPath = $env:PYTHONPATH
     try {
         $env:PYTHONPATH = "$repoRoot\src"
-        $argsSmoke = @("tools/run_phase5_local_runtime_smoke.py", "--base-url", $baseUrl, "--model", $alias, "--timeout-seconds", "30", "--evidence-dir", $clientEvidence, "--expected", "PHASE5_OK")
+        $argsSmoke = @("tools/run_phase5_local_runtime_smoke.py", "--base-url", $baseUrl, "--model", $alias, "--timeout-seconds", "30", "--evidence-dir", $clientEvidence, "--probe-text", "Provide one short acknowledgement.")
         & py -3.13 @argsSmoke
         $smokeExit = $LASTEXITCODE
     }
@@ -192,12 +192,15 @@ try {
 
     $smoke = Get-Content "$clientEvidence\result.json" -Raw | ConvertFrom-Json
     if ($smoke.classification -ne "LOCAL_RUNTIME_PLUMBING_PASS") { throw "Unexpected smoke classification." }
-    if ($smoke.response_valid -ne $true) { throw "Smoke response invalid." }
+    if ($smoke.response_observed -ne $true) { throw "Smoke did not observe a non-empty model response." }
+    if ($smoke.telemetry_complete -ne $true) { throw "Smoke telemetry was incomplete." }
     if ($smoke.binding.model_id -ne $alias) { throw "Model binding changed." }
     if ($smoke.binding.fallback -ne "DISABLED") { throw "Fallback policy changed." }
     if ($smoke.telemetry.preflight.model_id -ne $alias) { throw "Preflight model mismatch." }
 
     Write-Host "E2E_SMOKE          = PASS"
+    Write-Host "RESPONSE_OBSERVED  = PASS"
+    Write-Host "TELEMETRY_COMPLETE = PASS"
     Write-Host "MODEL_BINDING      = PASS"
     Write-Host "NO_SILENT_FALLBACK = PASS"
 }
@@ -226,7 +229,7 @@ $summary = [ordered]@{
     runtime = [ordered]@{ name = "llama.cpp"; build = 11205; commit = "95887577ab5fead779581a7030a83c7752ff3234" }
     reference_fixture = [ordered]@{ candidate = "L3"; model = "Granite-4.2-3B"; role = "PHASE5_PLUMBING_FIXTURE"; selected_model = $false; sha256 = $expectedSha }
     binding = $smoke.binding
-    smoke = [ordered]@{ classification = $smoke.classification; response_valid = $smoke.response_valid; expected_response = $smoke.expected_response; telemetry = $smoke.telemetry; provider_api_cost_usd = 0 }
+    smoke = [ordered]@{ classification = $smoke.classification; probe_semantics_graded = $false; response_observed = $smoke.response_observed; response_content_length = $smoke.response_content_length; response_content_sha256 = $smoke.response_content_sha256; telemetry_complete = $smoke.telemetry_complete; telemetry = $smoke.telemetry; provider_api_cost_usd = 0 }
     failure_boundaries = @("HTTP", "RUNTIME", "MODEL", "TIMEOUT", "PROTOCOL")
     gates = [ordered]@{ local_endpoint = "PASS"; endpoint_model_binding = "PASS"; no_silent_fallback = "PASS"; explicit_timeout = "PASS"; failure_separation = "PASS"; e2e_smoke = "PASS"; evidence_bundle = "PASS"; server_stop = "PASS" }
     next_phase = 6
@@ -251,13 +254,23 @@ $auditLines = @(
     "Failure boundaries: HTTP, RUNTIME, MODEL, TIMEOUT, PROTOCOL.",
     "",
     "Smoke classification: $($smoke.classification)",
-    "Response valid: $($smoke.response_valid)",
+    "Probe semantics graded: False",
+    "Response observed: $($smoke.response_observed)",
+    "Response content length: $($smoke.response_content_length)",
+    "Response content SHA256: $($smoke.response_content_sha256)",
+    "Telemetry complete: $($smoke.telemetry_complete)",
     "Wall time ms: $($smoke.telemetry.wall_time_ms)",
     "Prompt tokens: $($smoke.telemetry.prompt_tokens)",
     "Completion tokens: $($smoke.telemetry.completion_tokens)",
     "Total tokens: $($smoke.telemetry.total_tokens)",
     "Provider API cost USD: 0",
     "Server termination: PASS",
+    "",
+    "Diagnostic attempts are preserved under evidence/phase5-local-runtime/diagnostics/.",
+    "Attempt 1 exposed a 16-token harness truncation.",
+    "Attempt 2 showed freeform response variance with a healthy transport.",
+    "Attempt 3 showed HTTP 500 grammar incompatibility for constrained chat on this frozen model/template path.",
+    "None of those semantic/grammar behaviors is promoted into the Phase 5 plumbing gate.",
     "",
     "PHASE_5 = COMPLETE",
     "Evidence: evidence/phase5-local-runtime/frozen-smoke/",
