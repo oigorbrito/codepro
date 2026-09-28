@@ -16,7 +16,7 @@ fallback = DISABLED
 
 ## Result
 
-classification = BLOCKED_CODEPRO_GATE
+classification = BLOCKED_WINDOWS_SHELL_PROTOCOL
 vertical_status = BLOCKED
 vertical_reason = NO_OBSERVABLE_CHANGE
 mini_exit_status = LimitsExceeded
@@ -59,3 +59,19 @@ Prior diagnostic: the first interactive-CLI attempt was invalidated before the f
 Evidence: evidence/phase7-scaffold-compatibility/S1-mini-swe-agent/.
 
 Next compatibility cell: S2 Agentless.
+
+## Final S1 root-cause attribution
+
+The headless retest reached the frozen local model and produced 8 model calls, 13,716 prompt tokens and 798 completion tokens.
+
+The trajectory shows Bash-oriented commands (`ls -la`, `cat`, and heredoc syntax) emitted against the Windows-native local environment. Those commands are not valid CMD semantics. The later Python edit command returned zero but produced no observable repository change; CodePro therefore correctly stopped at `NO_OBSERVABLE_CHANGE` and did not invoke the independent verifier.
+
+Final attribution:
+
+S1 = BLOCKED_WINDOWS_SHELL_PROTOCOL
+CODEPRO_GATE = CORRECTLY_ENFORCED
+MODEL_CALLS = OBSERVED
+MODEL_FAILURE = NOT_ESTABLISHED
+SILENT_WSL_OR_SHELL_SWITCH = NOT_ALLOWED
+
+This closes the S1 compatibility cell under the frozen Windows-native baseline. WSL2 remains deferred to Phase 18.
