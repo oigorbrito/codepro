@@ -65,9 +65,9 @@ QUALIFY
 ```
 
 
-## Active reconciliation override
+## Completed reconciliation record
 
-Repository reconciliation is currently the highest-priority execution path.
+Repository reconciliation completed through PR #80. Normal roadmap execution resumes at Phase 3.
 
 Canonical correction plan:
 
@@ -76,9 +76,9 @@ docs/reconciliation-roadmap.md
 ```
 
 ```text
-RECONCILIATION = ACTIVE
-CURRENT_BLOCK = R5
-NORMAL_PHASE_3_PLUS = PAUSED_BY_RECONCILIATION
+RECONCILIATION = DONE
+CURRENT_BLOCK = NONE
+NORMAL_PHASE_3_PLUS = RESUMED
 ```
 
 Phase 0-2 completed evidence remains recorded. Do not continue normal Phase 3+
@@ -528,7 +528,7 @@ Deferred until local frontier is measured.
 PHASE 0   Strategy freeze               COMPLETE
 PHASE 1   Windows hardware              COMPLETE
 PHASE 2   Runtime qualification         COMPLETE
-PHASE 3   Telemetry baseline            PAUSED_BY_RECONCILIATION
+PHASE 3   Telemetry baseline            IN_PROGRESS
 PHASE 4   Model compatibility           NOT_STARTED
 PHASE 5   CodePro local plumbing        NOT_STARTED
 PHASE 6   Execution/verifier plumbing   NOT_STARTED
@@ -556,9 +556,9 @@ R1 = DONE
 R2 = DONE
 R3 = DONE
 R4 = DONE
-R5 = IN_PROGRESS
+R5 = DONE
 
-NORMAL PHASE 3+ = PAUSED_BY_RECONCILIATION
+NORMAL PHASE 3+ = RESUMED
 ```
 
 

@@ -1,6 +1,6 @@
 # CodePro Reconciliation & Recovery Roadmap
 
-Status: **ACTIVE**
+Status: **DONE**
 
 This document is the temporary operational control plan for correcting the
 unqualified repository replacement introduced around commit `04a670e` while
@@ -275,7 +275,7 @@ Mark `DONE` only when:
 
 ## R5 â€” Full requalification and reconciliation closure
 
-**Status: IN_PROGRESS**
+**Status: DONE**
 
 **Local technical R5 gate:** PASS; reviewed PR / merge pending.
 
@@ -341,15 +341,15 @@ NORMAL_ROADMAP = RESUME
 ## Current execution pointer
 
 ```text
-RECONCILIATION = ACTIVE
-CURRENT_BLOCK  = R5
+RECONCILIATION = DONE
+CURRENT_BLOCK  = NONE
 R1             = DONE
 R2             = DONE
 R3             = DONE
 R4             = DONE
-R5             = IN_PROGRESS
+R5             = DONE
 
-NORMAL PHASE 3+ IMPLEMENTATION = PAUSED_BY_RECONCILIATION
+NORMAL PHASE 3+ IMPLEMENTATION = RESUMED
 ```
 
 Completed Phase 0-2 evidence is not invalidated by this pause. Any conflict
