@@ -28,11 +28,19 @@
         "vertical_reason": "EXECUTOR_EXIT_NONZERO:1",
         "vertical_status": "FAILED"
       },
-      "phase7_status": "INCOMPATIBLE",
+      "phase7_status": "RETEST_REQUIRED_ENVIRONMENT_HARNESS",
       "prior_codepro_state": "provider-free/reference integration preserved; real local-runtime compatibility not yet established",
       "repository": "SWE-agent/mini-swe-agent",
       "selection_basis": "existing CodePro frozen reference and upstream release",
-      "version": "v2.4.6"
+      "version": "v2.4.6",
+      "prior_phase7_attempt": {
+        "classification": "INVALID_AS_COMPATIBILITY_RESULT",
+        "observed_vertical_status": "FAILED",
+        "observed_reason": "EXECUTOR_EXIT_NONZERO:1",
+        "root_cause": "mini interactive CLI imported prompt_toolkit and failed under captured Windows stdout/stderr with NoConsoleScreenBufferError before first model call",
+        "model_calls_observed": false,
+        "disposition": "ARCHIVE_AS_DIAGNOSTIC_AND_RETEST_HEADLESS_NATIVE_API"
+      }
     },
     {
       "commit": "b150f28465a77a81a7f4776384957a4271f5bd69",
