@@ -364,6 +364,8 @@ def classify(
     verifier_ok: bool,
 ) -> str:
     exit_status = trajectory.get("exit_status")
+    api_calls = trajectory.get("api_calls")
+
     if exit_status == "RepeatedFormatError":
         return "BLOCKED_MODEL_TOOL_PROTOCOL"
     if vertical.get("status") == "TIMED_OUT":
@@ -372,13 +374,18 @@ def classify(
         return "BLOCKED_ENVIRONMENT"
     if vertical.get("status") == "BLOCKED":
         return "BLOCKED_CODEPRO_GATE"
+    if vertical.get("status") == "FAILED":
+        if trajectory.get("present") is not True:
+            return "BLOCKED_SCAFFOLD_STARTUP"
+        if not isinstance(api_calls, int) or api_calls <= 0:
+            return "BLOCKED_BEFORE_MODEL_CALL"
+        return "INCOMPATIBLE"
 
     compatible = all(
         (
             vertical.get("status") == "VERIFIED",
             trajectory.get("present") is True,
-            isinstance(trajectory.get("api_calls"), int)
-            and trajectory.get("api_calls") > 0,
+            isinstance(api_calls, int) and api_calls > 0,
             trajectory.get("inspect_seen") is True,
             trajectory.get("command_seen") is True,
             exit_status == "Submitted",
