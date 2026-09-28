@@ -77,10 +77,14 @@ compatibility results.
 - AutoCodeRover v1.1.0 contains LiteLLM/OpenAI-compatible code paths and a
   generic-model mechanism; its exact local-model/base-URL interaction must be
   proven rather than assumed.
-- OpenHands v1.21.0 was already observed locally with headless/JSON and
-  `LLM_BASE_URL` / `LLM_MODEL` overrides, but prior CodePro evidence
-  classified it `BLOCKED_RUNTIME` before the first task cycle. Phase 7 must
-  requalify rather than inherit a PASS.
+- OpenHands v1.21.0 is Agent Canvas/orchestration. Its frozen
+  `config/defaults.json` pins `openhands-agent-server==1.49.3`, and the
+  Canvas CLI launches that server through `uvx`. LLM configuration is not a
+  Canvas `LLM_BASE_URL` / `LLM_MODEL` environment-variable contract; it is
+  carried through Agent Server/Canvas conversation settings. The Phase 7 S4
+  runner therefore uses the frozen Canvas request builder with explicit
+  `openai/<model>` plus `base_url`, while preserving the prior
+  `BLOCKED_RUNTIME` observation only as historical evidence to requalify.
 
 ## Ordering
 

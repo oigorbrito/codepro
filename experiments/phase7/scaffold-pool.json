@@ -123,7 +123,7 @@
     {
       "commit": "fc6d890f7b21c71a17de60d50597c00355e235ea",
       "id": "S4",
-      "local_runtime_surface": "headless mode with LLM_BASE_URL / LLM_MODEL overrides",
+      "local_runtime_surface": "Agent Canvas v1.21.0 request builder -> pinned Agent Server 1.49.3 REST API; explicit OpenAI-compatible model/base_url binding in conversation settings",
       "name": "OpenHands",
       "phase7_status": "NOT_TESTED",
       "prior_codepro_state": "previous local audit BLOCKED_RUNTIME before first task cycle due protected profile/Jinja cache",

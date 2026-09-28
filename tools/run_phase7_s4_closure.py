@@ -74,10 +74,11 @@ def update_roadmap(summary:dict,survivors:int)->None:
 - [x] Invoke the independent verifier only after an observable repository change.
 - [x] Classify all four frozen candidates."""
     if old in block: block=block.replace(old,new)
-    block=re.sub(r"\*\*Phase status:\*\* IN_PROGRESS[^\r\n]*",f"**Phase status:** COMPLETE — all four frozen scaffold cells classified; compatible survivors = {survivors}; post-Phase-7 gate review required before Phase 8.",block,count=1)
+    phase8_state="NEXT" if survivors>=1 else "BLOCKED_BY_NO_COMPATIBLE_SCAFFOLD"
+    block=re.sub(r"\*\*Phase status:\*\* IN_PROGRESS[^\r\n]*",f"**Phase status:** COMPLETE — all four frozen scaffold cells classified; compatible survivors = {survivors}; Phase 8 = {phase8_state}.",block,count=1)
     text=text[:a]+block+text[b:]
     text=text.replace("PHASE 7   Scaffold compatibility        IN_PROGRESS","PHASE 7   Scaffold compatibility        COMPLETE")
-    text=text.replace("STATUS = IN_PROGRESS / S4_NEXT","STATUS = COMPLETE / POST_PHASE7_GATE_REVIEW")
+    text=text.replace("STATUS = IN_PROGRESS / S4_NEXT","STATUS = COMPLETE / PR90_ACCEPTANCE_BEFORE_PHASE8")
     p.write_text(text,encoding="utf-8",newline="\n")
 
 def repo_gates()->None:
@@ -99,7 +100,7 @@ def main()->int:
     if not classification: raise RuntimeError("S4 classification missing")
     survivors,statuses=update_manifest(summary); write_audit(summary,survivors,statuses); update_roadmap(summary,survivors); repo_gates()
     roadmap=(ROOT/"roadmap.md").read_text(encoding="utf-8")
-    if "STATUS = COMPLETE / POST_PHASE7_GATE_REVIEW" not in roadmap: raise RuntimeError("roadmap Phase 7 closure pointer missing")
+    if "STATUS = COMPLETE / PR90_ACCEPTANCE_BEFORE_PHASE8" not in roadmap: raise RuntimeError("roadmap Phase 7 closure pointer missing")
     print("ROADMAP_SYNC = PASS")
     git("add","--","roadmap.md","experiments/phase7/scaffold-pool.json","docs/audits/phase7-s4-openhands-20260928.md","docs/audits/phase7-s3-autocoderover-20260928.md","evidence/phase7-scaffold-compatibility")
     staged=git("diff","--cached","--name-only").stdout.splitlines()
@@ -115,6 +116,7 @@ def main()->int:
     print(""); print("======================================================"); print(" PHASE 7 - FINAL RESULT"); print("======================================================")
     print(f"S4_CLASSIFICATION       = {classification}"); print(f"S4_VERTICAL_STATUS      = {vert.get('status')}"); print(f"S4_PROMPT_TOKENS        = {tele.get('prompt_tokens')}"); print(f"S4_COMPLETION_TOKENS    = {tele.get('completion_tokens')}")
     print(f"AGENT_CANVAS_READY      = {gates.get('agent_canvas_ready')}"); print(f"LOCAL_RUNTIME_READY     = {gates.get('local_runtime_ready')}"); print(f"MODEL_CALLS_OBSERVED    = {gates.get('model_calls_observed')}"); print(f"INSPECT_OBSERVED        = {gates.get('inspect_observed')}"); print(f"EDIT_OBSERVED           = {gates.get('edit_observed')}"); print(f"COMMAND_OBSERVED        = {gates.get('command_observed')}"); print(f"INDEPENDENT_VERIFIER    = {gates.get('independent_verifier')}")
-    print(f"COMPATIBLE_SURVIVORS    = {survivors}"); print(f"POOL_STATUS              = {', '.join(statuses)}"); print("FOUNDATION               = PASS"); print("PYTHON_TESTS             = PASS"); print("NPM_LINT                 = PASS"); print("NPM_BUILD                = PASS"); print("PHASE7                    = COMPLETE"); print("PHASE8                    = NOT_STARTED / GATE_REVIEW_REQUIRED"); print(f"COMMIT_SHA                = {after}"); print(f"REMOTE_HEAD               = {remote}"); print(f"COMMITS_AHEAD_MAIN        = {ahead}"); print("NEXT                       = REMOTE_ACCEPTANCE_AND_POST_PHASE7_GATE_REVIEW"); return 0
+    phase8_state="NEXT" if survivors>=1 else "BLOCKED_BY_NO_COMPATIBLE_SCAFFOLD"
+    print(f"COMPATIBLE_SURVIVORS    = {survivors}"); print(f"POOL_STATUS              = {', '.join(statuses)}"); print("FOUNDATION               = PASS"); print("PYTHON_TESTS             = PASS"); print("NPM_LINT                 = PASS"); print("NPM_BUILD                = PASS"); print("PHASE7                    = COMPLETE"); print(f"PHASE8                    = {phase8_state}"); print(f"COMMIT_SHA                = {after}"); print(f"REMOTE_HEAD               = {remote}"); print(f"COMMITS_AHEAD_MAIN        = {ahead}"); print("NEXT                       = REMOTE_REVIEW_THEN_PR90_ACCEPTANCE"); return 0
 
 if __name__=="__main__": raise SystemExit(main())

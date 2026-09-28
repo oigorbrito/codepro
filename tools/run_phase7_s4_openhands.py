@@ -168,17 +168,29 @@ def terminate_tree(process:subprocess.Popen[Any]|None)->None:
 
 def token_usage(adapter:dict[str,Any])->dict[str,Any]:
     info=adapter.get("conversation_info") if isinstance(adapter.get("conversation_info"),dict) else {}
-    metrics=info.get("metrics") if isinstance(info.get("metrics"),dict) else {}
-    usage=metrics.get("accumulated_token_usage") if isinstance(metrics.get("accumulated_token_usage"),dict) else {}
-    return {"prompt_tokens":usage.get("prompt_tokens"),"completion_tokens":usage.get("completion_tokens"),"context_window":usage.get("context_window")}
+    stats=info.get("stats") if isinstance(info.get("stats"),dict) else {}
+    per_usage=stats.get("usage_to_metrics") if isinstance(stats.get("usage_to_metrics"),dict) else {}
+    prompt=0; completion=0; context_windows=[]
+    observed=False
+    for metrics in per_usage.values():
+        if not isinstance(metrics,dict): continue
+        usage=metrics.get("accumulated_token_usage")
+        if not isinstance(usage,dict): continue
+        observed=True
+        prompt += int(usage.get("prompt_tokens") or 0)
+        completion += int(usage.get("completion_tokens") or 0)
+        if isinstance(usage.get("context_window"),int): context_windows.append(usage["context_window"])
+    return {"prompt_tokens":prompt if observed else None,"completion_tokens":completion if observed else None,"context_window":max(context_windows) if context_windows else None}
 
 def classify(vertical:dict[str,Any],adapter:dict[str,Any],gates:dict[str,Any])->str:
     usage=token_usage(adapter); model_calls=isinstance(usage.get("prompt_tokens"),int) and usage.get("prompt_tokens",0)>0
-    if adapter.get("error") and not adapter.get("conversation_id"): return "BLOCKED_OPENHANDS_REQUEST_OR_STARTUP"
+    if vertical.get("status")=="TIMED_OUT": return "BLOCKED_TIMEOUT"
+    if adapter.get("error") and not adapter.get("conversation_id"): return "BLOCKED_BEFORE_MODEL_CALL"
+    if not model_calls: return "BLOCKED_BEFORE_MODEL_CALL"
     if model_calls and not gates.get("edit_observed"): return "BLOCKED_MODEL_TOOL_PROTOCOL"
     if vertical.get("status")=="VERIFIED" and all(gates.get(k) is True for k in ("edit_observed","patch_captured","independent_verifier")): return "COMPATIBLE"
-    if vertical.get("status")=="TIMED_OUT": return "BLOCKED_TIMEOUT"
-    if vertical.get("status")=="ENVIRONMENT_UNAVAILABLE": return "BLOCKED_ENVIRONMENT"
+    if vertical.get("status")=="ENVIRONMENT_UNAVAILABLE": return "BLOCKED_RUNTIME"
+    if not gates.get("patch_captured"): return "BLOCKED_NO_OBSERVABLE_CHANGE"
     return "INCOMPATIBLE"
 
 def main(argv:list[str]|None=None)->int:
@@ -190,8 +202,8 @@ def main(argv:list[str]|None=None)->int:
     try:
         if not ensure_upstream(evidence,summary): return block(evidence,summary,"BLOCKED_UPSTREAM_IDENTITY","upstream",summary.get("blocker"))
         if not ensure_install(evidence,summary):
-            hint=summary.pop("classification_hint",None)
-            return block(evidence,summary,hint or "BLOCKED_INSTALLATION_WINDOWS_NATIVE","installation",summary.get("blocker"))
+            summary.pop("classification_hint",None)
+            return block(evidence,summary,"BLOCKED_INSTALLATION_WINDOWS_NATIVE","installation",summary.get("blocker"))
         assert_ports(); model=find_model(); server=find_server()
         llama_argv=[str(server),"-m",str(model),"--device","CUDA0","-ngl","99","-c","4096","--host","127.0.0.1","--port",str(LLAMA_PORT),"--alias",MODEL_ALIAS]
         write_json(evidence/"runtime-binding.json",{"llama_cpp_build":LLAMA_BUILD,"llama_cpp_commit":LLAMA_COMMIT,"server_argv":llama_argv,"base_url":LLAMA_BASE,"model_alias":MODEL_ALIAS,"model_artifact":str(model),"model_bytes":model.stat().st_size,"model_sha256":sha256(model),"fallback":"DISABLED"})
