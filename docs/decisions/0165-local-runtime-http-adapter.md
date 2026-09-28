@@ -88,13 +88,13 @@ PASS requires:
 - complete token and wall-time telemetry;
 - fallback disabled.
 
-Response semantics are deliberately not graded in Phase 5. Three diagnostic
+Response semantics are deliberately not graded in Phase 5. Four diagnostic
 attempts established why this separation matters: a 16-token truncation caused
 a harness-limited result, an unconstrained request returned a healthy but
-non-exact freeform answer, and schema-constrained chat returned HTTP 500 with a
-grammar-stack error on the frozen Granite/chat-template path. These are
-preserved as diagnostic evidence rather than misclassified as local-runtime
-plumbing failures.
+non-exact freeform answer, and two schema-constrained chat attempts independently
+reproduced HTTP 500 with the same grammar-stack error on the frozen
+Granite/chat-template path. These are preserved as diagnostic evidence rather
+than misclassified as local-runtime plumbing failures.
 
 Structured-output capability from Phase 4 was proven through the
 llama-completion constrained-decoding path and is not silently generalized to
