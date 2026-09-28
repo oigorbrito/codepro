@@ -1,0 +1,83 @@
+{
+  "adapter": {
+    "adapter": "agentless-native-repair",
+    "edit_applied": false,
+    "edit_parser_observed": true,
+    "edited_file": "",
+    "error": null,
+    "inspect_observed": true,
+    "model": "codepro-phase7-granite42-3b",
+    "model_call_observed": true,
+    "original_sha256": "e68d64f3704621913abb8b695afa61ff1628a0202d9c54f0acc21b56a74c858d",
+    "parsed_content_sha256": null,
+    "prompt_length": 1264,
+    "prompt_sha256": "418d9669f5bfd09dc9dae54243dcf3dd4cf63b6150561d369baabe2c9056484a",
+    "raw_response": "",
+    "target": "value.py",
+    "termination_observed": true,
+    "usage": {
+      "completion_tokens": 512,
+      "prompt_tokens": 355
+    }
+  },
+  "candidate": "S2",
+  "classification": "BLOCKED_MODEL_EDIT_FORMAT",
+  "commit": "b150f28465a77a81a7f4776384957a4271f5bd69",
+  "executor_promotion": "NOT_AUTHORIZED",
+  "gates": {
+    "edit_observed": false,
+    "exact_upstream_identity": true,
+    "explicit_local_binding": true,
+    "independent_verifier": false,
+    "inspect_observed": true,
+    "installation": true,
+    "local_runtime_ready": true,
+    "model_calls_observed": true,
+    "native_edit_parser_observed": true,
+    "patch_captured": false,
+    "python_3_11": true,
+    "source_repository_unchanged": true,
+    "termination_observed": true,
+    "verification_command_observed": false,
+    "workspace_cleanup": true
+  },
+  "local_runtime": {
+    "base_url": "http://127.0.0.1:18090/v1",
+    "fallback": "DISABLED",
+    "model_alias": "codepro-phase7-granite42-3b"
+  },
+  "native_command_loop": "NOT_APPLICABLE_AGENTLESS_PIPELINE",
+  "native_contract": "repair_prompt -> OpenAIChatDecoder -> Agentless edit parser -> repository patch",
+  "next_candidate": "S3",
+  "phase": 7,
+  "repository_state": {
+    "final": {
+      "clean": true,
+      "revision": "8c49fceba616e4119b5f212c17a4ffe6ffdc925d",
+      "status_porcelain": ""
+    },
+    "initial_revision": "8c49fceba616e4119b5f212c17a4ffe6ffdc925d",
+    "source": {
+      "clean": true,
+      "revision": "8c49fceba616e4119b5f212c17a4ffe6ffdc925d",
+      "status_porcelain": ""
+    }
+  },
+  "scaffold": "Agentless",
+  "schema_version": 1,
+  "selected_scaffold": false,
+  "telemetry": {
+    "completion_tokens": 512,
+    "model_calls": 1,
+    "prompt_tokens": 355
+  },
+  "version": "v1.5.0",
+  "vertical": {
+    "attempt_id": "attempt-1",
+    "changed_files": [],
+    "evidence_root": "D:\\projetos\\codepro-r2-validation\\evidence\\phase7-scaffold-compatibility\\S2-Agentless\\vertical\\phase7-s2-agentless-8aad05704b18",
+    "reason": "NO_OBSERVABLE_CHANGE",
+    "run_id": "phase7-s2-agentless-8aad05704b18",
+    "status": "BLOCKED"
+  }
+}

@@ -8,7 +8,9 @@
       "name": "mini-swe-agent",
       "observed": {
         "api_calls": 8,
+        "codepro_gate": "NO_OBSERVABLE_CHANGE",
         "completion_tokens": 798,
+        "disposition": "S1 cell closed as blocked under Windows-native baseline; no silent WSL/shell substitution",
         "gates": {
           "command_observed": true,
           "edit_observed": false,
@@ -25,11 +27,9 @@
         },
         "mini_exit_status": "LimitsExceeded",
         "prompt_tokens": 13716,
-        "vertical_reason": "NO_OBSERVABLE_CHANGE",
-        "vertical_status": "BLOCKED",
         "root_cause": "mini-swe-agent DefaultAgent prompt/tool contract emits bash-oriented commands while the frozen Windows-native LocalEnvironment executes Windows command semantics; no observable repository change was produced before LimitsExceeded",
-        "codepro_gate": "NO_OBSERVABLE_CHANGE",
-        "disposition": "S1 cell closed as blocked under Windows-native baseline; no silent WSL/shell substitution"
+        "vertical_reason": "NO_OBSERVABLE_CHANGE",
+        "vertical_status": "BLOCKED"
       },
       "phase7_status": "BLOCKED_WINDOWS_SHELL_PROTOCOL",
       "prior_codepro_state": "provider-free/reference integration preserved; real local-runtime compatibility not yet established",
@@ -47,10 +47,38 @@
     },
     {
       "commit": "b150f28465a77a81a7f4776384957a4271f5bd69",
+      "evidence": "evidence/phase7-scaffold-compatibility/S2-Agentless/s2-summary.json",
       "id": "S2",
       "local_runtime_surface": "OpenAI Python client supports base_url; exact pinned workflow requires local endpoint binding validation",
       "name": "Agentless",
-      "phase7_status": "NOT_TESTED",
+      "observed": {
+        "blocker": null,
+        "completion_tokens": 512,
+        "gates": {
+          "edit_observed": false,
+          "exact_upstream_identity": true,
+          "explicit_local_binding": true,
+          "independent_verifier": false,
+          "inspect_observed": true,
+          "installation": true,
+          "local_runtime_ready": true,
+          "model_calls_observed": true,
+          "native_edit_parser_observed": true,
+          "patch_captured": false,
+          "python_3_11": true,
+          "source_repository_unchanged": true,
+          "termination_observed": true,
+          "verification_command_observed": false,
+          "workspace_cleanup": true
+        },
+        "model_calls": 1,
+        "native_command_loop": "NOT_APPLICABLE_AGENTLESS_PIPELINE",
+        "native_contract": "repair_prompt -> OpenAIChatDecoder -> Agentless edit parser -> repository patch",
+        "prompt_tokens": 355,
+        "vertical_reason": "NO_OBSERVABLE_CHANGE",
+        "vertical_status": "BLOCKED"
+      },
+      "phase7_status": "BLOCKED_MODEL_EDIT_FORMAT",
       "prior_codepro_state": "no prior Phase 7 execution evidence",
       "repository": "OpenAutoCoder/Agentless",
       "selection_basis": "upstream stable release",

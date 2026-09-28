@@ -1,0 +1,14 @@
+{
+  "project_ref": "git://D:/projetos/codepro-mini-runtime/phase7/S2-Agentless/codepro-phase7-s2-5ywyhcq8/workspaces/s2-task@8c49fceba616e4119b5f212c17a4ffe6ffdc925d",
+  "request_id": "phase7-s2-agentless",
+  "requested_scope": [
+    "value.py"
+  ],
+  "requester_ref": "user://phase7-compatibility",
+  "required_permissions": [
+    "edit",
+    "test"
+  ],
+  "schema_version": 1,
+  "task_ref": "phase7-trivial-edit"
+}

@@ -1,0 +1,1 @@
+  Running command git clone --filter=blob:none --quiet https://github.com/princeton-nlp/SWE-bench 'C:\Users\igorb\AppData\Local\Temp\pip-install-8potcxwg\swebench_9df5b60a0478487ca118cd17024ef3b5'

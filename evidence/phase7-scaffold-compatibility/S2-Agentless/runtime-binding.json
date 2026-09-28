@@ -1,0 +1,28 @@
+{
+  "base_url": "http://127.0.0.1:18090/v1",
+  "fallback": "DISABLED",
+  "llama_cpp_build": 11205,
+  "llama_cpp_commit": "95887577ab5fead779581a7030a83c7752ff3234",
+  "model_alias": "codepro-phase7-granite42-3b",
+  "model_artifact": "D:\\projetos\\codepro-mini-runtime\\models\\phase4\\L3-Granite-4.2-3B\\granite-4.2-3b-Q4_K_M.gguf",
+  "model_bytes": 2244011552,
+  "model_sha256": "E0406663965846AE22A403456EB826CCCE5F450840491F71952F18A7CB78E7D5",
+  "server": "D:\\projetos\\codepro-mini-runtime\\downloads\\llama-b11205-bin-win-cuda-13.4-x64\\llama-server.exe",
+  "server_argv": [
+    "D:\\projetos\\codepro-mini-runtime\\downloads\\llama-b11205-bin-win-cuda-13.4-x64\\llama-server.exe",
+    "-m",
+    "D:\\projetos\\codepro-mini-runtime\\models\\phase4\\L3-Granite-4.2-3B\\granite-4.2-3b-Q4_K_M.gguf",
+    "--device",
+    "CUDA0",
+    "-ngl",
+    "99",
+    "-c",
+    "4096",
+    "--host",
+    "127.0.0.1",
+    "--port",
+    "18090",
+    "--alias",
+    "codepro-phase7-granite42-3b"
+  ]
+}

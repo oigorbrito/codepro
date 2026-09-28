@@ -413,11 +413,11 @@ Execution order: S1 -> S2 -> S3 -> S4. Order is operational, not a quality ranki
 Candidate compatibility cells:
 
 - S1 mini-swe-agent v2.4.6: **BLOCKED_WINDOWS_SHELL_PROTOCOL** — model calls/tool calls observed, but Bash-oriented command contract produced no valid Windows-native edit; CodePro correctly stopped at `NO_OBSERVABLE_CHANGE`.
-- S2 Agentless: **NEXT**.
-- S3 AutoCodeRover: **NOT_STARTED**.
+- S2 Agentless: **BLOCKED_MODEL_EDIT_FORMAT** — docs/audits/phase7-s2-agentless-20260928.md.
+- S3 AutoCodeRover: **NEXT**.
 - S4 OpenHands: **NOT_STARTED**.
 
-**Phase status:** IN_PROGRESS — S1 closed as Windows-shell-protocol blocked; S2 compatibility block next.
+**Phase status:** IN_PROGRESS — S1/S2 classified; S3 compatibility block next.
 
 ---
 
@@ -619,5 +619,5 @@ Current task:
 
 ```text
 PHASE 7 = SCAFFOLD COMPATIBILITY
-STATUS = IN_PROGRESS / S2_NEXT
+STATUS = IN_PROGRESS / S3_NEXT
 ```

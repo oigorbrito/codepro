@@ -1,0 +1,21 @@
+{
+  "adapter": "agentless-native-repair",
+  "edit_applied": false,
+  "edit_parser_observed": true,
+  "edited_file": "",
+  "error": null,
+  "inspect_observed": true,
+  "model": "codepro-phase7-granite42-3b",
+  "model_call_observed": true,
+  "original_sha256": "e68d64f3704621913abb8b695afa61ff1628a0202d9c54f0acc21b56a74c858d",
+  "parsed_content_sha256": null,
+  "prompt_length": 1264,
+  "prompt_sha256": "418d9669f5bfd09dc9dae54243dcf3dd4cf63b6150561d369baabe2c9056484a",
+  "raw_response": "",
+  "target": "value.py",
+  "termination_observed": true,
+  "usage": {
+    "completion_tokens": 512,
+    "prompt_tokens": 355
+  }
+}
