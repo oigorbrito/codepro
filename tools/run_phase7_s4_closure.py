@@ -98,7 +98,7 @@ def main()->int:
     if not sp.is_file(): raise RuntimeError("S4 summary missing")
     summary=json.loads(sp.read_text(encoding="utf-8")); classification=str(summary.get("classification") or "").strip()
     if not classification: raise RuntimeError("S4 classification missing")
-    survivors,statuses=update_manifest(summary); write_audit(summary,survivors,statuses); update_roadmap(summary,survivors); repo_gates()
+    repo_gates(); survivors,statuses=update_manifest(summary); write_audit(summary,survivors,statuses); update_roadmap(summary,survivors)
     roadmap=(ROOT/"roadmap.md").read_text(encoding="utf-8")
     if "STATUS = COMPLETE / PR90_ACCEPTANCE_BEFORE_PHASE8" not in roadmap: raise RuntimeError("roadmap Phase 7 closure pointer missing")
     print("ROADMAP_SYNC = PASS")
