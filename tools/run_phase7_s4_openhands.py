@@ -107,6 +107,13 @@ def ensure_install(evidence:Path,summary:dict[str,Any])->bool:
     (evidence/"install-stderr.txt").write_text(install.stderr,encoding="utf-8",newline="\n")
     summary["gates"]["exact_npm_ci"]=install.returncode==0
     if install.returncode!=0: summary["blocker"]={"stage":"npm_ci","returncode":install.returncode,"stdout_tail":install.stdout[-4000:],"stderr_tail":install.stderr[-6000:]}; return False
+    generate=run([npm,"run","make-i18n"],cwd=UPSTREAM,timeout=900,check=False)
+    (evidence/"make-i18n-stdout.txt").write_text(generate.stdout,encoding="utf-8",newline="\n")
+    (evidence/"make-i18n-stderr.txt").write_text(generate.stderr,encoding="utf-8",newline="\n")
+    declaration=UPSTREAM/"src"/"i18n"/"declaration.ts"
+    summary["gates"]["generated_i18n"]=generate.returncode==0 and declaration.is_file()
+    if not summary["gates"]["generated_i18n"]:
+        summary["blocker"]={"stage":"make_i18n","returncode":generate.returncode,"declaration_exists":declaration.is_file(),"stdout_tail":generate.stdout[-4000:],"stderr_tail":generate.stderr[-6000:]}; return False
     vite=UPSTREAM/"node_modules"/".bin"/("vite-node.cmd" if os.name=="nt" else "vite-node")
     summary["gates"]["vite_node_available"]=vite.is_file()
     if not vite.is_file(): summary["blocker"]={"stage":"vite_node","detail":str(vite)}; return False
