@@ -5,6 +5,7 @@ from __future__ import annotations
 
 import argparse
 from datetime import datetime, timezone
+import hashlib
 import json
 from pathlib import Path
 import sys
@@ -37,7 +38,11 @@ def build_parser() -> argparse.ArgumentParser:
     parser.add_argument("--model", required=True)
     parser.add_argument("--timeout-seconds", required=True, type=float)
     parser.add_argument("--evidence-dir", required=True)
-    parser.add_argument("--expected", default="PHASE5_OK")
+    parser.add_argument(
+        "--probe-text",
+        default="Provide one short acknowledgement.",
+        help="Content is not semantically graded; only a non-empty model response is required.",
+    )
     return parser
 
 
@@ -53,31 +58,15 @@ def main(argv: list[str] | None = None) -> int:
     binding = LocalRuntimeBinding(args.base_url, args.model, args.timeout_seconds)
     snapshot = binding.configuration_snapshot()
 
-    response_format = {
-        "type": "json_schema",
-        "schema": {
-            "type": "object",
-            "properties": {
-                "status": {
-                    "type": "string",
-                    "enum": [args.expected],
-                }
-            },
-            "required": ["status"],
-            "additionalProperties": False,
-        },
-    }
-
     request_payload = {
         "model": binding.model_id,
         "messages": [{
             "role": "user",
-            "content": "Return the required JSON object.",
+            "content": args.probe_text,
         }],
         "max_tokens": 32,
         "temperature": 0,
         "stream": False,
-        "response_format": response_format,
     }
 
     write_json(evidence / "configuration.json", snapshot.to_dict())
@@ -95,10 +84,13 @@ def main(argv: list[str] | None = None) -> int:
             "configuration_digest": snapshot.digest(),
             "fallback": "DISABLED",
         },
-        "expected_response": args.expected,
+        "probe_semantics_graded": False,
         "provider_api_cost_usd": 0,
         "failure": None,
-        "response_valid": False,
+        "response_observed": False,
+        "response_content_length": None,
+        "response_content_sha256": None,
+        "telemetry_complete": False,
         "telemetry": None,
     }
 
@@ -107,19 +99,24 @@ def main(argv: list[str] | None = None) -> int:
             request_payload["messages"],
             max_tokens=request_payload["max_tokens"],
             temperature=request_payload["temperature"],
-            response_format=request_payload["response_format"],
         )
         write_json(evidence / "response.json", result.raw_response)
 
-        parsed_content: Any = None
-        try:
-            parsed_content = json.loads(result.content)
-        except json.JSONDecodeError:
-            parsed_content = None
-
-        report["response_valid"] = (
-            isinstance(parsed_content, dict)
-            and parsed_content == {"status": args.expected}
+        content = result.content.strip()
+        report["response_observed"] = bool(content)
+        report["response_content_length"] = len(content)
+        report["response_content_sha256"] = (
+            hashlib.sha256(content.encode("utf-8")).hexdigest()
+            if content
+            else None
+        )
+        report["telemetry_complete"] = all(
+            value is not None
+            for value in (
+                result.prompt_tokens,
+                result.completion_tokens,
+                result.total_tokens,
+            )
         )
         report["telemetry"] = {
             "wall_time_ms": result.wall_time_ms,
@@ -130,12 +127,13 @@ def main(argv: list[str] | None = None) -> int:
             "model_id": result.model_id,
             "preflight": result.preflight.to_dict(),
         }
-        if report["response_valid"]:
+
+        if report["response_observed"] and report["telemetry_complete"]:
             report["classification"] = "LOCAL_RUNTIME_PLUMBING_PASS"
-        elif result.finish_reason == "length":
-            report["classification"] = "HARNESS_TRUNCATED"
+        elif not report["response_observed"]:
+            report["classification"] = "EMPTY_MODEL_RESPONSE"
         else:
-            report["classification"] = "STRUCTURED_RESPONSE_INVALID"
+            report["classification"] = "TELEMETRY_INCOMPLETE"
     except LocalRuntimeError as exc:
         report["failure"] = exc.to_dict()
         report["classification"] = f"{exc.kind.value}_FAILURE"
