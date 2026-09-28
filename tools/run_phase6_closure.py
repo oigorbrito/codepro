@@ -197,7 +197,7 @@ def update_docs() -> None:
     )
     roadmap = roadmap[:p6] + phase6 + roadmap[p7:]
     roadmap = roadmap.replace(
-        "PHASE 6   Execution/verifier plumbing   NOT_STARTED",
+        "PHASE 6   Execution/verifier plumbing   IN_PROGRESS",
         "PHASE 6   Execution/verifier plumbing   COMPLETE",
     )
     roadmap = re.sub(
@@ -299,7 +299,17 @@ def main() -> int:
     print("======================================================")
 
     git("fetch", "origin")
-    git("switch", BRANCH)
+    local_branch = git(
+        "show-ref",
+        "--verify",
+        "--quiet",
+        f"refs/heads/{BRANCH}",
+        check=False,
+    )
+    if local_branch.returncode == 0:
+        git("switch", BRANCH)
+    else:
+        git("switch", "-c", BRANCH, "--track", f"origin/{BRANCH}")
     git("pull", "--ff-only", "origin", BRANCH)
 
     archive_prior_evidence()
