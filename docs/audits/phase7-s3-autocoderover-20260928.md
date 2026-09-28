@@ -46,3 +46,15 @@ NO_SILENT_EXECUTOR_SWITCH
 Evidence: evidence/phase7-scaffold-compatibility/S3-AutoCodeRover/.
 
 Next compatibility cell: S4 OpenHands.
+
+## Exact installation root cause
+
+The Windows-native exact-upstream installation stopped at the pinned dependency `litellm==1.41.24`.
+
+pip reported `No matching distribution found for litellm==1.41.24` under the selected Python 3.11 Windows environment. The local runtime was therefore not started and no model call occurred.
+
+This blocker is narrower than a generic Linux/CUDA dependency incompatibility and must be preserved as the observed cause:
+
+EXACT_UPSTREAM_REQUIREMENTS = FAIL
+BLOCKER = PINNED_LITELLM_DISTRIBUTION_UNAVAILABLE
+MODEL_CALLS = NOT_REACHED
