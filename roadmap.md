@@ -404,7 +404,16 @@ For each:
 - [ ] Verify patch.
 - [ ] Classify compatibility.
 
+Pool identity: `experiments/phase7/scaffold-pool.json`.
+
+Decision: `docs/decisions/0167-phase7-scaffold-pool.md`.
+
+Execution order: S1 -> S2 -> S3 -> S4. Order is operational, not a quality ranking.
+
+**Phase status:** IN_PROGRESS — pool frozen; S1 compatibility block next.
+
 ---
+
 
 ## Phase 8 â€” Scaffold screen
 
@@ -584,7 +593,7 @@ PHASE 3   Telemetry baseline            COMPLETE
 PHASE 4   Model compatibility           COMPLETE
 PHASE 5   CodePro local plumbing        COMPLETE
 PHASE 6   Execution/verifier plumbing   COMPLETE
-PHASE 7   Scaffold compatibility        NOT_STARTED
+PHASE 7   Scaffold compatibility        IN_PROGRESS
 PHASE 8   Scaffold screen               NOT_STARTED
 PHASE 9   Scaffold pruning              NOT_STARTED
 PHASE 10  Model screen                  NOT_STARTED
@@ -603,5 +612,5 @@ Current task:
 
 ```text
 PHASE 7 = SCAFFOLD COMPATIBILITY
-STATUS = NEXT
+STATUS = IN_PROGRESS / S1_NEXT
 ```
