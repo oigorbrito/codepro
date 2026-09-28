@@ -102,16 +102,16 @@ During this roadmap:
 
 ## Status vocabulary
 
-- `NOT_STARTED` — no implementation work begun.
-- `IN_PROGRESS` — authorized block is being reconciled.
-- `BLOCKED` — gate cannot proceed; reason/evidence must be recorded.
-- `DONE` — block gate passed with evidence.
+- `NOT_STARTED` â€” no implementation work begun.
+- `IN_PROGRESS` â€” authorized block is being reconciled.
+- `BLOCKED` â€” gate cannot proceed; reason/evidence must be recorded.
+- `DONE` â€” block gate passed with evidence.
 
 A block is `DONE` only after its verification gate passes.
 
 ---
 
-## R1 — Freeze identities and reconciliation matrix
+## R1 â€” Freeze identities and reconciliation matrix
 
 **Status: DONE**
 
@@ -150,9 +150,9 @@ Mark `DONE` only when:
 
 ---
 
-## R2 — Restore the proven operational foundation
+## R2 â€” Restore the proven operational foundation
 
-**Status: IN_PROGRESS**
+**Status: DONE**
 
 Purpose: recover the minimum previously validated operational substrate without
 removing useful current work.
@@ -183,13 +183,13 @@ root:
 - current useful frontend/TS work has not been accidentally removed;
 - no whole-tree revert or history rewrite was used.
 
-**Evidence / decision record:** pending.
+**Evidence / decision record:** `docs/audits/reconciliation-r2-restore-20260927.md`.
 
 ---
 
-## R3 — Reconcile telemetry, evidence, and local-runtime measurements
+## R3 â€” Reconcile telemetry, evidence, and local-runtime measurements
 
-**Status: NOT_STARTED**
+**Status: DONE**
 
 Purpose: use one canonical telemetry/evidence model rather than parallel old
 and new systems.
@@ -224,13 +224,13 @@ Mark `DONE` only when:
 - telemetry/provenance/event-log focused tests pass;
 - the Phase 2 measurements can be represented without fabricated values.
 
-**Evidence / decision record:** pending.
+**Evidence / decision record:** `docs/audits/reconciliation-r3-20260927.md`.
 
 ---
 
-## R4 — Reconcile real execution, verifier, and executor boundaries
+## R4 â€” Reconcile real execution, verifier, and executor boundaries
 
-**Status: NOT_STARTED**
+**Status: DONE**
 
 Purpose: restore real operational behavior while retaining useful modern
 interfaces.
@@ -269,13 +269,15 @@ Mark `DONE` only when:
 - `AVAILABLE != QUALIFIED` is enforced;
 - no silent fallback or executor switch is possible.
 
-**Evidence / decision record:** pending.
+**Evidence / decision record:** `docs/audits/reconciliation-r4-20260927.md`.
 
 ---
 
-## R5 — Full requalification and reconciliation closure
+## R5 â€” Full requalification and reconciliation closure
 
-**Status: NOT_STARTED**
+**Status: IN_PROGRESS**
+
+**Local technical R5 gate:** PASS; reviewed PR / merge pending.
 
 Purpose: prove the composed repository, then resume the normal CodePro roadmap.
 
@@ -292,6 +294,15 @@ Perform as one closure tranche:
 - verify that useful current work is preserved and previously proven critical
   capability is not silently lost;
 - reconcile documentation and CI with the actual final architecture;
+- resolve the remaining product-surface duplication discovered during R5 closure:
+  standalone TypeScript characterization/progress/routing endpoints must either
+  bind to the authoritative Python semantics or be explicitly demoted to
+  non-authoritative compatibility/preview surfaces;
+- reconcile the TypeScript M1 review surface with the independent Python
+  acceptance boundary so it cannot create a parallel authoritative ACCEPTED;
+- align the Express doctor result with the mandatory `CODEPRO_PYTHON` binding
+  used by the real vertical; Python cannot remain reported as Optional/Legacy
+  while authoritative execution requires it;
 - merge through a reviewed PR; do not force-push or rewrite published
   `main` history;
 - update the canonical `roadmap.md` execution pointer only after this gate.
@@ -323,7 +334,7 @@ RECONCILIATION = DONE
 NORMAL_ROADMAP = RESUME
 ```
 
-**Evidence / decision record:** pending.
+**Evidence / decision record:** `docs/audits/reconciliation-r5-20260927.md` (in progress).
 
 ---
 
@@ -331,12 +342,12 @@ NORMAL_ROADMAP = RESUME
 
 ```text
 RECONCILIATION = ACTIVE
-CURRENT_BLOCK  = R2
+CURRENT_BLOCK  = R5
 R1             = DONE
-R2             = IN_PROGRESS
-R3             = NOT_STARTED
-R4             = NOT_STARTED
-R5             = NOT_STARTED
+R2             = DONE
+R3             = DONE
+R4             = DONE
+R5             = IN_PROGRESS
 
 NORMAL PHASE 3+ IMPLEMENTATION = PAUSED_BY_RECONCILIATION
 ```
@@ -344,3 +355,5 @@ NORMAL PHASE 3+ IMPLEMENTATION = PAUSED_BY_RECONCILIATION
 Completed Phase 0-2 evidence is not invalidated by this pause. Any conflict
 found during reconciliation must be recorded rather than silently rewriting a
 previous result.
+
+
