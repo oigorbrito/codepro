@@ -414,10 +414,10 @@ Candidate compatibility cells:
 
 - S1 mini-swe-agent v2.4.6: **BLOCKED_WINDOWS_SHELL_PROTOCOL** — model calls/tool calls observed, but Bash-oriented command contract produced no valid Windows-native edit; CodePro correctly stopped at `NO_OBSERVABLE_CHANGE`.
 - S2 Agentless: **BLOCKED_MODEL_EDIT_FORMAT** — docs/audits/phase7-s2-agentless-20260928.md.
-- S3 AutoCodeRover: **NEXT**.
-- S4 OpenHands: **NOT_STARTED**.
+- S3 AutoCodeRover: **BLOCKED_INSTALLATION_WINDOWS_NATIVE** — docs/audits/phase7-s3-autocoderover-20260928.md.
+- S4 OpenHands: **NEXT**.
 
-**Phase status:** IN_PROGRESS — S1/S2 classified; S3 compatibility block next.
+**Phase status:** IN_PROGRESS — S1/S2/S3 classified; S4 compatibility block next.
 
 ---
 
@@ -619,5 +619,5 @@ Current task:
 
 ```text
 PHASE 7 = SCAFFOLD COMPATIBILITY
-STATUS = IN_PROGRESS / S3_NEXT
+STATUS = IN_PROGRESS / S4_NEXT
 ```
