@@ -129,3 +129,33 @@ classification = BLOCKED_TIMEOUT
 This result rejects the claim that setting server parallelism to 1 is sufficient by itself. It does not yet prove whether context/KV pressure persisted, because that attribution requires the S4-R1 runtime logs.
 
 Next action: run `tools/analyze_phase7r_s4_requalification.py` against the local evidence bundle and review `phase7r-analysis.json` before authorizing another treatment.
+
+
+## S4-R1 log attribution
+
+The local evidence analyzer reported:
+
+```text
+context_or_kv_pressure_observed = false
+Context size has been exceeded = 0
+failed to find free space in the KV cache = 0
+failed to find a memory slot = 0
+decode() failed = 0
+Conversation lease lost = 1
+```
+
+Therefore the original S4 context/KV failure signature did not persist under `parallel=1`. Because the conversation still timed out, the next diagnostic target is the Agent Server conversation lifecycle.
+
+This does not authorize a second treatment. The S4-R1 configuration is repeated unchanged only to improve observability. The diagnostic harness records each polling snapshot and captures conversation info/events even when the 240-second polling budget expires.
+
+Run:
+
+```powershell
+uv run --python 3.12 --no-project python .\tools\run_phase7r_s4_conversation_diagnostic.py
+```
+
+Diagnostic evidence root:
+
+```text
+evidence/phase7r-s4-runtime-requalification/S4-OpenHands-parallel1-diagnostic/
+```
