@@ -286,6 +286,7 @@ class LocalRuntimeClient:
         *,
         max_tokens: int,
         temperature: float,
+        response_format: Mapping[str, Any] | None = None,
     ) -> LocalRuntimeChatResult:
         if not messages:
             raise ValueError("messages must be non-empty")
@@ -302,6 +303,8 @@ class LocalRuntimeClient:
             raise ValueError("max_tokens must be positive")
         if isinstance(temperature, bool) or temperature < 0:
             raise ValueError("temperature must be non-negative")
+        if response_format is not None and not isinstance(response_format, Mapping):
+            raise ValueError("response_format must be a mapping when provided")
 
         preflight = self.preflight()
         payload = {
@@ -311,6 +314,8 @@ class LocalRuntimeClient:
             "temperature": temperature,
             "stream": False,
         }
+        if response_format is not None:
+            payload["response_format"] = dict(response_format)
 
         started = time.perf_counter()
         response = self._request_json("POST", "/chat/completions", payload=payload)
