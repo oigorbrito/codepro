@@ -55,6 +55,9 @@ interface CharacterizationResponse {
   reason_codes: string[];
   reasons: string[];
   characterized_at: string;
+  authority: 'NON_AUTHORITATIVE_PREVIEW';
+  preview_only: true;
+  canonical_authority: string;
 }
 
 interface RoutingResponse {
@@ -63,6 +66,9 @@ interface RoutingResponse {
   selected_path: string;
   target_executor_tier: string;
   reasons: string[];
+  authority: 'NON_AUTHORITATIVE_PREVIEW';
+  preview_only: true;
+  canonical_authority: string;
 }
 
 interface RunEvidence {
@@ -84,8 +90,10 @@ interface RunEvidence {
 }
 
 interface AcceptanceResponse {
-  decision: 'ACCEPTED' | 'REJECTED';
-  status: string;
+  decision: 'WOULD_ACCEPT' | 'WOULD_REJECT';
+  status: 'NON_AUTHORITATIVE_PREVIEW';
+  authority: 'NON_AUTHORITATIVE_PREVIEW';
+  preview_only: true;
   reason: string;
   failures: string[];
   reviewed_at: string;
@@ -502,7 +510,7 @@ export default function App() {
               }`}
             >
               <Sliders className="h-4 w-4" />
-              <span>P1 Characterization</span>
+              <span>P1 Preview</span>
             </button>
 
             <button
@@ -801,10 +809,10 @@ export default function App() {
               <div>
                 <h2 className="text-xl font-bold text-white flex items-center space-x-2">
                   <Sliders className="h-5 w-5 text-blue-400" />
-                  <span>Task Characterization & Routing (P1 - P3)</span>
+                  <span>Task Characterization & Routing Preview (P1 - P3)</span>
                 </h2>
                 <p className="text-sm text-slate-400 mt-1">
-                  Deterministic task characterization evaluating candidate files, component blast radius, and ambiguity signals into bounded routing policies.
+                  Non-authoritative compatibility preview. Canonical characterization, progress, and routing semantics remain in the Python core.
                 </p>
               </div>
 
@@ -1166,10 +1174,10 @@ export default function App() {
               <div>
                 <h2 className="text-xl font-bold text-white flex items-center space-x-2">
                   <ShieldCheck className="h-5 w-5 text-blue-400" />
-                  <span>M1 Independent Acceptance Review</span>
+                  <span>M1 Acceptance Preview (Non-authoritative)</span>
                 </h2>
                 <p className="text-sm text-slate-400 mt-1">
-                  Reviews persisted M1 evidence without re-executing task or verifier. Strictly enforces frozen criteria (no provider call, no model call, scope exactness, verified vertical status).
+                  Compatibility preview only. This TypeScript surface cannot issue authoritative ACCEPTED; canonical acceptance remains in the Python evidence boundary.
                 </p>
               </div>
 
@@ -1191,7 +1199,7 @@ export default function App() {
                     disabled={acceptanceLoading}
                     className="w-full rounded bg-blue-600 py-2 text-xs font-bold uppercase tracking-wider text-white hover:bg-blue-500 disabled:opacity-50 transition"
                   >
-                    {acceptanceLoading ? 'Reviewing...' : 'Perform Independent Acceptance Review'}
+                    {acceptanceLoading ? 'Reviewing...' : 'Preview Acceptance Criteria'}
                   </button>
                 </div>
 
@@ -1200,10 +1208,10 @@ export default function App() {
                     <div className="space-y-4">
                       <div className="rounded-xl border border-slate-800 bg-slate-900/60 p-4 space-y-2">
                         <div className="flex items-center justify-between">
-                          <span className="text-xs font-mono uppercase text-slate-400">Acceptance Decision</span>
+                          <span className="text-xs font-mono uppercase text-slate-400">Preview Decision</span>
                           <span
                             className={`rounded px-2.5 py-0.5 font-mono text-xs font-bold border ${
-                              acceptanceResult.decision === 'ACCEPTED'
+                              acceptanceResult.decision === 'WOULD_ACCEPT'
                                 ? 'bg-emerald-950 text-emerald-400 border-emerald-800'
                                 : 'bg-rose-950 text-rose-400 border-rose-800'
                             }`}
@@ -1228,7 +1236,7 @@ export default function App() {
 
                       <div className="rounded-xl border border-slate-800 bg-slate-900/60 p-4">
                         <div className="text-xs font-mono uppercase text-slate-400 mb-2 font-semibold">
-                          Persisted Acceptance Record
+                          Preview Record (Not Acceptance Evidence)
                         </div>
                         <pre className="rounded bg-slate-950 p-3 font-mono text-[11px] text-slate-300 overflow-x-auto border border-slate-800">
                           {JSON.stringify(acceptanceResult.acceptance_record, null, 2)}
@@ -1237,7 +1245,7 @@ export default function App() {
                     </div>
                   ) : (
                     <div className="rounded-xl border border-slate-800 bg-slate-900/40 p-8 text-center text-xs font-mono text-slate-500">
-                      Click Perform Independent Acceptance Review to validate the JSON evidence record against frozen rules.
+                      Click Preview Acceptance Criteria to validate the JSON evidence record against frozen rules.
                     </div>
                   )}
                 </div>

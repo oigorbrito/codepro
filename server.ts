@@ -3,7 +3,7 @@ import { createServer as createViteServer } from 'vite';
 import path from 'path';
 import { fileURLToPath } from 'url';
 import fs from 'fs';
-import { execSync } from 'child_process';
+import { execFileSync } from 'child_process';
 
 import { CHASSIS_FINGERPRINT, CHASSIS_VERSION, SCHEMA_VERSION } from './src/chassis/contracts';
 import { inspectProject } from './src/chassis/inspection';
@@ -30,16 +30,28 @@ app.get('/api/doctor', (req, res) => {
   let gitVersion: string | null = null;
   let pythonVersion: string | null = null;
 
+  const pythonExecutable = process.env.CODEPRO_PYTHON?.trim() || null;
+
   try {
-    gitVersion = execSync('git --version 2>/dev/null').toString().trim();
+    gitVersion = execFileSync(
+      'git',
+      ['--version'],
+      { encoding: 'utf8' },
+    ).trim();
   } catch {
     gitVersion = null;
   }
 
-  try {
-    pythonVersion = execSync('python3 --version 2>/dev/null').toString().trim();
-  } catch {
-    pythonVersion = null;
+  if (pythonExecutable) {
+    try {
+      pythonVersion = execFileSync(
+        pythonExecutable,
+        ['--version'],
+        { encoding: 'utf8' },
+      ).trim();
+    } catch {
+      pythonVersion = null;
+    }
   }
 
   const checks = [
@@ -76,13 +88,16 @@ app.get('/api/doctor', (req, res) => {
     },
     {
       name: 'python_runtime',
-      label: 'Python Interpreter (Optional/Legacy)',
-      ok: !!pythonVersion,
-      detail: pythonVersion || 'not installed',
+      label: 'Python Execution Core (CODEPRO_PYTHON)',
+      ok: !!pythonExecutable && !!pythonVersion,
+      detail: !pythonExecutable
+        ? 'CODEPRO_PYTHON not configured'
+        : pythonVersion || `failed to execute ${pythonExecutable}`,
+      required: 'explicit CODEPRO_PYTHON binding',
     },
   ];
 
-  const overall = checks.filter((c) => c.name !== 'python_runtime').every((c) => c.ok);
+  const overall = checks.every((check) => check.ok);
 
   res.json({
     status: overall ? 'PASS' : 'FAIL',
@@ -108,7 +123,12 @@ app.post('/api/characterize', (req, res) => {
   try {
     const signals = req.body?.signals || {};
     const result = characterizeTask(signals);
-    res.json(result);
+    res.json({
+      ...result,
+      authority: 'NON_AUTHORITATIVE_PREVIEW',
+      preview_only: true,
+      canonical_authority: 'src/arkx/characterization.py',
+    });
   } catch (err: unknown) {
     const message = err instanceof Error ? err.message : 'Unknown error';
     res.status(400).json({ error: message });
@@ -119,7 +139,12 @@ app.post('/api/characterize', (req, res) => {
 app.post('/api/assess-progress', (req, res) => {
   try {
     const result = assessProgress(req.body);
-    res.json(result);
+    res.json({
+      ...result,
+      authority: 'NON_AUTHORITATIVE_PREVIEW',
+      preview_only: true,
+      canonical_authority: 'src/arkx/progress.py',
+    });
   } catch (err: unknown) {
     const message = err instanceof Error ? err.message : 'Unknown error';
     res.status(400).json({ error: message });
@@ -130,7 +155,12 @@ app.post('/api/assess-progress', (req, res) => {
 app.post('/api/routing', (req, res) => {
   try {
     const result = evaluateRouting(req.body);
-    res.json(result);
+    res.json({
+      ...result,
+      authority: 'NON_AUTHORITATIVE_PREVIEW',
+      preview_only: true,
+      canonical_authority: 'src/arkx/routing.py',
+    });
   } catch (err: unknown) {
     const message = err instanceof Error ? err.message : 'Unknown error';
     res.status(400).json({ error: message });
@@ -168,8 +198,28 @@ app.get('/api/evidence/:id', (req, res) => {
 // 8. M1 Acceptance Review (codepro accept)
 app.post('/api/m1/review', (req, res) => {
   try {
-    const decision = reviewM1Evidence(req.body);
-    res.json(decision);
+    const preview = reviewM1Evidence(req.body);
+    const previewDecision =
+      preview.decision === 'ACCEPTED'
+        ? 'WOULD_ACCEPT'
+        : 'WOULD_REJECT';
+
+    res.json({
+      decision: previewDecision,
+      status: 'NON_AUTHORITATIVE_PREVIEW',
+      authority: 'NON_AUTHORITATIVE_PREVIEW',
+      preview_only: true,
+      reason: preview.reason,
+      failures: preview.failures,
+      reviewed_at: preview.reviewed_at,
+      acceptance_record: {
+        authoritative: false,
+        preview_only: true,
+        preview_decision: previewDecision,
+        canonical_authority: 'src/arkx/acceptance.py',
+        failures: preview.failures,
+      },
+    });
   } catch (err: unknown) {
     const message = err instanceof Error ? err.message : 'Review error';
     res.status(400).json({ error: message });

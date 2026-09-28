@@ -277,6 +277,8 @@ Mark `DONE` only when:
 
 **Status: IN_PROGRESS**
 
+**Local technical R5 gate:** PASS; reviewed PR / merge pending.
+
 Purpose: prove the composed repository, then resume the normal CodePro roadmap.
 
 Perform as one closure tranche:

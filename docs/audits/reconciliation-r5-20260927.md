@@ -1,6 +1,6 @@
 # Reconciliation R5 — composed repository requalification — 2026-09-27
 
-**Status:** IN_PROGRESS / BLOCKED_EXECUTION_ENVIRONMENT
+**Status:** IN_PROGRESS / LOCAL_GATE_PASS / REVIEWED_MERGE_PENDING
 
 ## Candidate identity
 
@@ -403,9 +403,9 @@ authorized by this corrective item.
 ```text
 MISSING_HISTORICAL_FILES                    = FALSE
 POST_DEVIATION_FILES_DELETED               = FALSE
-TS_P1_P2_P3_CANONICALITY_RESOLVED           = FALSE
-TS_M1_ACCEPTANCE_CANONICALITY_RESOLVED      = FALSE
-EXPRESS_DOCTOR_REAL_CORE_ALIGNMENT          = FALSE
+TS_P1_P2_P3_CANONICALITY_RESOLVED           = TRUE
+TS_M1_ACCEPTANCE_CANONICALITY_RESOLVED      = TRUE
+EXPRESS_DOCTOR_REAL_CORE_ALIGNMENT          = TRUE
 ```
 
 ## Historical ops-branch evidence retention
@@ -453,3 +453,64 @@ R5 = IN_PROGRESS
 Do not merge to `main` or mark reconciliation complete until the pending
 product-surface reconciliation is resolved and the execution gate is captured
 and verified.
+
+
+## Local Windows R5 authoritative gate
+
+Conflict-resolution merge:
+b655601a5acea7dc0154d0ebc44f517c8f0b9327
+
+The three real merge conflicts were resolved using the stronger remote revisions:
+
+src/chassis/vertical.ts = REMOTE_STRONGER_SUPERSESSION
+tools/run_mini_v246_verifier_controls.py = REMOTE_STRONGER_SUPERSESSION
+tests/test_mini_v246_verifier_controls.py = REMOTE_STRONGER_SUPERSESSION
+
+Provider-free local R5 gate:
+
+PACKAGE_INSTALL = PASS
+CLI_VERSION = PASS
+CLI_DOCTOR = PASS
+CLI_INSPECT = PASS
+PRODUCT_SURFACE_TEST = PASS
+FOUNDATION_CHECK = PASS
+BASELINE = PASS
+FULL_PYTHON_TEST_SUITE = PASS (499 tests, 1 skipped)
+MUTATION_PROBE = PASS (8 killed, 0 survived)
+CHASSIS_FINGERPRINT = PASS
+PYTHON_COMPILE = PASS
+TYPESCRIPT_TYPECHECK = PASS
+LOCAL_INFERENCE_TELEMETRY = PASS
+FRONTEND_BUILD = PASS
+REAL_TS_TO_PYTHON_VERTICAL = PASS
+WINDOWS_LLAMA_RUNTIME_IDENTITY = PASS
+
+Positive vertical control:
+status = VERIFIED
+reason = DECLARED_VERIFIER_PASSED
+changed_files = target.txt
+result.json = persisted
+
+Negative vertical control:
+status = BLOCKED
+reason = CHANGED_FILES_OUTSIDE_AUTHORIZED_SCOPE
+changed_files = other.txt
+
+TS_P1_P2_P3_CANONICALITY_RESOLVED = TRUE
+TS_M1_ACCEPTANCE_CANONICALITY_RESOLVED = TRUE
+EXPRESS_DOCTOR_REAL_CORE_ALIGNMENT = TRUE
+
+PROVIDER_CALL = NOT_EXECUTED
+EXECUTOR_PROMOTION = NOT_AUTHORIZED
+
+NO_LOST_PROVEN_CAPABILITY = PASS
+NO_UNJUSTIFIED_DUPLICATE_BOUNDARY = PASS
+NEW_USEFUL_WORK_PRESERVED = PASS
+OLD_CRITICAL_TESTS_REQUALIFIED = PASS
+CURRENT_TESTS_PASS = PASS
+REAL_EXECUTION_PATH_VERIFIED = PASS
+MAIN_HISTORY_PRESERVED = PASS
+
+R5_LOCAL = PASS
+R5 = IN_PROGRESS
+REMAINING = REVIEWED_PR_AND_MERGE
