@@ -1,0 +1,33 @@
+
+
+Loading model... 
+
+ÔûäÔûä ÔûäÔûä
+ÔûêÔûê ÔûêÔûê
+ÔûêÔûê ÔûêÔûê  ÔûÇÔûÇÔûêÔûä ÔûêÔûêÔûêÔûäÔûêÔûêÔûêÔûä  ÔûÇÔûÇÔûêÔûä    ÔûäÔûêÔûêÔûêÔûê ÔûêÔûêÔûêÔûêÔûä ÔûêÔûêÔûêÔûêÔûä
+ÔûêÔûê ÔûêÔûê ÔûäÔûêÔûÇÔûêÔûê ÔûêÔûê ÔûêÔûê ÔûêÔûê ÔûäÔûêÔûÇÔûêÔûê    ÔûêÔûê    ÔûêÔûê ÔûêÔûê ÔûêÔûê ÔûêÔûê
+ÔûêÔûê ÔûêÔûê ÔûÇÔûêÔûäÔûêÔûê ÔûêÔûê ÔûêÔûê ÔûêÔûê ÔûÇÔûêÔûäÔûêÔûê ÔûêÔûê ÔûÇÔûêÔûêÔûêÔûê ÔûêÔûêÔûêÔûêÔûÇ ÔûêÔûêÔûêÔûêÔûÇ
+                                    ÔûêÔûê    ÔûêÔûê
+                                    ÔûÇÔûÇ    ÔûÇÔûÇ
+
+build      : b11205-95887577a
+model      : ggml-org/gemma-3-1b-it-GGUF:Q4_K_M
+ftype      : Q4_K - Medium
+modalities : text
+
+available commands:
+  /exit or Ctrl+C     stop or exit
+  /regen              regenerate the last response
+  /clear              clear the chat history
+  /read <file>        add a text file
+  /glob <pattern>     add text files using globbing pattern
+
+
+
+> Reply exactly GPU_OK
+GPU_OK
+
+[ Prompt: 48.8 t/s | Generation: 73.6 t/s ]
+
+
+Exiting...

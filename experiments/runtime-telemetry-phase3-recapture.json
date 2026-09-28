@@ -1,0 +1,159 @@
+{
+    "fixture_type":  "LOCAL_INFERENCE_EXECUTION_TELEMETRY_PHASE3",
+    "description":  "Controlled Phase 3 telemetry recapture using frozen Windows llama.cpp b11205.",
+    "historical_phase2_fixture_preserved":  true,
+    "records":  [
+                    {
+                        "schema_version":  1,
+                        "record_type":  "LOCAL_INFERENCE_EXECUTION",
+                        "run_id":  "phase3-b11205-cpu",
+                        "captured_at":  "2026-09-27T23:21:42.5326660-03:00",
+                        "platform":  {
+                                         "os":  "Windows 11 Home x64",
+                                         "arch":  "x86_64",
+                                         "gpu":  "NVIDIA GeForce GTX 1650"
+                                     },
+                        "model":  {
+                                      "repository":  "ggml-org/gemma-3-1b-it-GGUF",
+                                      "artifact":  null,
+                                      "format":  "GGUF",
+                                      "quantization":  "Q4_K_M"
+                                  },
+                        "runtime":  {
+                                        "name":  "llama.cpp",
+                                        "version":  "0.5.0-dev",
+                                        "build":  "11205",
+                                        "commit":  "95887577a",
+                                        "executable_path":  "D:\\projetos\\codepro-mini-runtime\\downloads\\llama-b11205-bin-win-cuda-13.4-x64\\llama-cli.exe"
+                                    },
+                        "execution":  {
+                                          "device":  "CPU",
+                                          "device_id":  null,
+                                          "context_length":  2048,
+                                          "max_generated_tokens":  32,
+                                          "temperature":  0,
+                                          "gpu_layers_requested":  0,
+                                          "gpu_layers_offloaded":  0,
+                                          "argv":  [
+                                                       "-hf",
+                                                       "ggml-org/gemma-3-1b-it-GGUF:Q4_K_M",
+                                                       "--device",
+                                                       "none",
+                                                       "-c",
+                                                       "2048",
+                                                       "-n",
+                                                       "32",
+                                                       "--temp",
+                                                       "0",
+                                                       "--single-turn",
+                                                       "--perf",
+                                                       "--show-timings",
+                                                       "-p",
+                                                       "Reply exactly CPU_OK"
+                                                   ]
+                                      },
+                        "metrics":  {
+                                        "wall_time_ms":  3668,
+                                        "load_time_ms":  null,
+                                        "peak_process_ram_mib":  1135.7,
+                                        "vram_baseline_mib":  null,
+                                        "peak_vram_mib":  null,
+                                        "vram_delta_mib":  null,
+                                        "prompt_tokens_per_sec":  61.1,
+                                        "generation_tokens_per_sec":  24.7
+                                    },
+                        "termination":  {
+                                            "response_valid":  true,
+                                            "expected_response":  "CPU_OK",
+                                            "exit_code":  0,
+                                            "reason":  "COMPLETED"
+                                        },
+                        "cost":  {
+                                     "provider_api_cost_usd":  0,
+                                     "local_compute_cost_usd":  null
+                                 },
+                        "evidence":  {
+                                         "stdout_path":  "evidence/phase3-perf-recapture/cpu-stdout.txt",
+                                         "stderr_path":  "evidence/phase3-perf-recapture/cpu-stderr.txt",
+                                         "metrics_path":  "evidence/phase3-perf-recapture/recapture.json"
+                                     }
+                    },
+                    {
+                        "schema_version":  1,
+                        "record_type":  "LOCAL_INFERENCE_EXECUTION",
+                        "run_id":  "phase3-b11205-gpu",
+                        "captured_at":  "2026-09-27T23:21:42.5326660-03:00",
+                        "platform":  {
+                                         "os":  "Windows 11 Home x64",
+                                         "arch":  "x86_64",
+                                         "gpu":  "NVIDIA GeForce GTX 1650"
+                                     },
+                        "model":  {
+                                      "repository":  "ggml-org/gemma-3-1b-it-GGUF",
+                                      "artifact":  null,
+                                      "format":  "GGUF",
+                                      "quantization":  "Q4_K_M"
+                                  },
+                        "runtime":  {
+                                        "name":  "llama.cpp",
+                                        "version":  "0.5.0-dev",
+                                        "build":  "11205",
+                                        "commit":  "95887577a",
+                                        "executable_path":  "D:\\projetos\\codepro-mini-runtime\\downloads\\llama-b11205-bin-win-cuda-13.4-x64\\llama-cli.exe"
+                                    },
+                        "execution":  {
+                                          "device":  "CUDA",
+                                          "device_id":  "CUDA0",
+                                          "context_length":  2048,
+                                          "max_generated_tokens":  32,
+                                          "temperature":  0,
+                                          "gpu_layers_requested":  99,
+                                          "gpu_layers_offloaded":  27,
+                                          "argv":  [
+                                                       "-hf",
+                                                       "ggml-org/gemma-3-1b-it-GGUF:Q4_K_M",
+                                                       "--device",
+                                                       "CUDA0",
+                                                       "-ngl",
+                                                       "99",
+                                                       "-c",
+                                                       "2048",
+                                                       "-n",
+                                                       "32",
+                                                       "--temp",
+                                                       "0",
+                                                       "--single-turn",
+                                                       "--perf",
+                                                       "--show-timings",
+                                                       "-p",
+                                                       "Reply exactly GPU_OK"
+                                                   ]
+                                      },
+                        "metrics":  {
+                                        "wall_time_ms":  3440,
+                                        "load_time_ms":  null,
+                                        "peak_process_ram_mib":  1217.9,
+                                        "vram_baseline_mib":  86,
+                                        "peak_vram_mib":  993,
+                                        "vram_delta_mib":  907,
+                                        "prompt_tokens_per_sec":  48.8,
+                                        "generation_tokens_per_sec":  73.6
+                                    },
+                        "termination":  {
+                                            "response_valid":  true,
+                                            "expected_response":  "GPU_OK",
+                                            "exit_code":  0,
+                                            "reason":  "COMPLETED"
+                                        },
+                        "cost":  {
+                                     "provider_api_cost_usd":  0,
+                                     "local_compute_cost_usd":  null
+                                 },
+                        "evidence":  {
+                                         "stdout_path":  "evidence/phase3-perf-recapture/gpu-stdout.txt",
+                                         "stderr_path":  "evidence/phase3-perf-recapture/gpu-stderr.txt",
+                                         "metrics_path":  "evidence/phase3-perf-recapture/recapture.json"
+                                     }
+                    }
+                ]
+}
