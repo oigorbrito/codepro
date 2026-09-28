@@ -430,13 +430,14 @@ Controlled recovery cell:
 - [x] Attribute the final S4 timeout to observed runtime context/KV pressure rather than silently treating missing telemetry as no model call.
 - [x] Freeze a one-variable S4 requalification: llama.cpp server parallelism `auto -> 1`.
 - [x] Preserve OpenHands/model/runtime build/context/task/platform/fallback identity.
-- [ ] Execute `S4-R1` with `--parallel 1`.
-- [ ] Capture requalification evidence and independent verifier result.
-- [ ] Review the result before changing the Phase 8 gate.
+- [x] Execute `S4-R1` with `--parallel 1`: `BLOCKED_TIMEOUT`.
+- [x] Preserve the observed result: no edit, no patch, no independent verifier, model-call telemetry unknown.
+- [ ] Attribute the timeout from the committed local logs before authorizing any second treatment.
+- [ ] Review the attribution before changing the Phase 8 gate.
 
 Decision: `docs/decisions/0168-phase7r-s4-runtime-requalification.md`.
 
-**Phase status:** IN_PROGRESS — S4-R1 execution next; Phase 8 remains BLOCKED_BY_NO_COMPATIBLE_SCAFFOLD.
+**Phase status:** IN_PROGRESS — S4-R1 = BLOCKED_TIMEOUT; log attribution next; Phase 8 remains BLOCKED_BY_NO_COMPATIBLE_SCAFFOLD.
 
 ---
 
@@ -639,6 +640,6 @@ Current task:
 
 ```text
 PHASE 7R = S4 RUNTIME REQUALIFICATION
-STATUS = IN_PROGRESS / S4-R1_NEXT
+STATUS = IN_PROGRESS / S4-R1_LOG_ATTRIBUTION_NEXT
 PHASE 8 = BLOCKED_BY_NO_COMPATIBLE_SCAFFOLD
 ```
