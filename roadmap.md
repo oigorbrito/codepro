@@ -81,9 +81,7 @@ CURRENT_BLOCK = NONE
 NORMAL_PHASE_3_PLUS = RESUMED
 ```
 
-Phase 0-2 completed evidence remains recorded. Do not continue normal Phase 3+
-implementation until the reconciliation plan reaches `DONE` or an explicit
-superseding decision changes this control.
+Phase 0-2 completed evidence remains recorded. Reconciliation is `DONE`; normal roadmap execution is resumed.
 
 The correction is selective:
 
@@ -245,16 +243,20 @@ Quantitative smoke measurement (same GGUF/configuration):
 
 ---
 
-## Phase 3 â€” Telemetry baseline
+## Phase 3 — Telemetry baseline
 
-- [~] Define normalized execution record schema: implemented in `src/chassis/executionTelemetry.ts`; verification pending because the GitHub Actions runner did not start (`runner_id=0`, no steps executed).
-- [~] Capture model, format, quantization, runtime, and runtime version: represented in schema + measured fixture; verification pending.
-- [~] Capture context length, generation limit, and prompt/generation throughput: represented in schema + measured fixture; verification pending.
-- [~] Capture wall time, peak RAM, peak VRAM, and offload configuration: represented in schema + measured fixture; verification pending.
-- [~] Capture termination reason and exit code: represented explicitly; nullable exit code preserves instrumentation uncertainty instead of inventing evidence.
-- [~] Record `provider_api_cost = 0`: enforced by schema validation for local inference.
-- [~] Keep local compute cost UNKNOWN until measured: represented as `null` and validated as nullable.
-- [~] Persist raw output and execution configuration: JSON persistence implemented; stdout/stderr/metrics evidence paths are mandatory. Verification pending.
+- [x] Define normalized execution telemetry boundary.
+  - Generic authority: `arkx.contracts.ExecutionRecord`.
+  - Local inference specialization: `LocalInferenceMeasurementRecordV1`.
+  - Correlation boundary: `run_id`.
+- [x] Capture model, format, quantization, runtime, and runtime version.
+- [x] Capture context length, generation limit, prompt throughput, and generation throughput.
+- [x] Capture wall time, peak process RAM, GPU VRAM, and offload configuration.
+- [x] Capture termination reason and exit code.
+- [x] Record `provider_api_cost_usd = 0` for the observed local execution path.
+- [x] Keep local compute cost UNKNOWN until measured.
+- [x] Persist raw stdout/stderr, normalized recapture, and SHA256 hashes.
+- [x] Preserve historical Phase 2 telemetry separately from the Phase 3 controlled recapture.
 
 **Gate:**
 
@@ -263,6 +265,9 @@ METRICS_COMPLETE = PASS
 RAW_EVIDENCE_CAPTURED = PASS
 ```
 
+**Evidence:** `docs/audits/phase3-telemetry-baseline-20260927.md`.
+
+**Phase status:** COMPLETE
 ---
 
 ## Phase 4 â€” Compact model compatibility
@@ -528,7 +533,7 @@ Deferred until local frontier is measured.
 PHASE 0   Strategy freeze               COMPLETE
 PHASE 1   Windows hardware              COMPLETE
 PHASE 2   Runtime qualification         COMPLETE
-PHASE 3   Telemetry baseline            IN_PROGRESS
+PHASE 3   Telemetry baseline            COMPLETE
 PHASE 4   Model compatibility           NOT_STARTED
 PHASE 5   CodePro local plumbing        NOT_STARTED
 PHASE 6   Execution/verifier plumbing   NOT_STARTED
@@ -550,15 +555,6 @@ PHASE 19  Cloud tier                    DEFERRED
 Current task:
 
 ```text
-RECONCILIATION ROADMAP â€” docs/reconciliation-roadmap.md
-
-R1 = DONE
-R2 = DONE
-R3 = DONE
-R4 = DONE
-R5 = DONE
-
-NORMAL PHASE 3+ = RESUMED
+PHASE 4 = COMPACT MODEL COMPATIBILITY
+STATUS = NEXT
 ```
-
-
