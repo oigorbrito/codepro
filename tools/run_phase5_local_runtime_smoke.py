@@ -53,15 +53,31 @@ def main(argv: list[str] | None = None) -> int:
     binding = LocalRuntimeBinding(args.base_url, args.model, args.timeout_seconds)
     snapshot = binding.configuration_snapshot()
 
+    response_format = {
+        "type": "json_schema",
+        "schema": {
+            "type": "object",
+            "properties": {
+                "status": {
+                    "type": "string",
+                    "enum": [args.expected],
+                }
+            },
+            "required": ["status"],
+            "additionalProperties": False,
+        },
+    }
+
     request_payload = {
         "model": binding.model_id,
         "messages": [{
             "role": "user",
-            "content": f"Reply exactly {args.expected}",
+            "content": "Return the required JSON object.",
         }],
         "max_tokens": 32,
         "temperature": 0,
         "stream": False,
+        "response_format": response_format,
     }
 
     write_json(evidence / "configuration.json", snapshot.to_dict())
@@ -91,9 +107,20 @@ def main(argv: list[str] | None = None) -> int:
             request_payload["messages"],
             max_tokens=request_payload["max_tokens"],
             temperature=request_payload["temperature"],
+            response_format=request_payload["response_format"],
         )
         write_json(evidence / "response.json", result.raw_response)
-        report["response_valid"] = result.content.strip() == args.expected
+
+        parsed_content: Any = None
+        try:
+            parsed_content = json.loads(result.content)
+        except json.JSONDecodeError:
+            parsed_content = None
+
+        report["response_valid"] = (
+            isinstance(parsed_content, dict)
+            and parsed_content == {"status": args.expected}
+        )
         report["telemetry"] = {
             "wall_time_ms": result.wall_time_ms,
             "prompt_tokens": result.prompt_tokens,
@@ -108,7 +135,7 @@ def main(argv: list[str] | None = None) -> int:
         elif result.finish_reason == "length":
             report["classification"] = "HARNESS_TRUNCATED"
         else:
-            report["classification"] = "MODEL_RESPONSE_INVALID"
+            report["classification"] = "STRUCTURED_RESPONSE_INVALID"
     except LocalRuntimeError as exc:
         report["failure"] = exc.to_dict()
         report["classification"] = f"{exc.kind.value}_FAILURE"
