@@ -209,7 +209,7 @@ def ensure_install() -> dict[str, Any]:
         [
             str(python),
             "-c",
-            "import minisweagent; print(minisweagent.__version__)",
+            "from importlib.metadata import version; print(version('mini-swe-agent'))",
         ]
     )
     observed_version = version_probe.stdout.strip()
