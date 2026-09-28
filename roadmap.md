@@ -370,6 +370,17 @@ CodePro
 - [ ] Implement independent verification.
 - [ ] Persist verifier evidence and final repository state.
 
+Implementation boundary:
+
+- `src/arkx/isolated_workspace.py` owns exact detached Git worktree isolation.
+- `src/arkx/repository_operations.py` owns explicit inspect/edit/command primitives.
+- the existing `run_vertical`, command, patch, and verifier boundaries remain authoritative.
+- the Phase 6 controlled scaffold is a plumbing fixture only; Phase 7 owns real scaffold/model compatibility.
+
+**Decision:** `docs/decisions/0166-phase6-execution-verifier-plumbing.md`.
+
+**Phase status:** IN_PROGRESS — implementation boundary complete; controlled local validation pending.
+
 ---
 
 ## Phase 7 â€” Scaffold compatibility
@@ -570,7 +581,7 @@ PHASE 2   Runtime qualification         COMPLETE
 PHASE 3   Telemetry baseline            COMPLETE
 PHASE 4   Model compatibility           COMPLETE
 PHASE 5   CodePro local plumbing        COMPLETE
-PHASE 6   Execution/verifier plumbing   NOT_STARTED
+PHASE 6   Execution/verifier plumbing   IN_PROGRESS
 PHASE 7   Scaffold compatibility        NOT_STARTED
 PHASE 8   Scaffold screen               NOT_STARTED
 PHASE 9   Scaffold pruning              NOT_STARTED
@@ -590,5 +601,5 @@ Current task:
 
 ```text
 PHASE 6 = EXECUTION AND VERIFIER PLUMBING
-STATUS = NEXT
+STATUS = IN_PROGRESS / CONTROLLED_VALIDATION_PENDING
 ```
