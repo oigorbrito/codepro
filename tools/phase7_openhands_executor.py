@@ -29,10 +29,36 @@ def main() -> int:
     if not vite_node.is_file():
         raise SystemExit(f"vite-node executable missing after exact npm install: {vite_node}")
 
+    config_dir = upstream / ".tmp"
+    config_dir.mkdir(parents=True, exist_ok=True)
+    config_path = config_dir / "codepro-phase7-vite-node.config.mts"
+    config_path.write_text(
+        """import { resolve } from "node:path";
+import { defineConfig } from "vite";
+
+const root = process.cwd();
+export default defineConfig({
+  define: {
+    __EXTENSIONS_SKILLS_DIR__: JSON.stringify(
+      resolve(root, "node_modules", "@openhands", "extensions", "skills"),
+    ),
+  },
+  resolve: {
+    alias: [{ find: /^#\\//, replacement: resolve(root, "src") + "/" }],
+  },
+  ssr: {
+    noExternal: ["@openhands/typescript-client"],
+  },
+});
+""",
+        encoding="utf-8",
+        newline="\n",
+    )
+
     argv = [
         str(vite_node),
         "-c",
-        str(upstream / "tests" / "e2e" / "live-acp" / "vite-node.config.mts"),
+        str(config_path),
         str(HARNESS),
         "--",
         "--backend-url", args.backend_url,
