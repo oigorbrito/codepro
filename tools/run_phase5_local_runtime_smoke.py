@@ -59,7 +59,7 @@ def main(argv: list[str] | None = None) -> int:
             "role": "user",
             "content": f"Reply exactly {args.expected}",
         }],
-        "max_tokens": 16,
+        "max_tokens": 32,
         "temperature": 0,
         "stream": False,
     }
@@ -103,11 +103,12 @@ def main(argv: list[str] | None = None) -> int:
             "model_id": result.model_id,
             "preflight": result.preflight.to_dict(),
         }
-        report["classification"] = (
-            "LOCAL_RUNTIME_PLUMBING_PASS"
-            if report["response_valid"]
-            else "MODEL_RESPONSE_INVALID"
-        )
+        if report["response_valid"]:
+            report["classification"] = "LOCAL_RUNTIME_PLUMBING_PASS"
+        elif result.finish_reason == "length":
+            report["classification"] = "HARNESS_TRUNCATED"
+        else:
+            report["classification"] = "MODEL_RESPONSE_INVALID"
     except LocalRuntimeError as exc:
         report["failure"] = exc.to_dict()
         report["classification"] = f"{exc.kind.value}_FAILURE"
