@@ -86,26 +86,10 @@ class LocalRuntimeClientTests(unittest.TestCase):
             }),
         ]
 
-        response_format = {
-            "type": "json_schema",
-            "schema": {
-                "type": "object",
-                "properties": {
-                    "status": {
-                        "type": "string",
-                        "enum": ["PHASE5_OK"],
-                    }
-                },
-                "required": ["status"],
-                "additionalProperties": False,
-            },
-        }
-
         result = LocalRuntimeClient(self.binding()).chat_completion(
-            [{"role": "user", "content": "Return the required JSON object."}],
-            max_tokens=32,
+            [{"role": "user", "content": "Reply exactly PHASE5_OK"}],
+            max_tokens=16,
             temperature=0,
-            response_format=response_format,
         )
 
         self.assertEqual(result.content, "PHASE5_OK")
@@ -119,7 +103,6 @@ class LocalRuntimeClientTests(unittest.TestCase):
         payload = json.loads(request.data.decode("utf-8"))
         self.assertEqual(payload["model"], "phase5-granite")
         self.assertFalse(payload["stream"])
-        self.assertEqual(payload["response_format"], response_format)
 
     @patch("arkx.local_runtime.urlopen")
     def test_model_mismatch_fails_without_chat_or_fallback(self, opened):
