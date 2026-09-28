@@ -514,21 +514,15 @@ def main(argv: list[str] | None = None) -> int:
                 )
 
                 python = Path(installation["python"])
+                headless_runner = ROOT / "tools" / "phase7_mini_headless.py"
                 executor_argv = (
                     str(python),
-                    "-m",
-                    "minisweagent.run.mini",
-                    "-y",
-                    "--exit-immediately",
-                    "-l",
-                    "0",
-                    "-t",
-                    task,
-                    "-c",
-                    "mini.yaml",
-                    "-c",
+                    str(headless_runner),
+                    "--config",
                     str(config),
-                    "-o",
+                    "--task",
+                    task,
+                    "--output",
                     str(trajectory_path),
                 )
 
