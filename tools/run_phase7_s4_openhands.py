@@ -217,7 +217,7 @@ def main(argv:list[str]|None=None)->int:
         llama_out=(evidence/"llama-server-stdout.txt").open("w",encoding="utf-8",newline="\n"); llama_err=(evidence/"llama-server-stderr.txt").open("w",encoding="utf-8",newline="\n")
         llama_proc=subprocess.Popen(llama_argv,cwd=server.parent,stdout=llama_out,stderr=llama_err,text=True,shell=False)
         write_json(evidence/"llama-preflight.json",wait_llama(llama_proc)); summary["gates"]["local_runtime_ready"]=True
-        with tempfile.TemporaryDirectory(prefix="codepro-phase7-s4-",dir=S4_ROOT) as tmp:
+        with tempfile.TemporaryDirectory(prefix="codepro-phase7-s4-",dir=S4_ROOT,ignore_cleanup_errors=True) as tmp:
             base=Path(tmp); source=base/"source"; workspaces=base/"workspaces"; state=base/"canvas-state"; profile=base/"profile"; source.mkdir(); state.mkdir(); profile.mkdir()
             (profile/"AppData"/"Local").mkdir(parents=True); (profile/"AppData"/"Roaming").mkdir(parents=True); (profile/".cache").mkdir(parents=True)
             run(["git","init"],cwd=source); run(["git","config","user.email","phase7@example.invalid"],cwd=source); run(["git","config","user.name","CodePro Phase 7"],cwd=source)
