@@ -21,6 +21,7 @@ def main() -> int:
     parser.add_argument("--model-alias", required=True)
     parser.add_argument("--result", required=True)
     parser.add_argument("--issue", required=True)
+    parser.add_argument("--completion-log-dir")
     args = parser.parse_args()
 
     upstream = Path(args.upstream).resolve()
@@ -69,6 +70,8 @@ export default defineConfig({
         "--result", args.result,
         "--issue", args.issue,
     ]
+    if args.completion_log_dir:
+        argv += ["--completion-log-dir", args.completion_log_dir]
     completed = subprocess.run(
         argv, cwd=upstream, capture_output=True, text=True,
         encoding="utf-8", errors="replace", shell=False, check=False, timeout=280
