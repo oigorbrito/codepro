@@ -416,3 +416,69 @@ evidence/phase7r-s4-runtime-requalification/S4-OpenHands-parallel1-litellm1943-c
 R7 is `COMPATIBLE` only if all frozen acceptance gates are true, including observable inspection, edit, exact patch capture, independent verifier pass, terminal observation, source-repository preservation, and workspace cleanup.
 
 If R7 remains blocked, classify the first new blocker from the evidence. Do not increase max iterations, change toolset, patch upstream OpenHands, alter task/model/provider/context/platform, enable fallback, or authorize another cell without a distinct isolated cause.
+
+
+## S4-R7 observed result
+
+S4-R7 executed on the reconciled Windows-native branch head with the strengthened `windows-powershell-v2` instruction-precedence suffix and with the OpenHands nested worktree still disabled.
+
+Observed gates:
+
+```text
+platform_contract_observed = true
+model_calls_observed = true
+inspect_observed = true
+edit_observed = false
+patch_captured = false
+independent_verifier = false
+termination_observed = true
+source_repository_unchanged = true
+workspace_cleanup = false
+classification = BLOCKED_MODEL_TOOL_PROTOCOL
+```
+
+The v2 contract was present in the captured system prompt, including the explicit statement that the Windows-native contract governs conflicts and that POSIX examples such as `find`, `grep`, `sed`, `cat -n`, and slash-rooted absolute paths are inapplicable.
+
+Despite that, the first repository actions still used POSIX/GNU syntax:
+
+```text
+find /workspace/s4-task -name "value.py" 2>/dev/null || find . -name "value.py" 2>/dev/null
+find . -name "value.py" 2>/dev/null
+pwd && ls -la
+ls -la
+```
+
+Only later did the agent issue plain `ls`, which succeeded under PowerShell and exposed `value.py`.
+
+The first file-editor call still used a POSIX-shaped path:
+
+```text
+/workspace/s4-task/value.py
+```
+
+and the editor rejected it as non-absolute in the Windows runtime.
+
+A later response recognized the correct drive-qualified workspace path, but the generated native tool call for `file_editor` failed JSON validation before execution:
+
+```text
+Error validating tool 'file_editor':
+Unterminated string ... Arguments: unparseable JSON
+```
+
+The conversation then reached `MaxIterationsReached (8)` without an edit.
+
+Attribution:
+
+```text
+PRIMARY = WINDOWS_TOOL_PROTOCOL_NONCOMPLIANCE_PERSISTS
+SECONDARY = WINDOWS_PATH_NATIVE_TOOL_JSON_ESCAPE_FAILURE
+```
+
+The ordering is material. The secondary malformed JSON event occurred only after multiple earlier actions had already ignored the v2 Windows contract. Therefore R7 does not isolate JSON escaping as the sole remaining cause, and it does not justify treating that symptom alone as an authorized next cell.
+
+Conclusion:
+
+- textual precedence in `agent_context.system_message_suffix` is insufficient for this frozen model/scaffold combination;
+- S4 remains unqualified;
+- no R8 treatment is authorized by R7 alone;
+- do not change max iterations, toolset, upstream OpenHands source, task, model, provider, context, platform, or fallback policy without a new isolated causal argument.
