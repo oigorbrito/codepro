@@ -22,6 +22,7 @@ function parseArgs() {
     completionLogDir: values.get("completion-log-dir") ?? null,
     pollTimeoutSeconds: Number(values.get("poll-timeout-seconds") ?? "240"),
     platformContract: values.get("platform-contract") ?? null,
+    systemPromptProfile: values.get("system-prompt-profile") ?? null,
     conversationWorktree: values.get("conversation-worktree") ?? "true",
   };
 }
@@ -48,6 +49,19 @@ function buildPlatformSystemSuffix(args) {
     ].join("\\n");
   }
   throw new Error(`unsupported platform contract: ${args.platformContract}`);
+}
+
+function buildSystemPrompt(args) {
+  if (args.systemPromptProfile === null) return null;
+  if (args.systemPromptProfile !== "windows-minimal-v1") {
+    throw new Error(`unsupported system prompt profile: ${args.systemPromptProfile}`);
+  }
+  return [
+    "You are OpenHands agent, a coding assistant operating in the current repository.",
+    "Use the provided tools to inspect the requested file, make the requested minimal edit, run the requested verification command, and finish only after verification succeeds.",
+    "The platform contract in dynamic context is authoritative for shell syntax and path shape.",
+    "Do not invent or rewrite the workspace path. Use the workspace path reported by the runtime.",
+  ].join("\n");
 }
 
 async function requestJson(args, method, path, body) {
@@ -123,16 +137,19 @@ async function main() {
     conversation_id: null, execution_status: null, final_reply: null,
     conversation_info: null, poll_snapshots: [], events: null, bash_events: null, observations: null, error: null,
     platform_contract: args.platformContract,
+    system_prompt_profile: args.systemPromptProfile,
     conversation_worktree: args.conversationWorktree,
   };
   try {
     setRegisteredBackends([{ id: "phase7-local", name: "Phase 7 Local", host: args.backendUrl, apiKey: args.apiKey, kind: "local" }]);
     setActiveSelection({ backendId: "phase7-local", orgId: null });
     const platformSystemSuffix = buildPlatformSystemSuffix(args);
+    const systemPrompt = buildSystemPrompt(args);
     const settings = {
       ...DEFAULT_SETTINGS,
       agent_settings: {
         ...DEFAULT_SETTINGS.agent_settings,
+        ...(systemPrompt ? { system_prompt: systemPrompt } : {}),
         ...(platformSystemSuffix ? { agent_context: { ...(DEFAULT_SETTINGS.agent_settings?.agent_context ?? {}), system_message_suffix: platformSystemSuffix } } : {}),
         llm: { model: `openai/${args.modelAlias}`, api_key: "local-llm", base_url: args.llmBaseUrl, ...(args.completionLogDir ? { log_completions: true, log_completions_folder: args.completionLogDir } : {}) },
       },
