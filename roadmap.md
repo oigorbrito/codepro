@@ -433,12 +433,12 @@ Controlled recovery cell:
 - [x] Execute `S4-R1` with `--parallel 1`: `BLOCKED_TIMEOUT`.
 - [x] Preserve the observed result: no edit, no patch, no independent verifier, model-call telemetry unknown.
 - [x] Attribute S4-R1 logs: no context/KV pressure remained with `parallel=1`; one conversation lease-loss signal was observed.
-- [ ] Repeat S4-R1 unchanged with conversation polling snapshots and post-timeout event capture.
+- [ ] Repeat S4-R1 unchanged with conversation polling snapshots and corrected post-timeout event capture (`limit=100`, `TIMESTAMP`).
 - [ ] Review the diagnostic repeat before authorizing any second treatment or changing the Phase 8 gate.
 
 Decision: `docs/decisions/0168-phase7r-s4-runtime-requalification.md`.
 
-**Phase status:** IN_PROGRESS — S4-R1 = BLOCKED_TIMEOUT; runtime context/KV attribution cleared; Agent Server conversation-state diagnostic next; Phase 8 remains BLOCKED_BY_NO_COMPATIBLE_SCAFFOLD.
+**Phase status:** IN_PROGRESS — S4-R1 = BLOCKED_TIMEOUT; runtime context/KV attribution cleared; model-call evidence observed via response latency/response_id; Agent Server event diagnostic next; Phase 8 remains BLOCKED_BY_NO_COMPATIBLE_SCAFFOLD.
 
 ---
 
