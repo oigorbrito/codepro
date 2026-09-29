@@ -105,8 +105,8 @@ async function main() {
       const final = await requestJson(args, "GET", `/api/conversations/${encodeURIComponent(conversationId)}/agent_final_response`);
       result.final_reply = typeof final === "string" ? final : (final?.response ?? final?.content ?? JSON.stringify(final));
     } catch (error) { result.final_reply_error = error instanceof Error ? error.message : String(error); }
-    const events = await requestJson(args, "GET", `/api/conversations/${encodeURIComponent(conversationId)}/events/search?limit=200&sort_order=TIMESTAMP_ASC`).catch((error) => ({ capture_error: error instanceof Error ? error.message : String(error) }));
-    const bashEvents = await requestJson(args, "GET", "/api/bash/bash_events/search?limit=200").catch((error) => ({ capture_error: error instanceof Error ? error.message : String(error) }));
+    const events = await requestJson(args, "GET", `/api/conversations/${encodeURIComponent(conversationId)}/events/search?limit=100&sort_order=TIMESTAMP`).catch((error) => ({ capture_error: error instanceof Error ? error.message : String(error) }));
+    const bashEvents = await requestJson(args, "GET", "/api/bash/bash_events/search?limit=100").catch((error) => ({ capture_error: error instanceof Error ? error.message : String(error) }));
     result.events = events; result.bash_events = bashEvents; result.observations = deriveObservations(events, bashEvents);
     if (polled.timedOut) {
       result.error = { type: "Error", message: "conversation polling timed out after 240 seconds" };
