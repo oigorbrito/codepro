@@ -24,6 +24,7 @@ function parseArgs() {
     platformContract: values.get("platform-contract") ?? null,
     systemPromptProfile: values.get("system-prompt-profile") ?? null,
     conversationWorktree: values.get("conversation-worktree") ?? "true",
+    maxIterations: Number(values.get("max-iterations") ?? "8"),
   };
 }
 
@@ -219,6 +220,7 @@ async function main() {
     system_prompt_profile: args.systemPromptProfile,
     system_prompt_transport: null,
     conversation_worktree: args.conversationWorktree,
+    max_iterations_requested: args.maxIterations,
   };
   try {
     setRegisteredBackends([{ id: "phase7-local", name: "Phase 7 Local", host: args.backendUrl, apiKey: args.apiKey, kind: "local" }]);
@@ -233,8 +235,11 @@ async function main() {
         ...(platformSystemSuffix ? { agent_context: { ...(DEFAULT_SETTINGS.agent_settings?.agent_context ?? {}), system_message_suffix: platformSystemSuffix } } : {}),
         llm: { model: `openai/${args.modelAlias}`, api_key: "local-llm", base_url: args.llmBaseUrl, ...(args.completionLogDir ? { log_completions: true, log_completions_folder: args.completionLogDir } : {}) },
       },
-      conversation_settings: { ...DEFAULT_SETTINGS.conversation_settings, max_iterations: 8 },
+      conversation_settings: { ...DEFAULT_SETTINGS.conversation_settings, max_iterations: args.maxIterations },
     };
+    if (!Number.isInteger(args.maxIterations) || args.maxIterations < 1) {
+      throw new Error(`--max-iterations must be a positive integer, got ${args.maxIterations}`);
+    }
     if (!["true", "false"].includes(args.conversationWorktree)) {
       throw new Error(`--conversation-worktree must be true or false, got ${args.conversationWorktree}`);
     }
