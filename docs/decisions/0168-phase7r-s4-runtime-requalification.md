@@ -575,3 +575,40 @@ R9 = NOT_AUTHORIZED
 The harness fix does not alter the R8 experimental treatment. It makes conversation creation consume the existing 600-second conversation budget rather than an unrelated 30-second client limit; any remaining polling time uses the same absolute deadline. Model, provider, prompt treatment, toolset, tool metadata, task, platform, context, parallelism, LiteLLM, max iterations, fallback policy, and outer 660/720-second limits remain unchanged.
 
 Retry R8 in a fresh evidence directory after the harness-fix commit passes CI.
+
+
+## S4-R8 attempt 2 treatment transport failure
+
+The retry after the HTTP transport-timeout fix successfully created and ran a conversation, but the intended R8 inline-system-prompt treatment was not observed at runtime.
+
+Observed:
+
+```text
+conversation_id = present
+model_calls_observed = true
+platform_contract_observed = true
+system_prompt_profile_observed = false
+agent.system_prompt = null
+agent.system_prompt_filename = system_prompt.j2
+edit_observed = false
+patch_captured = false
+independent_verifier = false
+termination_observed = true
+```
+
+The emitted `SystemPromptEvent` contained the stock OpenHands system prompt, including the generic POSIX-oriented `find`, `grep`, and `sed` guidance. Therefore the configured `agent_settings.system_prompt` field did not replace the frozen runtime's default system prompt.
+
+The conversation then reproduced the already-known protocol behavior: POSIX/GNU-shaped terminal actions under PowerShell, eventual successful inspection using a Windows drive-qualified file-editor path, then a malformed JSON file-editor edit call, followed by `MaxIterationsReached (8)`.
+
+This means the attempt is not evidence that the inline-system-prompt ablation itself failed. The ablation was never applied.
+
+```text
+ATTEMPT_2 = INCONCLUSIVE_TREATMENT_NOT_OBSERVED
+R8_RESULT = NOT_ESTABLISHED
+VALID_PRIOR_RESULT = R7 / BLOCKED_MODEL_TOOL_PROTOCOL
+R9 = NOT_AUTHORIZED
+```
+
+The frozen Agent Canvas adapter forwards arbitrary OpenHands agent-settings keys, but runtime evidence is authoritative: Agent Server 1.49.3 / its frozen SDK normalized the launched agent back to `system_prompt = null` and `system_prompt_filename = system_prompt.j2`. Current-SDK support for an inline `system_prompt` field is therefore insufficient proof that this frozen stack supports the same transport.
+
+No further R8 retry is authorized until a frozen-version-supported, non-semantic transport for the exact same `windows-minimal-v1` prompt is demonstrated. Changing the model, provider, task, toolset, tool metadata, max iterations, platform, context, timeout budgets, fallback policy, or frozen upstream identity remains unauthorized.
