@@ -54,6 +54,8 @@ if __name__ == "__main__":
                 "windows-embedded-v1",
                 "--conversation-worktree",
                 "false",
+                "--cleanup-untracked-python-bytecode",
+                "true",
             ]
         )
     )
