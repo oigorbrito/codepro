@@ -541,3 +541,37 @@ Interpretation:
 - if POSIX terminal actions persist, replacing the base system prompt is insufficient and no further prompt-only treatment is authorized automatically.
 
 No R9 is authorized by this decision.
+
+
+## S4-R8 attempt 1 transport timeout
+
+The first executable R8 attempt did not produce an experimental result.
+
+Observed adapter state:
+
+```text
+conversation_id = null
+conversation_info = null
+poll_snapshots = []
+model_calls_observed = null
+platform_contract_observed = false
+system_prompt_profile_observed = false
+error.type = TimeoutError
+error.message = The operation was aborted due to timeout
+```
+
+The Agent Canvas readiness gate passed, the frozen runtime binding passed, and the isolated source/workspace remained clean. The failure occurred before the harness obtained a conversation id.
+
+Inspection of the native request builder found a harness-level mismatch: every HTTP request, including `POST /api/conversations`, was wrapped in a fixed 30-second `AbortSignal.timeout(30000)`. That client-side transport timeout was independent of the frozen R8 conversation budget of 600 seconds.
+
+Therefore:
+
+```text
+ATTEMPT_1 = INCONCLUSIVE_HARNESS_TRANSPORT_TIMEOUT
+R8_RESULT = NOT_ESTABLISHED
+R9 = NOT_AUTHORIZED
+```
+
+The harness fix does not alter the R8 experimental treatment. It makes conversation creation consume the existing 600-second conversation budget rather than an unrelated 30-second client limit; any remaining polling time uses the same absolute deadline. Model, provider, prompt treatment, toolset, tool metadata, task, platform, context, parallelism, LiteLLM, max iterations, fallback policy, and outer 660/720-second limits remain unchanged.
+
+Retry R8 in a fresh evidence directory after the harness-fix commit passes CI.
