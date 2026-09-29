@@ -66,11 +66,20 @@ function flattenStrings(value, out = []) {
 }
 
 function deriveObservations(events, bashEvents) {
-  const joined = flattenStrings({ events, bashEvents }).map((x) => x.toLowerCase()).join("\n");
+  const items = Array.isArray(events?.items) ? events.items : [];
+  const actions = items.filter((event) => event?.kind === "ActionEvent");
+  const terminalActions = actions.filter((event) => String(event?.tool_name ?? "").toLowerCase() === "terminal");
+  const fileActions = actions.filter((event) => String(event?.tool_name ?? "").toLowerCase() === "file_editor");
+  const terminalJoined = flattenStrings(terminalActions).map((x) => x.toLowerCase()).join("\n");
+  const fileJoined = flattenStrings(fileActions).map((x) => x.toLowerCase()).join("\n");
   return {
-    commandObserved: joined.includes("terminal") || joined.includes("bashcommand") || joined.includes("bashoutput"),
-    inspectObserved: joined.includes("value.py") && (joined.includes("cat ") || joined.includes("get-content") || joined.includes("read") || joined.includes("view") || joined.includes("python")),
-    editObserved: joined.includes("file_editor") || joined.includes("str_replace") || joined.includes("write") || joined.includes("edit"),
+    commandObserved: terminalActions.length > 0,
+    inspectObserved:
+      (fileActions.length > 0 && fileJoined.includes("view") && fileJoined.includes("value.py")) ||
+      (terminalActions.length > 0 && terminalJoined.includes("value.py") && (terminalJoined.includes("get-content") || terminalJoined.includes("type ") || terminalJoined.includes("python"))),
+    editObserved:
+      fileActions.length > 0 &&
+      (fileJoined.includes("str_replace") || fileJoined.includes("create") || fileJoined.includes("insert") || fileJoined.includes("write")),
   };
 }
 
