@@ -223,7 +223,7 @@ def classify(vertical:dict[str,Any],adapter:dict[str,Any],gates:dict[str,Any])->
     return "INCOMPATIBLE"
 
 def main(argv:list[str]|None=None)->int:
-    parser=argparse.ArgumentParser(description=__doc__); parser.add_argument("--evidence-dir",required=True); parser.add_argument("--llama-parallel",type=int,default=None); parser.add_argument("--llama-context",type=int,default=4096); parser.add_argument("--litellm-version",default=None); parser.add_argument("--completion-log-dir",default=None); parser.add_argument("--study-id",default="phase7"); parser.add_argument("--conversation-timeout-seconds",type=int,default=240); parser.add_argument("--executor-timeout-seconds",type=int,default=280); parser.add_argument("--vertical-wall-time-seconds",type=int,default=320); args=parser.parse_args(argv)
+    parser=argparse.ArgumentParser(description=__doc__); parser.add_argument("--evidence-dir",required=True); parser.add_argument("--llama-parallel",type=int,default=None); parser.add_argument("--llama-context",type=int,default=4096); parser.add_argument("--litellm-version",default=None); parser.add_argument("--completion-log-dir",default=None); parser.add_argument("--study-id",default="phase7"); parser.add_argument("--conversation-timeout-seconds",type=int,default=240); parser.add_argument("--executor-timeout-seconds",type=int,default=280); parser.add_argument("--vertical-wall-time-seconds",type=int,default=320); parser.add_argument("--platform-contract",choices=("windows-powershell-v1",),default=None); args=parser.parse_args(argv)
     evidence=Path(args.evidence_dir).expanduser().resolve()
     if evidence.exists() and any(evidence.iterdir()): raise SystemExit(f"refusing to overwrite non-empty evidence directory: {evidence}")
     evidence.mkdir(parents=True,exist_ok=True); summary=summary_base(); summary["study_id"]=args.study_id
@@ -293,6 +293,9 @@ def main(argv:list[str]|None=None)->int:
             result_path=evidence/"openhands-result.json"
             issue="Work only in the current repository. Inspect value.py and confirm it contains VALUE = \"before\". Change it to VALUE = \"after\". Then run a Python command that imports value and asserts value.VALUE == \"after\". Finish after the check succeeds."
             executor=[sys.executable,str(ROOT/"tools"/"phase7_openhands_executor.py"),"--upstream",str(UPSTREAM),"--backend-url",CANVAS_BASE,"--api-key",SESSION_KEY,"--working-dir",str(isolated.workspace),"--llm-base-url",LLAMA_BASE,"--model-alias",MODEL_ALIAS,"--result",str(result_path),"--issue",issue,"--poll-timeout-seconds",str(args.conversation_timeout_seconds),"--process-timeout-seconds",str(args.executor_timeout_seconds)]
+            if args.platform_contract is not None:
+                executor += ["--platform-contract",args.platform_contract]
+                summary["platform_contract"]={"id":args.platform_contract,"transport":"agent_context.system_message_suffix"}
             if args.completion_log_dir is not None:
                 completion_log_dir=Path(args.completion_log_dir).expanduser().resolve(); completion_log_dir.mkdir(parents=True,exist_ok=True)
                 executor += ["--completion-log-dir",str(completion_log_dir)]
@@ -307,7 +310,11 @@ def main(argv:list[str]|None=None)->int:
             verifier_path=run_root/"verification-summary.json"; verifier=json.loads(verifier_path.read_text(encoding="utf-8")) if verifier_path.is_file() else {}; verifier_ok=verifier.get("status")=="PASSED"
             usage=token_usage(adapter); summary["telemetry"]={**usage,"provider_api_cost_usd":0}
             final_state=isolated.capture_state().to_dict(); source_state=capture_repository_state(source).to_dict(); cleanup=isolated.remove(); isolated=None
-            summary["gates"].update({"explicit_local_binding":(adapter.get("llm_binding") or {}).get("base_url")==LLAMA_BASE and (adapter.get("llm_binding") or {}).get("model")==f"openai/{MODEL_ALIAS}","model_calls_observed":model_call_observed(adapter),"inspect_observed":obs.get("inspectObserved") is True,"command_observed":obs.get("commandObserved") is True,"event_edit_signal":obs.get("editObserved") is True,"edit_observed":len(vertical.get("changed_files") or [])>0,"termination_observed":str(adapter.get("execution_status") or "").lower() in {"finished","error","stuck","stopped"},"patch_captured":patch_ok,"independent_verifier":verifier_ok,"source_repository_unchanged":source_state.get("clean") is True,"workspace_cleanup":cleanup.removed})
+            agent_info=(adapter.get("conversation_info") or {}).get("agent") if isinstance(adapter.get("conversation_info"),dict) else {}
+            agent_context=agent_info.get("agent_context") if isinstance(agent_info,dict) and isinstance(agent_info.get("agent_context"),dict) else {}
+            suffix=str(agent_context.get("system_message_suffix") or "")
+            platform_contract_observed=(args.platform_contract is None) or ("<PLATFORM_CONTRACT>" in suffix and "Platform: Windows-native." in suffix and "Terminal tool shell: PowerShell." in suffix)
+            summary["gates"].update({"explicit_local_binding":(adapter.get("llm_binding") or {}).get("base_url")==LLAMA_BASE and (adapter.get("llm_binding") or {}).get("model")==f"openai/{MODEL_ALIAS}","platform_contract_observed":platform_contract_observed,"model_calls_observed":model_call_observed(adapter),"inspect_observed":obs.get("inspectObserved") is True,"command_observed":obs.get("commandObserved") is True,"event_edit_signal":obs.get("editObserved") is True,"edit_observed":len(vertical.get("changed_files") or [])>0,"termination_observed":str(adapter.get("execution_status") or "").lower() in {"finished","error","stuck","stopped"},"patch_captured":patch_ok,"independent_verifier":verifier_ok,"source_repository_unchanged":source_state.get("clean") is True,"workspace_cleanup":cleanup.removed})
             summary["repository_state"]={"initial_revision":revision,"final":final_state,"source":source_state}; summary["classification"]=classify(vertical,adapter,summary["gates"])
             write_json(evidence/"s4-summary.json",summary); print(json.dumps(summary,ensure_ascii=False,indent=2,sort_keys=True)); return 0
     except Exception as exc:
