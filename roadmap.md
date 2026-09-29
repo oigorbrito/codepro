@@ -437,11 +437,11 @@ Controlled recovery cell:
 - [x] Match the failure to the upstream OpenHands SDK telemetry bug affecting LiteLLM >=1.95.1.
 - [x] Correct observation accounting so tool availability in `SystemPromptEvent` is not misclassified as emitted tool actions.
 - [x] Authorize S4-R2 with one additional treatment variable: exact LiteLLM `1.94.3` via `UV_CONSTRAINT`; keep Agent Server 1.49.3 and all other S4-R1 variables frozen.
-- [ ] Execute S4-R2 and review patch/verifier evidence before changing the Phase 8 gate.
+- [x] Execute S4-R2 with LiteLLM 1.94.3: telemetry exception cleared; model calls/tokens observed; no ActionEvent/edit/patch/verifier; classification remains `BLOCKED_TIMEOUT`.\n- [x] Attribute S4-R2 behavior: first agent turn consumed 316 prompt + 3344 completion tokens, then entered repeated condensation without emitting a repository tool action.\n- [ ] Repeat S4-R2 unchanged with raw completion logging enabled to classify the model response shape before authorizing any further treatment.
 
 Decision: `docs/decisions/0168-phase7r-s4-runtime-requalification.md`.
 
-**Phase status:** IN_PROGRESS — S4-R1 root cause attributed to upstream SDK/LiteLLM telemetry incompatibility; S4-R2 LiteLLM 1.94.3 compatibility treatment next; Phase 8 remains BLOCKED_BY_NO_COMPATIBLE_SCAFFOLD.
+**Phase status:** IN_PROGRESS — S4-R2 cleared the upstream telemetry crash but still times out before any tool action; raw model-response diagnostic next; Phase 8 remains BLOCKED_BY_NO_COMPATIBLE_SCAFFOLD.
 
 ---
 
