@@ -137,6 +137,63 @@ function deriveObservations(events, bashEvents) {
   };
 }
 
+function materializeDirectAgentWithSystemPrompt(payload, systemPrompt) {
+  const raw = payload;
+  const agentSettings = raw?.agent_settings;
+  if (!agentSettings || typeof agentSettings !== "object") {
+    throw new Error("inline system prompt requires resolved agent_settings payload");
+  }
+  if (!agentSettings.llm || !Array.isArray(agentSettings.tools)) {
+    throw new Error("resolved agent_settings is missing llm or tools");
+  }
+
+  const verification = agentSettings.verification ?? {};
+  if (verification.critic_enabled === true) {
+    throw new Error("direct-agent inline prompt transport does not support an enabled critic in this frozen cell");
+  }
+
+  const condenserSettings = agentSettings.condenser ?? {};
+  let condenser = null;
+  if (condenserSettings.enabled !== false) {
+    const condenserLlm = {
+      ...agentSettings.llm,
+      stream: false,
+      usage_id: "condenser",
+    };
+    condenser = {
+      kind: "LLMSummarizingCondenser",
+      llm: condenserLlm,
+      max_size: condenserSettings.max_size ?? 240,
+      keep_first: condenserSettings.keep_first ?? 2,
+      minimum_progress: condenserSettings.minimum_progress ?? 0.1,
+      hard_context_reset_max_retries: condenserSettings.hard_context_reset_max_retries ?? 5,
+      hard_context_reset_context_scaling: condenserSettings.hard_context_reset_context_scaling ?? 0.8,
+      ...(condenserSettings.max_tokens == null ? {} : { max_tokens: condenserSettings.max_tokens }),
+    };
+  }
+
+  const includeDefaultTools = ["FinishTool", "ThinkTool"];
+  if (agentSettings.enable_switch_llm_tool !== false) includeDefaultTools.push("SwitchLLMTool");
+
+  const agent = {
+    kind: "Agent",
+    llm: agentSettings.llm,
+    tools: agentSettings.tools,
+    mcp_config: agentSettings.mcp_config ?? {},
+    include_default_tools: includeDefaultTools,
+    agent_context: agentSettings.agent_context ?? {},
+    system_prompt: systemPrompt,
+    condenser,
+    critic: null,
+    tool_concurrency_limit: agentSettings.tool_concurrency_limit ?? 1,
+    ...(agentSettings.filter_tools_regex == null ? {} : { filter_tools_regex: agentSettings.filter_tools_regex }),
+  };
+
+  delete raw.agent_settings;
+  raw.agent = agent;
+  return raw;
+}
+
 async function main() {
   const args = parseArgs();
   const result = {
@@ -147,6 +204,7 @@ async function main() {
     conversation_info: null, poll_snapshots: [], events: null, bash_events: null, observations: null, error: null,
     platform_contract: args.platformContract,
     system_prompt_profile: args.systemPromptProfile,
+    system_prompt_transport: null,
     conversation_worktree: args.conversationWorktree,
   };
   try {
@@ -167,13 +225,17 @@ async function main() {
     if (!["true", "false"].includes(args.conversationWorktree)) {
       throw new Error(`--conversation-worktree must be true or false, got ${args.conversationWorktree}`);
     }
-    const payload = buildStartConversationRequest({
+    let payload = buildStartConversationRequest({
       settings,
       query: args.issue,
       workingDir: args.workingDir,
       worktree: args.conversationWorktree === "true",
       customSecrets: [],
     });
+    if (systemPrompt) {
+      payload = materializeDirectAgentWithSystemPrompt(payload, systemPrompt);
+      result.system_prompt_transport = "start-conversation-direct-agent-v1";
+    }
     if (!Number.isFinite(args.pollTimeoutSeconds) || args.pollTimeoutSeconds <= 0) {
       throw new Error("poll timeout must be a positive finite number");
     }
