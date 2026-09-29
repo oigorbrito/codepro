@@ -159,3 +159,12 @@ Diagnostic evidence root:
 ```text
 evidence/phase7r-s4-runtime-requalification/S4-OpenHands-parallel1-diagnostic/
 ```
+
+
+## Conversation-state diagnostic finding
+
+The instrumented diagnostic repeat remained `running` for the full polling budget while `runtime_status=available` and `can_resume=true`. The last captured conversation info also contained a default-model response latency entry with a non-empty `chatcmpl-...` response id, despite zero accumulated token usage. This is model-call evidence; zero token accounting must not be interpreted as no call.
+
+The attempted event queries were invalid for Agent Server 1.49.3: the endpoint rejected `limit=200` (maximum 100) and `TIMESTAMP_ASC` (accepted values include `TIMESTAMP` and `TIMESTAMP_DESC`). The harness now uses `limit=100&sort_order=TIMESTAMP` and bash `limit=100`.
+
+No second treatment is authorized. Repeat the same S4-R1 configuration only to capture valid events and identify the last agent lifecycle event.
