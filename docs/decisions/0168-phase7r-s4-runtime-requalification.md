@@ -357,3 +357,62 @@ The captured prompt/tool metadata isolates a remaining internal instruction conf
 Because the conflict persists after removing the nested worktree, S4-R6 is classified as `BLOCKED_MODEL_TOOL_PROTOCOL`, with the more specific attribution `WINDOWS_TOOL_INSTRUCTION_CONFLICT`.
 
 No S4-R7 treatment is authorized by this result alone. Any next cell must target this isolated instruction conflict as a single documented treatment while keeping model, provider, scaffold identity, task, Windows-native platform, context `16384`, parallel `1`, LiteLLM `1.94.3`, time budgets, and fallback policy frozen.
+
+
+## S4-R7 decision
+
+S4-R6 isolated the remaining blocker as an instruction-precedence conflict rather than a workspace-isolation defect.
+
+The frozen OpenHands stack presented the model with mutually inconsistent platform instructions:
+
+- the CodePro platform suffix declared Windows-native / PowerShell and required drive-qualified Windows paths;
+- the generic OpenHands system prompt still recommended POSIX-oriented commands such as `find`, `grep`, and `sed`;
+- the frozen file-editor tool description stated that absolute paths start with `/`.
+
+R6 proved that merely removing the nested OpenHands worktree does not resolve this conflict. It also proved that the Windows contract is transported successfully and observed by the Agent Server.
+
+Authorize one controlled treatment:
+
+```text
+CELL = S4-R7
+BASE = S4-R6
+PLATFORM_CONTRACT = windows-powershell-v1 -> windows-powershell-v2
+CONVERSATION_WORKTREE = false
+CTX_SIZE = 16384
+PARALLEL = 1
+LITELLM = 1.94.3
+MODEL = unchanged
+SCAFFOLD = unchanged
+AGENT_SERVER = unchanged
+AUTOMATION = unchanged
+PLATFORM = WINDOWS_NATIVE
+PROVIDER = unchanged
+TIME_BUDGETS = 600 / 660 / 720
+MAX_ITERATIONS = 8
+FALLBACK = DISABLED
+TASK = unchanged
+```
+
+The sole treatment delta is the content of the existing `agent_context.system_message_suffix`. Version 2 adds an explicit conflict-resolution rule:
+
+- when generic OpenHands prompt/tool text conflicts with the Windows-native contract, the Windows-native contract governs platform syntax and path shape;
+- POSIX examples including `find`, `grep`, `sed`, `cat -n`, and the statement that absolute paths start with `/` are declared inapplicable to this Windows-native cell;
+- PowerShell-native equivalents and drive-qualified Windows absolute paths are required.
+
+This does not patch the frozen OpenHands checkout, change the toolset, alter the user task, raise the iteration cap, switch provider/model, migrate platform, or enable fallback.
+
+Run:
+
+```powershell
+uv run --python 3.12 --no-project python .\tools\run_phase7r_s4_r7_windows_instruction_precedence.py
+```
+
+Evidence root:
+
+```text
+evidence/phase7r-s4-runtime-requalification/S4-OpenHands-parallel1-litellm1943-ctx16384-timeout600-winps2-single-workspace/
+```
+
+R7 is `COMPATIBLE` only if all frozen acceptance gates are true, including observable inspection, edit, exact patch capture, independent verifier pass, terminal observation, source-repository preservation, and workspace cleanup.
+
+If R7 remains blocked, classify the first new blocker from the evidence. Do not increase max iterations, change toolset, patch upstream OpenHands, alter task/model/provider/context/platform, enable fallback, or authorize another cell without a distinct isolated cause.
