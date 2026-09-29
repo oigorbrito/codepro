@@ -28,17 +28,26 @@ function parseArgs() {
 
 function buildPlatformSystemSuffix(args) {
   if (args.platformContract === null) return null;
-  if (args.platformContract !== "windows-powershell-v1") {
-    throw new Error(`unsupported platform contract: ${args.platformContract}`);
-  }
-  return [
+  const base = [
     "<PLATFORM_CONTRACT>",
     "Platform: Windows-native.",
     "Terminal tool shell: PowerShell. Use PowerShell syntax and cmdlets; do not use bash/GNU command syntax or POSIX redirection.",
     `Workspace: ${args.workingDir}`,
     "Use the Windows absolute workspace path exactly as reported by the tools. For file_editor, use Windows absolute paths (for example D:\\\\...); do not rewrite them as /tmp/... .",
-    "</PLATFORM_CONTRACT>",
-  ].join("\\n");
+  ];
+  if (args.platformContract === "windows-powershell-v1") {
+    return [...base, "</PLATFORM_CONTRACT>"].join("\\n");
+  }
+  if (args.platformContract === "windows-powershell-v2") {
+    return [
+      ...base,
+      "Instruction precedence for this runtime: when generic OpenHands prompt or tool text conflicts with this contract, this Windows-native contract governs platform syntax and path shape.",
+      "Generic examples mentioning find, grep, sed, cat -n, or absolute paths 'starting with /' are POSIX-only and are not valid instructions for this Windows-native cell.",
+      "Use PowerShell-native equivalents such as Get-ChildItem and Get-Content. For file_editor, a drive-qualified path such as D:\\\\... is absolute; never convert it to a slash-rooted path.",
+      "</PLATFORM_CONTRACT>",
+    ].join("\\n");
+  }
+  throw new Error(`unsupported platform contract: ${args.platformContract}`);
 }
 
 async function requestJson(args, method, path, body) {
