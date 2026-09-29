@@ -223,7 +223,7 @@ def classify(vertical:dict[str,Any],adapter:dict[str,Any],gates:dict[str,Any])->
     return "INCOMPATIBLE"
 
 def main(argv:list[str]|None=None)->int:
-    parser=argparse.ArgumentParser(description=__doc__); parser.add_argument("--evidence-dir",required=True); parser.add_argument("--llama-parallel",type=int,default=None); parser.add_argument("--study-id",default="phase7"); args=parser.parse_args(argv)
+    parser=argparse.ArgumentParser(description=__doc__); parser.add_argument("--evidence-dir",required=True); parser.add_argument("--llama-parallel",type=int,default=None); parser.add_argument("--litellm-version",default=None); parser.add_argument("--study-id",default="phase7"); args=parser.parse_args(argv)
     evidence=Path(args.evidence_dir).expanduser().resolve()
     if evidence.exists() and any(evidence.iterdir()): raise SystemExit(f"refusing to overwrite non-empty evidence directory: {evidence}")
     evidence.mkdir(parents=True,exist_ok=True); summary=summary_base(); summary["study_id"]=args.study_id
@@ -267,8 +267,13 @@ def main(argv:list[str]|None=None)->int:
                 "VITE_DO_NOT_TRACK":"1",
                 "NO_COLOR":"1",
             })
+            if args.litellm_version is not None:
+                constraint_path=base/"uv-constraints.txt"
+                constraint_path.write_text(f"litellm=={args.litellm_version}\n",encoding="utf-8",newline="\n")
+                canvas_env["UV_CONSTRAINT"]=str(constraint_path)
+                summary["local_runtime"]["litellm_constraint"]=args.litellm_version
             canvas_argv=[node,str(UPSTREAM/"bin"/"agent-canvas.mjs"),"--backend-only","--port",str(CANVAS_PORT)]
-            write_json(evidence/"canvas-binding.json",{"argv":canvas_argv,"canvas_version":"1.21.0","agent_server_version":AGENT_SERVER_VERSION,"automation_version":AUTOMATION_VERSION,"ingress":CANVAS_BASE,"agent_port":AGENT_PORT,"automation_port":AUTOMATION_PORT,"vscode_port":VSCODE_PORT,"state_dir":str(state),"profile_dir":str(profile),"profile_isolation":"PROCESS_ENVIRONMENT_ONLY","session_key":"REDACTED"})
+            write_json(evidence/"canvas-binding.json",{"argv":canvas_argv,"canvas_version":"1.21.0","agent_server_version":AGENT_SERVER_VERSION,"automation_version":AUTOMATION_VERSION,"ingress":CANVAS_BASE,"agent_port":AGENT_PORT,"automation_port":AUTOMATION_PORT,"vscode_port":VSCODE_PORT,"state_dir":str(state),"profile_dir":str(profile),"profile_isolation":"PROCESS_ENVIRONMENT_ONLY","uv_constraint":args.litellm_version,"session_key":"REDACTED"})
             canvas_out=(evidence/"agent-canvas-stdout.txt").open("w",encoding="utf-8",newline="\n"); canvas_err=(evidence/"agent-canvas-stderr.txt").open("w",encoding="utf-8",newline="\n")
             canvas_proc=subprocess.Popen(canvas_argv,cwd=UPSTREAM,env=canvas_env,stdout=canvas_out,stderr=canvas_err,text=True,shell=False)
             write_json(evidence/"canvas-preflight.json",wait_canvas(canvas_proc)); summary["gates"]["agent_canvas_ready"]=True
