@@ -22,7 +22,13 @@ def main() -> int:
     parser.add_argument("--result", required=True)
     parser.add_argument("--issue", required=True)
     parser.add_argument("--completion-log-dir")
+    parser.add_argument("--poll-timeout-seconds", type=int, default=240)
+    parser.add_argument("--process-timeout-seconds", type=int, default=280)
     args = parser.parse_args()
+    if args.poll_timeout_seconds < 1:
+        raise SystemExit("--poll-timeout-seconds must be >= 1")
+    if args.process_timeout_seconds <= args.poll_timeout_seconds:
+        raise SystemExit("--process-timeout-seconds must be greater than --poll-timeout-seconds")
 
     upstream = Path(args.upstream).resolve()
     bin_dir = upstream / "node_modules" / ".bin"
@@ -69,12 +75,13 @@ export default defineConfig({
         "--model-alias", args.model_alias,
         "--result", args.result,
         "--issue", args.issue,
+        "--poll-timeout-seconds", str(args.poll_timeout_seconds),
     ]
     if args.completion_log_dir:
         argv += ["--completion-log-dir", args.completion_log_dir]
     completed = subprocess.run(
         argv, cwd=upstream, capture_output=True, text=True,
-        encoding="utf-8", errors="replace", shell=False, check=False, timeout=280
+        encoding="utf-8", errors="replace", shell=False, check=False, timeout=args.process_timeout_seconds
     )
     sys.stdout.write(completed.stdout)
     sys.stderr.write(completed.stderr)
