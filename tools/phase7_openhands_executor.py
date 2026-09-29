@@ -25,6 +25,7 @@ def main() -> int:
     parser.add_argument("--poll-timeout-seconds", type=int, default=240)
     parser.add_argument("--process-timeout-seconds", type=int, default=280)
     parser.add_argument("--platform-contract")
+    parser.add_argument("--conversation-worktree", choices=("true", "false"), default="true")
     args = parser.parse_args()
     if args.poll_timeout_seconds < 1:
         raise SystemExit("--poll-timeout-seconds must be >= 1")
@@ -77,6 +78,7 @@ export default defineConfig({
         "--result", args.result,
         "--issue", args.issue,
         "--poll-timeout-seconds", str(args.poll_timeout_seconds),
+        "--conversation-worktree", args.conversation_worktree,
     ]
     if args.completion_log_dir:
         argv += ["--completion-log-dir", args.completion_log_dir]
