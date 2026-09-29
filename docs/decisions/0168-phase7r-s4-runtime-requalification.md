@@ -168,3 +168,53 @@ The instrumented diagnostic repeat remained `running` for the full polling budge
 The attempted event queries were invalid for Agent Server 1.49.3: the endpoint rejected `limit=200` (maximum 100) and `TIMESTAMP_ASC` (accepted values include `TIMESTAMP` and `TIMESTAMP_DESC`). The harness now uses `limit=100&sort_order=TIMESTAMP` and bash `limit=100`.
 
 No second treatment is authorized. Repeat the same S4-R1 configuration only to capture valid events and identify the last agent lifecycle event.
+
+
+## S4-R1 event-level root cause
+
+Corrected event capture exposed the first concrete agent failure:
+
+```text
+kind = ConversationErrorEvent
+code = AttributeError
+detail = 'PromptTokensDetailsWrapper' object has no attribute 'cache_creation_tokens'
+```
+
+This occurred after the Agent Server recorded a non-empty model response id and response latency, but before any repository tool action produced a change. The conversation then emitted a `CondensationRequest` and remained `running` until the external polling timeout.
+
+This signature matches the upstream OpenHands software-agent-sdk telemetry bug documented for LiteLLM >= 1.95.1. The upstream report identifies 1.94.3 and earlier as unaffected and recommends either defensive `getattr` in SDK telemetry or temporarily constraining LiteLLM below 1.95.
+
+## S4-R2 decision
+
+Authorize one new controlled cell:
+
+```text
+CELL = S4-R2
+BASE = S4-R1
+AGENT_SERVER = 1.49.3
+LITELLM = 1.94.3
+CONSTRAINT_MECHANISM = UV_CONSTRAINT
+PARALLEL = 1
+CTX_SIZE = 4096
+MODEL = unchanged
+SCAFFOLD = unchanged
+PLATFORM = WINDOWS_NATIVE
+FALLBACK = DISABLED
+TASK = unchanged
+```
+
+The Agent Canvas upstream source is not modified. `UV_CONSTRAINT` is inherited by the upstream `uvx` Agent Server launch and constrains only dependency resolution for the ephemeral tool environment.
+
+Run:
+
+```powershell
+uv run --python 3.12 --no-project python .\tools\run_phase7r_s4_litellm_requalification.py
+```
+
+Evidence root:
+
+```text
+evidence/phase7r-s4-runtime-requalification/S4-OpenHands-parallel1-litellm1943/
+```
+
+Compatibility still requires observable repository change, captured patch, and independent verifier success. Clearing the telemetry exception alone is not sufficient.
