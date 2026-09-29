@@ -22,6 +22,7 @@ function parseArgs() {
     completionLogDir: values.get("completion-log-dir") ?? null,
     pollTimeoutSeconds: Number(values.get("poll-timeout-seconds") ?? "240"),
     platformContract: values.get("platform-contract") ?? null,
+    conversationWorktree: values.get("conversation-worktree") ?? "true",
   };
 }
 
@@ -113,6 +114,7 @@ async function main() {
     conversation_id: null, execution_status: null, final_reply: null,
     conversation_info: null, poll_snapshots: [], events: null, bash_events: null, observations: null, error: null,
     platform_contract: args.platformContract,
+    conversation_worktree: args.conversationWorktree,
   };
   try {
     setRegisteredBackends([{ id: "phase7-local", name: "Phase 7 Local", host: args.backendUrl, apiKey: args.apiKey, kind: "local" }]);
@@ -127,7 +129,16 @@ async function main() {
       },
       conversation_settings: { ...DEFAULT_SETTINGS.conversation_settings, max_iterations: 8 },
     };
-    const payload = buildStartConversationRequest({ settings, query: args.issue, workingDir: args.workingDir, customSecrets: [] });
+    if (!["true", "false"].includes(args.conversationWorktree)) {
+      throw new Error(`--conversation-worktree must be true or false, got ${args.conversationWorktree}`);
+    }
+    const payload = buildStartConversationRequest({
+      settings,
+      query: args.issue,
+      workingDir: args.workingDir,
+      worktree: args.conversationWorktree === "true",
+      customSecrets: [],
+    });
     const created = await requestJson(args, "POST", "/api/conversations", payload);
     const conversationId = String(created?.id ?? "");
     if (!conversationId) throw new Error(`conversation create returned no id: ${JSON.stringify(created)}`);
