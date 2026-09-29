@@ -254,3 +254,59 @@ The diagnostic must determine whether the first default-model response is:
 - or another response-shape failure.
 
 No S4-R3 treatment is authorized until that response evidence is inspected.
+
+
+## S4-R2 response diagnostic finding
+
+The raw completion evidence changes the attribution materially.
+
+The first successful `usage_id=default` completion was not an agent task turn. It was Agent Server title generation and returned a short conversation title with no tool calls. Immediately afterward, the first real agent request was rejected by llama.cpp before generation because the serialized prompt was larger than the frozen runtime context:
+
+```text
+request_tokens = 14820
+ctx_size = 4096
+result = ContextWindowExceededError
+ActionEvent = none
+```
+
+The event stream then entered condensation. Condenser generations reached the 4096-token turn limit, and subsequent default-agent retries were again rejected with requests around 9854 tokens against the same 4096-token context. No terminal or file-editor `ActionEvent` was emitted.
+
+Therefore the current primary blocker is not malformed tool-call output. The task-execution turn is not reaching model generation under the frozen 4096-token context.
+
+The empty external `completions/` directory is an observability-path limitation, not loss of completion evidence: `LLMCompletionLogEvent` records in the captured Agent Server event stream contain the request/response/error payloads needed for attribution.
+
+## S4-R3 decision
+
+Authorize one controlled context-only treatment:
+
+```text
+CELL = S4-R3
+BASE = S4-R2
+CTX_SIZE = 16384
+PARALLEL = 1
+LITELLM = 1.94.3
+MODEL = unchanged
+SCAFFOLD = unchanged
+AGENT_SERVER = unchanged
+AUTOMATION = unchanged
+PLATFORM = WINDOWS_NATIVE
+PROVIDER = unchanged
+FALLBACK = DISABLED
+TASK = unchanged
+```
+
+Rationale: 16384 is the smallest power-of-two runtime context above the observed 14820-token first task request. This is a single-variable treatment. It does not authorize 32768, model changes, prompt surgery, tool filtering, reasoning changes, provider changes, or platform changes.
+
+Run:
+
+```powershell
+uv run --python 3.12 --no-project python .\tools\run_phase7r_s4_r3_context_requalification.py
+```
+
+Evidence root:
+
+```text
+evidence/phase7r-s4-runtime-requalification/S4-OpenHands-parallel1-litellm1943-ctx16384/
+```
+
+Acceptance remains unchanged: an observable authorized edit, captured patch, and independent verifier pass are required. Clearing the context error alone is not compatibility.
