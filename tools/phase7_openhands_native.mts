@@ -53,15 +53,28 @@ function buildPlatformSystemSuffix(args) {
 
 function buildSystemPrompt(args) {
   if (args.systemPromptProfile === null) return null;
-  if (args.systemPromptProfile !== "windows-minimal-v1") {
-    throw new Error(`unsupported system prompt profile: ${args.systemPromptProfile}`);
+  if (args.systemPromptProfile === "windows-minimal-v1") {
+    return [
+      "You are OpenHands agent, a coding assistant operating in the current repository.",
+      "Use the provided tools to inspect the requested file, make the requested minimal edit, run the requested verification command, and finish only after verification succeeds.",
+      "The platform contract in dynamic context is authoritative for shell syntax and path shape.",
+      "Do not invent or rewrite the workspace path. Use the workspace path reported by the runtime.",
+    ].join("\n");
   }
-  return [
-    "You are OpenHands agent, a coding assistant operating in the current repository.",
-    "Use the provided tools to inspect the requested file, make the requested minimal edit, run the requested verification command, and finish only after verification succeeds.",
-    "The platform contract in dynamic context is authoritative for shell syntax and path shape.",
-    "Do not invent or rewrite the workspace path. Use the workspace path reported by the runtime.",
-  ].join("\n");
+  if (args.systemPromptProfile === "windows-embedded-v1") {
+    return [
+      "You are OpenHands agent, a coding assistant operating in the current repository.",
+      "Use the provided tools to inspect the requested file, make the requested minimal edit, run the requested verification command, and finish only after verification succeeds.",
+      "Platform: Windows-native.",
+      "Terminal tool shell: PowerShell. Use PowerShell syntax and cmdlets only; do not use bash/GNU command syntax or POSIX redirection.",
+      `Workspace: ${args.workingDir}`,
+      "Use this exact Windows absolute workspace path. Do not remove the drive letter and do not rewrite it as a slash-rooted path.",
+      "Use PowerShell-native commands such as Get-ChildItem and Get-Content. Do not use find, grep, sed, cat -n, ls -la, &&, or 2>/dev/null.",
+      "For file_editor, a drive-qualified path such as D:\\\\... is absolute on this platform. Ignore generic tool text claiming absolute paths must start with '/'.",
+      "Do not invent or rewrite the workspace path. Use the workspace path reported by the runtime.",
+    ].join("\n");
+  }
+  throw new Error(`unsupported system prompt profile: ${args.systemPromptProfile}`);
 }
 
 async function requestJson(args, method, path, body, timeoutMs = 30000) {
