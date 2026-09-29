@@ -482,3 +482,62 @@ Conclusion:
 - S4 remains unqualified;
 - no R8 treatment is authorized by R7 alone;
 - do not change max iterations, toolset, upstream OpenHands source, task, model, provider, context, platform, or fallback policy without a new isolated causal argument.
+
+
+## S4-R8 decision
+
+R7 by itself did not authorize a next treatment. A subsequent source-level inspection of the frozen Agent Canvas adapter and the OpenHands SDK configuration boundary supplies the missing isolated causal argument.
+
+The frozen Agent Canvas adapter forwards OpenHands `agent_settings` fields into the Agent Server payload. The OpenHands SDK supports an inline `system_prompt` setting whose documented behavior is to use the supplied text verbatim instead of rendering the default `system_prompt_filename`.
+
+This creates a controlled ablation that does not patch the frozen OpenHands checkout and does not change the toolset: replace only the generic OpenHands base system prompt that contains the observed POSIX guidance. The file-editor tool description remains unchanged, including its slash-rooted absolute-path language. Holding that metadata constant is intentional: R8 measures whether the base system prompt is the dominant source of R7 protocol noncompliance.
+
+Authorize:
+
+```text
+CELL = S4-R8
+BASE = S4-R7
+SYSTEM_PROMPT = default -> windows-minimal-v1
+PLATFORM_CONTRACT = windows-powershell-v2
+CONVERSATION_WORKTREE = false
+CTX_SIZE = 16384
+PARALLEL = 1
+LITELLM = 1.94.3
+MODEL = unchanged
+SCAFFOLD = unchanged
+OPENHANDS_COMMIT = unchanged
+AGENT_SERVER = unchanged
+AUTOMATION = unchanged
+TOOLSET = unchanged
+TOOL_METADATA = unchanged
+PLATFORM = WINDOWS_NATIVE
+PROVIDER = unchanged
+TIME_BUDGETS = 600 / 660 / 720
+MAX_ITERATIONS = 8
+FALLBACK = DISABLED
+TASK = unchanged
+```
+
+The inline prompt is deliberately minimal. It states the agent role, asks it to use the provided tools for the requested edit/check workflow, makes the dynamic platform contract authoritative, and requires use of the runtime-reported workspace path. It does not encode the answer to the frozen task and does not alter acceptance criteria.
+
+A new fail-closed gate, `system_prompt_profile_observed`, requires the Agent Server conversation state to expose the expected inline prompt before compatibility can be returned.
+
+Run:
+
+```powershell
+uv run --python 3.12 --no-project python .\tools\run_phase7r_s4_r8_inline_system_prompt_ablation.py
+```
+
+Evidence root:
+
+```text
+evidence/phase7r-s4-runtime-requalification/S4-OpenHands-parallel1-litellm1943-ctx16384-timeout600-winps2-inlineprompt1-single-workspace/
+```
+
+Interpretation:
+
+- if POSIX terminal actions disappear but slash-rooted file-editor paths persist, the remaining blocker is isolated to tool metadata/model tool-path handling;
+- if both disappear and the edit/verifier gates pass, S4 may qualify subject to all frozen acceptance gates;
+- if POSIX terminal actions persist, replacing the base system prompt is insufficient and no further prompt-only treatment is authorized automatically.
+
+No R9 is authorized by this decision.
