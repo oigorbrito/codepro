@@ -20,6 +20,7 @@ function parseArgs() {
     workingDir: values.get("working-dir"), llmBaseUrl: values.get("llm-base-url"),
     modelAlias: values.get("model-alias"), result: values.get("result"), issue: values.get("issue"),
     completionLogDir: values.get("completion-log-dir") ?? null,
+    pollTimeoutSeconds: Number(values.get("poll-timeout-seconds") ?? "240"),
   };
 }
 
@@ -40,7 +41,10 @@ async function requestJson(args, method, path, body) {
 
 const TERMINAL = new Set(["finished","error","stuck"]);
 async function pollConversation(args, conversationId) {
-  const deadline = Date.now() + 240000;
+  if (!Number.isFinite(args.pollTimeoutSeconds) || args.pollTimeoutSeconds <= 0) {
+    throw new Error("poll timeout must be a positive finite number");
+  }
+  const deadline = Date.now() + args.pollTimeoutSeconds * 1000;
   let info = null;
   const snapshots = [];
   while (Date.now() < deadline) {
@@ -119,7 +123,7 @@ async function main() {
     const bashEvents = await requestJson(args, "GET", "/api/bash/bash_events/search?limit=100").catch((error) => ({ capture_error: error instanceof Error ? error.message : String(error) }));
     result.events = events; result.bash_events = bashEvents; result.observations = deriveObservations(events, bashEvents);
     if (polled.timedOut) {
-      result.error = { type: "Error", message: "conversation polling timed out after 240 seconds" };
+      result.error = { type: "Error", message: `conversation polling timed out after ${args.pollTimeoutSeconds} seconds` };
     }
   } catch (error) {
     result.error = { type: error instanceof Error ? error.name : "Error", message: error instanceof Error ? error.message : String(error) };
