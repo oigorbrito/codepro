@@ -433,12 +433,14 @@ Controlled recovery cell:
 - [x] Execute `S4-R1` with `--parallel 1`: `BLOCKED_TIMEOUT`.
 - [x] Preserve the observed result: no edit, no patch, no independent verifier, model-call telemetry unknown.
 - [x] Attribute S4-R1 logs: no context/KV pressure remained with `parallel=1`; one conversation lease-loss signal was observed.
-- [ ] Repeat S4-R1 unchanged with conversation polling snapshots and corrected post-timeout event capture (`limit=100`, `TIMESTAMP`).
-- [ ] Review the diagnostic repeat before authorizing any second treatment or changing the Phase 8 gate.
+- [x] Repeat S4-R1 unchanged with corrected event capture; observed `ConversationErrorEvent` = `AttributeError: PromptTokensDetailsWrapper ... cache_creation_tokens` after a real model response id.
+- [x] Match the failure to the upstream OpenHands SDK telemetry bug affecting LiteLLM >=1.95.1.
+- [x] Authorize S4-R2 with one additional treatment variable: exact LiteLLM `1.94.3` via `UV_CONSTRAINT`; keep Agent Server 1.49.3 and all other S4-R1 variables frozen.
+- [ ] Execute S4-R2 and review patch/verifier evidence before changing the Phase 8 gate.
 
 Decision: `docs/decisions/0168-phase7r-s4-runtime-requalification.md`.
 
-**Phase status:** IN_PROGRESS — S4-R1 = BLOCKED_TIMEOUT; runtime context/KV attribution cleared; model-call evidence observed via response latency/response_id; Agent Server event diagnostic next; Phase 8 remains BLOCKED_BY_NO_COMPATIBLE_SCAFFOLD.
+**Phase status:** IN_PROGRESS — S4-R1 root cause attributed to upstream SDK/LiteLLM telemetry incompatibility; S4-R2 LiteLLM 1.94.3 compatibility treatment next; Phase 8 remains BLOCKED_BY_NO_COMPATIBLE_SCAFFOLD.
 
 ---
 
@@ -641,6 +643,6 @@ Current task:
 
 ```text
 PHASE 7R = S4 RUNTIME REQUALIFICATION
-STATUS = IN_PROGRESS / S4-R1_CONVERSATION_DIAGNOSTIC_NEXT
+STATUS = IN_PROGRESS / S4-R2_LITELLM_COMPATIBILITY_NEXT
 PHASE 8 = BLOCKED_BY_NO_COMPATIBLE_SCAFFOLD
 ```
