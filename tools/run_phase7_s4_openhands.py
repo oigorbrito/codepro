@@ -220,6 +220,7 @@ def classify(vertical:dict[str,Any],adapter:dict[str,Any],gates:dict[str,Any])->
     if model_calls and not gates.get("edit_observed"): return "BLOCKED_MODEL_TOOL_PROTOCOL"
     if vertical.get("status")=="VERIFIED" and all(gates.get(k) is True for k in ("platform_contract_observed","system_prompt_profile_observed","model_calls_observed","inspect_observed","edit_observed","patch_captured","independent_verifier","termination_observed","source_repository_unchanged","workspace_cleanup")): return "COMPATIBLE"
     if vertical.get("status")=="ENVIRONMENT_UNAVAILABLE": return "BLOCKED_RUNTIME"
+    if vertical.get("reason")=="CHANGED_FILES_OUTSIDE_AUTHORIZED_SCOPE": return "BLOCKED_SCOPE_VIOLATION"
     if not gates.get("patch_captured"): return "BLOCKED_NO_OBSERVABLE_CHANGE"
     return "INCOMPATIBLE"
 
