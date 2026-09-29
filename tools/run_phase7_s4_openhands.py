@@ -217,6 +217,7 @@ def classify(vertical:dict[str,Any],adapter:dict[str,Any],gates:dict[str,Any])->
     if model_calls is None: return "BLOCKED_BEFORE_MODEL_CALL"
     if model_calls is False: return "BLOCKED_BEFORE_MODEL_CALL"
     if gates.get("system_prompt_profile_observed") is False: return "BLOCKED_TREATMENT_NOT_OBSERVED"
+    if gates.get("max_iterations_observed") is False: return "BLOCKED_TREATMENT_NOT_OBSERVED"
     if model_calls and not gates.get("edit_observed"): return "BLOCKED_MODEL_TOOL_PROTOCOL"
     if vertical.get("status")=="VERIFIED" and all(gates.get(k) is True for k in ("platform_contract_observed","system_prompt_profile_observed","max_iterations_observed","model_calls_observed","inspect_observed","edit_observed","patch_captured","independent_verifier","termination_observed","source_repository_unchanged","workspace_cleanup")): return "COMPATIBLE"
     if vertical.get("status")=="ENVIRONMENT_UNAVAILABLE": return "BLOCKED_RUNTIME"
@@ -238,7 +239,9 @@ def main(argv:list[str]|None=None)->int:
         if args.conversation_timeout_seconds < 1: raise ValueError("--conversation-timeout-seconds must be >= 1")
         if args.executor_timeout_seconds <= args.conversation_timeout_seconds: raise ValueError("--executor-timeout-seconds must be greater than --conversation-timeout-seconds")
         if args.vertical_wall_time_seconds <= args.executor_timeout_seconds: raise ValueError("--vertical-wall-time-seconds must be greater than --executor-timeout-seconds")
+        if args.max_iterations < 1: raise ValueError("--max-iterations must be >= 1")
         summary["timeouts"]={"conversation_poll_seconds":args.conversation_timeout_seconds,"executor_process_seconds":args.executor_timeout_seconds,"vertical_wall_seconds":args.vertical_wall_time_seconds}
+        summary["max_iterations_requested"]=args.max_iterations
         assert_ports(); model=find_model(); server=find_server()
         if args.llama_context < 1: raise ValueError("--llama-context must be >= 1")
         llama_argv=[str(server),"-m",str(model),"--device","CUDA0","-ngl","99","-c",str(args.llama_context),"--host","127.0.0.1","--port",str(LLAMA_PORT),"--alias",MODEL_ALIAS]
