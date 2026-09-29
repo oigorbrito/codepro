@@ -326,7 +326,15 @@ def main(argv:list[str]|None=None)->int:
             if system_prompt_events:
                 event_prompt_obj=system_prompt_events[0].get("system_prompt")
                 if isinstance(event_prompt_obj,dict): event_system_prompt=str(event_prompt_obj.get("text") or "")
-            system_prompt_profile_observed=(args.system_prompt_profile is None) or (args.system_prompt_profile=="windows-minimal-v1" and "The platform contract in dynamic context is authoritative for shell syntax and path shape." in system_prompt and "The platform contract in dynamic context is authoritative for shell syntax and path shape." in event_system_prompt and "<SOUL>" not in event_system_prompt and "find, grep" not in event_system_prompt and "using sed and grep" not in event_system_prompt)
+            if args.system_prompt_profile is None:
+                system_prompt_profile_observed=True
+            elif args.system_prompt_profile=="windows-minimal-v1":
+                system_prompt_profile_observed=("The platform contract in dynamic context is authoritative for shell syntax and path shape." in system_prompt and "The platform contract in dynamic context is authoritative for shell syntax and path shape." in event_system_prompt and "<SOUL>" not in event_system_prompt and "find, grep" not in event_system_prompt and "using sed and grep" not in event_system_prompt)
+            elif args.system_prompt_profile=="windows-embedded-v1":
+                embedded_markers=("Platform: Windows-native.","Terminal tool shell: PowerShell.","Use PowerShell-native commands such as Get-ChildItem and Get-Content.","Ignore generic tool text claiming absolute paths must start with '/'.")
+                system_prompt_profile_observed=(all(marker in system_prompt for marker in embedded_markers) and all(marker in event_system_prompt for marker in embedded_markers) and "<SOUL>" not in event_system_prompt)
+            else:
+                system_prompt_profile_observed=False
             summary["gates"].update({"explicit_local_binding":(adapter.get("llm_binding") or {}).get("base_url")==LLAMA_BASE and (adapter.get("llm_binding") or {}).get("model")==f"openai/{MODEL_ALIAS}","platform_contract_observed":platform_contract_observed,"system_prompt_profile_observed":system_prompt_profile_observed,"model_calls_observed":model_call_observed(adapter),"inspect_observed":obs.get("inspectObserved") is True,"command_observed":obs.get("commandObserved") is True,"event_edit_signal":obs.get("editObserved") is True,"edit_observed":len(vertical.get("changed_files") or [])>0,"termination_observed":str(adapter.get("execution_status") or "").lower() in {"finished","error","stuck","stopped"},"patch_captured":patch_ok,"independent_verifier":verifier_ok,"source_repository_unchanged":source_state.get("clean") is True,"workspace_cleanup":cleanup.removed})
             summary["repository_state"]={"initial_revision":revision,"final":final_state,"source":source_state}; summary["classification"]=classify(vertical,adapter,summary["gates"])
             write_json(evidence/"s4-summary.json",summary); print(json.dumps(summary,ensure_ascii=False,indent=2,sort_keys=True)); return 0
