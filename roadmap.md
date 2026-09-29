@@ -421,30 +421,6 @@ Candidate compatibility cells:
 
 ---
 
-## Phase 7R — Post-Phase-7 recovery gate
-
-Phase 7 is closed and remains historical. Phase 8 is blocked because the frozen pool produced zero compatible survivors.
-
-Controlled recovery cell:
-
-- [x] Attribute the final S4 timeout to observed runtime context/KV pressure rather than silently treating missing telemetry as no model call.
-- [x] Freeze a one-variable S4 requalification: llama.cpp server parallelism `auto -> 1`.
-- [x] Preserve OpenHands/model/runtime build/context/task/platform/fallback identity.
-- [x] Execute `S4-R1` with `--parallel 1`: `BLOCKED_TIMEOUT`.
-- [x] Preserve the observed result: no edit, no patch, no independent verifier, model-call telemetry unknown.
-- [x] Attribute S4-R1 logs: no context/KV pressure remained with `parallel=1`; one conversation lease-loss signal was observed.
-- [x] Repeat S4-R1 unchanged with corrected event capture; observed `ConversationErrorEvent` = `AttributeError: PromptTokensDetailsWrapper ... cache_creation_tokens` after a real model response id.
-- [x] Match the failure to the upstream OpenHands SDK telemetry bug affecting LiteLLM >=1.95.1.
-- [x] Correct observation accounting so tool availability in `SystemPromptEvent` is not misclassified as emitted tool actions.
-- [x] Authorize S4-R2 with one additional treatment variable: exact LiteLLM `1.94.3` via `UV_CONSTRAINT`; keep Agent Server 1.49.3 and all other S4-R1 variables frozen.
-- [x] Execute S4-R2 with LiteLLM 1.94.3: telemetry exception cleared; model calls/tokens observed; no ActionEvent/edit/patch/verifier; classification remains `BLOCKED_TIMEOUT`.\n- [x] Attribute S4-R2 behavior: first agent turn consumed 316 prompt + 3344 completion tokens, then entered repeated condensation without emitting a repository tool action.\n- [ ] Repeat S4-R2 unchanged with raw completion logging enabled to classify the model response shape before authorizing any further treatment.
-
-Decision: `docs/decisions/0168-phase7r-s4-runtime-requalification.md`.
-
-**Phase status:** IN_PROGRESS — S4-R2 cleared the upstream telemetry crash but still times out before any tool action; raw model-response diagnostic next; Phase 8 remains BLOCKED_BY_NO_COMPATIBLE_SCAFFOLD.
-
----
-
 
 ## Phase 8 â€” Scaffold screen
 
@@ -644,6 +620,7 @@ Current task:
 
 ```text
 PHASE 7R = S4 RUNTIME REQUALIFICATION
-STATUS = IN_PROGRESS / S4-R2_LITELLM_COMPATIBILITY_NEXT
-PHASE 8 = BLOCKED_BY_NO_COMPATIBLE_SCAFFOLD
+ACTIVE_PR = #91
+STATUS = IN_PROGRESS
+PHASE 8 = BLOCKED_PENDING_PHASE7R
 ```
