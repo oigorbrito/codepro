@@ -223,7 +223,7 @@ def classify(vertical:dict[str,Any],adapter:dict[str,Any],gates:dict[str,Any])->
     return "INCOMPATIBLE"
 
 def main(argv:list[str]|None=None)->int:
-    parser=argparse.ArgumentParser(description=__doc__); parser.add_argument("--evidence-dir",required=True); parser.add_argument("--llama-parallel",type=int,default=None); parser.add_argument("--litellm-version",default=None); parser.add_argument("--completion-log-dir",default=None); parser.add_argument("--study-id",default="phase7"); args=parser.parse_args(argv)
+    parser=argparse.ArgumentParser(description=__doc__); parser.add_argument("--evidence-dir",required=True); parser.add_argument("--llama-parallel",type=int,default=None); parser.add_argument("--llama-context",type=int,default=4096); parser.add_argument("--litellm-version",default=None); parser.add_argument("--completion-log-dir",default=None); parser.add_argument("--study-id",default="phase7"); args=parser.parse_args(argv)
     evidence=Path(args.evidence_dir).expanduser().resolve()
     if evidence.exists() and any(evidence.iterdir()): raise SystemExit(f"refusing to overwrite non-empty evidence directory: {evidence}")
     evidence.mkdir(parents=True,exist_ok=True); summary=summary_base(); summary["study_id"]=args.study_id
@@ -239,7 +239,7 @@ def main(argv:list[str]|None=None)->int:
             if args.llama_parallel < 1: raise ValueError("--llama-parallel must be >= 1")
             llama_argv += ["--parallel",str(args.llama_parallel)]
             summary["local_runtime"]["parallel"]=args.llama_parallel
-        write_json(evidence/"runtime-binding.json",{"llama_cpp_build":LLAMA_BUILD,"llama_cpp_commit":LLAMA_COMMIT,"server_argv":llama_argv,"base_url":LLAMA_BASE,"model_alias":MODEL_ALIAS,"model_artifact":str(model),"model_bytes":model.stat().st_size,"model_sha256":sha256(model),"context_size":4096,"parallel":args.llama_parallel,"fallback":"DISABLED"})
+        write_json(evidence/"runtime-binding.json",{"llama_cpp_build":LLAMA_BUILD,"llama_cpp_commit":LLAMA_COMMIT,"server_argv":llama_argv,"base_url":LLAMA_BASE,"model_alias":MODEL_ALIAS,"model_artifact":str(model),"model_bytes":model.stat().st_size,"model_sha256":sha256(model),"context_size":args.llama_context,"parallel":args.llama_parallel,"fallback":"DISABLED"})
         llama_out=(evidence/"llama-server-stdout.txt").open("w",encoding="utf-8",newline="\n"); llama_err=(evidence/"llama-server-stderr.txt").open("w",encoding="utf-8",newline="\n")
         llama_proc=subprocess.Popen(llama_argv,cwd=server.parent,stdout=llama_out,stderr=llama_err,text=True,shell=False)
         write_json(evidence/"llama-preflight.json",wait_llama(llama_proc)); summary["gates"]["local_runtime_ready"]=True
