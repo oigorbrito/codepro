@@ -218,3 +218,39 @@ evidence/phase7r-s4-runtime-requalification/S4-OpenHands-parallel1-litellm1943/
 ```
 
 Compatibility still requires observable repository change, captured patch, and independent verifier success. Clearing the telemetry exception alone is not sufficient.
+
+
+## S4-R2 result
+
+The exact LiteLLM 1.94.3 constraint removed the S4-R1 telemetry `AttributeError`. S4-R2 recorded real token accounting and response ids, but still produced no emitted repository tool action, no edit, no patch, and no independent verifier pass.
+
+Observed default-agent usage before the first condensation:
+
+```text
+prompt_tokens = 316
+completion_tokens = 3344
+per_turn_token = 3660
+```
+
+The event stream then entered repeated `CondensationRequest` / `Condensation` cycles while the conversation remained `running`. The first condenser response itself consumed 780 prompt + 3316 completion tokens and reached a 4096-token turn total. This is materially different from S4-R1: telemetry is now healthy enough to prove model execution, while the agent still never emits an `ActionEvent`.
+
+S4-R2 remains `BLOCKED_TIMEOUT` under the frozen classification ordering. Do not reinterpret the external polling timeout as successful tool compatibility.
+
+## S4-R2 response diagnostic
+
+Before any further treatment, repeat S4-R2 unchanged with OpenHands raw completion logging enabled. Completion logging is observability-only and does not change the model, scaffold, task, context, parallelism, LiteLLM constraint, provider, or fallback policy.
+
+Run:
+
+```powershell
+uv run --python 3.12 --no-project python .\tools\run_phase7r_s4_r2_response_diagnostic.py
+```
+
+The diagnostic must determine whether the first default-model response is:
+
+- free-form text with no tool call;
+- malformed or unsupported native tool-call output;
+- generation that fails to terminate before consuming the available turn budget;
+- or another response-shape failure.
+
+No S4-R3 treatment is authorized until that response evidence is inspected.
