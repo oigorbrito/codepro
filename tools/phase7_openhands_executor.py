@@ -25,6 +25,7 @@ def main() -> int:
     parser.add_argument("--poll-timeout-seconds", type=int, default=240)
     parser.add_argument("--process-timeout-seconds", type=int, default=280)
     parser.add_argument("--platform-contract")
+    parser.add_argument("--system-prompt-profile")
     parser.add_argument("--conversation-worktree", choices=("true", "false"), default="true")
     args = parser.parse_args()
     if args.poll_timeout_seconds < 1:
@@ -84,6 +85,8 @@ export default defineConfig({
         argv += ["--completion-log-dir", args.completion_log_dir]
     if args.platform_contract:
         argv += ["--platform-contract", args.platform_contract]
+    if args.system_prompt_profile:
+        argv += ["--system-prompt-profile", args.system_prompt_profile]
     completed = subprocess.run(
         argv, cwd=upstream, capture_output=True, text=True,
         encoding="utf-8", errors="replace", shell=False, check=False, timeout=args.process_timeout_seconds
