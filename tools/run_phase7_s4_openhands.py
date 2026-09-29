@@ -223,7 +223,7 @@ def classify(vertical:dict[str,Any],adapter:dict[str,Any],gates:dict[str,Any])->
     return "INCOMPATIBLE"
 
 def main(argv:list[str]|None=None)->int:
-    parser=argparse.ArgumentParser(description=__doc__); parser.add_argument("--evidence-dir",required=True); parser.add_argument("--llama-parallel",type=int,default=None); parser.add_argument("--llama-context",type=int,default=4096); parser.add_argument("--litellm-version",default=None); parser.add_argument("--completion-log-dir",default=None); parser.add_argument("--study-id",default="phase7"); args=parser.parse_args(argv)
+    parser=argparse.ArgumentParser(description=__doc__); parser.add_argument("--evidence-dir",required=True); parser.add_argument("--llama-parallel",type=int,default=None); parser.add_argument("--llama-context",type=int,default=4096); parser.add_argument("--litellm-version",default=None); parser.add_argument("--completion-log-dir",default=None); parser.add_argument("--study-id",default="phase7"); parser.add_argument("--conversation-timeout-seconds",type=int,default=240); parser.add_argument("--executor-timeout-seconds",type=int,default=280); parser.add_argument("--vertical-wall-time-seconds",type=int,default=320); args=parser.parse_args(argv)
     evidence=Path(args.evidence_dir).expanduser().resolve()
     if evidence.exists() and any(evidence.iterdir()): raise SystemExit(f"refusing to overwrite non-empty evidence directory: {evidence}")
     evidence.mkdir(parents=True,exist_ok=True); summary=summary_base(); summary["study_id"]=args.study_id
@@ -233,6 +233,10 @@ def main(argv:list[str]|None=None)->int:
         if not ensure_install(evidence,summary):
             summary.pop("classification_hint",None)
             return block(evidence,summary,"BLOCKED_INSTALLATION_WINDOWS_NATIVE","installation",summary.get("blocker"))
+        if args.conversation_timeout_seconds < 1: raise ValueError("--conversation-timeout-seconds must be >= 1")
+        if args.executor_timeout_seconds <= args.conversation_timeout_seconds: raise ValueError("--executor-timeout-seconds must be greater than --conversation-timeout-seconds")
+        if args.vertical_wall_time_seconds <= args.executor_timeout_seconds: raise ValueError("--vertical-wall-time-seconds must be greater than --executor-timeout-seconds")
+        summary["timeouts"]={"conversation_poll_seconds":args.conversation_timeout_seconds,"executor_process_seconds":args.executor_timeout_seconds,"vertical_wall_seconds":args.vertical_wall_time_seconds}
         assert_ports(); model=find_model(); server=find_server()
         if args.llama_context < 1: raise ValueError("--llama-context must be >= 1")
         llama_argv=[str(server),"-m",str(model),"--device","CUDA0","-ngl","99","-c",str(args.llama_context),"--host","127.0.0.1","--port",str(LLAMA_PORT),"--alias",MODEL_ALIAS]
@@ -288,13 +292,13 @@ def main(argv:list[str]|None=None)->int:
             write_json(evidence/"canvas-preflight.json",wait_canvas(canvas_proc)); summary["gates"]["agent_canvas_ready"]=True
             result_path=evidence/"openhands-result.json"
             issue="Work only in the current repository. Inspect value.py and confirm it contains VALUE = \"before\". Change it to VALUE = \"after\". Then run a Python command that imports value and asserts value.VALUE == \"after\". Finish after the check succeeds."
-            executor=[sys.executable,str(ROOT/"tools"/"phase7_openhands_executor.py"),"--upstream",str(UPSTREAM),"--backend-url",CANVAS_BASE,"--api-key",SESSION_KEY,"--working-dir",str(isolated.workspace),"--llm-base-url",LLAMA_BASE,"--model-alias",MODEL_ALIAS,"--result",str(result_path),"--issue",issue]
+            executor=[sys.executable,str(ROOT/"tools"/"phase7_openhands_executor.py"),"--upstream",str(UPSTREAM),"--backend-url",CANVAS_BASE,"--api-key",SESSION_KEY,"--working-dir",str(isolated.workspace),"--llm-base-url",LLAMA_BASE,"--model-alias",MODEL_ALIAS,"--result",str(result_path),"--issue",issue,"--poll-timeout-seconds",str(args.conversation_timeout_seconds),"--process-timeout-seconds",str(args.executor_timeout_seconds)]
             if args.completion_log_dir is not None:
                 completion_log_dir=Path(args.completion_log_dir).expanduser().resolve(); completion_log_dir.mkdir(parents=True,exist_ok=True)
                 executor += ["--completion-log-dir",str(completion_log_dir)]
                 summary["completion_logging"]={"enabled":True,"directory":str(completion_log_dir)}
             executor=tuple(executor)
-            vr=run_vertical(workspace=isolated.workspace,revision=revision,request_id="phase7-s4-openhands",task_id="phase7-trivial-edit",requester_ref="user://phase7-compatibility",authority_ref="authority://phase7-compatibility",acceptance_authority_ref="acceptance://phase7-independent-verifier",scope=("value.py",),candidate_files=("value.py",),affected_components=("fixture",),characterization_source_ref="evidence://phase7-s4-frozen-task",executor_argv=executor,verifier_argv=(sys.executable,"-c",'from pathlib import Path; ns={}; exec(Path("value.py").read_text(encoding="utf-8"),ns); ok=ns.get("VALUE")=="after"; print("VERIFIER_OK" if ok else "VERIFIER_BAD"); raise SystemExit(0 if ok else 9)'),evidence_dir=evidence/"vertical",max_wall_time_seconds=320)
+            vr=run_vertical(workspace=isolated.workspace,revision=revision,request_id="phase7-s4-openhands",task_id="phase7-trivial-edit",requester_ref="user://phase7-compatibility",authority_ref="authority://phase7-compatibility",acceptance_authority_ref="acceptance://phase7-independent-verifier",scope=("value.py",),candidate_files=("value.py",),affected_components=("fixture",),characterization_source_ref="evidence://phase7-s4-frozen-task",executor_argv=executor,verifier_argv=(sys.executable,"-c",'from pathlib import Path; ns={}; exec(Path("value.py").read_text(encoding="utf-8"),ns); ok=ns.get("VALUE")=="after"; print("VERIFIER_OK" if ok else "VERIFIER_BAD"); raise SystemExit(0 if ok else 9)'),evidence_dir=evidence/"vertical",max_wall_time_seconds=args.vertical_wall_time_seconds)
             vertical=vr.to_dict(); summary["vertical"]=vertical
             adapter=json.loads(result_path.read_text(encoding="utf-8")) if result_path.is_file() else {"error":{"type":"MissingAdapterEvidence","message":"OpenHands harness result missing"}}; summary["adapter"]=adapter
             obs=adapter.get("observations") if isinstance(adapter.get("observations"),dict) else {}
