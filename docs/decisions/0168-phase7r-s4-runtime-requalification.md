@@ -310,3 +310,50 @@ evidence/phase7r-s4-runtime-requalification/S4-OpenHands-parallel1-litellm1943-c
 ```
 
 Acceptance remains unchanged: an observable authorized edit, captured patch, and independent verifier pass are required. Clearing the context error alone is not compatibility.
+
+
+## S4-R6 observed result
+
+S4-R6 executed on Windows-native with the OpenHands nested conversation worktree disabled while preserving the CodePro `IsolatedGitWorkspace`.
+
+Observed gates:
+
+```text
+platform_contract_observed = true
+model_calls_observed = true
+inspect_observed = true
+edit_observed = false
+patch_captured = false
+independent_verifier = false
+termination_observed = true
+source_repository_unchanged = true
+workspace_cleanup = false
+classification = BLOCKED_MODEL_TOOL_PROTOCOL
+```
+
+The cell therefore did not qualify S4.
+
+The R6 evidence rejects the hypothesis that the OpenHands nested conversation worktree was the remaining primary cause of the Windows path failure. With `conversation-worktree=false`, the active workspace remained the CodePro-isolated Windows path, but the agent still emitted POSIX/GNU-oriented actions:
+
+```text
+find . -name "value.py" -type f
+ls -la
+```
+
+and then supplied the file editor a POSIX-shaped path:
+
+```text
+/projetos/codepro-mini-runtime/.../value.py
+```
+
+The file editor rejected that path and suggested the correct `D:\\...` absolute path. The event stream then terminated at `MaxIterationsReached (8)` without an edit.
+
+The captured prompt/tool metadata isolates a remaining internal instruction conflict in the frozen OpenHands stack:
+
+- the CodePro suffix says Windows-native / PowerShell and requires `D:\\...` paths;
+- the base system prompt recommends `find`, `grep`, and `sed`;
+- the file editor description says absolute paths must start with `/`.
+
+Because the conflict persists after removing the nested worktree, S4-R6 is classified as `BLOCKED_MODEL_TOOL_PROTOCOL`, with the more specific attribution `WINDOWS_TOOL_INSTRUCTION_CONFLICT`.
+
+No S4-R7 treatment is authorized by this result alone. Any next cell must target this isolated instruction conflict as a single documented treatment while keeping model, provider, scaffold identity, task, Windows-native platform, context `16384`, parallel `1`, LiteLLM `1.94.3`, time budgets, and fallback policy frozen.
