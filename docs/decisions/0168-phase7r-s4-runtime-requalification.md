@@ -744,3 +744,67 @@ NEXT_EXPERIMENTAL_CELL = NOT_AUTHORIZED
 The requalification stream is now at a decision boundary rather than an execution boundary. The current evidence supports no additional prompt-only retry. Any continuation requires a new ADR section that identifies one isolated treatment and explicitly states what remains frozen.
 
 Candidate treatment families such as tool-metadata correction, model change, iteration-cap change, provider change, platform change, or task change remain proposals only until separately authorized. They must not be inferred from this status update.
+
+
+## S4-R9 decision
+
+S4-R8 proved that a correctly transported inline system prompt is not sufficient when that prompt only delegates platform specifics to `dynamic_context`: the model still emitted POSIX/GNU-shaped actions immediately.
+
+Authorize one new controlled cell:
+
+```text
+CELL = S4-R9
+BASE = S4-R8
+SYSTEM_PROMPT_PROFILE = windows-minimal-v1 -> windows-embedded-v1
+SYSTEM_PROMPT_TRANSPORT = start_conversation.agent.system_prompt
+PLATFORM_CONTRACT = windows-powershell-v2
+CONVERSATION_WORKTREE = false
+CTX_SIZE = 16384
+PARALLEL = 1
+LITELLM = 1.94.3
+MODEL = unchanged
+SCAFFOLD = unchanged
+AGENT_SERVER = unchanged
+AUTOMATION = unchanged
+PLATFORM = WINDOWS_NATIVE
+PROVIDER = unchanged
+TIME_BUDGETS = 600 / 660 / 720
+MAX_ITERATIONS = 8
+FALLBACK = DISABLED
+TASK = unchanged
+TOOLSET = unchanged
+TOOL_METADATA = unchanged
+```
+
+The sole semantic treatment is system-prompt content/location of the Windows rules. The new inline prompt contains the concrete Windows-native / PowerShell rules directly, with real newline separators, instead of merely telling the model to defer to the dynamic-context platform contract.
+
+The dynamic-context platform contract remains unchanged and continues to be transported through `agent_context.system_message_suffix`. This deliberately does not repair or alter that transport, tool descriptions, terminal implementation, file-editor metadata, model, provider, task, iteration cap, time budgets, or frozen upstream identity.
+
+The inline prompt explicitly states:
+
+- Windows-native;
+- PowerShell only;
+- exact drive-qualified workspace path;
+- use `Get-ChildItem` / `Get-Content`;
+- do not use `find`, `grep`, `sed`, `cat -n`, `ls -la`, `&&`, or `2>/dev/null`;
+- for `file_editor`, drive-qualified `D:\\...` paths are absolute and generic slash-rooted path guidance is inapplicable.
+
+Run:
+
+```powershell
+uv run --python 3.12 --no-project python .\tools\run_phase7r_s4_r9_embedded_windows_system_prompt.py
+```
+
+Evidence root:
+
+```text
+evidence/phase7r-s4-runtime-requalification/S4-OpenHands-parallel1-litellm1943-ctx16384-timeout600-winps2-inlineprompt2-single-workspace/
+```
+
+Interpretation:
+
+- if the concrete inline Windows instructions are observed but POSIX terminal actions still occur, prompt placement/content is not sufficient and no further prompt-only cell is automatically authorized;
+- if terminal protocol becomes PowerShell-native but slash-rooted file-editor paths persist, the remaining blocker is isolated more strongly to tool metadata/model handling for the file-editor schema;
+- only full edit + exact patch + independent verifier + cleanup can qualify S4.
+
+No S4-R10 treatment is authorized by this decision.
