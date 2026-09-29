@@ -29,11 +29,14 @@ def main() -> int:
     parser.add_argument("--system-prompt-profile")
     parser.add_argument("--conversation-worktree", choices=("true", "false"), default="true")
     parser.add_argument("--cleanup-untracked-python-bytecode", choices=("true", "false"), default="false")
+    parser.add_argument("--max-iterations", type=int, default=8)
     args = parser.parse_args()
     if args.poll_timeout_seconds < 1:
         raise SystemExit("--poll-timeout-seconds must be >= 1")
     if args.process_timeout_seconds <= args.poll_timeout_seconds:
         raise SystemExit("--process-timeout-seconds must be greater than --poll-timeout-seconds")
+    if args.max_iterations < 1:
+        raise SystemExit("--max-iterations must be >= 1")
 
     upstream = Path(args.upstream).resolve()
     bin_dir = upstream / "node_modules" / ".bin"
@@ -82,6 +85,7 @@ export default defineConfig({
         "--issue", args.issue,
         "--poll-timeout-seconds", str(args.poll_timeout_seconds),
         "--conversation-worktree", args.conversation_worktree,
+        "--max-iterations", str(args.max_iterations),
     ]
     if args.completion_log_dir:
         argv += ["--completion-log-dir", args.completion_log_dir]
