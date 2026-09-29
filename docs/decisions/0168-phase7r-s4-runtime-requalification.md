@@ -995,3 +995,68 @@ Interpretation: embedding the concrete Windows/PowerShell instructions directly 
 The retry also establishes that the prior `__pycache__` scope collision was a harness issue rather than the experimental blocker: after the scoped cleanup correction, the patch was captured and only `value.py` remained changed.
 
 No increase to `max_iterations`, no tool-metadata change, and no further prompt-only retry is authorized by this result. Any further experimental cell requires a separately documented single treatment.
+
+
+## S4-R10 decision
+
+S4-R9 established two facts simultaneously:
+
+1. the `windows-embedded-v1` prompt can lead the frozen model to the correct edit;
+2. noncompliant shell/path actions can consume enough of the frozen eight-iteration budget that the required verifier is not reached reliably.
+
+Authorize one controlled cell:
+
+```text
+CELL = S4-R10
+BASE = S4-R9 attempt 2
+SOLE TREATMENT = max_iterations: 8 -> 10
+```
+
+Preserved exactly:
+
+```text
+MODEL = unchanged
+PROVIDER = unchanged
+SCAFFOLD = unchanged
+AGENT_SERVER = unchanged
+AUTOMATION = unchanged
+PLATFORM = WINDOWS_NATIVE
+SYSTEM_PROMPT_PROFILE = windows-embedded-v1
+SYSTEM_PROMPT_TRANSPORT = start_conversation.agent.system_prompt
+PLATFORM_CONTRACT = windows-powershell-v2
+CONVERSATION_WORKTREE = false
+CTX_SIZE = 16384
+PARALLEL = 1
+LITELLM = 1.94.3
+TIME_BUDGETS = 600 / 660 / 720
+FALLBACK = DISABLED
+TASK = unchanged
+TOOLSET = unchanged
+TOOL_METADATA = unchanged
+BYTECODE_CLEANUP = untracked-python-bytecode-only-v1
+```
+
+The purpose is narrow: determine whether the residual acceptance failure in R9 is caused by the eight-iteration budget after protocol inefficiency, without changing the protocol instructions or any runtime/tool semantics.
+
+The harness now transports `max_iterations` explicitly through the Python runner, executor wrapper, and native Agent Canvas request builder. The runtime value is independently checked against `conversation_info.max_iterations` through `max_iterations_observed`. A mismatch is fail-closed as `BLOCKED_TREATMENT_NOT_OBSERVED`.
+
+Run:
+
+```powershell
+uv run --python 3.12 --no-project python .\tools\run_phase7r_s4_r10_max_iterations_10.py
+```
+
+Evidence root:
+
+```text
+evidence/phase7r-s4-runtime-requalification/S4-OpenHands-parallel1-litellm1943-ctx16384-timeout600-winps2-inlineprompt2-maxiter10-single-workspace/
+```
+
+Interpretation:
+
+- if the runtime observes `max_iterations=10` and the exact patch plus independent verifier pass, the cell may reach `COMPATIBLE` only if every existing acceptance gate also passes;
+- if noncompliant protocol still prevents verifier completion, iteration budget is not sufficient to recover compatibility;
+- any compatibility result does not erase the observed protocol violations; those remain part of the evidence and must be reported separately from acceptance;
+- no further increase above 10 is automatically authorized.
+
+No S4-R11 treatment is authorized by this decision.
