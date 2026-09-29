@@ -435,6 +435,7 @@ Controlled recovery cell:
 - [x] Attribute S4-R1 logs: no context/KV pressure remained with `parallel=1`; one conversation lease-loss signal was observed.
 - [x] Repeat S4-R1 unchanged with corrected event capture; observed `ConversationErrorEvent` = `AttributeError: PromptTokensDetailsWrapper ... cache_creation_tokens` after a real model response id.
 - [x] Match the failure to the upstream OpenHands SDK telemetry bug affecting LiteLLM >=1.95.1.
+- [x] Correct observation accounting so tool availability in `SystemPromptEvent` is not misclassified as emitted tool actions.
 - [x] Authorize S4-R2 with one additional treatment variable: exact LiteLLM `1.94.3` via `UV_CONSTRAINT`; keep Agent Server 1.49.3 and all other S4-R1 variables frozen.
 - [ ] Execute S4-R2 and review patch/verifier evidence before changing the Phase 8 gate.
 
