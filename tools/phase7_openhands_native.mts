@@ -21,7 +21,23 @@ function parseArgs() {
     modelAlias: values.get("model-alias"), result: values.get("result"), issue: values.get("issue"),
     completionLogDir: values.get("completion-log-dir") ?? null,
     pollTimeoutSeconds: Number(values.get("poll-timeout-seconds") ?? "240"),
+    platformContract: values.get("platform-contract") ?? null,
   };
+}
+
+function buildPlatformSystemSuffix(args) {
+  if (args.platformContract === null) return null;
+  if (args.platformContract !== "windows-powershell-v1") {
+    throw new Error(`unsupported platform contract: ${args.platformContract}`);
+  }
+  return [
+    "<PLATFORM_CONTRACT>",
+    "Platform: Windows-native.",
+    "Terminal tool shell: PowerShell. Use PowerShell syntax and cmdlets; do not use bash/GNU command syntax or POSIX redirection.",
+    `Workspace: ${args.workingDir}`,
+    "Use the Windows absolute workspace path exactly as reported by the tools. For file_editor, use Windows absolute paths (for example D:\\\\...); do not rewrite them as /tmp/... .",
+    "</PLATFORM_CONTRACT>",
+  ].join("\\n");
 }
 
 async function requestJson(args, method, path, body) {
@@ -96,13 +112,19 @@ async function main() {
     llm_binding: { model: `openai/${args.modelAlias}`, base_url: args.llmBaseUrl, fallback: "DISABLED" },
     conversation_id: null, execution_status: null, final_reply: null,
     conversation_info: null, poll_snapshots: [], events: null, bash_events: null, observations: null, error: null,
+    platform_contract: args.platformContract,
   };
   try {
     setRegisteredBackends([{ id: "phase7-local", name: "Phase 7 Local", host: args.backendUrl, apiKey: args.apiKey, kind: "local" }]);
     setActiveSelection({ backendId: "phase7-local", orgId: null });
+    const platformSystemSuffix = buildPlatformSystemSuffix(args);
     const settings = {
       ...DEFAULT_SETTINGS,
-      agent_settings: { ...DEFAULT_SETTINGS.agent_settings, llm: { model: `openai/${args.modelAlias}`, api_key: "local-llm", base_url: args.llmBaseUrl, ...(args.completionLogDir ? { log_completions: true, log_completions_folder: args.completionLogDir } : {}) } },
+      agent_settings: {
+        ...DEFAULT_SETTINGS.agent_settings,
+        ...(platformSystemSuffix ? { agent_context: { ...(DEFAULT_SETTINGS.agent_settings?.agent_context ?? {}), system_message_suffix: platformSystemSuffix } } : {}),
+        llm: { model: `openai/${args.modelAlias}`, api_key: "local-llm", base_url: args.llmBaseUrl, ...(args.completionLogDir ? { log_completions: true, log_completions_folder: args.completionLogDir } : {}) },
+      },
       conversation_settings: { ...DEFAULT_SETTINGS.conversation_settings, max_iterations: 8 },
     };
     const payload = buildStartConversationRequest({ settings, query: args.issue, workingDir: args.workingDir, customSecrets: [] });
