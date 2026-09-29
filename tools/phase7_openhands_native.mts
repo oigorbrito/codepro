@@ -19,6 +19,7 @@ function parseArgs() {
     backendUrl: values.get("backend-url"), apiKey: values.get("api-key"),
     workingDir: values.get("working-dir"), llmBaseUrl: values.get("llm-base-url"),
     modelAlias: values.get("model-alias"), result: values.get("result"), issue: values.get("issue"),
+    completionLogDir: values.get("completion-log-dir") ?? null,
   };
 }
 
@@ -97,7 +98,7 @@ async function main() {
     setActiveSelection({ backendId: "phase7-local", orgId: null });
     const settings = {
       ...DEFAULT_SETTINGS,
-      agent_settings: { ...DEFAULT_SETTINGS.agent_settings, llm: { model: `openai/${args.modelAlias}`, api_key: "local-llm", base_url: args.llmBaseUrl } },
+      agent_settings: { ...DEFAULT_SETTINGS.agent_settings, llm: { model: `openai/${args.modelAlias}`, api_key: "local-llm", base_url: args.llmBaseUrl, ...(args.completionLogDir ? { log_completions: true, log_completions_folder: args.completionLogDir } : {}) } },
       conversation_settings: { ...DEFAULT_SETTINGS.conversation_settings, max_iterations: 8 },
     };
     const payload = buildStartConversationRequest({ settings, query: args.issue, workingDir: args.workingDir, customSecrets: [] });
