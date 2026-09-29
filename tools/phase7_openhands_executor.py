@@ -24,6 +24,7 @@ def main() -> int:
     parser.add_argument("--completion-log-dir")
     parser.add_argument("--poll-timeout-seconds", type=int, default=240)
     parser.add_argument("--process-timeout-seconds", type=int, default=280)
+    parser.add_argument("--platform-contract")
     args = parser.parse_args()
     if args.poll_timeout_seconds < 1:
         raise SystemExit("--poll-timeout-seconds must be >= 1")
@@ -79,6 +80,8 @@ export default defineConfig({
     ]
     if args.completion_log_dir:
         argv += ["--completion-log-dir", args.completion_log_dir]
+    if args.platform_contract:
+        argv += ["--platform-contract", args.platform_contract]
     completed = subprocess.run(
         argv, cwd=upstream, capture_output=True, text=True,
         encoding="utf-8", errors="replace", shell=False, check=False, timeout=args.process_timeout_seconds
