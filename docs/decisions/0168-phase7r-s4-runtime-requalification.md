@@ -4,7 +4,7 @@ Date: 2026-09-28
 
 ## Status
 
-EXECUTED / ATTRIBUTION_PENDING
+EXECUTED / S4-R8_BLOCKED_MODEL_TOOL_PROTOCOL / NEXT_TREATMENT_NOT_AUTHORIZED
 
 ## Context
 
@@ -727,3 +727,20 @@ R9 = NOT_AUTHORIZED
 Interpretation: replacing the OpenHands base system prompt with the minimal Windows-specific prompt is insufficient. The residual failure persists even after removal of the stock system-prompt POSIX instructions, while unchanged tool metadata still includes POSIX-oriented FileEditor text. Per the R8 authorization, no further prompt-only treatment is automatically authorized.
 
 Any next experimental cell requires a separately documented single treatment and isolated evidence. In particular, changing tool metadata, model, task, max iterations, platform, provider, context, timeouts, fallback, or frozen upstream identity is not authorized by R8 itself.
+
+
+## Phase 7R state after S4-R8
+
+S4-R8 is closed with a valid experimental result and failed acceptance.
+
+```text
+S4-R8 = BLOCKED_MODEL_TOOL_PROTOCOL
+COMPATIBLE_SURVIVORS = 0
+EXECUTOR_PROMOTION = NOT_AUTHORIZED
+PHASE_8 = BLOCKED_PENDING_PHASE7R
+NEXT_EXPERIMENTAL_CELL = NOT_AUTHORIZED
+```
+
+The requalification stream is now at a decision boundary rather than an execution boundary. The current evidence supports no additional prompt-only retry. Any continuation requires a new ADR section that identifies one isolated treatment and explicitly states what remains frozen.
+
+Candidate treatment families such as tool-metadata correction, model change, iteration-cap change, provider change, platform change, or task change remain proposals only until separately authorized. They must not be inferred from this status update.
