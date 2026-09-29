@@ -664,3 +664,66 @@ The direct-agent materialization mirrors the frozen `OpenHandsAgentSettings.crea
 The acceptance gate is strengthened: `system_prompt_profile_observed` now requires both the persisted runtime agent and the emitted `SystemPromptEvent` to contain the inline prompt, while rejecting the stock `<SOUL>` prompt / POSIX guidance.
 
 Interpretation remains the original R8 interpretation. No R9 is authorized.
+
+
+## S4-R8 attempt 3 result
+
+Attempt 3 successfully applied the intended R8 treatment through the frozen-version-supported direct-Agent transport.
+
+Observed treatment gates:
+
+```text
+system_prompt_transport = start-conversation-direct-agent-v1
+agent.system_prompt = windows-minimal-v1
+SystemPromptEvent = windows-minimal-v1
+system_prompt_profile_observed = true
+platform_contract_observed = true
+model_calls_observed = true
+```
+
+The inline prompt therefore reached both the persisted runtime agent and the emitted system prompt. This removes the transport ambiguity from attempt 2.
+
+Despite that, the model immediately continued using POSIX/GNU-shaped tool protocol under the Windows-native PowerShell runtime:
+
+```text
+find <slash-rooted workspace> -name "value.py" -type f
+find /projetos -name "value.py" -type f 2>/dev/null
+find . -name "value.py" -type f 2>/dev/null
+pwd && ls -la
+file_editor path = /projetos/...
+ls -la
+```
+
+The run ended at `MaxIterationsReached (8)` without any file edit, patch, or independent verifier success.
+
+Final gates included:
+
+```text
+command_observed = true
+inspect_observed = true
+edit_observed = false
+event_edit_signal = false
+patch_captured = false
+independent_verifier = false
+termination_observed = true
+source_repository_unchanged = true
+workspace_cleanup = false
+```
+
+The cleanup failure is an additional fail-closed acceptance failure, but it is not the first causal blocker: the agent had already exhausted all 8 iterations while continuing the wrong platform/tool protocol and never edited the target file.
+
+Therefore:
+
+```text
+R8_ATTEMPT_3 = VALID_EXPERIMENTAL_RESULT
+R8 = BLOCKED_MODEL_TOOL_PROTOCOL
+PRIMARY = WINDOWS_TOOL_PROTOCOL_NONCOMPLIANCE_PERSISTS
+SECONDARY = FILE_EDITOR_PATH_PROTOCOL_NONCOMPLIANCE
+ACCEPTANCE = FAILED
+PROMOTION = NOT_AUTHORIZED
+R9 = NOT_AUTHORIZED
+```
+
+Interpretation: replacing the OpenHands base system prompt with the minimal Windows-specific prompt is insufficient. The residual failure persists even after removal of the stock system-prompt POSIX instructions, while unchanged tool metadata still includes POSIX-oriented FileEditor text. Per the R8 authorization, no further prompt-only treatment is automatically authorized.
+
+Any next experimental cell requires a separately documented single treatment and isolated evidence. In particular, changing tool metadata, model, task, max iterations, platform, provider, context, timeouts, fallback, or frozen upstream identity is not authorized by R8 itself.
