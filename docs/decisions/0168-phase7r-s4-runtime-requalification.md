@@ -808,3 +808,28 @@ Interpretation:
 - only full edit + exact patch + independent verifier + cleanup can qualify S4.
 
 No S4-R10 treatment is authorized by this decision.
+
+
+## S4-R9 pre-execution parser failure
+
+The first local invocation of the S4-R9 runner stopped in Python argument parsing before `run_phase7_s4_openhands.main()` entered its execution body:
+
+```text
+argument --system-prompt-profile: invalid choice: 'windows-embedded-v1'
+```
+
+Cause: the shared runner's argparse `choices` list had not been extended from `windows-minimal-v1` to include the already-implemented `windows-embedded-v1` profile.
+
+Classification:
+
+```text
+HARNESS_FAILURE
+NO_EXPERIMENTAL_RESULT
+R9_RESULT = NOT_ESTABLISHED
+```
+
+The wrapper printed the intended evidence path, but the shared runner parses arguments before creating the evidence directory. Therefore this failure did not create or overwrite an R9 evidence bundle.
+
+The repair is limited to accepting `windows-embedded-v1` in the argparse choices. R9 treatment semantics and every frozen experimental variable remain unchanged.
+
+Retry is authorized only after CI passes on the parser-fix head. R10 remains unauthorized.
