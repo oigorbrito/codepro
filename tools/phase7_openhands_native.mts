@@ -64,7 +64,10 @@ function buildSystemPrompt(args) {
   ].join("\n");
 }
 
-async function requestJson(args, method, path, body) {
+async function requestJson(args, method, path, body, timeoutMs = 30000) {
+  if (!Number.isFinite(timeoutMs) || timeoutMs <= 0) {
+    throw new Error("request timeout must be a positive finite number");
+  }
   const response = await fetch(`${args.backendUrl}${path}`, {
     method,
     headers: {
@@ -72,7 +75,7 @@ async function requestJson(args, method, path, body) {
       ...(body === undefined ? {} : { "Content-Type": "application/json" }),
     },
     ...(body === undefined ? {} : { body: JSON.stringify(body) }),
-    signal: AbortSignal.timeout(30000),
+    signal: AbortSignal.timeout(Math.max(1, Math.floor(timeoutMs))),
   });
   const text = await response.text();
   if (!response.ok) throw new Error(`${method} ${path} -> ${response.status}: ${text.slice(0,1200)}`);
@@ -80,15 +83,21 @@ async function requestJson(args, method, path, body) {
 }
 
 const TERMINAL = new Set(["finished","error","stuck"]);
-async function pollConversation(args, conversationId) {
-  if (!Number.isFinite(args.pollTimeoutSeconds) || args.pollTimeoutSeconds <= 0) {
-    throw new Error("poll timeout must be a positive finite number");
+async function pollConversation(args, conversationId, deadline) {
+  if (!Number.isFinite(deadline) || deadline <= Date.now()) {
+    return { info: null, snapshots: [], timedOut: true };
   }
-  const deadline = Date.now() + args.pollTimeoutSeconds * 1000;
   let info = null;
   const snapshots = [];
   while (Date.now() < deadline) {
-    info = await requestJson(args, "GET", `/api/conversations/${encodeURIComponent(conversationId)}`);
+    const remainingMs = Math.max(1, deadline - Date.now());
+    info = await requestJson(
+      args,
+      "GET",
+      `/api/conversations/${encodeURIComponent(conversationId)}`,
+      undefined,
+      Math.min(30000, remainingMs),
+    );
     snapshots.push({
       observed_at: new Date().toISOString(),
       execution_status: info?.execution_status ?? null,
@@ -165,11 +174,21 @@ async function main() {
       worktree: args.conversationWorktree === "true",
       customSecrets: [],
     });
-    const created = await requestJson(args, "POST", "/api/conversations", payload);
+    if (!Number.isFinite(args.pollTimeoutSeconds) || args.pollTimeoutSeconds <= 0) {
+      throw new Error("poll timeout must be a positive finite number");
+    }
+    const conversationDeadline = Date.now() + args.pollTimeoutSeconds * 1000;
+    const created = await requestJson(
+      args,
+      "POST",
+      "/api/conversations",
+      payload,
+      Math.max(1, conversationDeadline - Date.now()),
+    );
     const conversationId = String(created?.id ?? "");
     if (!conversationId) throw new Error(`conversation create returned no id: ${JSON.stringify(created)}`);
     result.conversation_id = conversationId;
-    const polled = await pollConversation(args, conversationId);
+    const polled = await pollConversation(args, conversationId, conversationDeadline);
     const info = polled.info;
     result.conversation_info = info;
     result.poll_snapshots = polled.snapshots;
