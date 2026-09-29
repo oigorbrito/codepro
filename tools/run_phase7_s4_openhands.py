@@ -234,12 +234,21 @@ def main(argv:list[str]|None=None)->int:
             summary.pop("classification_hint",None)
             return block(evidence,summary,"BLOCKED_INSTALLATION_WINDOWS_NATIVE","installation",summary.get("blocker"))
         assert_ports(); model=find_model(); server=find_server()
-        llama_argv=[str(server),"-m",str(model),"--device","CUDA0","-ngl","99","-c","4096","--host","127.0.0.1","--port",str(LLAMA_PORT),"--alias",MODEL_ALIAS]
+        if args.llama_context < 1: raise ValueError("--llama-context must be >= 1")
+        llama_argv=[str(server),"-m",str(model),"--device","CUDA0","-ngl","99","-c",str(args.llama_context),"--host","127.0.0.1","--port",str(LLAMA_PORT),"--alias",MODEL_ALIAS]
         if args.llama_parallel is not None:
             if args.llama_parallel < 1: raise ValueError("--llama-parallel must be >= 1")
             llama_argv += ["--parallel",str(args.llama_parallel)]
             summary["local_runtime"]["parallel"]=args.llama_parallel
-        write_json(evidence/"runtime-binding.json",{"llama_cpp_build":LLAMA_BUILD,"llama_cpp_commit":LLAMA_COMMIT,"server_argv":llama_argv,"base_url":LLAMA_BASE,"model_alias":MODEL_ALIAS,"model_artifact":str(model),"model_bytes":model.stat().st_size,"model_sha256":sha256(model),"context_size":args.llama_context,"parallel":args.llama_parallel,"fallback":"DISABLED"})
+        try:
+            context_index=llama_argv.index("-c")+1
+            effective_context=int(llama_argv[context_index])
+        except (ValueError, IndexError) as exc:
+            raise RuntimeError("llama context binding is missing or invalid") from exc
+        if effective_context != args.llama_context:
+            raise RuntimeError(f"llama context binding mismatch: declared={args.llama_context} effective={effective_context}")
+        summary["local_runtime"]["context_size"]=effective_context
+        write_json(evidence/"runtime-binding.json",{"llama_cpp_build":LLAMA_BUILD,"llama_cpp_commit":LLAMA_COMMIT,"server_argv":llama_argv,"base_url":LLAMA_BASE,"model_alias":MODEL_ALIAS,"model_artifact":str(model),"model_bytes":model.stat().st_size,"model_sha256":sha256(model),"context_size":effective_context,"parallel":args.llama_parallel,"fallback":"DISABLED"})
         llama_out=(evidence/"llama-server-stdout.txt").open("w",encoding="utf-8",newline="\n"); llama_err=(evidence/"llama-server-stderr.txt").open("w",encoding="utf-8",newline="\n")
         llama_proc=subprocess.Popen(llama_argv,cwd=server.parent,stdout=llama_out,stderr=llama_err,text=True,shell=False)
         write_json(evidence/"llama-preflight.json",wait_llama(llama_proc)); summary["gates"]["local_runtime_ready"]=True
