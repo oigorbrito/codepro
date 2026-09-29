@@ -612,3 +612,55 @@ R9 = NOT_AUTHORIZED
 The frozen Agent Canvas adapter forwards arbitrary OpenHands agent-settings keys, but runtime evidence is authoritative: Agent Server 1.49.3 / its frozen SDK normalized the launched agent back to `system_prompt = null` and `system_prompt_filename = system_prompt.j2`. Current-SDK support for an inline `system_prompt` field is therefore insufficient proof that this frozen stack supports the same transport.
 
 No further R8 retry is authorized until a frozen-version-supported, non-semantic transport for the exact same `windows-minimal-v1` prompt is demonstrated. Changing the model, provider, task, toolset, tool metadata, max iterations, platform, context, timeout budgets, fallback policy, or frozen upstream identity remains unauthorized.
+
+
+## S4-R8 attempt 3 authorization
+
+Frozen-version source inspection resolves why attempt 2 did not observe the treatment.
+
+At `OpenHands/software-agent-sdk v1.49.3`:
+
+- `AgentBase` defines `system_prompt: str | None` as a supported inline system prompt.
+- `OpenHandsAgentSettings` does **not** define a `system_prompt` field.
+- `OpenHandsAgentSettings.create_agent()` constructs `Agent(...)` without a `system_prompt` argument.
+- `StartConversationRequest` explicitly supports either a concrete `agent` payload or an `agent_settings` payload; the two are alternative construction paths.
+
+Therefore attempt 2 used a field that the frozen settings model did not transport to the concrete agent. This matches the runtime evidence exactly: the request succeeded, but the created agent reported `system_prompt = null` and emitted the stock system prompt.
+
+Attempt 3 is authorized as a transport correction for the same R8 treatment:
+
+```text
+TREATMENT:
+  system prompt: default -> windows-minimal-v1
+
+TRANSPORT:
+  attempt 2: agent_settings.system_prompt (not supported by frozen settings model)
+  attempt 3: StartConversationRequest.agent.system_prompt (supported by frozen AgentBase)
+
+PRESERVED:
+  OpenHands Agent Canvas 1.21.0
+  OpenHands/software-agent-sdk / Agent Server 1.49.3
+  Granite 4.2 3B frozen model and SHA256
+  llama.cpp build/commit
+  LiteLLM 1.94.3
+  Windows-native
+  context 16384
+  parallel 1
+  timeouts 600/660/720
+  max_iterations 8
+  fallback DISABLED
+  conversation-worktree false
+  frozen task
+  platform contract windows-powershell-v2
+  resolved exec tools
+  default Finish/Think/SwitchLLM tools
+  condenser behavior
+  critic disabled
+  tool concurrency 1
+```
+
+The direct-agent materialization mirrors the frozen `OpenHandsAgentSettings.create_agent()` resolution: same resolved LLM, same resolved tools, same agent context, same default tools, same summarizing condenser settings, disabled critic, and same tool concurrency. The only semantic addition is `system_prompt = windows-minimal-v1`.
+
+The acceptance gate is strengthened: `system_prompt_profile_observed` now requires both the persisted runtime agent and the emitted `SystemPromptEvent` to contain the inline prompt, while rejecting the stock `<SOUL>` prompt / POSIX guidance.
+
+Interpretation remains the original R8 interpretation. No R9 is authorized.
