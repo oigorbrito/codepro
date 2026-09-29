@@ -601,6 +601,7 @@ PHASE 4   Model compatibility           COMPLETE
 PHASE 5   CodePro local plumbing        COMPLETE
 PHASE 6   Execution/verifier plumbing   COMPLETE
 PHASE 7   Scaffold compatibility        COMPLETE
+PHASE 7R  S4 runtime requalification    IN_PROGRESS
 PHASE 8   Scaffold screen               NOT_STARTED
 PHASE 9   Scaffold pruning              NOT_STARTED
 PHASE 10  Model screen                  NOT_STARTED
@@ -618,6 +619,8 @@ PHASE 19  Cloud tier                    DEFERRED
 Current task:
 
 ```text
-PHASE 7 = SCAFFOLD COMPATIBILITY
-STATUS = COMPLETE / PR90_ACCEPTANCE_BEFORE_PHASE8
+PHASE 7R = S4 RUNTIME REQUALIFICATION
+ACTIVE_PR = #91
+STATUS = IN_PROGRESS
+PHASE 8 = BLOCKED_PENDING_PHASE7R
 ```
