@@ -251,7 +251,11 @@ class LocalCommandEnvironmentTests(unittest.TestCase):
 
 def _process_running(pid: int) -> bool:
     stat = Path(f"/proc/{pid}/stat")
-    if stat.exists():
+    try:
+        stat_exists = stat.exists()
+    except OSError:
+        stat_exists = False
+    if stat_exists:
         try:
             fields = stat.read_text(encoding="utf-8").split()
         except OSError:
