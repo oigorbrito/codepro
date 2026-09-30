@@ -4,7 +4,7 @@ Date: 2026-09-28
 
 ## Status
 
-EXECUTED / S4-R8_BLOCKED_MODEL_TOOL_PROTOCOL / NEXT_TREATMENT_NOT_AUTHORIZED
+COMPLETE / NO_COMPATIBLE_SURVIVOR / PHASE8_BLOCKED
 
 ## Context
 
@@ -1060,3 +1060,95 @@ Interpretation:
 - no further increase above 10 is automatically authorized.
 
 No S4-R11 treatment is authorized by this decision.
+
+
+## S4-R10 result and Phase 7R closure
+
+S4-R10 executed from the authorized green-CI head with the sole treatment:
+
+```text
+max_iterations: 8 -> 10
+```
+
+The treatment was observed by the runtime:
+
+```text
+max_iterations_requested = 10
+conversation_info.max_iterations = 10
+max_iterations_observed = true
+```
+
+The run again reached the correct source edit and captured the exact patch:
+
+```text
+value.py:
+VALUE = "before"
+->
+VALUE = "after"
+
+changed_files = ["value.py"]
+patch_captured = true
+```
+
+However, the agent continued to violate the Windows-native tool protocol. Before and after the edit it emitted POSIX-shaped actions including:
+
+```text
+find . -name ...
+ls -la
+file_editor path=/D:/...
+cd /D:/... && python -c ...
+cd /D/... && python -c ...
+```
+
+Both post-edit verifier attempts failed under PowerShell because of the slash-rooted path / POSIX command shape. The conversation then ended at:
+
+```text
+MaxIterationsReached (10)
+```
+
+Final acceptance state:
+
+```text
+classification = INCOMPATIBLE
+edit_observed = true
+patch_captured = true
+independent_verifier = false
+termination_observed = true
+source_repository_unchanged = true
+workspace_cleanup = false
+vertical.status = FAILED
+vertical.reason = EXECUTOR_EXIT_NONZERO:1
+executor_promotion = NOT_AUTHORIZED
+```
+
+Therefore:
+
+```text
+S4-R10 = INCOMPATIBLE
+PRIMARY = WINDOWS_TOOL_PROTOCOL_NONCOMPLIANCE_PERSISTS
+SECONDARY = MAX_ITERATIONS_REACHED_AFTER_FAILED_POSIX_SHAPED_VERIFIER_ATTEMPTS
+ACCEPTANCE = FAILED
+PROMOTION = NOT_AUTHORIZED
+R11 = NOT_AUTHORIZED
+```
+
+Increasing the iteration budget from 8 to 10 is not sufficient to recover compatibility. The evidence also rejects an interpretation that the residual blocker is merely lack of room for one final verifier call: the extra actions were consumed by additional protocol-noncompliant verifier attempts.
+
+### Phase 7R closure
+
+Phase 7R was a bounded requalification stream for historical Phase 7 candidate S4. It does not replace the immutable Phase 7 result and does not require unbounded treatment search.
+
+Across R1-R10, runtime/context/transport/harness ambiguities were progressively removed. The terminal residual is now attributable to persistent model/tool-protocol noncompliance under the frozen Windows-native scaffold/model/task configuration.
+
+Final Phase 7R state:
+
+```text
+PHASE_7R = COMPLETE
+S4_REQUALIFICATION = INCOMPATIBLE
+COMPATIBLE_SURVIVORS = 0
+EXECUTOR_PROMOTION = NOT_AUTHORIZED
+PHASE_8 = BLOCKED_BY_NO_COMPATIBLE_SCAFFOLD
+NEXT_EXPERIMENTAL_CELL = NOT_AUTHORIZED
+```
+
+No S4-R11 is authorized. A future reopening of scaffold qualification would require a new explicit decision stream rather than continuation under Phase 7R.
