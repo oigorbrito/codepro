@@ -28,7 +28,7 @@ def run_ps(script: str) -> dict[str, object]:
 def main() -> int:
     device_guard = run_ps(r"""
 $dg = Get-CimInstance -ClassName Win32_DeviceGuard -Namespace root\Microsoft\Windows\DeviceGuard -ErrorAction SilentlyContinue
-$dg | Select-Object * | ConvertTo-Json -Depth 5 -Compress
+$dg | Select-Object InstanceIdentifier,Version,VirtualizationBasedSecurityStatus,CodeIntegrityPolicyEnforcementStatus,UsermodeCodeIntegrityPolicyEnforcementStatus,SecurityServicesConfigured,SecurityServicesRunning,SecurityFeaturesEnabled,AvailableSecurityProperties,RequiredSecurityProperties | ConvertTo-Json -Depth 3 -Compress
 """)
     ci_policies = run_ps(r"""
 $paths = @(
@@ -51,10 +51,17 @@ $paths = @(
 )
 $out = foreach($p in $paths) {
   if(Test-Path $p) {
-    [pscustomobject]@{Path=$p; Values=(Get-ItemProperty -Path $p | Select-Object *)}
+    $item = Get-ItemProperty -Path $p
+    $values = [ordered]@{}
+    foreach($prop in $item.PSObject.Properties) {
+      if($prop.Name -notlike 'PS*') {
+        $values[$prop.Name] = $prop.Value
+      }
+    }
+    [pscustomobject]@{Path=$p; Values=$values}
   }
 }
-$out | ConvertTo-Json -Depth 6 -Compress
+$out | ConvertTo-Json -Depth 4 -Compress
 """)
     payload = {
         "schema_version": 1,
