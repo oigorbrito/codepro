@@ -637,3 +637,42 @@ LOCAL_ALLOWLIST_TREATMENT = NOT_AUTHORIZED
 ```
 
 A validly signed runtime would be a distinct runtime-byte treatment and cannot be substituted into Q1 silently.
+
+
+## Authenticode signing capability preflight result
+
+The read-only local signing-capability preflight completed successfully.
+
+Observed:
+
+```text
+code_signing_certificates = []
+usable_code_signing_certificate_count = 0
+signtool.exe = PRESENT
+modifies_files = false
+modifies_policy = false
+```
+
+Canonical result:
+
+```text
+SIGNTOOL_AVAILABILITY = PRESENT
+LOCAL_CODE_SIGNING_CERTIFICATE = ABSENT
+LOCAL_SIGNING_CAPABILITY = ABSENT
+SIGNED_RUNTIME_REMEDIATION = NOT_FEASIBLE_WITH_CURRENT_LOCAL_CREDENTIALS
+```
+
+This does not mean signed-runtime remediation is impossible in principle. It means it is not available from the current environment without introducing a new external input, such as a trusted code-signing certificate/private key or a separately supplied already-signed runtime artifact.
+
+Either path would be a distinct treatment and would require explicit authorization, identity capture, provenance, and isolated evidence. It must not be substituted into Q1 silently.
+
+Therefore the current Phase7Q Q1 remains not established and blocked before model/scaffold compatibility is reached:
+
+```text
+Q1_RESULT = NOT_ESTABLISHED
+BLOCKER = SMART_APP_CONTROL_ENFORCEMENT
+RUNTIME_BYTE_DRIFT = NOT_OBSERVED_RELATIVE_TO_RETAINED_PACKAGE
+MODEL_PAIR_CONCLUSION = NOT_REACHED
+Q1_RETRY = NOT_AUTHORIZED
+ENVIRONMENT_REMEDIATION_DECISION = REQUIRED
+```
