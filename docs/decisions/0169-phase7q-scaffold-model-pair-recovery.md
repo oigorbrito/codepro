@@ -382,3 +382,54 @@ ARCHIVE_TO_EXTRACTED_BYTE_LINKAGE = NOT_YET_PROVEN
 ```
 
 The next authorized action is read-only comparison of the SHA256 of the corresponding members inside the retained ZIP against the current extracted files.
+
+
+## Runtime archive linkage result
+
+The read-only archive-member linkage check completed successfully:
+
+```text
+archive =
+D:\projetos\codepro-mini-runtime\downloads\llama-b11205-bin-win-cuda-13.4-x64.zip
+
+archive_sha256 =
+D91178299D1007E162ACAD2776A24D5EF8C834A73F3DB282139ADDC12123BD80
+
+all_targets_match = true
+```
+
+Exact member linkage:
+
+```text
+llama-server.exe
+zip_member_sha256 = 66C0EBF7CFF9053EABE208CCF1329AB46BFF5B1663750B4979AEF5C3D32DA555
+extracted_sha256  = 66C0EBF7CFF9053EABE208CCF1329AB46BFF5B1663750B4979AEF5C3D32DA555
+byte_identity_match = true
+
+llama-server-impl.dll
+zip_member_sha256 = D1EECF41A8CA5D7BD972FDCFDF69270D2D056363CA66FD2EF1E7F5676DCED77A
+extracted_sha256  = D1EECF41A8CA5D7BD972FDCFDF69270D2D056363CA66FD2EF1E7F5676DCED77A
+byte_identity_match = true
+```
+
+Therefore:
+
+```text
+PACKAGE_PROVENANCE = ESTABLISHED
+ARCHIVE_TO_EXTRACTED_BYTE_LINKAGE = ESTABLISHED
+RUNTIME_IDENTITY_INTACT_RELATIVE_TO_RETAINED_PACKAGE = TRUE
+RUNTIME_CORRUPTION_OR_LOCAL_SUBSTITUTION = NOT_OBSERVED
+```
+
+Combined with the prior Code Integrity events, the supported attribution is now:
+
+```text
+Q1_STARTUP_BLOCKER = WINDOWS_APPLICATION_CONTROL_ENVIRONMENT
+FROZEN_RUNTIME_BYTES = INTACT
+MODEL = NOT_REACHED
+SCAFFOLD_MODEL_PAIR = NOT_REACHED
+```
+
+No Windows security-policy change, file unblocking, alternate runtime binary, re-extraction treatment, or Q1 retry is authorized by this finding alone.
+
+The next authorized action is read-only inspection of the current Windows application-control posture to determine which active enforcement surface owns Policy ID `{0283ac0f-fff1-49ae-ada1-8a933130cad6}`.
