@@ -714,3 +714,39 @@ Any candidate introduced next must be treated as a distinct runtime identity. Be
 - byte-level separation from the frozen Q1 runtime,
 - isolated evidence directory,
 - no silent substitution into Q1.
+
+
+## R1 signed/reputable upstream runtime candidate
+
+The authorized remediation stream selects one exact upstream candidate for identity/signature preflight only.
+
+Frozen candidate:
+
+```text
+CELL = PHASE7Q-ENV-R1
+SOLE_TREATMENT = LLAMA_CPP_RUNTIME_BUILD
+FROM = b11205
+TO = b11295
+UPSTREAM_REPOSITORY = ggml-org/llama.cpp
+UPSTREAM_COMMIT = 3b3d022b823abaa62a467b26a44e10659e080ee7
+RELEASE_PUBLISHED_AT = 2026-09-30T18:50:02Z
+ASSET = llama-b11295-bin-win-cuda-13.4-x64.zip
+ASSET_BYTES = 152769566
+ASSET_SHA256 = 5F2EC28C4DED2986499D6B7B9DBD1FECB6EE7182208F3167C40E8EE3D585D1DC
+```
+
+This selection is not a compatibility conclusion and does not promote b11295. It is chosen because it is the current official upstream Windows x64 CUDA 13.4 artifact matching the existing backend family.
+
+All other Q1 dimensions remain frozen. R1 is a remediation preflight, not a Q1 retry.
+
+Authorized next action:
+
+- download the exact upstream asset into an isolated remediation staging directory,
+- verify the archive SHA-256 against the GitHub-published digest,
+- extract into a separate candidate directory,
+- record member SHA-256 and Authenticode state for runtime executables/DLLs,
+- do not execute candidate binaries,
+- do not replace the frozen b11205 runtime,
+- do not change Smart App Control or Code Integrity policy.
+
+Only after identity/signature/reputation-relevant evidence is captured may an execution preflight be considered.
