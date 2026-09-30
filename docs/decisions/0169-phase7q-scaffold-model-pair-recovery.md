@@ -257,3 +257,55 @@ uv run --python 3.12 --no-project python .\tools\run_phase7q_windows_application
 ```
 
 This diagnostic performs no policy changes and must be used only to identify the exact blocked file(s) and event IDs before deciding whether the environment can be repaired without changing experimental semantics.
+
+
+## Windows Code Integrity root cause
+
+The read-only Code Integrity diagnostic established the blocked runtime component exactly.
+
+Observed Windows Code Integrity events:
+
+```text
+process =
+D:\projetos\codepro-mini-runtime\downloads\llama-b11205-bin-win-cuda-13.4-x64\llama-server.exe
+
+blocked module =
+D:\projetos\codepro-mini-runtime\downloads\llama-b11205-bin-win-cuda-13.4-x64\llama-server-impl.dll
+
+event IDs = 3077 and 3033
+policy ID = {0283ac0f-fff1-49ae-ada1-8a933130cad6}
+reason = module did not meet Enterprise signing level requirements or violated code integrity policy
+```
+
+The diagnostic also observed the same Code Integrity policy blocking the uv-managed Python 3.12 standard-library extension:
+
+```text
+python.exe -> DLLs\select.pyd
+event IDs = 3077 and 3033
+policy ID = {0283ac0f-fff1-49ae-ada1-8a933130cad6}
+```
+
+Therefore the repeated Q1 startup failures are attributable to Windows application-control policy enforcement, not to the L1 Nanbeige model artifact, OpenHands behavior, task semantics, or pair compatibility.
+
+Canonical state:
+
+```text
+S4-L1-Q1_RESULT = NOT_ESTABLISHED
+FAILURE_CLASS = ENVIRONMENT_DRIFT
+PRIMARY = WINDOWS_CODE_INTEGRITY_BLOCKS_FROZEN_RUNTIME_MODULE
+BLOCKED_MODULE = llama-server-impl.dll
+POLICY_ID = {0283ac0f-fff1-49ae-ada1-8a933130cad6}
+MODEL_COMPATIBILITY_CONCLUSION = NOT_REACHED
+SCAFFOLD_MODEL_PAIR_CONCLUSION = NOT_REACHED
+```
+
+This environment differs materially from the environment in which the same frozen llama.cpp build completed prior Phase 2-7 qualification work.
+
+No security-policy relaxation is authorized. No runtime binary replacement is authorized. Either action would be a new treatment requiring an explicit decision because:
+
+```text
+POLICY_CHANGE != ENVIRONMENT_REPAIR_WITHOUT_SEMANTIC_DELTA
+RUNTIME_BINARY_CHANGE != SAME_FROZEN_RUNTIME
+```
+
+The next action is read-only identity/signature inspection of the exact blocked frozen runtime files before choosing a new decision stream.
