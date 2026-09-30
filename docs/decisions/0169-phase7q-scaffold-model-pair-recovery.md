@@ -125,3 +125,93 @@ NO_SILENT_EXECUTOR_SWITCH
 NO_SILENT_SCOPE_EXPANSION
 NO_MODEL_RANKING_FROM_PHASE4_COMPATIBILITY
 ```
+
+
+## L1 artifact identity result
+
+The non-experimental Phase 7Q preflight completed without starting llama.cpp, OpenHands, or any model invocation.
+
+Two local Nanbeige GGUF artifacts were present:
+
+```text
+Nanbeige4.2-3B-Q4_K_M-mainline-e31e82d.gguf
+bytes = 2574807872
+sha256 = FBCE43B8977DD73A86126E85AE0BFE219EF3131498AE7C37571DEA58F3C6AA34
+
+Nanbeige4.2-3B-Q4_K_M.gguf
+bytes = 2574807840
+sha256 = 99C7BFB88907F7EEE0A04C4314F1C46BCA391819478D8CB90B3E164F09576489
+```
+
+The retained Phase 4 evidence unambiguously links the compatible L1 qualification to the mainline artifact:
+
+```text
+artifact_repository = iamimmanuelraj/Nanbeige4.2-3B-GGUF
+artifact = Nanbeige4.2-3B-Q4_K_M-mainline-e31e82d.gguf
+```
+
+The same artifact path appears in the retained context-4096, CPU, GPU, and tool-constrained stdout evidence.
+
+Therefore the identity gate is satisfied:
+
+```text
+L1_ARTIFACT_PATH =
+D:\projetos\codepro-mini-runtime\models\phase4\L1-Nanbeige4.2-3B\Nanbeige4.2-3B-Q4_K_M-mainline-e31e82d.gguf
+
+L1_ARTIFACT_BYTES = 2574807872
+
+L1_ARTIFACT_SHA256 =
+FBCE43B8977DD73A86126E85AE0BFE219EF3131498AE7C37571DEA58F3C6AA34
+
+PHASE4_COMPATIBLE_ARTIFACT_LINKAGE = ESTABLISHED
+```
+
+The non-mainline Nanbeige artifact is not selected and must not be substituted silently.
+
+## Phase 7Q-Q1 decision
+
+Authorize one controlled pair-qualification cell:
+
+```text
+CELL = S4-L1-Q1
+BASE = S4-R10
+SOLE TREATMENT = MODEL L3 Granite 4.2 3B -> L1 Nanbeige4.2-3B
+```
+
+Frozen L1 identity:
+
+```text
+MODEL_ALIAS = codepro-phase7q-nanbeige42-3b
+MODEL_PATH = D:\projetos\codepro-mini-runtime\models\phase4\L1-Nanbeige4.2-3B\Nanbeige4.2-3B-Q4_K_M-mainline-e31e82d.gguf
+MODEL_BYTES = 2574807872
+MODEL_SHA256 = FBCE43B8977DD73A86126E85AE0BFE219EF3131498AE7C37571DEA58F3C6AA34
+```
+
+Everything else remains frozen from S4-R10:
+
+```text
+SCAFFOLD = OpenHands Agent Canvas v1.21.0
+OPENHANDS_COMMIT = fc6d890f7b21c71a17de60d50597c00355e235ea
+AGENT_SERVER = 1.49.3
+AUTOMATION = 1.13.3
+LLAMA_CPP_BUILD = 11205
+LLAMA_CPP_COMMIT = 95887577ab5fead779581a7030a83c7752ff3234
+PLATFORM = WINDOWS_NATIVE
+SYSTEM_PROMPT_PROFILE = windows-embedded-v1
+PLATFORM_CONTRACT = windows-powershell-v2
+CONVERSATION_WORKTREE = false
+CTX_SIZE = 16384
+PARALLEL = 1
+LITELLM = 1.94.3
+TIME_BUDGETS = 600 / 660 / 720
+MAX_ITERATIONS = 10
+FALLBACK = DISABLED
+TASK = unchanged
+TOOLSET = unchanged
+TOOL_METADATA = unchanged
+BYTECODE_CLEANUP = untracked-python-bytecode-only-v1
+```
+
+Compatibility still requires the unchanged fail-closed gates: exact model identity, local binding, observed model calls, inspect/edit/command, exact patch capture, independent verifier, source repository unchanged, and workspace cleanup.
+
+No S4-L2 or other Phase 7Q cell is authorized by this decision.
