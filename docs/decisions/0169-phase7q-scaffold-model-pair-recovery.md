@@ -841,3 +841,23 @@ RUNTIME_REPLACEMENT = NOT_AUTHORIZED
 ```
 
 The next authorized action is a broader read-only Code Integrity event capture around the R1 execution window, matching the candidate directory and critical filenames without re-running Q1 or changing policy.
+
+
+## R1 broad Code Integrity capture script defect
+
+The first broad Code Integrity capture attempt did not query the event log successfully. The embedded PowerShell filter contained a parser error caused by assignment inside a boolean expression.
+
+Observed:
+
+```text
+candidate_execution = false
+file_changes = false
+policy_changes = false
+returncode = 1
+failure_class = DIAGNOSTIC_SCRIPT_DEFECT
+event_absence = NOT_INFERRED
+```
+
+This is a diagnostic-output defect only. It is not an R1 execution result and does not change the previously established `R1_EXECUTION_PREFLIGHT = FAILED`.
+
+The filter was corrected without changing the query window, event IDs, candidate identity, or authorization boundary. The corrected rerun remains read-only and does not execute the candidate.
