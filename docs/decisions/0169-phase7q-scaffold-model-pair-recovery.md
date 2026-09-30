@@ -345,3 +345,40 @@ HISTORICAL_BYTE_IDENTITY = UNKNOWN
 Do not collapse this into `RUNTIME_IDENTITY_INTACT` or `RUNTIME_IDENTITY_CHANGED` without additional evidence.
 
 The next authorized action is another read-only provenance preflight: inspect the runtime download directory for retained archives, checksums, extraction metadata, or download artifacts that can bind the current extracted files back to the frozen b11205 package without changing any file or policy.
+
+
+## Frozen runtime package provenance result
+
+The read-only provenance preflight found the retained original llama.cpp b11205 package:
+
+```text
+archive =
+D:\projetos\codepro-mini-runtime\downloads\llama-b11205-bin-win-cuda-13.4-x64.zip
+
+archive_bytes = 152343527
+archive_sha256 = D91178299D1007E162ACAD2776A24D5EF8C834A73F3DB282139ADDC12123BD80
+archive_zone_identifier = present
+```
+
+The extracted target directory is also present and contains the current runtime files with known hashes, including:
+
+```text
+llama-server.exe
+sha256 = 66C0EBF7CFF9053EABE208CCF1329AB46BFF5B1663750B4979AEF5C3D32DA555
+
+llama-server-impl.dll
+sha256 = D1EECF41A8CA5D7BD972FDCFDF69270D2D056363CA66FD2EF1E7F5676DCED77A
+```
+
+This establishes retained package provenance at the archive level, but not yet byte-for-byte linkage between the current extracted files and the retained ZIP members.
+
+Current state:
+
+```text
+PACKAGE_PROVENANCE = RETAINED
+ARCHIVE_IDENTITY = KNOWN
+EXTRACTED_RUNTIME_BYTES = KNOWN
+ARCHIVE_TO_EXTRACTED_BYTE_LINKAGE = NOT_YET_PROVEN
+```
+
+The next authorized action is read-only comparison of the SHA256 of the corresponding members inside the retained ZIP against the current extracted files.
