@@ -451,3 +451,40 @@ Q1_RETRY = NOT_AUTHORIZED
 POLICY_CHANGE = NOT_AUTHORIZED
 RUNTIME_REPLACEMENT = NOT_AUTHORIZED
 ```
+
+
+## Smart App Control policy-owner attribution
+
+The constrained posture diagnostic established the active Windows application-control owner.
+
+Observed local state:
+
+```text
+C:\WINDOWS\System32\CodeIntegrity\CiPolicies\Active\{0283AC0F-FFF1-49AE-ADA1-8A933130CAD6}.cip = present
+CodeIntegrityPolicyEnforcementStatus = 2
+UsermodeCodeIntegrityPolicyEnforcementStatus = 2
+VirtualizationBasedSecurityStatus = 2
+SecurityServicesRunning = [2]
+VerifiedAndReputablePolicyState = 1
+SAC_EnforcementReason = 1
+```
+
+Microsoft identifies policy ID `{0283ac0f-fff1-49ae-ada1-8a933130cad6}` as the inbox `VerifiedAndReputableDesktop` base policy used when Windows 11 Smart App Control is turned on. Microsoft documents `VerifiedAndReputablePolicyState = 1` as Smart App Control enforcement mode.
+
+Therefore:
+
+```text
+POLICY_OWNER = SMART_APP_CONTROL
+POLICY_NAME = VerifiedAndReputableDesktop
+POLICY_ID = {0283AC0F-FFF1-49AE-ADA1-8A933130CAD6}
+UMCI = ENFORCED
+CODE_INTEGRITY = ENFORCED
+VBS = RUNNING
+Q1_STARTUP_BLOCKER = SMART_APP_CONTROL_REJECTION_OF_UNSIGNED_FROZEN_RUNTIME_MODULE
+```
+
+The previously observed Event ID 3077 block of `llama-server-impl.dll` is therefore attributable to Smart App Control enforcement, not to runtime corruption, model incompatibility, scaffold behavior, or task semantics.
+
+No Smart App Control disablement, registry mutation, policy removal, file unblocking, runtime replacement, code signing, or supplemental policy deployment is authorized by this attribution.
+
+The next authorized step is read-only `CiTool -lp -json` inventory to capture the active policy's own metadata before deciding whether a security-preserving exception route exists.
