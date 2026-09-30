@@ -64,7 +64,7 @@ def sha256(path:Path)->str:
 def summary_base()->dict[str,Any]:
     return {"schema_version":1,"phase":7,"candidate":"S4","scaffold":"OpenHands Agent Canvas","version":VERSION,"commit":COMMIT,
             "agent_server_version":AGENT_SERVER_VERSION,"automation_version":AUTOMATION_VERSION,"classification":"BLOCKED_UNCLASSIFIED",
-            "local_runtime":{"base_url":LLAMA_BASE,"model_alias":MODEL_ALIAS,"fallback":"DISABLED"},
+            "local_runtime":{"base_url":LLAMA_BASE,"model_alias":args.model_alias,"fallback":"DISABLED"},
             "native_contract":"Agent Canvas request builder -> Agent Server 1.49.3 -> OpenHands agent tools -> isolated repository -> CodePro verifier",
             "gates":{},"telemetry":{},"vertical":None,"adapter":None,"selected_scaffold":False,"executor_promotion":"NOT_AUTHORIZED"}
 
@@ -119,10 +119,17 @@ def ensure_install(evidence:Path,summary:dict[str,Any])->bool:
     if not vite.is_file(): summary["blocker"]={"stage":"vite_node","detail":str(vite)}; return False
     return True
 
-def find_model()->Path:
+def find_model(*, model_path:str|None=None, model_bytes:int=MODEL_BYTES, model_sha256:str=MODEL_SHA256)->Path:
+    expected_sha=model_sha256.upper()
+    if model_path is not None:
+        p=Path(model_path).expanduser().resolve()
+        if not p.is_file(): raise RuntimeError(f"frozen model artifact not found: {p}")
+        if p.stat().st_size!=model_bytes: raise RuntimeError(f"frozen model byte-size mismatch: {p}")
+        if sha256(p)!=expected_sha: raise RuntimeError(f"frozen model SHA256 mismatch: {p}")
+        return p
     for p in (RUNTIME_ROOT/"models"/"phase4").rglob("*.gguf"):
-        if p.stat().st_size==MODEL_BYTES and sha256(p)==MODEL_SHA256: return p.resolve()
-    raise RuntimeError("frozen L3 artifact not found by SHA256")
+        if p.stat().st_size==model_bytes and sha256(p)==expected_sha: return p.resolve()
+    raise RuntimeError("frozen model artifact not found by SHA256")
 
 def find_server()->Path:
     matches=list((RUNTIME_ROOT/"downloads"/"llama-b11205-bin-win-cuda-13.4-x64").rglob("llama-server.exe"))
@@ -226,7 +233,7 @@ def classify(vertical:dict[str,Any],adapter:dict[str,Any],gates:dict[str,Any])->
     return "INCOMPATIBLE"
 
 def main(argv:list[str]|None=None)->int:
-    parser=argparse.ArgumentParser(description=__doc__); parser.add_argument("--evidence-dir",required=True); parser.add_argument("--llama-parallel",type=int,default=None); parser.add_argument("--llama-context",type=int,default=4096); parser.add_argument("--litellm-version",default=None); parser.add_argument("--completion-log-dir",default=None); parser.add_argument("--study-id",default="phase7"); parser.add_argument("--conversation-timeout-seconds",type=int,default=240); parser.add_argument("--executor-timeout-seconds",type=int,default=280); parser.add_argument("--vertical-wall-time-seconds",type=int,default=320); parser.add_argument("--platform-contract",choices=("windows-powershell-v1","windows-powershell-v2"),default=None); parser.add_argument("--system-prompt-profile",choices=("windows-minimal-v1","windows-embedded-v1"),default=None); parser.add_argument("--conversation-worktree",choices=("true","false"),default="true"); parser.add_argument("--cleanup-untracked-python-bytecode",choices=("true","false"),default="false"); parser.add_argument("--max-iterations",type=int,default=8); args=parser.parse_args(argv)
+    parser=argparse.ArgumentParser(description=__doc__); parser.add_argument("--evidence-dir",required=True); parser.add_argument("--llama-parallel",type=int,default=None); parser.add_argument("--llama-context",type=int,default=4096); parser.add_argument("--litellm-version",default=None); parser.add_argument("--completion-log-dir",default=None); parser.add_argument("--study-id",default="phase7"); parser.add_argument("--conversation-timeout-seconds",type=int,default=240); parser.add_argument("--executor-timeout-seconds",type=int,default=280); parser.add_argument("--vertical-wall-time-seconds",type=int,default=320); parser.add_argument("--platform-contract",choices=("windows-powershell-v1","windows-powershell-v2"),default=None); parser.add_argument("--system-prompt-profile",choices=("windows-minimal-v1","windows-embedded-v1"),default=None); parser.add_argument("--conversation-worktree",choices=("true","false"),default="true"); parser.add_argument("--cleanup-untracked-python-bytecode",choices=("true","false"),default="false"); parser.add_argument("--max-iterations",type=int,default=8); parser.add_argument("--model-path",default=None); parser.add_argument("--model-bytes",type=int,default=MODEL_BYTES); parser.add_argument("--model-sha256",default=MODEL_SHA256); parser.add_argument("--model-alias",default=MODEL_ALIAS); args=parser.parse_args(argv)
     evidence=Path(args.evidence_dir).expanduser().resolve()
     if evidence.exists() and any(evidence.iterdir()): raise SystemExit(f"refusing to overwrite non-empty evidence directory: {evidence}")
     evidence.mkdir(parents=True,exist_ok=True); summary=summary_base(); summary["study_id"]=args.study_id
@@ -242,9 +249,9 @@ def main(argv:list[str]|None=None)->int:
         if args.max_iterations < 1: raise ValueError("--max-iterations must be >= 1")
         summary["timeouts"]={"conversation_poll_seconds":args.conversation_timeout_seconds,"executor_process_seconds":args.executor_timeout_seconds,"vertical_wall_seconds":args.vertical_wall_time_seconds}
         summary["max_iterations_requested"]=args.max_iterations
-        assert_ports(); model=find_model(); server=find_server()
+        assert_ports(); model=find_model(model_path=args.model_path,model_bytes=args.model_bytes,model_sha256=args.model_sha256); server=find_server()
         if args.llama_context < 1: raise ValueError("--llama-context must be >= 1")
-        llama_argv=[str(server),"-m",str(model),"--device","CUDA0","-ngl","99","-c",str(args.llama_context),"--host","127.0.0.1","--port",str(LLAMA_PORT),"--alias",MODEL_ALIAS]
+        llama_argv=[str(server),"-m",str(model),"--device","CUDA0","-ngl","99","-c",str(args.llama_context),"--host","127.0.0.1","--port",str(LLAMA_PORT),"--alias",args.model_alias]
         if args.llama_parallel is not None:
             if args.llama_parallel < 1: raise ValueError("--llama-parallel must be >= 1")
             llama_argv += ["--parallel",str(args.llama_parallel)]
@@ -257,7 +264,7 @@ def main(argv:list[str]|None=None)->int:
         if effective_context != args.llama_context:
             raise RuntimeError(f"llama context binding mismatch: declared={args.llama_context} effective={effective_context}")
         summary["local_runtime"]["context_size"]=effective_context
-        write_json(evidence/"runtime-binding.json",{"llama_cpp_build":LLAMA_BUILD,"llama_cpp_commit":LLAMA_COMMIT,"server_argv":llama_argv,"base_url":LLAMA_BASE,"model_alias":MODEL_ALIAS,"model_artifact":str(model),"model_bytes":model.stat().st_size,"model_sha256":sha256(model),"context_size":effective_context,"parallel":args.llama_parallel,"fallback":"DISABLED"})
+        write_json(evidence/"runtime-binding.json",{"llama_cpp_build":LLAMA_BUILD,"llama_cpp_commit":LLAMA_COMMIT,"server_argv":llama_argv,"base_url":LLAMA_BASE,"model_alias":MODEL_ALIAS,"model_artifact":str(model),"model_bytes":model.stat().st_size,"model_sha256":sha256(model),"model_alias":args.model_alias,"context_size":effective_context,"parallel":args.llama_parallel,"fallback":"DISABLED"})
         llama_out=(evidence/"llama-server-stdout.txt").open("w",encoding="utf-8",newline="\n"); llama_err=(evidence/"llama-server-stderr.txt").open("w",encoding="utf-8",newline="\n")
         llama_proc=subprocess.Popen(llama_argv,cwd=server.parent,stdout=llama_out,stderr=llama_err,text=True,shell=False)
         write_json(evidence/"llama-preflight.json",wait_llama(llama_proc)); summary["gates"]["local_runtime_ready"]=True
@@ -341,7 +348,7 @@ def main(argv:list[str]|None=None)->int:
             else:
                 system_prompt_profile_observed=False
             max_iterations_observed=(adapter.get("conversation_info") or {}).get("max_iterations")==args.max_iterations if isinstance(adapter.get("conversation_info"),dict) else False
-            summary["gates"].update({"max_iterations_observed":max_iterations_observed,"explicit_local_binding":(adapter.get("llm_binding") or {}).get("base_url")==LLAMA_BASE and (adapter.get("llm_binding") or {}).get("model")==f"openai/{MODEL_ALIAS}","platform_contract_observed":platform_contract_observed,"system_prompt_profile_observed":system_prompt_profile_observed,"model_calls_observed":model_call_observed(adapter),"inspect_observed":obs.get("inspectObserved") is True,"command_observed":obs.get("commandObserved") is True,"event_edit_signal":obs.get("editObserved") is True,"edit_observed":len(vertical.get("changed_files") or [])>0,"termination_observed":str(adapter.get("execution_status") or "").lower() in {"finished","error","stuck","stopped"},"patch_captured":patch_ok,"independent_verifier":verifier_ok,"source_repository_unchanged":source_state.get("clean") is True,"workspace_cleanup":cleanup.removed})
+            summary["gates"].update({"max_iterations_observed":max_iterations_observed,"explicit_local_binding":(adapter.get("llm_binding") or {}).get("base_url")==LLAMA_BASE and (adapter.get("llm_binding") or {}).get("model")==f"openai/{args.model_alias}","platform_contract_observed":platform_contract_observed,"system_prompt_profile_observed":system_prompt_profile_observed,"model_calls_observed":model_call_observed(adapter),"inspect_observed":obs.get("inspectObserved") is True,"command_observed":obs.get("commandObserved") is True,"event_edit_signal":obs.get("editObserved") is True,"edit_observed":len(vertical.get("changed_files") or [])>0,"termination_observed":str(adapter.get("execution_status") or "").lower() in {"finished","error","stuck","stopped"},"patch_captured":patch_ok,"independent_verifier":verifier_ok,"source_repository_unchanged":source_state.get("clean") is True,"workspace_cleanup":cleanup.removed})
             summary["repository_state"]={"initial_revision":revision,"final":final_state,"source":source_state}; summary["classification"]=classify(vertical,adapter,summary["gates"])
             write_json(evidence/"s4-summary.json",summary); print(json.dumps(summary,ensure_ascii=False,indent=2,sort_keys=True)); return 0
     except Exception as exc:
