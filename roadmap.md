@@ -601,7 +601,7 @@ PHASE 4   Model compatibility           COMPLETE
 PHASE 5   CodePro local plumbing        COMPLETE
 PHASE 6   Execution/verifier plumbing   COMPLETE
 PHASE 7   Scaffold compatibility        COMPLETE
-PHASE 7R  S4 runtime requalification    IN_PROGRESS
+PHASE 7R  S4 runtime requalification    COMPLETE
 PHASE 8   Scaffold screen               NOT_STARTED
 PHASE 9   Scaffold pruning              NOT_STARTED
 PHASE 10  Model screen                  NOT_STARTED
@@ -621,6 +621,6 @@ Current task:
 ```text
 PHASE 7R = S4 RUNTIME REQUALIFICATION
 ACTIVE_PR = #91
-STATUS = IN_PROGRESS / S4-R10_MAX_ITERATIONS_10_NEXT
-PHASE 8 = BLOCKED_PENDING_PHASE7R
+STATUS = COMPLETE / NO_COMPATIBLE_SURVIVOR
+PHASE 8 = BLOCKED_BY_NO_COMPATIBLE_SCAFFOLD
 ```
