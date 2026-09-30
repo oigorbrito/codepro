@@ -433,3 +433,21 @@ SCAFFOLD_MODEL_PAIR = NOT_REACHED
 No Windows security-policy change, file unblocking, alternate runtime binary, re-extraction treatment, or Q1 retry is authorized by this finding alone.
 
 The next authorized action is read-only inspection of the current Windows application-control posture to determine which active enforcement surface owns Policy ID `{0283ac0f-fff1-49ae-ada1-8a933130cad6}`.
+
+
+## Application-control posture diagnostic output correction
+
+The first posture-diagnostic run produced an unusably large serialized PowerShell object because unrestricted `Select-Object *` expanded provider/CIM metadata. The captured terminal output was therefore incomplete for policy-owner attribution.
+
+This is a diagnostic-output defect, not an experimental result and not a change in the Windows policy state.
+
+The posture script is constrained to scalar security-state fields, active Code Integrity policy-file metadata, and non-PowerShell registry values only.
+
+Canonical state remains:
+
+```text
+POLICY_OWNER_ATTRIBUTION = NOT_ESTABLISHED
+Q1_RETRY = NOT_AUTHORIZED
+POLICY_CHANGE = NOT_AUTHORIZED
+RUNTIME_REPLACEMENT = NOT_AUTHORIZED
+```
