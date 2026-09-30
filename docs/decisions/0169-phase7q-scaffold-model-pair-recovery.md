@@ -676,3 +676,41 @@ MODEL_PAIR_CONCLUSION = NOT_REACHED
 Q1_RETRY = NOT_AUTHORIZED
 ENVIRONMENT_REMEDIATION_DECISION = REQUIRED
 ```
+
+
+## Authorized signed-runtime remediation treatment
+
+The environment-remediation decision is explicitly authorized for a new, isolated treatment whose objective is to restore execution under Smart App Control without disabling or weakening the control.
+
+Authorization boundary:
+
+```text
+REMEDIATION_TREATMENT = AUTHORIZED
+TREATMENT_CLASS = SIGNED_RUNTIME
+SMART_APP_CONTROL_CHANGE = NOT_AUTHORIZED
+POLICY_RELAXATION = NOT_AUTHORIZED
+Q1_REUSE = NOT_AUTHORIZED
+Q1_RETRY = NOT_AUTHORIZED
+RUNTIME_SUBSTITUTION = NOT_AUTHORIZED_UNTIL_CANDIDATE_IDENTITY_AND_SIGNATURE_ARE_ESTABLISHED
+```
+
+Current upstream discovery does not establish a suitable signed candidate. The current official llama.cpp release workflow builds and packages Windows artifacts directly and contains no observed `signtool`, Authenticode, or equivalent Windows code-signing step. GitHub release attestations establish provenance, not Windows Authenticode trust for Smart App Control.
+
+Therefore:
+
+```text
+OFFICIAL_LLAMA_CPP_RELEASE_ARTIFACTS = AVAILABLE
+OFFICIAL_RELEASE_PROVENANCE_ATTESTATION = AVAILABLE
+OFFICIAL_RELEASE_AUTHENTICODE_SIGNING = NOT_OBSERVED
+SIGNED_RUNTIME_CANDIDATE = NOT_ESTABLISHED
+```
+
+Any candidate introduced next must be treated as a distinct runtime identity. Before execution it requires at minimum:
+
+- exact source/provenance,
+- archive and extracted SHA-256,
+- Authenticode status and signer chain,
+- version/build identity,
+- byte-level separation from the frozen Q1 runtime,
+- isolated evidence directory,
+- no silent substitution into Q1.
