@@ -61,10 +61,10 @@ def sha256(path:Path)->str:
         for chunk in iter(lambda:h.read(1024*1024),b""): d.update(chunk)
     return d.hexdigest().upper()
 
-def summary_base()->dict[str,Any]:
+def summary_base(*, model_alias:str=MODEL_ALIAS)->dict[str,Any]:
     return {"schema_version":1,"phase":7,"candidate":"S4","scaffold":"OpenHands Agent Canvas","version":VERSION,"commit":COMMIT,
             "agent_server_version":AGENT_SERVER_VERSION,"automation_version":AUTOMATION_VERSION,"classification":"BLOCKED_UNCLASSIFIED",
-            "local_runtime":{"base_url":LLAMA_BASE,"model_alias":args.model_alias,"fallback":"DISABLED"},
+            "local_runtime":{"base_url":LLAMA_BASE,"model_alias":model_alias,"fallback":"DISABLED"},
             "native_contract":"Agent Canvas request builder -> Agent Server 1.49.3 -> OpenHands agent tools -> isolated repository -> CodePro verifier",
             "gates":{},"telemetry":{},"vertical":None,"adapter":None,"selected_scaffold":False,"executor_promotion":"NOT_AUTHORIZED"}
 
@@ -147,13 +147,13 @@ def get_json(url:str,headers:dict[str,str]|None=None,timeout:float=3)->Any:
     req=Request(url,headers=headers or {})
     with urlopen(req,timeout=timeout) as r: return json.loads(r.read().decode("utf-8"))
 
-def wait_llama(process:subprocess.Popen[Any],timeout_seconds:int=120)->dict[str,Any]:
+def wait_llama(process:subprocess.Popen[Any],model_alias:str=MODEL_ALIAS,timeout_seconds:int=120)->dict[str,Any]:
     deadline=time.monotonic()+timeout_seconds; last=""
     while time.monotonic()<deadline:
         if process.poll() is not None: raise RuntimeError(f"llama-server exited early: {process.returncode}")
         try:
             health=get_json(f"{LLAMA_BASE}/health"); models=get_json(f"{LLAMA_BASE}/models"); ids=[x.get("id") for x in models.get("data",[]) if isinstance(x,dict)]
-            if health.get("status")=="ok" and MODEL_ALIAS in ids: return {"health":health,"models":models}
+            if health.get("status")=="ok" and model_alias in ids: return {"health":health,"models":models}
         except Exception as exc: last=f"{type(exc).__name__}: {exc}"
         time.sleep(.5)
     raise RuntimeError(f"llama readiness timeout: {last}")
@@ -236,7 +236,7 @@ def main(argv:list[str]|None=None)->int:
     parser=argparse.ArgumentParser(description=__doc__); parser.add_argument("--evidence-dir",required=True); parser.add_argument("--llama-parallel",type=int,default=None); parser.add_argument("--llama-context",type=int,default=4096); parser.add_argument("--litellm-version",default=None); parser.add_argument("--completion-log-dir",default=None); parser.add_argument("--study-id",default="phase7"); parser.add_argument("--conversation-timeout-seconds",type=int,default=240); parser.add_argument("--executor-timeout-seconds",type=int,default=280); parser.add_argument("--vertical-wall-time-seconds",type=int,default=320); parser.add_argument("--platform-contract",choices=("windows-powershell-v1","windows-powershell-v2"),default=None); parser.add_argument("--system-prompt-profile",choices=("windows-minimal-v1","windows-embedded-v1"),default=None); parser.add_argument("--conversation-worktree",choices=("true","false"),default="true"); parser.add_argument("--cleanup-untracked-python-bytecode",choices=("true","false"),default="false"); parser.add_argument("--max-iterations",type=int,default=8); parser.add_argument("--model-path",default=None); parser.add_argument("--model-bytes",type=int,default=MODEL_BYTES); parser.add_argument("--model-sha256",default=MODEL_SHA256); parser.add_argument("--model-alias",default=MODEL_ALIAS); args=parser.parse_args(argv)
     evidence=Path(args.evidence_dir).expanduser().resolve()
     if evidence.exists() and any(evidence.iterdir()): raise SystemExit(f"refusing to overwrite non-empty evidence directory: {evidence}")
-    evidence.mkdir(parents=True,exist_ok=True); summary=summary_base(); summary["study_id"]=args.study_id
+    evidence.mkdir(parents=True,exist_ok=True); summary=summary_base(model_alias=args.model_alias); summary["study_id"]=args.study_id
     llama_proc=None; canvas_proc=None; isolated=None
     try:
         if not ensure_upstream(evidence,summary): return block(evidence,summary,"BLOCKED_UPSTREAM_IDENTITY","upstream",summary.get("blocker"))
@@ -264,10 +264,10 @@ def main(argv:list[str]|None=None)->int:
         if effective_context != args.llama_context:
             raise RuntimeError(f"llama context binding mismatch: declared={args.llama_context} effective={effective_context}")
         summary["local_runtime"]["context_size"]=effective_context
-        write_json(evidence/"runtime-binding.json",{"llama_cpp_build":LLAMA_BUILD,"llama_cpp_commit":LLAMA_COMMIT,"server_argv":llama_argv,"base_url":LLAMA_BASE,"model_alias":MODEL_ALIAS,"model_artifact":str(model),"model_bytes":model.stat().st_size,"model_sha256":sha256(model),"model_alias":args.model_alias,"context_size":effective_context,"parallel":args.llama_parallel,"fallback":"DISABLED"})
+        write_json(evidence/"runtime-binding.json",{"llama_cpp_build":LLAMA_BUILD,"llama_cpp_commit":LLAMA_COMMIT,"server_argv":llama_argv,"base_url":LLAMA_BASE,"model_alias":args.model_alias,"model_artifact":str(model),"model_bytes":model.stat().st_size,"model_sha256":sha256(model),"context_size":effective_context,"parallel":args.llama_parallel,"fallback":"DISABLED"})
         llama_out=(evidence/"llama-server-stdout.txt").open("w",encoding="utf-8",newline="\n"); llama_err=(evidence/"llama-server-stderr.txt").open("w",encoding="utf-8",newline="\n")
         llama_proc=subprocess.Popen(llama_argv,cwd=server.parent,stdout=llama_out,stderr=llama_err,text=True,shell=False)
-        write_json(evidence/"llama-preflight.json",wait_llama(llama_proc)); summary["gates"]["local_runtime_ready"]=True
+        write_json(evidence/"llama-preflight.json",wait_llama(llama_proc,args.model_alias)); summary["gates"]["local_runtime_ready"]=True
         with tempfile.TemporaryDirectory(prefix="codepro-phase7-s4-",dir=S4_ROOT,ignore_cleanup_errors=True) as tmp:
             base=Path(tmp); source=base/"source"; workspaces=base/"workspaces"; state=base/"canvas-state"; profile=base/"profile"; source.mkdir(); state.mkdir(); profile.mkdir()
             (profile/"AppData"/"Local").mkdir(parents=True); (profile/"AppData"/"Roaming").mkdir(parents=True); (profile/".cache").mkdir(parents=True)
@@ -304,7 +304,7 @@ def main(argv:list[str]|None=None)->int:
             write_json(evidence/"canvas-preflight.json",wait_canvas(canvas_proc)); summary["gates"]["agent_canvas_ready"]=True
             result_path=evidence/"openhands-result.json"
             issue="Work only in the current repository. Inspect value.py and confirm it contains VALUE = \"before\". Change it to VALUE = \"after\". Then run a Python command that imports value and asserts value.VALUE == \"after\". Finish after the check succeeds."
-            executor=[sys.executable,str(ROOT/"tools"/"phase7_openhands_executor.py"),"--upstream",str(UPSTREAM),"--backend-url",CANVAS_BASE,"--api-key",SESSION_KEY,"--working-dir",str(isolated.workspace),"--llm-base-url",LLAMA_BASE,"--model-alias",MODEL_ALIAS,"--result",str(result_path),"--issue",issue,"--poll-timeout-seconds",str(args.conversation_timeout_seconds),"--process-timeout-seconds",str(args.executor_timeout_seconds),"--conversation-worktree",args.conversation_worktree,"--cleanup-untracked-python-bytecode",args.cleanup_untracked_python_bytecode,"--max-iterations",str(args.max_iterations)]
+            executor=[sys.executable,str(ROOT/"tools"/"phase7_openhands_executor.py"),"--upstream",str(UPSTREAM),"--backend-url",CANVAS_BASE,"--api-key",SESSION_KEY,"--working-dir",str(isolated.workspace),"--llm-base-url",LLAMA_BASE,"--model-alias",args.model_alias,"--result",str(result_path),"--issue",issue,"--poll-timeout-seconds",str(args.conversation_timeout_seconds),"--process-timeout-seconds",str(args.executor_timeout_seconds),"--conversation-worktree",args.conversation_worktree,"--cleanup-untracked-python-bytecode",args.cleanup_untracked_python_bytecode,"--max-iterations",str(args.max_iterations)]
             summary["conversation_worktree"]={"openhands_nested":args.conversation_worktree=="true","codepro_isolated_workspace":True}
             summary["workspace_ephemeral_cleanup_policy"]="untracked-python-bytecode-only-v1" if args.cleanup_untracked_python_bytecode=="true" else None
             if args.platform_contract is not None:
