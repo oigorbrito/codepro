@@ -215,3 +215,45 @@ BYTECODE_CLEANUP = untracked-python-bytecode-only-v1
 Compatibility still requires the unchanged fail-closed gates: exact model identity, local binding, observed model calls, inspect/edit/command, exact patch capture, independent verifier, source repository unchanged, and workspace cleanup.
 
 No S4-L2 or other Phase 7Q cell is authorized by this decision.
+
+
+## S4-L1-Q1 pre-execution environment failure
+
+The first local Q1 invocation did not enter the runner because the selected Python 3.12 environment failed importing the standard-library `select` extension:
+
+```text
+ImportError: DLL load failed while importing select:
+Uma política de Controle de Aplicativo bloqueou este arquivo.
+```
+
+A second invocation entered the runner, completed the upstream/npm preflight, and then the frozen llama.cpp server exited before readiness:
+
+```text
+exit code = 3236495362
+hex = 0xC0E90002
+classification = BLOCKED_HARNESS_OR_ENVIRONMENT
+adapter = null
+vertical = null
+```
+
+Windows reports `0xC0E90002` as an Application Control policy block. Because no Agent Canvas conversation, model call, repository action, patch, or verifier execution occurred, this is not a valid S4-L1-Q1 experimental result.
+
+Therefore:
+
+```text
+S4-L1-Q1_RESULT = NOT_ESTABLISHED
+FAILURE_CLASS = HARNESS_ENVIRONMENT
+PRIMARY = WINDOWS_APPLICATION_CONTROL_BLOCK
+PROMOTION = NOT_AUTHORIZED
+S4-L2 = NOT_AUTHORIZED
+```
+
+No security policy relaxation is authorized by Phase 7Q.
+
+The next authorized action is read-only diagnosis of the Windows Code Integrity operational log using:
+
+```powershell
+uv run --python 3.12 --no-project python .\tools\run_phase7q_windows_application_control_diagnostic.py
+```
+
+This diagnostic performs no policy changes and must be used only to identify the exact blocked file(s) and event IDs before deciding whether the environment can be repaired without changing experimental semantics.
