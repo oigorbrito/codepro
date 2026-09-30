@@ -799,3 +799,45 @@ R1_SAC_REPUTATION_OR_ISG_HYPOTHESIS = NOT_TESTED
 Because Smart App Control can also authorize code through reputation/Intelligent Security Graph, unsigned status alone does not establish whether this exact official b11295 artifact will execute on the current machine.
 
 The next authorized action is an isolated execution preflight of the candidate `llama-server.exe --version`, with Code Integrity event capture. This is not a runtime replacement, not a Q1 retry, and does not modify policy.
+
+
+## R1 b11295 isolated execution preflight result
+
+The isolated candidate execution preflight ran only:
+
+```text
+llama-server.exe --version
+```
+
+Observed:
+
+```text
+CELL = PHASE7Q-ENV-R1
+candidate_execution = true
+model_invocation = false
+runtime_replacement = false
+policy_changes = false
+returncode = 3236495362
+returncode_hex = 0xC0E90002
+stdout = empty
+stderr = empty
+Zone.Identifier on llama-server.exe = absent
+Code Integrity query returncode = 0
+Code Integrity matched events = not established by this capture
+```
+
+This reproduces the same process-level failure code previously observed with the frozen b11205 runtime, but the current event-capture filter did not return matching Code Integrity events. Therefore the exact blocked member/policy attribution for R1 is not yet established from this run alone.
+
+Canonical result:
+
+```text
+R1_EXECUTION_PREFLIGHT = FAILED
+R1_PROCESS_RETURN = 0xC0E90002
+R1_ZONE_IDENTIFIER = ABSENT
+R1_CODE_INTEGRITY_EVENT_ATTRIBUTION = NOT_ESTABLISHED
+R1_SAC_REPUTATION_OR_ISG_HYPOTHESIS = NOT_ESTABLISHED
+Q1_RETRY = NOT_AUTHORIZED
+RUNTIME_REPLACEMENT = NOT_AUTHORIZED
+```
+
+The next authorized action is a broader read-only Code Integrity event capture around the R1 execution window, matching the candidate directory and critical filenames without re-running Q1 or changing policy.
