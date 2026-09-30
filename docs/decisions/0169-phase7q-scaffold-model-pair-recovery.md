@@ -488,3 +488,31 @@ The previously observed Event ID 3077 block of `llama-server-impl.dll` is theref
 No Smart App Control disablement, registry mutation, policy removal, file unblocking, runtime replacement, code signing, or supplemental policy deployment is authorized by this attribution.
 
 The next authorized step is read-only `CiTool -lp -json` inventory to capture the active policy's own metadata before deciding whether a security-preserving exception route exists.
+
+
+## CiTool inventory privilege gate
+
+The first read-only `CiTool.exe -lp -json` inventory attempt returned decimal `2147942405`, which is Windows HRESULT `0x80070005 (Access denied)`.
+
+Therefore the empty policy arrays from that run are not evidence that no policies are active.
+
+Canonical result:
+
+```text
+CITOOL_INVENTORY = NOT_ESTABLISHED
+FAILURE_CLASS = BLOCKED_BY_PRIVILEGE
+FAILURE_DETAIL = ACCESS_DENIED
+TARGET_POLICY_ABSENCE = NOT_INFERRED
+```
+
+A rerun from an elevated Administrator PowerShell is authorized because the command remains read-only and performs no policy mutation.
+
+The following remain unauthorized:
+
+```text
+Q1_RETRY = NOT_AUTHORIZED
+SMART_APP_CONTROL_DISABLE = NOT_AUTHORIZED
+POLICY_REMOVAL = NOT_AUTHORIZED
+SUPPLEMENTAL_POLICY_DEPLOYMENT = NOT_AUTHORIZED
+RUNTIME_REPLACEMENT = NOT_AUTHORIZED
+```
