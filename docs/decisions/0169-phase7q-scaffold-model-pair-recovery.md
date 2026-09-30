@@ -542,3 +542,33 @@ POLICY_OWNER = SMART_APP_CONTROL
 ```
 
 The next authorized action is read-only token/elevation and direct-command diagnostics. No policy mutation is authorized.
+
+
+## Effective elevation diagnosis
+
+The direct diagnostic captured the actual access token presented to `CiTool`.
+
+Observed:
+
+```text
+mandatory integrity SID = S-1-16-8192 (Medium)
+BUILTIN\Administrators = deny-only
+local account and member of Administrators = deny-only
+CiTool -h = SUCCESS
+CiTool -lp -json = 0x80070005 ACCESS_DENIED
+```
+
+Microsoft documents that standard/filtered processes run at Medium integrity while elevated processes run at High integrity. A deny-only Administrators SID is consistent with the filtered UAC token rather than the full elevated administrator token.
+
+Canonical result:
+
+```text
+EFFECTIVE_ELEVATION = FALSE
+SHELL_TOKEN = UAC_FILTERED_MEDIUM_INTEGRITY
+CITOOL_ACCESS_DENIED = EXPLAINED_BY_NON_ELEVATED_EFFECTIVE_TOKEN
+CITOOL_INVENTORY = NOT_ESTABLISHED
+```
+
+The next authorized action is to rerun the same read-only diagnostic from a process whose effective token is High integrity (SID `S-1-16-12288`) and whose Administrators SID is enabled, not deny-only.
+
+No UAC policy changes, Smart App Control changes, Code Integrity changes, or other security relaxation are authorized.
