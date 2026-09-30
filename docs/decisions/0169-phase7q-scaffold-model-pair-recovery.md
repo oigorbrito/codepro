@@ -572,3 +572,68 @@ CITOOL_INVENTORY = NOT_ESTABLISHED
 The next authorized action is to rerun the same read-only diagnostic from a process whose effective token is High integrity (SID `S-1-16-12288`) and whose Administrators SID is enabled, not deny-only.
 
 No UAC policy changes, Smart App Control changes, Code Integrity changes, or other security relaxation are authorized.
+
+
+## High-integrity CiTool inventory result
+
+The read-only diagnostic was rerun with an effective High integrity administrator token.
+
+Observed:
+
+```text
+integrity SID = S-1-16-12288
+BUILTIN\Administrators = enabled
+effective_elevation = true
+CiTool -lp -json = SUCCESS
+```
+
+The active Smart App Control base policy is:
+
+```text
+PolicyID = 0283ac0f-fff1-49ae-ada1-8a933130cad6
+BasePolicyID = 0283ac0f-fff1-49ae-ada1-8a933130cad6
+FriendlyName = VerifiedAndReputableDesktop
+IsSystemPolicy = true
+IsSignedPolicy = true
+IsOnDisk = true
+IsEnforced = true
+IsAuthorized = true
+PolicyOptions includes Enabled:Allow Supplemental Policies
+```
+
+An active Microsoft supplemental policy is also present for the same base:
+
+```text
+FriendlyName = VerifiedAndReputableDesktopFlightSupplemental
+BasePolicyID = 0283ac0f-fff1-49ae-ada1-8a933130cad6
+IsSystemPolicy = true
+IsSignedPolicy = true
+IsEnforced = true
+IsAuthorized = true
+```
+
+Canonical result:
+
+```text
+EFFECTIVE_ELEVATION = TRUE
+CITOOL_INVENTORY = ESTABLISHED
+POLICY_OWNER = SMART_APP_CONTROL
+SMART_APP_CONTROL_BASE = VerifiedAndReputableDesktop
+SMART_APP_CONTROL_BASE_SIGNED = TRUE
+SMART_APP_CONTROL_BASE_ENFORCED = TRUE
+SUPPLEMENTAL_CAPABILITY = PRESENT
+```
+
+Microsoft's Smart App Control support guidance states that there is no supported per-app bypass for Smart App Control. If Smart App Control cannot establish reputation, unsigned code is blocked; the security-preserving supported route is a valid code signature. Therefore the generic App Control supplemental-policy capability must not be treated as authorization for a local per-app SAC bypass.
+
+For the frozen Phase7Q runtime:
+
+```text
+CURRENT_LLAMA_RUNTIME_SIGNATURE = NOT_SIGNED
+CURRENT_LLAMA_RUNTIME_BYTES = FROZEN_AND_LINKED_TO_RETAINED_PACKAGE
+PER_APP_SAC_BYPASS = NOT_SUPPORTED
+SAC_DISABLEMENT = NOT_AUTHORIZED
+LOCAL_ALLOWLIST_TREATMENT = NOT_AUTHORIZED
+```
+
+A validly signed runtime would be a distinct runtime-byte treatment and cannot be substituted into Q1 silently.
