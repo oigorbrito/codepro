@@ -24,9 +24,14 @@ def main() -> int:
         "operation": "phase7q-citool-policy-inventory",
         "policy_changes": False,
         "returncode": p.returncode,
+        "returncode_hex": f"0x{p.returncode & 0xFFFFFFFF:08X}",
         "stderr": p.stderr,
         "target_policy_id": TARGET_POLICY_ID,
     }
+    if (p.returncode & 0xFFFFFFFF) == 0x80070005:
+        payload["failure_class"] = "BLOCKED_BY_PRIVILEGE"
+        payload["failure_detail"] = "ACCESS_DENIED"
+        payload["inventory_established"] = False
     if p.stdout.strip():
         try:
             raw = json.loads(p.stdout)
