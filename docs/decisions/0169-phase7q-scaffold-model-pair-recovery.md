@@ -881,3 +881,84 @@ The collector:
 If both independent event readers attribute the R1 window to the candidate and the Smart App Control policy, the treatment can be classified and closed without another candidate execution.
 
 If the historical event window no longer contains sufficient evidence, the treatment stops at an external evidence limitation rather than silently re-running or changing the treatment.
+
+
+## R1 final classification
+
+The consolidated closure collector established the exact Phase7Q ENV-R1 failure attribution with two independent Windows event readers.
+
+Critical runtime identity remained stable:
+
+```text
+llama-server.exe
+  bytes = 9216
+  sha256 = FC7CB1C0252B2A98768EE15F3EA79AE59216243DF7F2D69A07A52A50E2A86762
+  Authenticode = NotSigned
+
+llama-server-impl.dll
+  bytes = 8945664
+  sha256 = B85BB48F0B1E684F0C722568651F23E4F17F49DF69C6332F80011D523A003155
+  Authenticode = NotSigned
+```
+
+The original isolated execution window contains both Code Integrity Event ID 3033 and Event ID 3077 for:
+
+```text
+process =
+D:\projetos\codepro-mini-runtime\downloads\phase7q-remediation\b11295\extracted\llama-server.exe
+
+blocked module =
+D:\projetos\codepro-mini-runtime\downloads\phase7q-remediation\b11295\extracted\mtmd.dll
+
+status = 0xC0E90002
+policy = VerifiedAndReputableDesktop
+policy GUID = {0283ac0f-fff1-49ae-ada1-8a933130cad6}
+```
+
+Both `Get-WinEvent` and an independent `wevtutil` read of the same historical window agree on:
+
+```text
+candidate_path_observed = true
+server_exe_observed = true
+event_3033_observed = true
+event_3077_observed = true
+target_policy_id_observed = true
+```
+
+The originally hypothesized `llama-server-impl.dll` was not the first blocked member in R1. The exact R1 blocked member is `mtmd.dll`. This does not alter the causal classification: the candidate runtime remains unable to start under the active Smart App Control base policy.
+
+Final canonical result:
+
+```text
+RESULT = INCOMPATIBLE
+
+PRIMARY = SMART_APP_CONTROL_BLOCKS_B11295_RUNTIME_DEPENDENCY_MTMD_DLL
+
+SECONDARY = OFFICIAL_B11295_WINDOWS_RUNTIME_IS_UNSIGNED_AND_NOT_AUTHORIZED_BY_CURRENT_VERIFIED_AND_REPUTABLE_POLICY
+
+EVIDENCE =
+  ARCHIVE_IDENTITY_VERIFIED
+  CRITICAL_MEMBER_HASHES_REVERIFIED
+  AUTHENTICODE_NOT_SIGNED
+  ISOLATED_EXECUTION_RETURN_0xC0E90002
+  CODE_INTEGRITY_EVENT_3033
+  CODE_INTEGRITY_EVENT_3077
+  POLICY_VERIFIED_AND_REPUTABLE_DESKTOP
+  POLICY_GUID_{0283ac0f-fff1-49ae-ada1-8a933130cad6}
+  INDEPENDENT_GET_WINEVENT_AND_WEVTUTIL_AGREEMENT
+
+ACCEPTANCE = FAILED
+PROMOTION = NOT_AUTHORIZED
+
+NEXT_EXPERIMENTAL_CELL = NOT_AUTHORIZED
+
+PHASE8 = BLOCKED_BY_NO_COMPATIBLE_SCAFFOLD_RUNTIME_PATH
+```
+
+Interpretation:
+
+- R1 changed only the llama.cpp runtime build from b11205 to b11295.
+- The newer official upstream artifact does not restore executable compatibility under the current Smart App Control environment.
+- The failure occurs before model invocation, so it does not provide evidence about Nanbeige L1 compatibility or scaffold/model interaction.
+- The R1 treatment is closed. Repeating additional unsigned llama.cpp builds under the same policy would not be a justified next cell without a new treatment rationale.
+- Any next treatment must introduce a materially different execution-trust mechanism or environment and therefore requires separate authorization.
