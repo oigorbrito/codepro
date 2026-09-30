@@ -516,3 +516,29 @@ POLICY_REMOVAL = NOT_AUTHORIZED
 SUPPLEMENTAL_POLICY_DEPLOYMENT = NOT_AUTHORIZED
 RUNTIME_REPLACEMENT = NOT_AUTHORIZED
 ```
+
+
+## CiTool elevated inventory remains access denied
+
+A second read-only `CiTool.exe -lp -json` attempt was run from an Administrator PowerShell and again returned:
+
+```text
+returncode = 2147942405
+returncode_hex = 0x80070005
+failure_class = BLOCKED_BY_PRIVILEGE
+failure_detail = ACCESS_DENIED
+inventory_established = false
+```
+
+This rules out the simple explanation that the first failure was caused only by a non-elevated shell. The Microsoft CiTool reference documents `-lp` / `--list-policies` as the supported policy inventory command.
+
+Canonical result:
+
+```text
+CITOOL_INVENTORY = NOT_ESTABLISHED
+CITOOL_ACCESS = DENIED_EVEN_FROM_REPORTED_ELEVATED_SHELL
+TARGET_POLICY_ABSENCE = NOT_INFERRED
+POLICY_OWNER = SMART_APP_CONTROL
+```
+
+The next authorized action is read-only token/elevation and direct-command diagnostics. No policy mutation is authorized.
