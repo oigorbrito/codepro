@@ -861,3 +861,23 @@ event_absence = NOT_INFERRED
 This is a diagnostic-output defect only. It is not an R1 execution result and does not change the previously established `R1_EXECUTION_PREFLIGHT = FAILED`.
 
 The filter was corrected without changing the query window, event IDs, candidate identity, or authorization boundary. The corrected rerun remains read-only and does not execute the candidate.
+
+
+## Consolidated R1 closure collector
+
+To avoid further fragmentation after the first broad-capture script defect, R1 closure evidence is consolidated into one read-only collector.
+
+The collector:
+
+- does not execute candidate binaries,
+- does not invoke a model,
+- does not replace the frozen runtime,
+- does not modify Windows policy or files,
+- re-verifies SHA-256 and Authenticode for `llama-server.exe` and `llama-server-impl.dll`,
+- reads the original R1 execution window through `Get-WinEvent`,
+- independently reads the same window through `wevtutil`,
+- checks both evidence paths for the b11295 candidate path, `llama-server-impl.dll`, policy ID `{0283ac0f-fff1-49ae-ada1-8a933130cad6}`, and event IDs 3033/3076/3077.
+
+If both independent event readers attribute the R1 window to the candidate and the Smart App Control policy, the treatment can be classified and closed without another candidate execution.
+
+If the historical event window no longer contains sufficient evidence, the treatment stops at an external evidence limitation rather than silently re-running or changing the treatment.
