@@ -750,3 +750,52 @@ Authorized next action:
 - do not change Smart App Control or Code Integrity policy.
 
 Only after identity/signature/reputation-relevant evidence is captured may an execution preflight be considered.
+
+
+## R1 b11295 identity and Authenticode preflight result
+
+The isolated remediation candidate preflight completed without executing candidate binaries.
+
+Observed:
+
+```text
+CELL = PHASE7Q-ENV-R1
+TAG = b11295
+COMMIT = 3b3d022b823abaa62a467b26a44e10659e080ee7
+ARCHIVE_BYTES = 152769566
+ARCHIVE_SHA256 = 5F2EC28C4DED2986499D6B7B9DBD1FECB6EE7182208F3167C40E8EE3D585D1DC
+ARCHIVE_DIGEST_MATCH = TRUE
+RUNTIME_REPLACEMENT = FALSE
+CANDIDATE_EXECUTION = FALSE
+POLICY_CHANGES = FALSE
+```
+
+Critical candidate members:
+
+```text
+llama-server.exe
+  bytes = 9216
+  sha256 = FC7CB1C0252B2A98768EE15F3EA79AE59216243DF7F2D69A07A52A50E2A86762
+  Authenticode = NotSigned
+
+llama-server-impl.dll
+  bytes = 8945664
+  sha256 = B85BB48F0B1E684F0C722568651F23E4F17F49DF69C6332F80011D523A003155
+  Authenticode = NotSigned
+```
+
+The broader extracted executable/DLL set inspected by the preflight is likewise unsigned. The localized Authenticode StatusMessage text is not used as the classification signal; the structured `Status = NotSigned` field is canonical.
+
+Therefore:
+
+```text
+R1_IDENTITY = ESTABLISHED
+R1_UPSTREAM_ARCHIVE_INTEGRITY = ESTABLISHED
+R1_AUTHENTICODE = NOT_SIGNED
+R1_SIGNED_RUNTIME_HYPOTHESIS = REJECTED
+R1_SAC_REPUTATION_OR_ISG_HYPOTHESIS = NOT_TESTED
+```
+
+Because Smart App Control can also authorize code through reputation/Intelligent Security Graph, unsigned status alone does not establish whether this exact official b11295 artifact will execute on the current machine.
+
+The next authorized action is an isolated execution preflight of the candidate `llama-server.exe --version`, with Code Integrity event capture. This is not a runtime replacement, not a Q1 retry, and does not modify policy.
