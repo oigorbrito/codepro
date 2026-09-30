@@ -309,3 +309,39 @@ RUNTIME_BINARY_CHANGE != SAME_FROZEN_RUNTIME
 ```
 
 The next action is read-only identity/signature inspection of the exact blocked frozen runtime files before choosing a new decision stream.
+
+
+## Frozen runtime signature preflight result
+
+The read-only signature preflight observed the current frozen runtime files as follows:
+
+```text
+llama-server.exe
+bytes = 9216
+sha256 = 66C0EBF7CFF9053EABE208CCF1329AB46BFF5B1663750B4979AEF5C3D32DA555
+Authenticode = NotSigned
+Zone.Identifier = present
+
+llama-server-impl.dll
+bytes = 8916480
+sha256 = D1EECF41A8CA5D7BD972FDCFDF69270D2D056363CA66FD2EF1E7F5676DCED77A
+Authenticode = NotSigned
+Zone.Identifier = present
+```
+
+The repository does not preserve historical SHA256 values for these two individual files, so the current bytes cannot yet be proven identical to the earlier successful Phase 2-7 runtime bytes.
+
+Supported conclusion:
+
+```text
+RUNTIME_BUILD_PATH = PRESERVED
+CURRENT_RUNTIME_BYTES = KNOWN
+AUTHENTICODE = NOT_SIGNED
+ZONE_IDENTIFIER = PRESENT
+WINDOWS_POLICY_BLOCK = CONFIRMED
+HISTORICAL_BYTE_IDENTITY = UNKNOWN
+```
+
+Do not collapse this into `RUNTIME_IDENTITY_INTACT` or `RUNTIME_IDENTITY_CHANGED` without additional evidence.
+
+The next authorized action is another read-only provenance preflight: inspect the runtime download directory for retained archives, checksums, extraction metadata, or download artifacts that can bind the current extracted files back to the frozen b11205 package without changing any file or policy.
