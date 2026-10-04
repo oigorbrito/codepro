@@ -6,9 +6,12 @@
     "dev": "tsx server.ts",
     "build": "vite build",
     "start": "tsx server.ts",
-    "lint": "tsc --noEmit"
+    "lint": "tsc --noEmit",
+    "test": "tsx tests/test_blind_spot.ts && tsx tests/test_event_log.ts && tsx tests/test_m2_m3_gates.ts && tsx tests/test_pr40_hardening.ts && tsx tests/test_second_executor.ts && tsx tests/test_tiered_routing.ts",
+    "test:all": "tsx tests/test_blind_spot.ts && tsx tests/test_event_log.ts && tsx tests/test_m2_m3_gates.ts && tsx tests/test_pr40_hardening.ts && tsx tests/test_second_executor.ts && tsx tests/test_tiered_routing.ts"
   },
   "dependencies": {
+    "@google/genai": "^2.24.0",
     "express": "^5.2.1",
     "lucide-react": "^1.48.0",
     "react": "^19.3.0",

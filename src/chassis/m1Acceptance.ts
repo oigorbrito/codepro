@@ -2,6 +2,10 @@
  * Evidence-only acceptance review for CodePro M1 task.
  */
 
+import {
+  validateRepositoryRelativePath,
+} from "./localizationPolicy";
+
 export interface M1ReviewEvidence {
   classification?: string;
   task_ref?: string;
@@ -85,6 +89,14 @@ export function reviewM1Evidence(summary: M1ReviewEvidence): AcceptanceDecision 
     failures.push("Fallback must be strictly disabled");
   }
 
+  // ADR 0159 / 0161 Path lexical validation
+  for (const path of (summary.observed_changed_files || [])) {
+    const pRes = validateRepositoryRelativePath(path);
+    if (!pRes.valid) {
+      failures.push(`Invalid changed file path: ${pRes.error}`);
+    }
+  }
+
   const observed = [...(summary.observed_changed_files || [])].sort();
   const expectedScope = [...M1_CONSTANTS.SCOPE].sort();
   if (JSON.stringify(observed) !== JSON.stringify(expectedScope)) {
@@ -94,6 +106,11 @@ export function reviewM1Evidence(summary: M1ReviewEvidence): AcceptanceDecision 
   const vertStatus = summary.vertical_result?.status;
   if (vertStatus !== "VERIFIED") {
     failures.push(`Vertical status is ${vertStatus}, expected VERIFIED`);
+  }
+
+  // ADR 0157 Positive Outcome Evidence Guard
+  if (!summary.vertical_result?.run_id || summary.vertical_result.run_id.trim().length === 0) {
+    failures.push("Positive acceptance requires a non-empty vertical run evidence reference (run_id)");
   }
 
   const isAccepted = failures.length === 0;

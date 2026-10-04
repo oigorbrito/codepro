@@ -64,3 +64,16 @@ export function validateEvent(event: TelemetryEvent): void {
     throw new Error("data must be an object");
   }
 }
+
+// Re-export ADR 0164 Event-Log Contract v1.1
+export * from "./eventLog";
+
+// Re-export ADR 0156-0161 Localization Policy & Scope Guard
+export * from "./localizationPolicy";
+
+// Re-export Gates M2 & M3 Validation Harness
+export * from "./m2m3Validation";
+
+// Re-export ADR 0152 Second Executor Qualification Harness
+export * from "./secondExecutorQualification";
+

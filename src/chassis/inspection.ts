@@ -36,6 +36,7 @@ export interface ProjectInspectionResult {
   git_available: boolean;
   git_repository: boolean;
   branch: string | null;
+  head_sha: string | null;
   languages: string[];
   test_surfaces: string[];
   executors: ExecutorStatus[];
@@ -70,6 +71,7 @@ export function inspectProject(targetPath: string = '.'): ProjectInspectionResul
   const gitAvailable = checkCommand('git');
   let gitRepo = false;
   let branch: string | null = null;
+  let headSha: string | null = null;
   let rootDir = resolved;
 
   if (gitAvailable) {
@@ -82,6 +84,7 @@ export function inspectProject(targetPath: string = '.'): ProjectInspectionResul
         const detached = runGit(rootDir, 'rev-parse --short HEAD');
         branch = detached ? `DETACHED@${detached}` : 'DETACHED';
       }
+      headSha = runGit(rootDir, 'rev-parse HEAD');
     }
   }
 
@@ -111,6 +114,7 @@ export function inspectProject(targetPath: string = '.'): ProjectInspectionResul
     git_available: gitAvailable,
     git_repository: gitRepo,
     branch,
+    head_sha: headSha,
     languages,
     test_surfaces,
     executors,
