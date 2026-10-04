@@ -64,7 +64,7 @@ export interface VerticalRunResult {
    * Adapter-observation metadata only.
    * Authoritative run evidence lives under evidence_root.
    */
-  events: [];
+  events: any[];
   started_at: string | null;
   finished_at: string | null;
   duration_ms: number | null;
@@ -237,6 +237,14 @@ function assertPersistedEvidence(
   }
 }
 
+function assertSafeArgument(value: string, field: string): void {
+  // Reject unsafe shell control metacharacters to prevent OS command injection
+  const unsafePattern = /[;&|\$`<>\(\)]/;
+  if (unsafePattern.test(value)) {
+    throw new Error(`Security Exception: Input field '${field}' contains unsafe characters`);
+  }
+}
+
 export function executeVertical(
   input: VerticalRunInput,
 ): VerticalRunResult {
@@ -278,6 +286,23 @@ export function executeVertical(
   );
 
   const attemptId = requireString(input.attempt_id, "attempt_id");
+
+  // Strict Input Sanitization Check (OS Command Injection Hardening)
+  assertSafeArgument(workspace, "workspace");
+  assertSafeArgument(revision, "revision");
+  assertSafeArgument(requestId, "request_id");
+  assertSafeArgument(taskId, "task_id");
+  assertSafeArgument(requester, "requester_ref");
+  assertSafeArgument(authority, "authority_ref");
+  assertSafeArgument(acceptanceAuthority, "acceptance_authority_ref");
+  assertSafeArgument(characterizationSourceRef, "characterization_source_ref");
+  assertSafeArgument(attemptId, "attempt_id");
+
+  scope.forEach((s) => assertSafeArgument(s, "scope"));
+  candidateFiles.forEach((cf) => assertSafeArgument(cf, "candidate_files"));
+  affectedComponents.forEach((ac) => assertSafeArgument(ac, "affected_components"));
+  executorArgv.forEach((ea) => assertSafeArgument(ea, "executor_argv"));
+  verifierArgv.forEach((va) => assertSafeArgument(va, "verifier_argv"));
 
   if (
     typeof input.max_wall_time_seconds !== "number" ||

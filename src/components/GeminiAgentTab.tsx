@@ -108,27 +108,41 @@ export function GeminiAgentTab({ onApplySignalsToP1 }: GeminiAgentTabProps) {
   const [loadingStatus, setLoadingStatus] = useState(false);
 
   // Mode: 'execute' | 'characterize'
-  const [activeSubMode, setActiveSubMode] = useState<'execute' | 'characterize'>('execute');
+  const [activeSubMode, setActiveSubMode] = useState<'execute' | 'characterize'>(() => {
+    return (localStorage.getItem('codepro_gemini_submode') as 'execute' | 'characterize') || 'execute';
+  });
 
   // Execution State
-  const [requestId, setRequestId] = useState('req-gemini-v1');
-  const [taskId, setTaskId] = useState('task-fix-null-pointer');
-  const [prompt, setPrompt] = useState(
-    'In src/chassis/contracts.ts, add an optional field `telemetry_source` to TelemetryEvent and export a helper validator function isEventValid().'
-  );
-  const [scope, setScope] = useState('src/chassis/contracts.ts\ntests/test_contracts.ts');
-  const [candidateFiles, setCandidateFiles] = useState('src/chassis/contracts.ts');
-  const [selectedModel, setSelectedModel] = useState('gemini-2.5-flash');
+  const [requestId, setRequestId] = useState(() => localStorage.getItem('codepro_gemini_req_id') || 'req-gemini-v1');
+  const [taskId, setTaskId] = useState(() => localStorage.getItem('codepro_gemini_task_id') || 'task-fix-null-pointer');
+  const [prompt, setPrompt] = useState(() => {
+    return localStorage.getItem('codepro_gemini_prompt') || 
+      'In src/chassis/contracts.ts, add an optional field `telemetry_source` to TelemetryEvent and export a helper validator function isEventValid().';
+  });
+  const [scope, setScope] = useState(() => {
+    return localStorage.getItem('codepro_gemini_scope') || 'src/chassis/contracts.ts\ntests/test_contracts.ts';
+  });
+  const [candidateFiles, setCandidateFiles] = useState(() => {
+    return localStorage.getItem('codepro_gemini_candidate_files') || 'src/chassis/contracts.ts';
+  });
+  const [selectedModel, setSelectedModel] = useState(() => localStorage.getItem('codepro_gemini_model') || 'gemini-2.5-flash');
   const [isExecuting, setIsExecuting] = useState(false);
-  const [runResult, setRunResult] = useState<GeminiRunResult | null>(null);
+  const [runResult, setRunResult] = useState<GeminiRunResult | null>(() => {
+    const saved = localStorage.getItem('codepro_gemini_run_result');
+    return saved ? JSON.parse(saved) : null;
+  });
   const [copiedPatch, setCopiedPatch] = useState(false);
 
   // Characterization State
-  const [issueText, setIssueText] = useState(
-    'Users report that when running codepro inspect on a directory without git repo, the git status crashes instead of failing closed gracefully with git_repository=false.'
-  );
+  const [issueText, setIssueText] = useState(() => {
+    return localStorage.getItem('codepro_gemini_issue_text') || 
+      'Users report that when running codepro inspect on a directory without git repo, the git status crashes instead of failing closed gracefully with git_repository=false.';
+  });
   const [charLoading, setCharLoading] = useState(false);
-  const [charOutput, setCharOutput] = useState<CharacterizeResult | null>(null);
+  const [charOutput, setCharOutput] = useState<CharacterizeResult | null>(() => {
+    const saved = localStorage.getItem('codepro_gemini_char_output');
+    return saved ? JSON.parse(saved) : null;
+  });
   const [errorMessage, setErrorMessage] = useState<string | null>(null);
 
   // Issues State
@@ -138,6 +152,28 @@ export function GeminiAgentTab({ onApplySignalsToP1 }: GeminiAgentTabProps) {
   const [githubToken, setGithubToken] = useState('');
   const [showTokenModal, setShowTokenModal] = useState(false);
   const [issuesSource, setIssuesSource] = useState<string>('codepro_internal_registry');
+
+  // Auto-sync states to localStorage
+  useEffect(() => {
+    localStorage.setItem('codepro_gemini_submode', activeSubMode);
+    localStorage.setItem('codepro_gemini_req_id', requestId);
+    localStorage.setItem('codepro_gemini_task_id', taskId);
+    localStorage.setItem('codepro_gemini_prompt', prompt);
+    localStorage.setItem('codepro_gemini_scope', scope);
+    localStorage.setItem('codepro_gemini_candidate_files', candidateFiles);
+    localStorage.setItem('codepro_gemini_model', selectedModel);
+    localStorage.setItem('codepro_gemini_issue_text', issueText);
+    if (runResult) {
+      localStorage.setItem('codepro_gemini_run_result', JSON.stringify(runResult));
+    } else {
+      localStorage.removeItem('codepro_gemini_run_result');
+    }
+    if (charOutput) {
+      localStorage.setItem('codepro_gemini_char_output', JSON.stringify(charOutput));
+    } else {
+      localStorage.removeItem('codepro_gemini_char_output');
+    }
+  }, [activeSubMode, requestId, taskId, prompt, scope, candidateFiles, selectedModel, issueText, runResult, charOutput]);
 
   // Fetch status and issues on load
   const fetchIssues = async (token?: string) => {

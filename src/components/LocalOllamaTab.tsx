@@ -17,25 +17,52 @@ import {
 import { OllamaModelInfo, OllamaExecuteResponse } from '../chassis/ollamaRunner';
 
 export const LocalOllamaTab: React.FC = () => {
-  const [endpoint, setEndpoint] = useState('http://127.0.0.1:11434');
+  const [endpoint, setEndpoint] = useState(() => localStorage.getItem('codepro_ollama_endpoint') || 'http://127.0.0.1:11434');
   const [checking, setChecking] = useState(false);
   const [statusData, setStatusData] = useState<{
     connected: boolean;
     models: OllamaModelInfo[];
     error?: string;
-  } | null>(null);
+  } | null>(() => {
+    const saved = localStorage.getItem('codepro_ollama_status_data');
+    return saved ? JSON.parse(saved) : null;
+  });
 
   // Formulário de Execução
-  const [selectedModel, setSelectedModel] = useState<string>('qwen2.5-coder:7b');
-  const [taskPrompt, setTaskPrompt] = useState(
-    'Corrigir a função de validação de scope em src/chassis/vertical.ts para garantir que nenhum arquivo fora de authorized_scope seja lido ou modificado.'
-  );
-  const [scopeFiles, setScopeFiles] = useState('src/chassis/vertical.ts');
-  const [temperature, setTemperature] = useState(0.1);
-  const [maxTokens, setMaxTokens] = useState(2048);
+  const [selectedModel, setSelectedModel] = useState<string>(() => localStorage.getItem('codepro_ollama_model') || 'qwen2.5-coder:7b');
+  const [taskPrompt, setTaskPrompt] = useState(() => {
+    return localStorage.getItem('codepro_ollama_task_prompt') ||
+      'Corrigir a função de validação de scope em src/chassis/vertical.ts para garantir que nenhum arquivo fora de authorized_scope seja lido ou modificado.';
+  });
+  const [scopeFiles, setScopeFiles] = useState(() => localStorage.getItem('codepro_ollama_scope_files') || 'src/chassis/vertical.ts');
+  const [temperature, setTemperature] = useState(() => Number(localStorage.getItem('codepro_ollama_temp') || '0.1'));
+  const [maxTokens, setMaxTokens] = useState(() => Number(localStorage.getItem('codepro_ollama_max_tokens') || '2048'));
 
   const [executing, setExecuting] = useState(false);
-  const [executionResult, setExecutionResult] = useState<OllamaExecuteResponse | null>(null);
+  const [executionResult, setExecutionResult] = useState<OllamaExecuteResponse | null>(() => {
+    const saved = localStorage.getItem('codepro_ollama_exec_result');
+    return saved ? JSON.parse(saved) : null;
+  });
+
+  // Auto-sync states to localStorage
+  useEffect(() => {
+    localStorage.setItem('codepro_ollama_endpoint', endpoint);
+    localStorage.setItem('codepro_ollama_model', selectedModel);
+    localStorage.setItem('codepro_ollama_task_prompt', taskPrompt);
+    localStorage.setItem('codepro_ollama_scope_files', scopeFiles);
+    localStorage.setItem('codepro_ollama_temp', String(temperature));
+    localStorage.setItem('codepro_ollama_max_tokens', String(maxTokens));
+    if (statusData) {
+      localStorage.setItem('codepro_ollama_status_data', JSON.stringify(statusData));
+    } else {
+      localStorage.removeItem('codepro_ollama_status_data');
+    }
+    if (executionResult) {
+      localStorage.setItem('codepro_ollama_exec_result', JSON.stringify(executionResult));
+    } else {
+      localStorage.removeItem('codepro_ollama_exec_result');
+    }
+  }, [endpoint, selectedModel, taskPrompt, scopeFiles, temperature, maxTokens, statusData, executionResult]);
 
   const checkConnection = async () => {
     setChecking(true);

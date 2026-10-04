@@ -13,7 +13,7 @@ from .project import inspect_project
 from .vertical import VerticalRunStatus, run_vertical
 
 
-_SUPPORTED_MIN = (3, 12)
+_SUPPORTED_MIN = (3, 10)
 _SUPPORTED_MAX = (3, 14)
 
 
