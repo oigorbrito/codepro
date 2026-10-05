@@ -31,7 +31,8 @@ CURRENT PHASE = PHASE 7 / SCAFFOLD COMPATIBILITY
 
 The reconciled main preserves:
 
-- the Python `arkx` operational core;
+- the Python operational core, currently implemented under `arkx` with a
+  canonical `codepro` package facade;
 - the public `codepro` CLI;
 - the Python regression and validation boundary;
 - the TypeScript/API/UI surface;
@@ -309,7 +310,11 @@ Equivalent module entrypoint:
 python -m arkx --help
 ```
 
-The public product command is `codepro`. The Python implementation namespace remains `arkx` so introducing the CLI does not force an unrelated package-rename migration.
+The canonical product and Python package namespace is `codepro`. The existing
+implementation remains under `arkx` during the staged migration, which keeps
+legacy imports available while the supported public API is migrated and
+verified. The `arkx` namespace is a compatibility implementation namespace,
+not a separate product identity.
 
 ### `codepro inspect`
 

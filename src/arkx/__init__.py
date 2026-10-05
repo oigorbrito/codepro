@@ -20,7 +20,8 @@ _LEGACY_MODULES = (
     "p82_localization", "p82_editing", "orchestration", "recovery",
     "acceptance", "promotion", "characterization", "progress", "routing",
     "planning", "verification", "handoff", "composition",
-    "executor_qualification", "p82", "p82_baseline", "swebench_authority",
+    "executor_qualification", "p82", "p82_baseline", "performance_baseline",
+    "swebench_authority",
 )
 
 
@@ -29,7 +30,13 @@ def __getattr__(name: str):
     if name == "OrchestrationExecutionResult":
         return OrchestrationExecutionResult
     for module_name in _LEGACY_MODULES:
-        module = import_module(f"{__name__}.{module_name}")
+        qualified_name = f"{__name__}.{module_name}"
+        try:
+            module = import_module(qualified_name)
+        except ModuleNotFoundError as error:
+            if error.name != qualified_name:
+                raise
+            continue
         if hasattr(module, name):
             value = getattr(module, name)
             globals()[name] = value

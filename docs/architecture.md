@@ -17,6 +17,12 @@ Study Spec v1 adds a pre-execution research-design contract above P0-P6. It vali
 
 The product surface includes a dependency-free `codepro` CLI implemented with the Python standard library. The CLI exposes help, version, doctor, and read-only project inspection. Inspection may query Git and PATH and detect project markers, but it does not invoke executors or execute tasks.
 
+`codepro` is the canonical product and Python package namespace. The current
+implementation remains under `src/arkx/` while `src/codepro/` provides the
+staged public facade. Legacy `arkx` imports remain available during migration;
+the facade does not imply that the wider API or installed-package behavior has
+already been qualified. See Decision 0170 for migration criteria and status.
+
 A low-level command environment boundary may execute an explicit argv vector with explicit cwd and timeout. Its output is a `CommandResult` observation only: exit code, stdout, stderr, timeout, duration, and environment error. It does not map process outcomes to task status.
 
 Capability qualification is a separate pure boundary. A runtime executor identity is bindable only when the exact executor version + adapter version has explicit qualification evidence for the required capability. Availability alone is never qualification. Multiple equally qualified available executors are blocked rather than silently ranked.

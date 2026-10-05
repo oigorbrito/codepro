@@ -98,6 +98,14 @@ def build_parser() -> argparse.ArgumentParser:
         nargs=argparse.REMAINDER,
         help="Executor argv after --. No shell interpretation is used.",
     )
+
+    baseline_parser = subparsers.add_parser(
+        "baseline-cost",
+        help="Measure local overhead without changing behavior.",
+    )
+    baseline_parser.add_argument("--workspace", default=".")
+    baseline_parser.add_argument("--output", required=True)
+    baseline_parser.add_argument("--samples", type=int, default=5)
     return parser
 
 
@@ -204,6 +212,16 @@ def main(argv: Sequence[str] | None = None) -> int:
         return _inspect(args.path, as_json=args.as_json)
     if args.command == "run":
         return _run(args)
+    if args.command == "baseline-cost":
+        from .performance_baseline import main as performance_baseline_main
+
+        return performance_baseline_main(
+            [
+                "--workspace", args.workspace,
+                "--output", args.output,
+                "--samples", str(args.samples),
+            ]
+        )
 
     parser.error(f"unsupported command: {args.command}")
     return 2

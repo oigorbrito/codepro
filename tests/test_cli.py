@@ -61,6 +61,29 @@ class CliFunctionTests(unittest.TestCase):
         self.assertIn("core: PASS (importable)", output)
         self.assertTrue(output.rstrip().endswith("status: PASS"))
 
+    def test_baseline_cost_delegates_with_explicit_arguments(self):
+        with patch("arkx.performance_baseline.main", return_value=0) as baseline:
+            code = main([
+                "baseline-cost",
+                "--workspace", ".",
+                "--output", "baseline.json",
+                "--samples", "2",
+            ])
+        self.assertEqual(code, 0)
+        baseline.assert_called_once_with([
+            "--workspace", ".",
+            "--output", "baseline.json",
+            "--samples", "2",
+        ])
+
+    def test_baseline_cost_requires_output_path(self):
+        error = io.StringIO()
+        with patch("sys.stderr", error):
+            with self.assertRaises(SystemExit) as raised:
+                main(["baseline-cost"])
+        self.assertEqual(raised.exception.code, 2)
+        self.assertIn("--output", error.getvalue())
+
     def test_inspect_text_output_is_read_only_and_explicit(self):
         inspection = ProjectInspection(
             project_name="fixture",
@@ -138,7 +161,7 @@ class PackagingContractTests(unittest.TestCase):
     def test_console_script_points_to_cli_main(self):
         project = tomllib.loads((ROOT / "pyproject.toml").read_text(encoding="utf-8"))
         self.assertEqual(project["project"]["name"], "codepro")
-        self.assertEqual(project["project"]["scripts"], {"codepro": "arkx.cli:main"})
+        self.assertEqual(project["project"]["scripts"], {"codepro": "codepro.cli:main"})
         self.assertEqual(project["project"]["requires-python"], ">=3.12")
 
     def test_no_runtime_dependencies_are_declared(self):
