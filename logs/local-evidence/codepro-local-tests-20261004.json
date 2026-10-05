@@ -1,0 +1,176 @@
+{
+  "schema": "codepro-local-verification-evidence/v1",
+  "evidence_kind": "LOCAL_UNIT_TEST_RUN",
+  "attempt_id": "95eadf2e-b246-4a5e-83d9-341d7af6600c",
+  "collected_at": "2026-10-05T02:01:47.007692+00:00",
+  "workspace": "C:\\Users\\igorb\\.codex\\worktrees\\reconcile-04a-main\\codepro",
+  "head_revision": "a42dbbf1dd1dd5f5078249f29713faf9f4d9c083",
+  "base_revision": "a42dbbf1dd1dd5f5078249f29713faf9f4d9c083",
+  "branch": null,
+  "patch_identity": {
+    "algorithm": "sha256",
+    "value": "8557788b4f539eefb2292994c437949fe2571607083056169d578fa98d90fb74",
+    "scope": "staged implementation patch excluding this evidence file"
+  },
+  "environment": {
+    "python": "3.13.15 (tags/v3.13.15:4061bc4, Aug  5 2026, 13:05:39) [MSC v.1944 64 bit (AMD64)]",
+    "executable": "C:\\Users\\igorb\\AppData\\Local\\Programs\\Python\\Python313\\python.exe",
+    "platform": "Windows-11-10.0.26300-SP0",
+    "machine": "AMD64",
+    "architecture": "64bit"
+  },
+  "provider_called": false,
+  "benchmark_executed": false,
+  "acceptance": "PENDING_INDEPENDENT_REVIEW",
+  "promotion": "NOT_PROMOTED",
+  "results": [
+    {
+      "test_file": "test_codepro_namespace.py",
+      "command": [
+        "C:\\Users\\igorb\\AppData\\Local\\Programs\\Python\\Python313\\python.exe",
+        "-m",
+        "unittest",
+        "discover",
+        "-s",
+        "tests",
+        "-t",
+        ".",
+        "-p",
+        "test_codepro_namespace.py"
+      ],
+      "returncode": 0,
+      "status": "PASS",
+      "stdout": "",
+      "stderr": "......\n----------------------------------------------------------------------\nRan 6 tests in 0.203s\n\nOK\n"
+    },
+    {
+      "test_file": "test_architecture_boundaries.py",
+      "command": [
+        "C:\\Users\\igorb\\AppData\\Local\\Programs\\Python\\Python313\\python.exe",
+        "-m",
+        "unittest",
+        "discover",
+        "-s",
+        "tests",
+        "-t",
+        ".",
+        "-p",
+        "test_architecture_boundaries.py"
+      ],
+      "returncode": 0,
+      "status": "PASS",
+      "stdout": "",
+      "stderr": "....\n----------------------------------------------------------------------\nRan 4 tests in 0.402s\n\nOK\n"
+    },
+    {
+      "test_file": "test_cli.py",
+      "command": [
+        "C:\\Users\\igorb\\AppData\\Local\\Programs\\Python\\Python313\\python.exe",
+        "-m",
+        "unittest",
+        "discover",
+        "-s",
+        "tests",
+        "-t",
+        ".",
+        "-p",
+        "test_cli.py"
+      ],
+      "returncode": 0,
+      "status": "PASS",
+      "stdout": "",
+      "stderr": "..............\n----------------------------------------------------------------------\nRan 14 tests in 1.170s\n\nOK\n"
+    },
+    {
+      "test_file": "test_p82_baseline.py",
+      "command": [
+        "C:\\Users\\igorb\\AppData\\Local\\Programs\\Python\\Python313\\python.exe",
+        "-m",
+        "unittest",
+        "discover",
+        "-s",
+        "tests",
+        "-t",
+        ".",
+        "-p",
+        "test_p82_baseline.py"
+      ],
+      "returncode": 0,
+      "status": "PASS",
+      "stdout": "",
+      "stderr": ".......................\n----------------------------------------------------------------------\nRan 23 tests in 1.121s\n\nOK\n"
+    },
+    {
+      "test_file": "test_performance_baseline.py",
+      "command": [
+        "C:\\Users\\igorb\\AppData\\Local\\Programs\\Python\\Python313\\python.exe",
+        "-m",
+        "unittest",
+        "discover",
+        "-s",
+        "tests",
+        "-t",
+        ".",
+        "-p",
+        "test_performance_baseline.py"
+      ],
+      "returncode": 0,
+      "status": "PASS",
+      "stdout": "",
+      "stderr": "..\n----------------------------------------------------------------------\nRan 2 tests in 0.723s\n\nOK\n"
+    },
+    {
+      "test_file": "test_verification.py",
+      "command": [
+        "C:\\Users\\igorb\\AppData\\Local\\Programs\\Python\\Python313\\python.exe",
+        "-m",
+        "unittest",
+        "discover",
+        "-s",
+        "tests",
+        "-t",
+        ".",
+        "-p",
+        "test_verification.py"
+      ],
+      "returncode": 0,
+      "status": "PASS",
+      "stdout": "",
+      "stderr": "................\n----------------------------------------------------------------------\nRan 16 tests in 0.002s\n\nOK\n"
+    },
+    {
+      "test_file": "test_swebench_authority.py",
+      "command": [
+        "C:\\Users\\igorb\\AppData\\Local\\Programs\\Python\\Python313\\python.exe",
+        "-m",
+        "unittest",
+        "discover",
+        "-s",
+        "tests",
+        "-t",
+        ".",
+        "-p",
+        "test_swebench_authority.py"
+      ],
+      "returncode": 1,
+      "status": "BLOCKED",
+      "stdout": "",
+      "stderr": "....E...E...E...EEE\n======================================================================\nERROR: test_enriched_record_image_is_idempotently_verified (tests.test_swebench_authority.SWEbenchAuthorityTests.test_enriched_record_image_is_idempotently_verified)\n----------------------------------------------------------------------\nTraceback (most recent call last):\n  File \"C:\\Users\\igorb\\.codex\\worktrees\\reconcile-04a-main\\codepro\\src\\arkx\\swebench_authority.py\", line 177, in derive_harness_instance\n    from swebench.task.checks import expected_image\nModuleNotFoundError: No module named 'swebench'\n\nThe above exception was the direct cause of the following exception:\n\nTraceback (most recent call last):\n  File \"C:\\Users\\igorb\\.codex\\worktrees\\reconcile-04a-main\\codepro\\tests\\test_swebench_authority.py\", line 191, in test_enriched_record_image_is_idempotently_verified\n    enriched = derive_harness_instance(raw, source_dataset_id=\"dataset\", revision=\"rev\", fingerprint=\"fp\")\n  File \"C:\\Users\\igorb\\.codex\\worktrees\\reconcile-04a-main\\codepro\\src\\arkx\\swebench_authority.py\", line 180, in derive_harness_instance\n    raise RuntimeError(\n        f\"cannot derive official image for {instance_id}: {type(error).__name__}: {error}\"\n    ) from error\nRuntimeError: cannot derive official image for sympy__sympy-14711: ModuleNotFoundError: No module named 'swebench'\n\n======================================================================\nERROR: test_make_test_spec_accepts_complete_derived_record (tests.test_swebench_authority.SWEbenchAuthorityTests.test_make_test_spec_accepts_complete_derived_record)\n----------------------------------------------------------------------\nTraceback (most recent call last):\n  File \"C:\\Users\\igorb\\.codex\\worktrees\\reconcile-04a-main\\codepro\\tests\\test_swebench_authority.py\", line 237, in test_make_test_spec_accepts_complete_derived_record\n    from swebench.harness.utils import make_test_spec\nModuleNotFoundError: No module named 'swebench'\n\n======================================================================\nERROR: test_raw_record_is_explicitly_enriched_with_harness_image (tests.test_swebench_authority.SWEbenchAuthorityTests.test_raw_record_is_explicitly_enriched_with_harness_image)\n----------------------------------------------------------------------\nTraceback (most recent call last):\n  File \"C:\\Users\\igorb\\.codex\\worktrees\\reconcile-04a-main\\codepro\\src\\arkx\\swebench_authority.py\", line 177, in derive_harness_instance\n    from swebench.task.checks import expected_image\nModuleNotFoundError: No module named 'swebench'\n\nThe above exception was the direct cause of the following exception:\n\nTraceback (most recent call last):\n  File \"C:\\Users\\igorb\\.codex\\worktrees\\reconcile-04a-main\\codepro\\tests\\test_swebench_authority.py\", line 156, in test_raw_record_is_explicitly_enriched_with_harness_image\n    enriched = derive_harness_instance(\n        raw, source_dataset_id=\"dataset\", revision=\"rev\", fingerprint=\"fp\"\n    )\n  File \"C:\\Users\\igorb\\.codex\\worktrees\\reconcile-04a-main\\codepro\\src\\arkx\\swebench_authority.py\", line 180, in derive_harness_instance\n    raise RuntimeError(\n        f\"cannot derive official image for {instance_id}: {type(error).__name__}: {error}\"\n    ) from error\nRuntimeError: cannot derive official image for sympy__sympy-14711: ModuleNotFoundError: No module named 'swebench'\n\n======================================================================\nERROR: test_task_repo_is_the_authority_for_the_three_missing_fields (tests.test_swebench_authority.SWEbenchAuthorityTests.test_task_repo_is_the_authority_for_the_three_missing_fields)\n----------------------------------------------------------------------\nTraceback (most recent call last):\n  File \"C:\\Users\\igorb\\.codex\\worktrees\\reconcile-04a-main\\codepro\\tests\\test_swebench_authority.py\", line 221, in test_task_repo_is_the_authority_for_the_three_missing_fields\n    enriched = derive_harness_instance_from_task_repo(\n        raw, task_repo=root, source_dataset_id=\"dataset\", revision=\"rev\", fingerprint=\"fp\"\n    )\n  File \"C:\\Users\\igorb\\.codex\\worktrees\\reconcile-04a-main\\codepro\\src\\arkx\\swebench_authority.py\", line 208, in derive_harness_instance_from_task_repo\n    from swebench.task.repo import load_task_repo\nModuleNotFoundError: No module named 'swebench'\n\n======================================================================\nERROR: test_unknown_task_repo_identity_is_blocked (tests.test_swebench_authority.SWEbenchAuthorityTests.test_unknown_task_repo_identity_is_blocked)\n----------------------------------------------------------------------\nTraceback (most recent call last):\n  File \"C:\\Users\\igorb\\.codex\\worktrees\\reconcile-04a-main\\codepro\\tests\\test_swebench_authority.py\", line 247, in test_unknown_task_repo_identity_is_blocked\n    derive_harness_instance_from_task_repo(\n    ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~^\n        raw_harness_record(), task_repo=directory,\n        ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^\n        source_dataset_id=\"dataset\", revision=\"rev\", fingerprint=\"fp\"\n        ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^\n    )\n    ^\n  File \"C:\\Users\\igorb\\.codex\\worktrees\\reconcile-04a-main\\codepro\\src\\arkx\\swebench_authority.py\", line 208, in derive_harness_instance_from_task_repo\n    from swebench.task.repo import load_task_repo\nModuleNotFoundError: No module named 'swebench'\n\n======================================================================\nERROR: test_wrong_image_identity_is_blocked (tests.test_swebench_authority.SWEbenchAuthorityTests.test_wrong_image_identity_is_blocked)\n----------------------------------------------------------------------\nTraceback (most recent call last):\n  File \"C:\\Users\\igorb\\.codex\\worktrees\\reconcile-04a-main\\codepro\\src\\arkx\\swebench_authority.py\", line 177, in derive_harness_instance\n    from swebench.task.checks import expected_image\nModuleNotFoundError: No module named 'swebench'\n\nThe above exception was the direct cause of the following exception:\n\nTraceback (most recent call last):\n  File \"C:\\Users\\igorb\\.codex\\worktrees\\reconcile-04a-main\\codepro\\tests\\test_swebench_authority.py\", line 186, in test_wrong_image_identity_is_blocked\n    derive_harness_instance(raw, source_dataset_id=\"dataset\", revision=\"rev\", fingerprint=\"fp\")\n    ~~~~~~~~~~~~~~~~~~~~~~~^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^\n  File \"C:\\Users\\igorb\\.codex\\worktrees\\reconcile-04a-main\\codepro\\src\\arkx\\swebench_authority.py\", line 180, in derive_harness_instance\n    raise RuntimeError(\n        f\"cannot derive official image for {instance_id}: {type(error).__name__}: {error}\"\n    ) from error\nRuntimeError: cannot derive official image for sympy__sympy-14711: ModuleNotFoundError: No module named 'swebench'\n\n----------------------------------------------------------------------\nRan 19 tests in 0.035s\n\nFAILED (errors=6)\n"
+    }
+  ],
+  "availability_probes": [
+    {
+      "purpose": "diagnose SWE-bench focused test blocker",
+      "command": [
+        "py",
+        "-3.14",
+        "-c",
+        "import importlib.util, platform, sys; print(sys.version); print(platform.platform()); print(importlib.util.find_spec('swebench'))"
+      ],
+      "python": "3.14.7 (tags/v3.14.7:823f032, Aug 5 2026, 10:51:32) [MSC v.1944 64 bit (AMD64)]",
+      "platform": "Windows-11-10.0.26300-SP0",
+      "result": "swebench module unavailable (find_spec returned None)",
+      "interpretation": "BLOCKED_OPTIONAL_DEPENDENCY_NOT_INSTALLED; no install attempted"
+    }
+  ]
+}

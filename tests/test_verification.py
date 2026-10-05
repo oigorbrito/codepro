@@ -25,6 +25,7 @@ def valid(**overrides):
         "changed_files": ("src/a.py",),
         "expected_scope": ("src/a.py",),
         "evidence_refs": ("e://patch",),
+        "verifier_run_id": "verify-task-control-1",
     }
     values.update(overrides)
     return PatchVerificationInput(**values)
